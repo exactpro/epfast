@@ -1,10 +1,12 @@
 package com.exactpro.epfast.annotation;
 
-import org.junit.Test;
+
 
 import com.exactpro.epfast.annotation.internal.CreatorImpl;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ProcessorTest {
     @Test
@@ -17,9 +19,11 @@ public class ProcessorTest {
         Object def = new CreatorImpl().create("Default");
         assertEquals(Default.class, def.getClass());
     }
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testNull() {
-        new CreatorImpl().create("null");
+        Assertions.assertThrows(RuntimeException.class, () ->{
+            new CreatorImpl().create("null");
+        });
     }
 
 }

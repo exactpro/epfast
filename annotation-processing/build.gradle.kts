@@ -11,5 +11,5 @@ dependencies {
 
     compileOnly("com.google.auto.service:auto-service:1.0-rc6")
 
-    testImplementation("junit:junit:4.12")
+    testCompile(rootProject.extra.get("junit5")!!)
 }

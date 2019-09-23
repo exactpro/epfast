@@ -1,3 +1,5 @@
+apply(from="gradle/dependencies.gradle.kts")
+
 plugins {
     java
 }
@@ -10,9 +12,10 @@ repositories {
 }
 
 dependencies {
-    testCompile("junit", "junit", "4.12")
+    testCompile(rootProject.extra.get("junit5")!!)
 }
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
