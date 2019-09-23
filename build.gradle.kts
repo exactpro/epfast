@@ -1,5 +1,4 @@
-apply(from="gradle/dependencies.gradle.kts")
-
+val junitVersion = "5.5.2"
 plugins {
     java
 }
@@ -11,11 +10,14 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testCompile(rootProject.extra.get("junit5")!!)
+subprojects{
+    apply(plugin="java")
+    dependencies{
+        testImplementation("org.junit.jupiter:junit-jupiter:"+junitVersion)
+    }
+    configure<JavaPluginConvention> {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
