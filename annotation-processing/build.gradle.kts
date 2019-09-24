@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     annotationProcessor("com.google.auto.service:auto-service:1.0-rc6")
     compileOnly("com.google.auto.service:auto-service:1.0-rc6")
 }

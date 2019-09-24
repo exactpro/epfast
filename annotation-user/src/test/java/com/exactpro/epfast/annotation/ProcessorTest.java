@@ -21,9 +21,7 @@ public class ProcessorTest {
     }
     @Test
     public void testNull() {
-        Assertions.assertThrows(RuntimeException.class, () ->{
-            new CreatorImpl().create("null");
-        });
+        Assertions.assertThrows(RuntimeException.class, () -> new CreatorImpl().create("null"));
     }
 
 }
