@@ -11,6 +11,7 @@ repositories {
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+
     annotationProcessor(project(":annotation-processing"))
     compile(project(":annotation-processing"))
 }
