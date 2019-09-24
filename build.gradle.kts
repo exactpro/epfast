@@ -1,4 +1,4 @@
-val junitVersion = "5.5.2"
+val junitVersion by extra { "5.5.2" }
 plugins {
     java
 }
@@ -10,11 +10,9 @@ repositories {
     mavenCentral()
 }
 
-subprojects{
+allprojects{
     apply(plugin="java")
-    dependencies{
-        testImplementation("org.junit.jupiter:junit-jupiter:"+junitVersion)
-    }
+
     configure<JavaPluginConvention> {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
