@@ -1,14 +1,13 @@
+val junitVersion: String by rootProject.extra
+
 plugins {
     `java-library`
-}
-
-repositories {
-
-    jcenter()
 }
 
 dependencies {
     annotationProcessor(project(":annotation-processing"))
     compile(project(":annotation-processing"))
-    testImplementation("junit:junit:4.12")
+
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }
