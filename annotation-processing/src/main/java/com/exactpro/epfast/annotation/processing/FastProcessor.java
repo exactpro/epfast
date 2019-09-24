@@ -12,6 +12,7 @@ import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+
 @SupportedAnnotationTypes("com.exactpro.epfast.FastType")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
