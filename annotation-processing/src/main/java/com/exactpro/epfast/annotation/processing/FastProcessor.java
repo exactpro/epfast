@@ -1,6 +1,9 @@
 package com.exactpro.epfast.annotation.processing;
 
 import com.exactpro.epfast.FastType;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.auto.service.AutoService;
 
 import javax.annotation.processing.*;
@@ -16,7 +19,9 @@ import java.util.*;
 @SupportedAnnotationTypes("com.exactpro.epfast.FastType")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
+
 public class FastProcessor extends AbstractProcessor {
+    private MustacheFactory mustacheFactory = new DefaultMustacheFactory();
 
     private TypeElement fastTypeElement;
 
@@ -78,27 +83,15 @@ public class FastProcessor extends AbstractProcessor {
     }
 
     private void buildCreatorClass(HashMap<String, Element> nameClassMap) throws IOException {
-        String packageName = "com.exactpro.epfast.annotation.internal";
-        String className = "CreatorImpl";
-        JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(packageName + "." + className);
+        TypeName typeName = new TypeName("com.exactpro.epfast.annotation.internal.CreatorImpl");
+        //mustache files are in UTF-8 by default
+        Mustache mustache = mustacheFactory.compile("creator.mustache");
+
+        JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(typeName.toString());
         try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-            out.println("package " + packageName + ";");
-            out.println("import java.util.HashMap;");
-            out.println("import java.util.Map;");
-            out.println("import com.exactpro.epfast.annotation.ICreator;");
-            out.println("public class " + className + " implements ICreator {");
-            out.println("public Object create(String name) {");
-            nameClassMap.forEach((key, value) -> {
-                out.println("if (\"" + key + "\".equals(name)) {");
-                out.println("return new " + value + "();");
-                out.print("} else ");
-            });
-            out.println("{");
-            out.print("throw new RuntimeException(\"FastType name=\"+name+\" not found.\");");
-            out.print("}");
-            out.print("}");
-            out.print("}");
+            mustache.execute(out, new MustacheSource(typeName, nameClassMap.entrySet())).flush();
         }
+
     }
 
     private static <T> T getSingleElementOrNull(Collection<T> collection) {

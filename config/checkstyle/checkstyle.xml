@@ -340,7 +340,9 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="severity" value="error" />
         </module>
 
-        <module name="EmptyLineSeparator" />
+        <module name="EmptyLineSeparator" >
+            <property name="allowMultipleEmptyLines" value="false"/>
+        </module>
 
         <!-- No System.out -->
         <module name="Regexp">

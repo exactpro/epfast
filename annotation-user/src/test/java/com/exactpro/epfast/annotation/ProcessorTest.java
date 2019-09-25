@@ -1,7 +1,5 @@
 package com.exactpro.epfast.annotation;
 
-
-
 import com.exactpro.epfast.annotation.internal.CreatorImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
