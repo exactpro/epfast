@@ -1,0 +1,10 @@
+package {{packageName}};
+
+public class {{className}} implements {{interface}}{
+    public Object create(String name) {
+    {{#nameClassMap}}
+        if ("{{key}}".equals(name)) return new {{value}}();
+    {{/nameClassMap}}
+        throw new RuntimeException("FastType name=\"+name+\" not found");
+    }
+}

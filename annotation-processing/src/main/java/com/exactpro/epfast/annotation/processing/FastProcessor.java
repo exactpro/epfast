@@ -1,6 +1,9 @@
 package com.exactpro.epfast.annotation.processing;
 
 import com.exactpro.epfast.FastType;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.auto.service.AutoService;
 
 import javax.annotation.processing.*;
@@ -11,11 +14,13 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 @SupportedAnnotationTypes("com.exactpro.epfast.FastType")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
+
 public class FastProcessor extends AbstractProcessor {
 
     private TypeElement fastTypeElement;
@@ -80,25 +85,24 @@ public class FastProcessor extends AbstractProcessor {
     private void buildCreatorClass(HashMap<String, Element> nameClassMap) throws IOException {
         String packageName = "com.exactpro.epfast.annotation.internal";
         String className = "CreatorImpl";
+        String interfaceName = "com.exactpro.epfast.annotation.ICreator";
+
+        HashMap<String, Object> scopes = new HashMap<>();
+        scopes.put("packageName", packageName);
+        scopes.put("className", className);
+        scopes.put("interface", interfaceName);
+        scopes.put("nameClassMap", nameClassMap.entrySet());
+
+        MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+        Mustache mustache = mustacheFactory.compile("creator.mustache");
+        StringWriter writer = new StringWriter();
+        mustache.execute(writer, scopes).flush();
+
         JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(packageName + "." + className);
         try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-            out.println("package " + packageName + ";");
-            out.println("import java.util.HashMap;");
-            out.println("import java.util.Map;");
-            out.println("import com.exactpro.epfast.annotation.ICreator;");
-            out.println("public class " + className + " implements ICreator {");
-            out.println("public Object create(String name) {");
-            nameClassMap.forEach((key, value) -> {
-                out.println("if (\"" + key + "\".equals(name)) {");
-                out.println("return new " + value + "();");
-                out.print("} else ");
-            });
-            out.println("{");
-            out.print("throw new RuntimeException(\"FastType name=\"+name+\" not found.\");");
-            out.print("}");
-            out.print("}");
-            out.print("}");
+            out.print(writer.toString());
         }
+
     }
 
     private static <T> T getSingleElementOrNull(Collection<T> collection) {
