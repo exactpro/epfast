@@ -19,7 +19,6 @@ import java.util.*;
 @SupportedAnnotationTypes("com.exactpro.epfast.FastType")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
-
 public class FastProcessor extends AbstractProcessor {
     private MustacheFactory mustacheFactory = new DefaultMustacheFactory();
 
@@ -84,14 +83,14 @@ public class FastProcessor extends AbstractProcessor {
 
     private void buildCreatorClass(HashMap<String, Element> nameClassMap) throws IOException {
         TypeName typeName = new TypeName("com.exactpro.epfast.annotation.internal.CreatorImpl");
-        //mustache files are in UTF-8 by default
-        Mustache mustache = mustacheFactory.compile("creator.mustache");
+        // mustache files are in UTF-8 by default
+        Mustache mustache = mustacheFactory.compile(
+            "com/exactpro/epfast/annotation/processing/CreatorImpl.java.mustache");
 
         JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(typeName.toString());
         try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-            mustache.execute(out, new MustacheSource(typeName, nameClassMap.entrySet())).flush();
+            mustache.execute(out, new CreatorTemplateParameters(typeName, nameClassMap.entrySet())).flush();
         }
-
     }
 
     private static <T> T getSingleElementOrNull(Collection<T> collection) {

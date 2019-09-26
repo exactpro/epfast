@@ -4,12 +4,12 @@ import javax.lang.model.element.Element;
 import java.util.Collection;
 import java.util.Map;
 
-class MustacheSource {
+class CreatorTemplateParameters {
     private TypeName typeName;
 
     private Collection<Map.Entry<String, Element>> nameClassEntries;
 
-    MustacheSource(TypeName typeName, Collection<Map.Entry<String, Element>> nameClassEntries) {
+    CreatorTemplateParameters(TypeName typeName, Collection<Map.Entry<String, Element>> nameClassEntries) {
         this.typeName = typeName;
         this.nameClassEntries = nameClassEntries;
     }
