@@ -1,4 +1,4 @@
-package com.exactpro.epfast;
+package com.exactpro.epfast.annotation.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

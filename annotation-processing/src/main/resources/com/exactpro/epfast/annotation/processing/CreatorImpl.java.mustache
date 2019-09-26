@@ -7,7 +7,7 @@ public class {{{typeName.className}}} implements com.exactpro.epfast.annotation.
     {{#nameClassEntries}}
         if ("{{{key}}}".equals(name)) return new {{{value}}}();
     {{/nameClassEntries}}
-        throw new RuntimeException("FastType name=\"+name+\" not found");
+        throw new RuntimeException("FastType name=\""+name+"\" not found");
     }
 
 }
