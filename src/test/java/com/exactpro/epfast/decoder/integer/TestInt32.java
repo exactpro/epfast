@@ -309,7 +309,6 @@ class TestInt32 {
 
     @Test
     void mandatory_positive() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x39);
@@ -325,7 +324,6 @@ class TestInt32 {
 
     @Test
     void mandatory_positive_split() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x39);
@@ -341,7 +339,6 @@ class TestInt32 {
 
     @Test
     void optional_negative() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x46);
@@ -357,7 +354,6 @@ class TestInt32 {
 
     @Test
     void optional_negative_split() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x46);
@@ -373,7 +369,6 @@ class TestInt32 {
 
     @Test
     void mandatory_negative() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7c);
@@ -390,7 +385,6 @@ class TestInt32 {
 
     @Test
     void mandatory_negative_split() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7c);
@@ -407,7 +401,6 @@ class TestInt32 {
 
     @Test
     void optional_minus_one() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0xff);
@@ -421,7 +414,6 @@ class TestInt32 {
 
     @Test
     void mandatory_minus_one() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0xff);
@@ -467,7 +459,6 @@ class TestInt32 {
 
     @Test
     void optional_sign_extension_negative() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7f);
@@ -483,7 +474,6 @@ class TestInt32 {
 
     @Test
     void mandatory_sign_extension_negative() {
-
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7f);

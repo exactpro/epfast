@@ -10,7 +10,7 @@ public class DecodeNullableInt32 extends DecodeInteger {
 
     private int value;
 
-    DecodeNullableInt32() {
+    public DecodeNullableInt32() {
         positiveLimit = 2147483648L >> 7;
         negativeLimit = Integer.MIN_VALUE >> 7;
     }
@@ -30,6 +30,22 @@ public class DecodeNullableInt32 extends DecodeInteger {
                 accumulatePositive(buf.readByte());
             }
         }
+    }
+
+    public void continueDecode(ByteBuf buf) {
+        if (positive) {
+            while (buf.isReadable() && !ready) {
+                accumulateNegative(buf.readByte());
+            }
+        } else {
+            while (buf.isReadable() && !ready) {
+                accumulatePositive(buf.readByte());
+            }
+        }
+    }
+
+    public Integer getValue() {
+        return value == 0 ? null : positive ? value - 1 : value;
     }
 
     private void accumulatePositive(int oneByte) {
@@ -60,27 +76,4 @@ public class DecodeNullableInt32 extends DecodeInteger {
         }
     }
 
-    public void continueDecode(ByteBuf buf) {
-        if (positive) {
-            while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
-            }
-        } else {
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
-            }
-        }
-    }
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    Integer getValue() {
-        return value == 0 ? null : positive ? value - 1 : value;
-    }
-
-    public boolean isOverflow() {
-        return overflow;
-    }
 }

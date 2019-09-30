@@ -5,19 +5,23 @@ import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeInteger implements IDecodeContext {
 
-    boolean overflow;
+    protected boolean overflow;
 
-    boolean ready;
+    protected boolean ready;
 
-    long positiveLimit;
+    protected long positiveLimit;
 
-    long negativeLimit;
+    protected long negativeLimit;
 
     public abstract void decode(ByteBuf buf);
 
     public abstract void continueDecode(ByteBuf buf);
 
-    public abstract boolean isReady();
+    public boolean isReady() {
+        return ready;
+    }
 
-    public abstract boolean isOverflow();
+    public boolean isOverflow() {
+        return overflow;
+    }
 }

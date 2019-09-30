@@ -8,8 +8,7 @@ class DecodeMandatoryUInt32 extends DecodeInteger {
 
     private static final int OVERFLOW_MASK = 0xFE000000;
 
-    DecodeMandatoryUInt32() {
-        positiveLimit = 262143;
+    public DecodeMandatoryUInt32() {
     }
 
     public void decode(ByteBuf buf) {
@@ -35,15 +34,7 @@ class DecodeMandatoryUInt32 extends DecodeInteger {
         decode(buf);
     }
 
-    long getValue() {
+    public long getValue() {
         return (long) value & 0xffffffffL;
-    }
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public boolean isOverflow() {
-        return overflow;
     }
 }

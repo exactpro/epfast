@@ -33,6 +33,22 @@ public class DecodeMandatoryInt64 extends DecodeInteger {
 
     }
 
+    public void continueDecode(ByteBuf buf) {
+        if (positive) {
+            while (buf.isReadable() && !ready) {
+                accumulateNegative(buf.readByte());
+            }
+        } else {
+            while (buf.isReadable() && !ready) {
+                accumulatePositive(buf.readByte());
+            }
+        }
+    }
+
+    long getValue() {
+        return value;
+    }
+
     private void accumulatePositive(int oneByte) {
         if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
             oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
@@ -59,27 +75,4 @@ public class DecodeMandatoryInt64 extends DecodeInteger {
         }
     }
 
-    public void continueDecode(ByteBuf buf) {
-        if (positive) {
-            while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
-            }
-        } else {
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
-            }
-        }
-    }
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    long getValue() {
-        return value;
-    }
-
-    public boolean isOverflow() {
-        return overflow;
-    }
 }

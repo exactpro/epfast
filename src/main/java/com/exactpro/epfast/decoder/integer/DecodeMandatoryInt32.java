@@ -30,7 +30,22 @@ class DecodeMandatoryInt32 extends DecodeInteger {
                 accumulatePositive(buf.readByte());
             }
         }
+    }
 
+    public void continueDecode(ByteBuf buf) {
+        if (positive) {
+            while (buf.isReadable() && !ready) {
+                accumulateNegative(buf.readByte());
+            }
+        } else {
+            while (buf.isReadable() && !ready) {
+                accumulatePositive(buf.readByte());
+            }
+        }
+    }
+
+    public int getValue() {
+        return value;
     }
 
     private void accumulatePositive(int oneByte) {
@@ -59,27 +74,4 @@ class DecodeMandatoryInt32 extends DecodeInteger {
         }
     }
 
-    public void continueDecode(ByteBuf buf) {
-        if (positive) {
-            while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
-            }
-        } else {
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
-            }
-        }
-    }
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    int getValue() {
-        return value;
-    }
-
-    public boolean isOverflow() {
-        return overflow;
-    }
 }

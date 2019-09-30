@@ -6,13 +6,28 @@ public class DecodeNullableUInt32 extends DecodeInteger {
 
     private int value;
 
-    DecodeNullableUInt32() {
+    public DecodeNullableUInt32() {
         positiveLimit = 33554432;
     }
 
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
             accumulate(buf.readByte());
+        }
+    }
+
+    public void continueDecode(ByteBuf buf) {
+        decode(buf);
+    }
+
+    public Long getValue() {
+        if (value == 0) {
+            return null;
+        } else {
+            if (value > 0) {
+                value--;
+            }
+            return (long) value & 0xffffffffL;
         }
     }
 
@@ -31,26 +46,4 @@ public class DecodeNullableUInt32 extends DecodeInteger {
         }
     }
 
-    public void continueDecode(ByteBuf buf) {
-        decode(buf);
-    }
-
-    Long getValue() {
-        if (value == 0) {
-            return null;
-        } else {
-            if (value > 0) {
-                value--;
-            }
-            return (long) value & 0xffffffffL;
-        }
-    }
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public boolean isOverflow() {
-        return overflow;
-    }
 }
