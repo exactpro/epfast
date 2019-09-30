@@ -34,4 +34,5 @@ allprojects{
 dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    compile ("io.netty", "netty-all",  "4.1.5.Final")
 }
