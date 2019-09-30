@@ -19,7 +19,7 @@ class TestInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void testNullInt64() {
+    void testNull() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x80);
@@ -36,7 +36,7 @@ class TestInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void optional_zero() {
+    void optionalZero() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x81);
@@ -45,11 +45,11 @@ class TestInt64 {
             nullableInt64Decoder.continueDecode(nextBuf);
         }
         Long val = nullableInt64Decoder.getValue();
-        assertEquals(0, (long) val);
+        assertEquals(0, val);
     }
 
     @Test
-    void mandatory_zero() {
+    void mandatoryZero() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x80);
@@ -66,7 +66,7 @@ class TestInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void test_max_nullable() {
+    void testMaxNullable() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x01);
@@ -88,7 +88,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_max_mandatory() {
+    void testMaxMandatory() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
@@ -110,7 +110,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_min_nullable() {
+    void testMinNullable() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7f);
@@ -132,7 +132,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_min_mandatory() {
+    void testMinMandatory() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7f);
@@ -154,7 +154,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_max_overflow_nullable_1() {
+    void testMaxOverflowNullable1() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x01);
@@ -176,7 +176,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_max_overflow_nullable_2() {
+    void testMaxOverflowNullable2() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x01);
@@ -199,7 +199,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_max_overflow_mandatory_1() {
+    void testMaxOverflowMandatory1() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x01);
@@ -220,7 +220,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_max_overflow_mandatory_2() {
+    void testMaxOverflowMandatory2() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
@@ -242,7 +242,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_min_overflow_nullable_1() {
+    void testMinOverflowNullable1() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x77);
@@ -264,7 +264,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_min_overflow_nullable_2() {
+    void testMinOverflowNullable2() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7f);
@@ -287,7 +287,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_min_overflow_mandatory_1() {
+    void testMinOverflowMandatory1() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x77);
@@ -308,7 +308,7 @@ class TestInt64 {
     }
 
     @Test
-    void test_min_overflow_mandatory_2() {
+    void testMinOverflowMandatory2() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7f);
@@ -334,7 +334,7 @@ class TestInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void optional_positive() {
+    void optionalPositive() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x39);
@@ -349,7 +349,7 @@ class TestInt64 {
     }
 
     @Test
-    void optional_positive_split() {
+    void optionalPositiveSplit() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x39);
@@ -364,7 +364,7 @@ class TestInt64 {
     }
 
     @Test
-    void mandatory_positive() {
+    void mandatoryPositive() {
 
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
@@ -380,7 +380,7 @@ class TestInt64 {
     }
 
     @Test
-    void mandatory_positive_split() {
+    void mandatoryPositiveSplit() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x39);
@@ -395,7 +395,7 @@ class TestInt64 {
     }
 
     @Test
-    void optional_negative() {
+    void optionalNegative() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x46);
@@ -410,7 +410,7 @@ class TestInt64 {
     }
 
     @Test
-    void optional_negative_split() {
+    void optionalNegativeSplit() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x46);
@@ -425,7 +425,7 @@ class TestInt64 {
     }
 
     @Test
-    void mandatory_negative() {
+    void mandatoryNegative() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7c);
@@ -441,7 +441,7 @@ class TestInt64 {
     }
 
     @Test
-    void mandatory_negative_split() {
+    void mandatoryNegativeSplit() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7c);
@@ -457,7 +457,7 @@ class TestInt64 {
     }
 
     @Test
-    void optional_minus_one() {
+    void optionalMinusOne() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0xff);
@@ -470,8 +470,7 @@ class TestInt64 {
     }
 
     @Test
-    void mandatory_minus_one() {
-
+    void mandatoryMinusOne() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0xff);
@@ -484,7 +483,7 @@ class TestInt64 {
     }
 
     @Test
-    void optional_sign_extension_positive() {
+    void optionalSignExtensionPositive() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
@@ -500,7 +499,7 @@ class TestInt64 {
     }
 
     @Test
-    void mandatory_sign_extension_positive() {
+    void mandatorySignExtensionPositive() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
@@ -516,7 +515,7 @@ class TestInt64 {
     }
 
     @Test
-    void optional_sign_extension_negative() {
+    void optionalSignExtensionNegative() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7f);
@@ -531,7 +530,7 @@ class TestInt64 {
     }
 
     @Test
-    void mandatory_sign_extension_negative() {
+    void mandatorySignExtensionNegative() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x7f);

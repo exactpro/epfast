@@ -9,10 +9,6 @@ public abstract class DecodeInteger implements IDecodeContext {
 
     protected boolean ready;
 
-    protected long positiveLimit;
-
-    protected long negativeLimit;
-
     public abstract void decode(ByteBuf buf);
 
     public abstract void continueDecode(ByteBuf buf);

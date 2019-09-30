@@ -4,30 +4,29 @@ import io.netty.buffer.ByteBuf;
 
 class DecodeMandatoryInt32 extends DecodeInteger {
 
+    private static final int POSITIVE_LIMIT = Integer.MAX_VALUE >> 7;
+
+    private static final int NEGATIVE_LIMIT = Integer.MIN_VALUE >> 7;
+
     private static final int SIGN_BIT_MASK = 0b01000000;
 
     private int value;
 
     private boolean positive;
 
-    DecodeMandatoryInt32() {
-        positiveLimit = Integer.MAX_VALUE >> 7;
-        negativeLimit = Integer.MIN_VALUE >> 7;
-    }
-
     public void decode(ByteBuf buf) {
         int oneByte = buf.readByte();
-        positive = (oneByte & SIGN_BIT_MASK) != 0;
+        positive = (oneByte & SIGN_BIT_MASK) == 0;
         if (positive) {
+            accumulatePositive(oneByte);
+            while (buf.isReadable() && !ready) {
+                accumulatePositive(buf.readByte());
+            }
+        } else {
             value = -1;
             accumulateNegative(oneByte);
             while (buf.isReadable() && !ready) {
                 accumulateNegative(buf.readByte());
-            }
-        } else {
-            accumulatePositive(oneByte);
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
             }
         }
     }
@@ -35,11 +34,11 @@ class DecodeMandatoryInt32 extends DecodeInteger {
     public void continueDecode(ByteBuf buf) {
         if (positive) {
             while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
+                accumulatePositive(buf.readByte());
             }
         } else {
             while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
+                accumulateNegative(buf.readByte());
             }
         }
     }
@@ -53,7 +52,7 @@ class DecodeMandatoryInt32 extends DecodeInteger {
             oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
             ready = true;
         }
-        if (value <= positiveLimit) {
+        if (value <= POSITIVE_LIMIT) {
             value = (value << 7) + oneByte;
         } else {
             value = 0;
@@ -66,7 +65,7 @@ class DecodeMandatoryInt32 extends DecodeInteger {
             oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
             ready = true;
         }
-        if (value >= negativeLimit) {
+        if (value >= NEGATIVE_LIMIT) {
             value = (value << 7) + oneByte;
         } else {
             value = 0;

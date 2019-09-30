@@ -6,9 +6,7 @@ public class DecodeNullableUInt32 extends DecodeInteger {
 
     private int value;
 
-    public DecodeNullableUInt32() {
-        positiveLimit = 33554432;
-    }
+    private static final int POSITIVE_LIMIT = 33554432;
 
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
@@ -36,9 +34,9 @@ public class DecodeNullableUInt32 extends DecodeInteger {
             oneByte = oneByte & CLEAR_STOP_BIT_MASK;
             ready = true;
         }
-        if (value < positiveLimit) {
+        if (value < POSITIVE_LIMIT) {
             value = (value << 7) + oneByte;
-        } else if (value == positiveLimit && oneByte == 0 && ready) {
+        } else if (value == POSITIVE_LIMIT && oneByte == 0 && ready) {
             value = -1;
         } else {
             value = 0;

@@ -8,9 +8,7 @@ public class DecodeNullableUInt64 extends DecodeInteger {
 
     private long value;
 
-    public DecodeNullableUInt64() {
-        positiveLimit = 144115188075855872L;
-    }
+    private static final long POSITIVE_LIMIT = 144115188075855872L;
 
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
@@ -29,7 +27,7 @@ public class DecodeNullableUInt64 extends DecodeInteger {
             if (value > 0) {
                 value--;
             }
-            return new BigInteger(1, new byte[] {
+            return new BigInteger(1, new byte[]{
                 (byte) (value >> 56),
                 (byte) ((value >> 48) & 0xffL),
                 (byte) ((value >> 40) & 0xffL),
@@ -47,14 +45,13 @@ public class DecodeNullableUInt64 extends DecodeInteger {
             oneByte = oneByte & CLEAR_STOP_BIT_MASK;
             ready = true;
         }
-        if (value < positiveLimit) {
+        if (value < POSITIVE_LIMIT) {
             value = (value << 7) + oneByte;
-        } else if (value == positiveLimit && oneByte == 0 && ready) {
+        } else if (value == POSITIVE_LIMIT && oneByte == 0 && ready) {
             value = -1;
         } else {
             value = 0;
             overflow = true;
         }
     }
-
 }

@@ -20,7 +20,7 @@ class TestUInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void test_null() {
+    void testNull() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x80);
@@ -37,7 +37,7 @@ class TestUInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void optional_zero() {
+    void optionalZero() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x81);
@@ -50,7 +50,7 @@ class TestUInt64 {
     }
 
     @Test
-    void mandatory_zero() {
+    void mandatoryZero() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x80);
@@ -67,7 +67,7 @@ class TestUInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void test_max_nullable() {
+    void testMaxNullable() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x02);
@@ -89,7 +89,7 @@ class TestUInt64 {
     }
 
     @Test
-    void test_max_mandatory() {
+    void testMaxMandatory() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x01);
@@ -111,7 +111,7 @@ class TestUInt64 {
     }
 
     @Test
-    void test_max_overflow_nullable_1() {
+    void testMaxOverflowNullable1() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x02);
@@ -132,7 +132,7 @@ class TestUInt64 {
     }
 
     @Test
-    void test_max_overflow_nullable_2() {
+    void testMaxOverflowNullable2() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x02);
@@ -154,7 +154,7 @@ class TestUInt64 {
     }
 
     @Test
-    void test_max_overflow_mandatory_1() {
+    void testMaxOverflowMandatory1() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x02);
@@ -175,7 +175,7 @@ class TestUInt64 {
     }
 
     @Test
-    void test_max_overflow_mandatory_2() {
+    void testMaxOverflowMandatory2() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x01);
@@ -201,7 +201,7 @@ class TestUInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void optional_simple_number() {
+    void optionalSimpleNumber() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x39);
@@ -216,7 +216,7 @@ class TestUInt64 {
     }
 
     @Test
-    void mandatory_simple_number_1() {
+    void mandatorySimpleNumber1() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x39);
@@ -231,7 +231,7 @@ class TestUInt64 {
     }
 
     @Test
-    void mandatory_simple_number_2() {
+    void mandatorySimpleNumber2() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x01);

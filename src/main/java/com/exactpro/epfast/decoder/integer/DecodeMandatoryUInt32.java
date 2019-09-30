@@ -8,9 +8,6 @@ class DecodeMandatoryUInt32 extends DecodeInteger {
 
     private static final int OVERFLOW_MASK = 0xFE000000;
 
-    public DecodeMandatoryUInt32() {
-    }
-
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
             accumulatePositive(buf.readByte());

@@ -10,9 +10,6 @@ public class DecodeMandatoryUInt64 extends DecodeInteger {
 
     private static final long OVERFLOW_MASK = 0xFE00000000000000L;
 
-    DecodeMandatoryUInt64() {
-    }
-
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
             accumulatePositive(buf.readByte());
