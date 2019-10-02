@@ -1,7 +1,7 @@
-package test;
+package com.exactpro.epfast;
 
 import com.exactpro.epfast.annotations.FastType;
 
 @FastType
-public class DefaultAnnotated {
+public class Default {
 }

@@ -1,6 +1,6 @@
 package com.exactpro.epfast.annotation.processing;
 
-import com.exactpro.epfast.annotation.annotations.FastType;
+import com.exactpro.epfast.annotations.FastType;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 
-@SupportedAnnotationTypes("com.exactpro.epfast.annotation.annotations.FastType")
+@SupportedAnnotationTypes("com.exactpro.epfast.annotations.FastType")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
 public class FastProcessor extends AbstractProcessor {

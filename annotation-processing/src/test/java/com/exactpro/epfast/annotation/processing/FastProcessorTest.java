@@ -10,7 +10,6 @@ class FastProcessorTest {
 
     @Test
     void testProcessing() {
-
         JavaSourcesSubject.assertThat(JavaFileObjects.forResource("test/DefaultAnnotated.java"))
             .processedWith(new FastProcessor())
             .compilesWithoutError()
