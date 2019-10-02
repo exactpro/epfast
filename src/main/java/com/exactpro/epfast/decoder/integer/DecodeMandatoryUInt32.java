@@ -19,7 +19,7 @@ class DecodeMandatoryUInt32 extends DecodeInteger {
     }
 
     public long getValue() {
-        return (long) value & 0xffffffffL;
+        return value & 0xFFFFFFFFL;
     }
 
     private void accumulate(int oneByte) {

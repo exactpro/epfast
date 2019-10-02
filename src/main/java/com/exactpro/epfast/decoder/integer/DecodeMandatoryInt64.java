@@ -8,8 +8,6 @@ public class DecodeMandatoryInt64 extends DecodeInteger {
 
     private static final long NEGATIVE_LIMIT = Long.MIN_VALUE >> 7;
 
-    private static final int SIGN_BIT_MASK = 0b01000000;
-
     private boolean positive;
 
     private long value;
