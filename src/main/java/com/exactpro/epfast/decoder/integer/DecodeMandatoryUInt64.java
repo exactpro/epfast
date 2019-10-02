@@ -6,13 +6,13 @@ import java.math.BigInteger;
 
 public class DecodeMandatoryUInt64 extends DecodeInteger {
 
-    private long value;
-
     private static final long OVERFLOW_MASK = 0xFE00000000000000L;
+
+    private long value;
 
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
-            accumulatePositive(buf.readByte());
+            accumulate(buf.readByte());
         }
     }
 
@@ -33,7 +33,7 @@ public class DecodeMandatoryUInt64 extends DecodeInteger {
         });
     }
 
-    private void accumulatePositive(int oneByte) {
+    private void accumulate(int oneByte) {
         if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
             oneByte = oneByte & CLEAR_STOP_BIT_MASK;
             ready = true;

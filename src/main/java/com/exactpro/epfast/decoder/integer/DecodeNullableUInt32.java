@@ -4,9 +4,11 @@ import io.netty.buffer.ByteBuf;
 
 public class DecodeNullableUInt32 extends DecodeInteger {
 
-    private int value;
-
     private static final int POSITIVE_LIMIT = 33554432;
+
+    private boolean maxValue;
+
+    private int value;
 
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
@@ -22,10 +24,7 @@ public class DecodeNullableUInt32 extends DecodeInteger {
         if (value == 0) {
             return null;
         } else {
-            if (value > 0) {
-                value--;
-            }
-            return (long) value & 0xffffffffL;
+            return maxValue ? 4294967295L : (long) --value & 0xffffffffL;
         }
     }
 
@@ -37,11 +36,10 @@ public class DecodeNullableUInt32 extends DecodeInteger {
         if (value < POSITIVE_LIMIT) {
             value = (value << 7) + oneByte;
         } else if (value == POSITIVE_LIMIT && oneByte == 0 && ready) {
-            value = -1;
+            maxValue = true;
         } else {
             value = 0;
             overflow = true;
         }
     }
-
 }

@@ -10,7 +10,7 @@ public class DecodeNullableInt64 extends DecodeInteger {
 
     private static final int SIGN_BIT_MASK = 0b01000000;
 
-    private boolean positive = true;
+    private boolean positive;
 
     private long value;
 
@@ -74,5 +74,4 @@ public class DecodeNullableInt64 extends DecodeInteger {
             overflow = true;
         }
     }
-
 }

@@ -201,7 +201,7 @@ class TestUInt64 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void optionalSimpleNumber() {
+    void optionalSimpleNumber1() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x39);
@@ -213,6 +213,28 @@ class TestUInt64 {
         }
         BigInteger val = nullableUInt64Decoder.getValue();
         assertEquals(new BigInteger("942755"), val);
+    }
+
+    @Test
+    void optionalSimpleNumber2() {
+        ByteBuf buf = Unpooled.buffer();
+        ByteBuf nextBuf = Unpooled.buffer();
+        buf.writeByte(0x01);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0xff);
+        nullableUInt64Decoder.decode(buf);
+        while (!nullableUInt64Decoder.isReady()) {
+            nullableUInt64Decoder.continueDecode(nextBuf);
+        }
+        BigInteger val = nullableUInt64Decoder.getValue();
+        assertEquals(new BigInteger("18446744073709551614"), val);
     }
 
     @Test

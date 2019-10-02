@@ -10,9 +10,9 @@ class DecodeMandatoryInt32 extends DecodeInteger {
 
     private static final int SIGN_BIT_MASK = 0b01000000;
 
-    private int value;
-
     private boolean positive;
+
+    private int value;
 
     public void decode(ByteBuf buf) {
         int oneByte = buf.readByte();

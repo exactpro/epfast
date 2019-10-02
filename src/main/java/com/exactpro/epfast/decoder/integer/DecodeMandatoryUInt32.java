@@ -4,17 +4,25 @@ import io.netty.buffer.ByteBuf;
 
 class DecodeMandatoryUInt32 extends DecodeInteger {
 
-    private int value;
-
     private static final int OVERFLOW_MASK = 0xFE000000;
+
+    private int value;
 
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
-            accumulatePositive(buf.readByte());
+            accumulate(buf.readByte());
         }
     }
 
-    private void accumulatePositive(int oneByte) {
+    public void continueDecode(ByteBuf buf) {
+        decode(buf);
+    }
+
+    public long getValue() {
+        return (long) value & 0xffffffffL;
+    }
+
+    private void accumulate(int oneByte) {
         if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
             oneByte = oneByte & CLEAR_STOP_BIT_MASK;
             ready = true;
@@ -25,13 +33,5 @@ class DecodeMandatoryUInt32 extends DecodeInteger {
             overflow = true;
             value = 0;
         }
-    }
-
-    public void continueDecode(ByteBuf buf) {
-        decode(buf);
-    }
-
-    public long getValue() {
-        return (long) value & 0xffffffffL;
     }
 }
