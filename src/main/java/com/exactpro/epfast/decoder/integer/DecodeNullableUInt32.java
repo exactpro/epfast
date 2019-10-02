@@ -24,21 +24,20 @@ public class DecodeNullableUInt32 extends DecodeInteger {
         if (value == 0) {
             return null;
         } else {
-            return maxValue ? 4294967295L : (long) --value & 0xffffffffL;
+            return maxValue ? 4294967295L : (long) --value & 0xFFFFFFFFL;
         }
     }
 
     private void accumulate(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = oneByte & CLEAR_STOP_BIT_MASK;
+        if (oneByte < 0) { // if stop bit is set
+            oneByte &= CLEAR_STOP_BIT_MASK;
             ready = true;
         }
         if (value < POSITIVE_LIMIT) {
-            value = (value << 7) + oneByte;
+            value = (value << 7) | oneByte;
         } else if (value == POSITIVE_LIMIT && oneByte == 0 && ready) {
             maxValue = true;
         } else {
-            value = 0;
             overflow = true;
         }
     }

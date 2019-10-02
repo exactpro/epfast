@@ -23,15 +23,14 @@ class DecodeMandatoryUInt32 extends DecodeInteger {
     }
 
     private void accumulate(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = oneByte & CLEAR_STOP_BIT_MASK;
+        if (oneByte < 0) { // if stop bit is set
+            oneByte &= CLEAR_STOP_BIT_MASK;
             ready = true;
         }
         if ((value & OVERFLOW_MASK) == 0) {
-            value = (value << 7) + oneByte;
+            value = (value << 7) | oneByte;
         } else {
             overflow = true;
-            value = 0;
         }
     }
 }

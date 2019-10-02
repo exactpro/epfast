@@ -8,14 +8,12 @@ public class DecodeMandatoryInt64 extends DecodeInteger {
 
     private static final long NEGATIVE_LIMIT = Long.MIN_VALUE >> 7;
 
-    private boolean positive;
-
     private long value;
 
     public void decode(ByteBuf buf) {
         int oneByte = buf.readByte();
-        positive = (oneByte & SIGN_BIT_MASK) == 0;
-        if (positive) {
+        if ((oneByte & SIGN_BIT_MASK) == 0) {
+            value = 0;
             accumulatePositive(oneByte);
             while (buf.isReadable() && !ready) {
                 accumulatePositive(buf.readByte());
@@ -30,7 +28,7 @@ public class DecodeMandatoryInt64 extends DecodeInteger {
     }
 
     public void continueDecode(ByteBuf buf) {
-        if (positive) {
+        if (value >= 0) {
             while (buf.isReadable() && !ready) {
                 accumulatePositive(buf.readByte());
             }
@@ -46,27 +44,25 @@ public class DecodeMandatoryInt64 extends DecodeInteger {
     }
 
     private void accumulatePositive(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
+        if (oneByte < 0) { // if stop bit is set
+            oneByte &= CLEAR_STOP_BIT_MASK;
             ready = true;
         }
         if (value <= POSITIVE_LIMIT) {
-            value = (value << 7) + oneByte;
+            value = (value << 7) | oneByte;
         } else {
-            value = 0;
             overflow = true;
         }
     }
 
     private void accumulateNegative(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
+        if (oneByte < 0) { // if stop bit is set
+            oneByte &= CLEAR_STOP_BIT_MASK;
             ready = true;
         }
         if (value >= NEGATIVE_LIMIT) {
-            value = (value << 7) + oneByte;
+            value = (value << 7) | oneByte;
         } else {
-            value = 0;
             overflow = true;
         }
     }

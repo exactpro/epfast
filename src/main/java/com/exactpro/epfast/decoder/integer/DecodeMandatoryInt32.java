@@ -63,7 +63,6 @@ class DecodeMandatoryInt32 extends DecodeInteger {
         if (value >= NEGATIVE_LIMIT) {
             value = (value << 7) | oneByte;
         } else {
-            value = 0;
             overflow = true;
         }
     }
