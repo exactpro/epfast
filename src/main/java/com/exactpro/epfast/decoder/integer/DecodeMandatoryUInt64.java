@@ -6,13 +6,15 @@ import java.math.BigInteger;
 
 public class DecodeMandatoryUInt64 extends DecodeInteger {
 
-    private long value;
-
     private static final long OVERFLOW_MASK = 0xFE00000000000000L;
+
+    private byte[] bytes = new byte[8];
+
+    private long value;
 
     public void decode(ByteBuf buf) {
         while (buf.isReadable() && !ready) {
-            accumulatePositive(buf.readByte());
+            accumulate(buf.readByte());
         }
     }
 
@@ -21,28 +23,19 @@ public class DecodeMandatoryUInt64 extends DecodeInteger {
     }
 
     public BigInteger getValue() {
-        return new BigInteger(1, new byte[] {
-            (byte) (value >> 56),
-            (byte) ((value >> 48) & 0xffL),
-            (byte) ((value >> 40) & 0xffL),
-            (byte) ((value >> 32) & 0xffL),
-            (byte) ((value >> 24) & 0xff),
-            (byte) ((value >> 16) & 0xffL),
-            (byte) ((value >> 8) & 0xffL),
-            (byte) (value & 0xffL)
-        });
+        longToBytes(value, bytes);
+        return new BigInteger(1, bytes);
     }
 
-    private void accumulatePositive(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = oneByte & CLEAR_STOP_BIT_MASK;
+    private void accumulate(int oneByte) {
+        if (oneByte < 0) { // if stop bit is set
+            oneByte &= CLEAR_STOP_BIT_MASK;
             ready = true;
         }
         if ((value & OVERFLOW_MASK) == 0) {
-            value = (value << 7) + oneByte;
+            value = (value << 7) | oneByte;
         } else {
             overflow = true;
-            value = 0;
         }
     }
 
