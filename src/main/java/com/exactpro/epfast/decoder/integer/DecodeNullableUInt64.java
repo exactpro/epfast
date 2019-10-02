@@ -6,11 +6,11 @@ import java.math.BigInteger;
 
 public class DecodeNullableUInt64 extends DecodeInteger {
 
-    private static final long POSITIVE_LIMIT = 144115188075855872L;
+    private static final long POSITIVE_LIMIT = 0x02000000_00000000L;
 
-    private byte[] byteArrayValue = new byte[8];
+    private byte[] bytes = new byte[8];
 
-    private boolean maxValue;
+    private boolean isUInt64Limit;
 
     private long value;
 
@@ -28,12 +28,12 @@ public class DecodeNullableUInt64 extends DecodeInteger {
         if (value == 0) {
             return null;
         } else {
-            if (maxValue) {
-                fillByteArray(byteArrayValue, -1L);
-                return new BigInteger(1, byteArrayValue);
+            if (isUInt64Limit) {
+                longToBytes(-1L, bytes);
+                return new BigInteger(1, bytes);
             } else {
-                fillByteArray(byteArrayValue, --value);
-                return new BigInteger(1, byteArrayValue);
+                longToBytes(--value, bytes);
+                return new BigInteger(1, bytes);
             }
         }
     }
@@ -46,7 +46,7 @@ public class DecodeNullableUInt64 extends DecodeInteger {
         if (value < POSITIVE_LIMIT) {
             value = (value << 7) | oneByte;
         } else if (value == POSITIVE_LIMIT && oneByte == 0 && ready) {
-            maxValue = true;
+            isUInt64Limit = true;
         } else {
             overflow = true;
         }

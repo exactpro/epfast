@@ -8,7 +8,7 @@ public class DecodeMandatoryUInt64 extends DecodeInteger {
 
     private static final long OVERFLOW_MASK = 0xFE00000000000000L;
 
-    private byte[] byteArrayValue = new byte[8];
+    private byte[] bytes = new byte[8];
 
     private long value;
 
@@ -23,8 +23,8 @@ public class DecodeMandatoryUInt64 extends DecodeInteger {
     }
 
     public BigInteger getValue() {
-        fillByteArray(byteArrayValue, value);
-        return new BigInteger(1, byteArrayValue);
+        longToBytes(value, bytes);
+        return new BigInteger(1, bytes);
     }
 
     private void accumulate(int oneByte) {

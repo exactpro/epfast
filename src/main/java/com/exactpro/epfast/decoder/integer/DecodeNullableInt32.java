@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 
 public class DecodeNullableInt32 extends DecodeInteger {
 
-    private static final int POSITIVE_LIMIT = 16777216;
+    private static final int POSITIVE_LIMIT = 0x01000000;
 
     private static final int NEGATIVE_LIMIT = Integer.MIN_VALUE >> 7;
 

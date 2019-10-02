@@ -18,9 +18,10 @@ public abstract class DecodeInteger implements IDecodeContext {
         return overflow;
     }
 
-    static void fillByteArray(byte[] array, long value) {
-        for (int i = 0; i < 8; i++) {
-            array[i] = (byte) (value >> (8 * (7 - i)));
+    static void longToBytes(long value, byte[] bytes) {
+        for (int i = 7; i >= 0; --i) {
+            bytes[i] = (byte) value;
+            value >>>= 8;
         }
     }
 }
