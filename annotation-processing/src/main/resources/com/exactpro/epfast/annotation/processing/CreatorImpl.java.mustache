@@ -1,13 +1,16 @@
-{{#typeName.packageName}}
-package {{{typeName.packageName}}};
-{{/typeName.packageName}}
+{{#typeName.packageName}}package {{{typeName.packageName}}};{{/typeName.packageName}}
 
-public class {{{typeName.className}}} implements com.exactpro.epfast.ICreator{
+public class {{{typeName.className}}} implements com.exactpro.epfast.ICreator {
+    private static final String FAST_PACKAGE = "{{{fastPackage.packageName}}}";
+
     public Object create(String name) {
-    {{#nameClassEntries}}
-        if ("{{{key}}}".equals(name)) return new {{{value}}}();
-    {{/nameClassEntries}}
-        throw new RuntimeException("FastType name=\""+name+"\" not found");
+{{#fastPackage.fastTypes}}
+        if ("{{{typeName}}}".equals(name)) return new {{{element}}}();
+{{/fastPackage.fastTypes}}
+        throw new RuntimeException("FastType name=\"" + name + "\" not found");
     }
 
+    public String getFastPackage() {
+        return FAST_PACKAGE;
+    }
 }

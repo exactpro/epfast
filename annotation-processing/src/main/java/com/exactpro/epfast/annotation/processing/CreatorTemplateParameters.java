@@ -1,25 +1,21 @@
 package com.exactpro.epfast.annotation.processing;
 
-import javax.lang.model.element.Element;
-import java.util.Collection;
-import java.util.Map;
-
 class CreatorTemplateParameters {
     private TypeName typeName;
 
-    private Collection<Map.Entry<String, Element>> nameClassEntries;
+    private FastPackageElement fastPackage;
 
-    CreatorTemplateParameters(TypeName typeName, Collection<Map.Entry<String, Element>> nameClassEntries) {
+    CreatorTemplateParameters(
+        TypeName typeName, FastPackageElement fastPackage) {
         this.typeName = typeName;
-        this.nameClassEntries = nameClassEntries;
+        this.fastPackage = fastPackage;
     }
 
     public TypeName getTypeName() {
         return typeName;
     }
 
-    public Collection<Map.Entry<String, Element>> getNameClassEntries() {
-        return nameClassEntries;
+    public FastPackageElement getFastPackage() {
+        return fastPackage;
     }
-
 }
