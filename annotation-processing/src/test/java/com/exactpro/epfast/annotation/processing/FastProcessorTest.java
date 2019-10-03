@@ -5,6 +5,7 @@ import com.google.testing.compile.JavaSourcesSubject;
 import org.junit.jupiter.api.Test;
 
 import javax.tools.StandardLocation;
+import java.nio.charset.StandardCharsets;
 
 class FastProcessorTest {
 
@@ -15,7 +16,11 @@ class FastProcessorTest {
             .compilesWithoutError()
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
             "com.exactpro.epfast.annotation.internal",
-            "CreatorImpl.class");
+            "CreatorImpl.class")
+            .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
+            "",
+            "META-INF/services/com.exactpro.epfast.ICreator")
+            .withStringContents(StandardCharsets.UTF_8, "com.exactpro.epfast.annotation.internal.CreatorImpl\n");
     }
 
     @Test
@@ -34,7 +39,11 @@ class FastProcessorTest {
             .compilesWithoutError()
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
                 "com.exactpro.epfast.annotation.internal",
-                "CreatorImpl.class");
+                "CreatorImpl.class")
+            .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
+            "",
+            "META-INF/services/com.exactpro.epfast.ICreator")
+            .withStringContents(StandardCharsets.UTF_8, "com.exactpro.epfast.annotation.internal.CreatorImpl\n");
     }
 
     @Test

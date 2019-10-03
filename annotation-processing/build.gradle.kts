@@ -38,7 +38,6 @@ dependencies {
     junitRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 
     testImplementation("com.google.testing.compile:compile-testing:0.18")
-    testImplementation("com.google.truth:truth:1.0")
     testRuntimeOnly(project(":epfast-annotations"))
 
     integrationTestImplementation(project(":epfast-annotations"))
