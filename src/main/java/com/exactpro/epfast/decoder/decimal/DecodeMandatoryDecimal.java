@@ -1,72 +1,55 @@
 package com.exactpro.epfast.decoder.decimal;
 
+import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
 import io.netty.buffer.ByteBuf;
 
 import java.math.BigDecimal;
 
 public class DecodeMandatoryDecimal extends DecodeDecimal {
 
+    private DecodeMandatoryInt32 exponentDecoder = new DecodeMandatoryInt32();
+
+    private int exponent;
+
     public void decode(ByteBuf buf) {
-        exponent = readExponent(buf.readByte());
-        int firstMantissaByte = buf.readByte();
-        positive = (firstMantissaByte & SIGN_BIT_MASK) != 0;
-        if (positive) {
-            mantissa = -1;
-            accumulateNegative(firstMantissaByte);
-            while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
-            }
-        } else {
-            accumulatePositive(firstMantissaByte);
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
+        exponentDecoder.decode(buf);
+        if (exponentDecoder.isReady()) {
+            exponentReady = true;
+            exponent = exponentDecoder.getValue();
+            mantissaDecoder.decode(buf);
+            if (mantissaDecoder.isReady()) {
+                mantissa = mantissaDecoder.getValue();
+                ready = true;
             }
         }
     }
 
     public void continueDecode(ByteBuf buf) {
-        if (positive) {
-            while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
+        if (exponentReady) {
+            mantissaDecoder.continueDecode(buf);
+            if (mantissaDecoder.isReady()) {
+                ready = true;
+                mantissa = mantissaDecoder.getValue();
             }
         } else {
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
+            exponentDecoder.continueDecode(buf);
+            if (exponentDecoder.isReady()) {
+                exponentReady = true;
+                exponent = exponentDecoder.getValue();
+                mantissaDecoder.decode(buf);
+                if (mantissaDecoder.isReady()) {
+                    mantissa = mantissaDecoder.getValue();
+                    ready = true;
+                }
             }
         }
     }
 
     BigDecimal getValue() {
-        return new BigDecimal(mantissa).movePointRight(exponent);
-    }
-
-    private int readExponent(int exponentByte) {
-        return (exponentByte & SIGN_BIT_MASK) == 0 ? (exponentByte & CLEAR_STOP_BIT_MASK) : exponentByte;
-    }
-
-    private void accumulatePositive(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
-            ready = true;
-        }
-        if (mantissa <= POSITIVE_LIMIT) {
-            mantissa = (mantissa << 7) + oneByte;
+        if (exponent >= -63 && exponent <= 63) {
+            return new BigDecimal(mantissa).movePointRight(exponent);
         } else {
-            mantissa = 0;
-            overflow = true;
-        }
-    }
-
-    private void accumulateNegative(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
-            ready = true;
-        }
-        if (mantissa >= NEGATIVE_LIMIT) {
-            mantissa = (mantissa << 7) + oneByte;
-        } else {
-            mantissa = 0;
-            overflow = true;
+            return null;
         }
     }
 }

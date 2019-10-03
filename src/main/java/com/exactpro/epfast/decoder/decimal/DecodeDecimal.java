@@ -1,25 +1,22 @@
 package com.exactpro.epfast.decoder.decimal;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt64;
 import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeDecimal implements IDecodeContext {
 
-    static final int POSITIVE_LIMIT = Integer.MAX_VALUE >> 7;
+    DecodeMandatoryInt64 mantissaDecoder = new DecodeMandatoryInt64();
 
-    static final int NEGATIVE_LIMIT = Integer.MIN_VALUE >> 7;
+    boolean exponentReady;
 
-    static final int SIGN_BIT_MASK = 0b01000000;
+    boolean startedMantissa;
 
     protected boolean ready;
 
     protected boolean overflow;
 
-    boolean positive;
-
-    int exponent;
-
-    int mantissa;
+    long mantissa;
 
     public abstract void decode(ByteBuf buf);
 

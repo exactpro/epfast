@@ -1,43 +1,67 @@
 package com.exactpro.epfast.decoder.decimal;
 
+import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
 import io.netty.buffer.ByteBuf;
-
 import java.math.BigDecimal;
 
 public class DecodeNullableDecimal extends DecodeDecimal {
 
+    private DecodeNullableInt32 exponentDecoder = new DecodeNullableInt32();
+
+    private Integer exponent;
+
     private boolean nullValue;
 
     public void decode(ByteBuf buf) {
-        ready = readExponent(buf.readByte());
-        if (!ready) {
-            int firstMantissaByte = buf.readByte();
-            positive = (firstMantissaByte & SIGN_BIT_MASK) == 0;
-            if (positive) {
-                accumulatePositive(firstMantissaByte);
-                while (buf.isReadable() && !ready) {
-                    accumulatePositive(buf.readByte());
+        exponentDecoder.decode(buf);
+        if (exponentDecoder.isReady()) {
+            exponentReady = true;
+            exponent = exponentDecoder.getValue();
+            if (exponent != null && buf.isReadable()) {
+                startedMantissa = true;
+                mantissaDecoder.decode(buf);
+                if (mantissaDecoder.isReady()) {
+                    mantissa = mantissaDecoder.getValue();
+                    ready = true;
                 }
-            } else {
-                mantissa = -1;
-                accumulateNegative(firstMantissaByte);
-                while (buf.isReadable() && !ready) {
-                    accumulateNegative(buf.readByte());
-                }
+            } else if (exponent == null) {
+                nullValue = true;
+                ready = true;
             }
-        } else {
-            nullValue = true;
         }
     }
 
     public void continueDecode(ByteBuf buf) {
-        if (positive) {
-            while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
+        if (exponentReady && startedMantissa) {
+            mantissaDecoder.continueDecode(buf);
+            if (mantissaDecoder.isReady()) {
+                ready = true;
+                mantissa = mantissaDecoder.getValue();
             }
-        } else {
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
+        }
+        else if(exponentReady){
+            startedMantissa = true;
+            mantissaDecoder.decode(buf);
+            if (mantissaDecoder.isReady()) {
+                ready = true;
+                mantissa = mantissaDecoder.getValue();
+            }
+        }
+        else {
+            exponentDecoder.continueDecode(buf);
+            if (exponentDecoder.isReady()) {
+                exponentReady = true;
+                exponent = exponentDecoder.getValue();
+                if (exponent != null) {
+                    mantissaDecoder.decode(buf);
+                    if (mantissaDecoder.isReady()) {
+                        mantissa = mantissaDecoder.getValue();
+                        ready = true;
+                    }
+                } else {
+                    nullValue = true;
+                    ready = true;
+                }
             }
         }
     }
@@ -45,47 +69,10 @@ public class DecodeNullableDecimal extends DecodeDecimal {
     BigDecimal getValue() {
         if (nullValue) {
             return null;
-        } else {
+        } else if(exponent >= -63 && exponent <= 63){
             return new BigDecimal(mantissa).movePointRight(exponent);
-        }
-    }
-
-    private boolean readExponent(int exponentByte) {
-        if ((exponentByte & SIGN_BIT_MASK) == 0) {
-            if ((exponentByte & CLEAR_STOP_BIT_MASK) == 0) {
-                return true;
-            } else {
-                exponent = (exponentByte & CLEAR_STOP_BIT_MASK) - 1;
-            }
-        } else {
-            exponent = exponentByte;
-        }
-        return false;
-    }
-
-    private void accumulatePositive(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
-            ready = true;
-        }
-        if (mantissa <= POSITIVE_LIMIT) {
-            mantissa = (mantissa << 7) + oneByte;
-        } else {
-            mantissa = 0;
-            overflow = true;
-        }
-    }
-
-    private void accumulateNegative(int oneByte) {
-        if ((oneByte & CHECK_STOP_BIT_MASK) != 0) {
-            oneByte = (oneByte & CLEAR_STOP_BIT_MASK);
-            ready = true;
-        }
-        if (mantissa >= NEGATIVE_LIMIT) {
-            mantissa = (mantissa << 7) + oneByte;
-        } else {
-            mantissa = 0;
-            overflow = true;
+        }else {
+            return  null;
         }
     }
 }

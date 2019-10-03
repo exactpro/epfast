@@ -2,7 +2,7 @@ package com.exactpro.epfast.decoder.integer;
 
 import io.netty.buffer.ByteBuf;
 
-class DecodeMandatoryInt32 extends DecodeInteger {
+public class DecodeMandatoryInt32 extends DecodeInteger {
 
     private static final int POSITIVE_LIMIT = Integer.MAX_VALUE >> 7;
 

@@ -43,7 +43,7 @@ public class DecodeMandatoryInt64 extends DecodeInteger {
         }
     }
 
-    long getValue() {
+    public long getValue() {
         return value;
     }
 
