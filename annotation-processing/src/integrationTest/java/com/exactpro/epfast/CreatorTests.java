@@ -1,5 +1,5 @@
-import com.exactpro.epfast.annotation.DefaultAnnotated;
-import com.exactpro.epfast.annotation.NamedAnnotated;
+package com.exactpro.epfast;
+
 import com.exactpro.epfast.annotation.internal.CreatorImpl;
 import org.junit.jupiter.api.Test;
 

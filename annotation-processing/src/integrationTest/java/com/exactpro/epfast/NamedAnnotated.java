@@ -1,4 +1,4 @@
-package com.exactpro.epfast.annotation;
+package com.exactpro.epfast;
 
 import com.exactpro.epfast.annotations.FastType;
 
