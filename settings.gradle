@@ -1,3 +1,5 @@
 rootProject.name = 'epfast'
 include 'annotation-processing'
 include 'epfast-annotations'
+include 'service-providers'
+
