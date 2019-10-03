@@ -1,4 +1,4 @@
-import com.exactpro.epfast.annotation.CreatorService;
+import com.exactpro.epfast.CreatorService;
 import com.exactpro.epfast.annotation.internal.CreatorImpl;
 import org.junit.jupiter.api.Test;
 

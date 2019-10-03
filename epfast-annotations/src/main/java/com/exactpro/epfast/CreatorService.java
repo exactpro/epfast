@@ -1,4 +1,4 @@
-package com.exactpro.epfast.annotation;
+package com.exactpro.epfast;
 
 import java.util.ArrayList;
 import java.util.List;
