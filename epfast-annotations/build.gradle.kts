@@ -5,8 +5,6 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor(project(":annotation-processing"))
-    compile(project(":annotation-processing"))
 
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")

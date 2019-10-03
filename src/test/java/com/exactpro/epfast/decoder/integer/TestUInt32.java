@@ -188,6 +188,23 @@ class TestUInt32 {
     }
 
     @Test
+    void optionalSimpleNumber2() {
+        ByteBuf buf = Unpooled.buffer();
+        ByteBuf nextBuf = Unpooled.buffer();
+        buf.writeByte(0x0f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0x7f);
+        buf.writeByte(0xff);
+        nullableUInt32Decoder.decode(buf);
+        while (!nullableUInt32Decoder.isReady()) {
+            nullableUInt32Decoder.continueDecode(nextBuf);
+        }
+        long val = nullableUInt32Decoder.getValue();
+        assertEquals(4294967294L, val);
+    }
+
+    @Test
     void mandatorySimpleNumber() {
         ByteBuf buf = Unpooled.buffer();
         ByteBuf nextBuf = Unpooled.buffer();
