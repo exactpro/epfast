@@ -2,12 +2,12 @@
 package {{{typeName.packageName}}};
 {{/typeName.packageName}}
 
-public class {{{typeName.className}}} implements com.exactpro.epfast.annotation.ICreator{
+public class {{{typeName.className}}} implements com.exactpro.epfast.ICreator{
     public Object create(String name) {
     {{#nameClassEntries}}
         if ("{{{key}}}".equals(name)) return new {{{value}}}();
     {{/nameClassEntries}}
-        throw new RuntimeException("FastType name=\"+name+\" not found");
+        throw new RuntimeException("FastType name=\""+name+"\" not found");
     }
 
 }
