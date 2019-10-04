@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class TestInt32 {
@@ -21,12 +22,10 @@ class TestInt32 {
     @Test
     void testNull() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x80");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         Integer val = nullableInt32Decoder.getValue();
         assertNull(val);
     }
@@ -38,12 +37,10 @@ class TestInt32 {
     @Test
     void optionalZero() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x81);
+        FillBuffer.fillBuffer(buf, "0x81");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         Integer val = nullableInt32Decoder.getValue();
         assertEquals(0, val);
     }
@@ -51,12 +48,10 @@ class TestInt32 {
     @Test
     void mandatoryZero() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x80");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(0, val);
     }
@@ -68,16 +63,10 @@ class TestInt32 {
     @Test
     void testMaxNullable() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x08);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x08 0x00 0x00 0x00 0x80");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(Integer.MAX_VALUE, val);
     }
@@ -85,16 +74,10 @@ class TestInt32 {
     @Test
     void testMaxMandatory() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x07);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x7f);
-        buf.writeByte(0xff);
+        FillBuffer.fillBuffer(buf, "0x07 0x7f 0x7f 0x7f 0xff");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(Integer.MAX_VALUE, val);
     }
@@ -102,16 +85,10 @@ class TestInt32 {
     @Test
     void testMinNullable() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x78);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x78 0x00 0x00 0x00 0x80");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(Integer.MIN_VALUE, val);
     }
@@ -119,16 +96,10 @@ class TestInt32 {
     @Test
     void testMinMandatory() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x78);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x78 0x00 0x00 0x00 0x80");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(Integer.MIN_VALUE, val);
     }
@@ -136,139 +107,72 @@ class TestInt32 {
     @Test
     void testMaxOverflowNullable1() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x08);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x81);
+        FillBuffer.fillBuffer(buf, "0x08 0x00 0x00 0x00 0x81");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
-        nullableInt32Decoder.getValue();
+        assertTrue(nullableInt32Decoder.isReady());
         assertTrue(nullableInt32Decoder.isOverflow());
     }
 
     @Test
     void testMaxOverflowNullable2() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x08);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x08 0x00 0x00 0x00 0x00 0x00 0x00 0x80");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
-        nullableInt32Decoder.getValue();
+        assertTrue(nullableInt32Decoder.isReady());
         assertTrue(nullableInt32Decoder.isOverflow());
     }
 
     @Test
     void testMaxOverflowMandatory1() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x08);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x08 0x00 0x00 0x00 0x80");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
         assertTrue(mandatoryInt32Decoder.isOverflow());
     }
 
     @Test
     void testMaxOverflowMandatory2() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x07);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x00);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x7f);
-        buf.writeByte(0xff);
+        FillBuffer.fillBuffer(buf, "0x07 0x7f 0x00 0x7f 0x7f 0x7f 0xff");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
         assertTrue(mandatoryInt32Decoder.isOverflow());
     }
 
     @Test
     void testMinOverflowNullable1() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x77);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x7f);
-        buf.writeByte(0xff);
+        FillBuffer.fillBuffer(buf, "0x77 0x7f 0x7f 0x7f 0xff");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
-        nullableInt32Decoder.getValue();
+        assertTrue(nullableInt32Decoder.isReady());
         assertTrue(nullableInt32Decoder.isOverflow());
     }
 
     @Test
     void testMinOverflowNullable2() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x78);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x78 0x00 0x00 0x00 0x00 0x80");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
-        nullableInt32Decoder.getValue();
+        assertTrue(nullableInt32Decoder.isReady());
         assertTrue(nullableInt32Decoder.isOverflow());
     }
 
     @Test
     void testMinOverflowMandatory1() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x77);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x7f);
-        buf.writeByte(0xff);
+        FillBuffer.fillBuffer(buf, "0x77 0x7f 0x7f 0x7f 0xff");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
         assertTrue(mandatoryInt32Decoder.isOverflow());
     }
 
     @Test
     void testMinOverflowMandatory2() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x78);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x80);
+        FillBuffer.fillBuffer(buf, "0x78 0x00 0x00 0x00 0x00 0x80");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
         assertTrue(mandatoryInt32Decoder.isOverflow());
     }
 
@@ -279,14 +183,10 @@ class TestInt32 {
     @Test
     void optionalPositive() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        buf.writeByte(0xa4);
+        FillBuffer.fillBuffer(buf, "0x39 0x45 0xa4");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(942755, val);
     }
@@ -295,14 +195,16 @@ class TestInt32 {
     void optionalPositiveSplit() {
 
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        nextBuf.writeByte(0xa4);
+        FillBuffer.fillBuffer(buf, "0x39 0x45");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertFalse(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
+
+        buf = Unpooled.buffer();
+        FillBuffer.fillBuffer(buf, "0xa4");
+        nullableInt32Decoder.continueDecode(buf);
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(942755, val);
     }
@@ -310,14 +212,10 @@ class TestInt32 {
     @Test
     void mandatoryPositive() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        buf.writeByte(0xa3);
+        FillBuffer.fillBuffer(buf, "0x39 0x45 0xa3");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(942755, val);
     }
@@ -325,14 +223,16 @@ class TestInt32 {
     @Test
     void mandatoryPositiveSplit() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        nextBuf.writeByte(0xa3);
+        FillBuffer.fillBuffer(buf, "0x39 0x45");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertFalse(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
+
+        buf = Unpooled.buffer();
+        FillBuffer.fillBuffer(buf, "0xa3");
+        mandatoryInt32Decoder.continueDecode(buf);
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(942755, val);
     }
@@ -340,14 +240,10 @@ class TestInt32 {
     @Test
     void optionalNegative() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x46);
-        buf.writeByte(0x3a);
-        buf.writeByte(0xdd);
+        FillBuffer.fillBuffer(buf, "0x46 0x3a 0xdd");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(-942755, val);
     }
@@ -355,14 +251,16 @@ class TestInt32 {
     @Test
     void optionalNegativeSplit() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x46);
-        buf.writeByte(0x3a);
-        nextBuf.writeByte(0xdd);
+        FillBuffer.fillBuffer(buf, "0x46 0x3a");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertFalse(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
+
+        buf = Unpooled.buffer();
+        FillBuffer.fillBuffer(buf, "0xdd");
+        nullableInt32Decoder.continueDecode(buf);
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(-942755, val);
     }
@@ -370,15 +268,10 @@ class TestInt32 {
     @Test
     void mandatoryNegative() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x7c);
-        buf.writeByte(0x1b);
-        buf.writeByte(0x1b);
-        buf.writeByte(0x9d);
+        FillBuffer.fillBuffer(buf, "0x7c 0x1b 0x1b 0x9d");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(-7942755, val);
     }
@@ -386,15 +279,16 @@ class TestInt32 {
     @Test
     void mandatoryNegativeSplit() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x7c);
-        buf.writeByte(0x1b);
-        nextBuf.writeByte(0x1b);
-        nextBuf.writeByte(0x9d);
+        FillBuffer.fillBuffer(buf, "0x7c 0x1b");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertFalse(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
+
+        buf = Unpooled.buffer();
+        FillBuffer.fillBuffer(buf, "0x1b 0x9d");
+        mandatoryInt32Decoder.continueDecode(buf);
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(-7942755, val);
     }
@@ -402,12 +296,10 @@ class TestInt32 {
     @Test
     void optionalMinusOne() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0xff);
+        FillBuffer.fillBuffer(buf, "0xff");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(-1, val);
     }
@@ -415,12 +307,10 @@ class TestInt32 {
     @Test
     void mandatoryMinusOne() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0xff);
+        FillBuffer.fillBuffer(buf, "0xff");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(-1, val);
     }
@@ -428,15 +318,10 @@ class TestInt32 {
     @Test
     void optionalSignExtensionPositive() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x40);
-        buf.writeByte(0x82);
+        FillBuffer.fillBuffer(buf, "0x00 0x00 0x40 0x82");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(8193, val);
     }
@@ -444,15 +329,10 @@ class TestInt32 {
     @Test
     void mandatorySignExtensionPositive() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x00);
-        buf.writeByte(0x00);
-        buf.writeByte(0x40);
-        buf.writeByte(0x81);
+        FillBuffer.fillBuffer(buf, "0x00 0x00 0x40 0x81");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(8193, val);
     }
@@ -460,14 +340,10 @@ class TestInt32 {
     @Test
     void optionalSignExtensionNegative() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x7f);
-        buf.writeByte(0x3f);
-        buf.writeByte(0xff);
+        FillBuffer.fillBuffer(buf, "0x7f 0x3f 0xff");
         nullableInt32Decoder.decode(buf);
-        while (!nullableInt32Decoder.isReady()) {
-            nullableInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(nullableInt32Decoder.isReady());
+        assertFalse(nullableInt32Decoder.isOverflow());
         int val = nullableInt32Decoder.getValue();
         assertEquals(-8193, val);
     }
@@ -475,16 +351,42 @@ class TestInt32 {
     @Test
     void mandatorySignExtensionNegative() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x7f);
-        buf.writeByte(0x3f);
-        buf.writeByte(0xff);
+        FillBuffer.fillBuffer(buf, "0x7f 0x3f 0xff");
         mandatoryInt32Decoder.decode(buf);
-        while (!mandatoryInt32Decoder.isReady()) {
-            mandatoryInt32Decoder.continueDecode(nextBuf);
-        }
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertFalse(mandatoryInt32Decoder.isOverflow());
         int val = mandatoryInt32Decoder.getValue();
         assertEquals(-8193, val);
     }
 
 }
+
+
+//    ByteBuf buf = Unpooled.buffer();
+//    buf.writeByte(0x08);
+//    buf.writeByte(0x00);
+//    buf.writeByte(0x00);
+//    buf.writeByte(0x00);
+//    buf.writeByte(0x80);
+//    nullableInt32Decoder.decode(buf);
+//    assertTrue(nullableInt32Decoder.isReady());
+//    assertFalse(nullableInt32Decoder.isOverflow());
+//    assertEquals(Integer.MAX_VALUE, nullableInt32Decoder.getValue());
+//    assertFalse(buf.isReadable());
+//
+//    ByteBuf buf = Unpooled.buffer();
+//    buf.writeByte(0x08);
+//    buf.writeByte(0x00);
+//    buf.writeByte(0x00);
+//    nullableInt32Decoder.decode(buf);
+//    assertFalse(nullableInt32Decoder.isReady());
+//    assertFalse(buf.isReadable());
+//
+//    buf = Unpooled.buffer();
+//    buf.writeByte(0x00);
+//    buf.writeByte(0x80);
+//    nullableInt32Decoder.continueDecode(buf);
+//    assertTrue(nullableInt32Decoder.isReady());
+//    assertFalse(nullableInt32Decoder.isOverflow());
+//    assertEquals(Integer.MAX_VALUE, nullableInt32Decoder.getValue());
+//    assertFalse(buf.isReadable());
