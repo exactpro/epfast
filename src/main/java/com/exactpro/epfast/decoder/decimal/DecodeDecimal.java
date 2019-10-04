@@ -1,8 +1,11 @@
 package com.exactpro.epfast.decoder.decimal;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt64;
 import io.netty.buffer.ByteBuf;
+
+import java.math.BigDecimal;
 
 public abstract class DecodeDecimal implements IDecodeContext {
 
@@ -12,9 +15,11 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     boolean startedMantissa;
 
-    protected boolean ready;
+    boolean exponentOverflow;
 
-    protected boolean overflow;
+    boolean mantissaOverflow;
+
+    protected boolean ready;
 
     long mantissa;
 
@@ -22,11 +27,9 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     public abstract void continueDecode(ByteBuf buf);
 
+    public abstract BigDecimal getValue() throws OverflowException;
+
     public boolean isReady() {
         return ready;
-    }
-
-    public boolean isOverflow() {
-        return overflow;
     }
 }

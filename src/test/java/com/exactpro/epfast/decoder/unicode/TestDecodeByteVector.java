@@ -1,11 +1,13 @@
 package com.exactpro.epfast.decoder.unicode;
 
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestDecodeByteVector {
 
@@ -16,14 +18,15 @@ class TestDecodeByteVector {
     @Test
     void testNull() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x80);
         nullableByteVectorDecoder.decode(buf);
-        while (!nullableByteVectorDecoder.isReady()) {
-            nullableByteVectorDecoder.continueDecode(nextBuf);
+        System.out.println();
+        try {
+            assertNull(nullableByteVectorDecoder.getValue());
+        }catch (OverflowException ex){
+            System.out.println(ex.getMessage());
         }
-        String val = nullableByteVectorDecoder.getValue();
-        assertNull(val);
+
     }
 
     @Test
@@ -35,7 +38,12 @@ class TestDecodeByteVector {
         while (!nullableByteVectorDecoder.isReady()) {
             nullableByteVectorDecoder.continueDecode(nextBuf);
         }
-        String val = nullableByteVectorDecoder.getValue();
+        String val = "";
+        try {
+            val = new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8);
+        }catch (OverflowException ex){
+            System.out.println(ex.getMessage());
+        }
         assertEquals("", val);
     }
 
@@ -49,7 +57,12 @@ class TestDecodeByteVector {
         while (!mandatoryByteVectorDecoder.isReady()) {
             mandatoryByteVectorDecoder.continueDecode(nextBuf);
         }
-        String val = mandatoryByteVectorDecoder.getValue();
+        String val = "";
+        try {
+            val = new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8);
+        }catch (OverflowException ex){
+            System.out.println(ex.getMessage());
+        }
         assertEquals("", val);
     }
 
@@ -69,7 +82,12 @@ class TestDecodeByteVector {
         while (!nullableByteVectorDecoder.isReady()) {
             nullableByteVectorDecoder.continueDecode(nextBuf);
         }
-        String val = nullableByteVectorDecoder.getValue();
+        String val = "";
+        try {
+            val = new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8);
+        }catch (OverflowException ex){
+            System.out.println(ex.getMessage());
+        }
         assertEquals("ABBCDE", val);
     }
 
@@ -89,7 +107,12 @@ class TestDecodeByteVector {
         while (!mandatoryByteVectorDecoder.isReady()) {
             mandatoryByteVectorDecoder.continueDecode(nextBuf);
         }
-        String val = mandatoryByteVectorDecoder.getValue();
+        String val = "";
+        try {
+            val = new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8);
+        }catch (OverflowException ex){
+            System.out.println(ex.getMessage());
+        };
         assertEquals("ABBCDE", val);
     }
 
@@ -109,7 +132,12 @@ class TestDecodeByteVector {
         while (!nullableByteVectorDecoder.isReady()) {
             nullableByteVectorDecoder.continueDecode(nextBuf);
         }
-        String val = nullableByteVectorDecoder.getValue();
+        String val = "";
+        try {
+            val = new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8);
+        }catch (OverflowException ex){
+            System.out.println(ex.getMessage());
+        }
         assertEquals("ABBCDE", val);
     }
 
@@ -129,7 +157,27 @@ class TestDecodeByteVector {
         while (!mandatoryByteVectorDecoder.isReady()) {
             mandatoryByteVectorDecoder.continueDecode(nextBuf);
         }
-        String val = mandatoryByteVectorDecoder.getValue();
+        String val = "";
+        try {
+            val = new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8);
+        }catch (OverflowException ex){
+            System.out.println(ex.getMessage());
+        }
         assertEquals("ABBCDE", val);
+    }
+
+    @Test
+    void testOverflow() {
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(0x10);
+        buf.writeByte(0x00);
+        buf.writeByte(0x00);
+        buf.writeByte(0x00);
+        buf.writeByte(0x81);
+        buf.writeByte(0x41);
+        buf.writeByte(0x42);
+        buf.writeByte(0x42);
+        nullableByteVectorDecoder.decode(buf);
+        assertThrows(OverflowException.class, () -> nullableByteVectorDecoder.getValue());
     }
 }

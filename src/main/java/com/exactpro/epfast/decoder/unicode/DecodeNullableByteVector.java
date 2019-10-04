@@ -1,45 +1,93 @@
 package com.exactpro.epfast.decoder.unicode;
 
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.integer.DecodeNullableUInt32;
 import io.netty.buffer.ByteBuf;
+
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 public class DecodeNullableByteVector extends DecodeByteVector {
 
+    private DecodeNullableUInt32 lengthDecoder = new DecodeNullableUInt32();
+
+    private Long messageLength;
+
     public void decode(ByteBuf buf) {
-        ready = readFirstByte(buf.readByte());
-        while (buf.isReadable() && !ready) {
-            if (counter < messageLength) {
-                val.append((char) buf.readByte());
-                counter++;
-            }
-            if (counter == messageLength) {
+        value = new ArrayList<>();
+        lengthDecoder.decode(buf);
+        if (lengthDecoder.isReady()) {
+            lengthReady = true;
+            messageLength = lengthDecoder.getValue();
+            overflow = lengthDecoder.isOverflow();
+            if ((messageLength != null) && (messageLength > 0)) {
+                readIndex = buf.readerIndex();
+                readableBytes = buf.readableBytes() + readIndex;
+                while ((readIndex < readableBytes) && !ready) {
+                    if (counter < messageLength) {
+                        value.add(buf.getByte(readIndex++));
+                        counter++;
+                    }
+                    if (counter == messageLength) {
+                        ready = true;
+                    }
+                }
+                buf.readerIndex(readIndex);
+            } else {
                 ready = true;
             }
+
         }
     }
 
     public void continueDecode(ByteBuf buf) {
-        while (buf.isReadable() && !ready) {
-            if (counter < messageLength) {
-                val.append((char) buf.readByte());
-                counter++;
+        if (lengthReady) {
+            readIndex = buf.readerIndex();
+            readableBytes = buf.readableBytes() + readIndex;
+            while ((readIndex < readableBytes) && !ready) {
+                if (counter < messageLength) {
+                    value.add(buf.getByte(readIndex++));
+                    counter++;
+                }
+                if (counter == messageLength) {
+                    ready = true;
+                }
             }
-            if (counter == messageLength) {
-                ready = true;
-            }
-        }
-    }
-
-    public String getValue() {
-        return messageLength == 0 ? null : val.toString();
-    }
-
-    boolean readFirstByte(int firstByte) {
-        messageLength = firstByte & CLEAR_STOP_BIT_MASK;
-        if (messageLength == 0 || messageLength == 1) {
-            return true;
+            buf.readerIndex(readIndex);
         } else {
-            messageLength--;
+            lengthDecoder.continueDecode(buf);
+            if (lengthDecoder.isReady()) {
+                lengthReady = true;
+                messageLength = lengthDecoder.getValue();
+                overflow = lengthDecoder.isOverflow();
+                if (messageLength > 0) {
+                    readIndex = buf.readerIndex();
+                    readableBytes = buf.readableBytes() + readIndex;
+                    while ((readIndex < readableBytes) && !ready) {
+                        if (counter < messageLength) {
+                            value.add(buf.getByte(readIndex++));
+                            counter++;
+                        }
+                        if (counter == messageLength) {
+                            ready = true;
+                        }
+                    }
+                    buf.readerIndex(readIndex);
+                }
+
+            }
         }
-        return false;
+    }
+
+    public byte[] getValue() throws OverflowException {
+        if (overflow) {
+            throw new OverflowException("exponent value range is int32");
+        } else {
+            byte[] finalVal = new byte[value.size()];
+            for (int i = 0; i < value.size(); i++) {
+                finalVal[i] = value.get(i);
+            }
+            return messageLength == null ? null : finalVal;
+        }
     }
 }

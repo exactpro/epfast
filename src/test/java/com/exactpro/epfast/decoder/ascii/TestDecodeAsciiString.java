@@ -173,4 +173,27 @@ class TestDecodeAsciiString {
         assertTrue(nullableStringDecoder.isOverlong());
         assertNull(val);
     }
+
+    @Test
+    void testNullableReuse(){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(0x41);
+        buf.writeByte(0x42);
+        buf.writeByte(0xc3);
+        buf.writeByte(0x42);
+        buf.writeByte(0x42);
+        buf.writeByte(0xc3);
+        buf.writeByte(0x41);
+        buf.writeByte(0x44);
+        buf.writeByte(0xc3);
+        nullableStringDecoder.decode(buf);
+        String val = nullableStringDecoder.getValue();
+        assertEquals("ABC", val);
+        nullableStringDecoder.decode(buf);
+        val = nullableStringDecoder.getValue();
+        assertEquals("BBC", val);
+        nullableStringDecoder.decode(buf);
+        val = nullableStringDecoder.getValue();
+        assertEquals("ADC", val);
+    }
 }

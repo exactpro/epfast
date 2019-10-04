@@ -5,32 +5,44 @@ import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeAsciiString implements IDecodeContext {
 
-    StringBuilder value = new StringBuilder();
+    StringBuilder value;
 
-    int relativeLength;
+    private int readLimit;
+
+    private int readerIndex;
 
     private boolean zeroPreamble;
 
+    int relativeLength;
+
     boolean overlong;
+
+    boolean checkOverlong;
 
     protected boolean ready;
 
     public void decode(ByteBuf buf) {
-        int oneByte;
-        oneByte = buf.readByte();
-        if (oneByte == 0) {
+        ready = false;
+        value = new StringBuilder();
+        readerIndex = buf.readerIndex();
+        readLimit = buf.readableBytes() + readerIndex;
+        if (buf.getByte(readerIndex) == 0) {
             zeroPreamble = true;
         }
-        accumulateValue(oneByte);
-        while (buf.isReadable() && !ready) {
-            accumulateValue(buf.readByte());
+        accumulateValue(buf.getByte(readerIndex++));
+        while ((readerIndex < readLimit) && !ready) {
+            accumulateValue(buf.getByte(readerIndex++));
         }
+        buf.readerIndex(readerIndex);
     }
 
     public void continueDecode(ByteBuf buf) {
-        while (buf.isReadable() && !ready) {
-            accumulateValue(buf.readByte());
+        readLimit = buf.readableBytes();
+        readerIndex = buf.readerIndex();
+        while ((readerIndex < readLimit) && !ready) {
+            accumulateValue(buf.getByte(readerIndex++));
         }
+        buf.readerIndex(readerIndex);
     }
 
     public abstract String getValue();
@@ -41,6 +53,14 @@ public abstract class DecodeAsciiString implements IDecodeContext {
 
     public boolean isOverlong() {
         return overlong;
+    }
+
+    public void setCheckOverlong() {
+        checkOverlong = true;
+    }
+
+    public void clearCheckOverlong() {
+        checkOverlong = false;
     }
 
     private void accumulateValue(int oneByte) {

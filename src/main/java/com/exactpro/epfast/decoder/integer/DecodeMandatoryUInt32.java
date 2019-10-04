@@ -2,7 +2,7 @@ package com.exactpro.epfast.decoder.integer;
 
 import io.netty.buffer.ByteBuf;
 
-class DecodeMandatoryUInt32 extends DecodeInteger {
+public class DecodeMandatoryUInt32 extends DecodeInteger {
 
     private static final int OVERFLOW_MASK = 0xFE000000;
 
