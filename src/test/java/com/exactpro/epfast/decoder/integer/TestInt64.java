@@ -1,7 +1,6 @@
 package com.exactpro.epfast.decoder.integer;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +20,7 @@ class TestInt64 {
 
     @Test
     void testNull() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x80");
+        ByteBuf buf = FillBuffer.fromHex("80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -36,8 +34,7 @@ class TestInt64 {
 
     @Test
     void optionalZero() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x81");
+        ByteBuf buf = FillBuffer.fromHex("81");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -47,8 +44,7 @@ class TestInt64 {
 
     @Test
     void mandatoryZero() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x80");
+        ByteBuf buf = FillBuffer.fromHex("80");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -62,8 +58,7 @@ class TestInt64 {
 
     @Test
     void testMaxNullable() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("01 00 00 00 00 00 00 00 00 80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -73,8 +68,7 @@ class TestInt64 {
 
     @Test
     void testMaxMandatory() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x00 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0xff");
+        ByteBuf buf = FillBuffer.fromHex("00 7f 7f 7f 7f 7f 7f 7f 7f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -84,8 +78,7 @@ class TestInt64 {
 
     @Test
     void testMinNullable() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x7f 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("7f 00 00 00 00 00 00 00 00 80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -95,8 +88,7 @@ class TestInt64 {
 
     @Test
     void testMinMandatory() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x7f 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("7f 00 00 00 00 00 00 00 00 80");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -106,8 +98,7 @@ class TestInt64 {
 
     @Test
     void testMaxOverflowNullable1() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x81");
+        ByteBuf buf = FillBuffer.fromHex("01 00 00 00 00 00 00 00 00 81");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertTrue(nullableInt64Decoder.isOverflow());
@@ -115,8 +106,7 @@ class TestInt64 {
 
     @Test
     void testMaxOverflowNullable2() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("01 00 00 00 00 00 00 00 00 00 80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertTrue(nullableInt64Decoder.isOverflow());
@@ -124,8 +114,7 @@ class TestInt64 {
 
     @Test
     void testMaxOverflowMandatory1() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("01 00 00 00 00 00 00 00 00 80");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertTrue(mandatoryInt64Decoder.isOverflow());
@@ -133,8 +122,7 @@ class TestInt64 {
 
     @Test
     void testMaxOverflowMandatory2() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x00 0x7f 0x00 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0xff");
+        ByteBuf buf = FillBuffer.fromHex("00 7f 00 7f 7f 7f 7f 7f 7f 7f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertTrue(mandatoryInt64Decoder.isOverflow());
@@ -142,8 +130,7 @@ class TestInt64 {
 
     @Test
     void testMinOverflowNullable1() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x77 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0xff");
+        ByteBuf buf = FillBuffer.fromHex("77 7f 7f 7f 7f 7f 7f 7f 7f ff");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertTrue(nullableInt64Decoder.isOverflow());
@@ -151,8 +138,7 @@ class TestInt64 {
 
     @Test
     void testMinOverflowNullable2() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x7f 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("7f 00 00 00 00 00 00 00 00 00 80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertTrue(nullableInt64Decoder.isOverflow());
@@ -160,8 +146,7 @@ class TestInt64 {
 
     @Test
     void testMinOverflowMandatory1() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x77 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0x7f 0xff");
+        ByteBuf buf = FillBuffer.fromHex("77 7f 7f 7f 7f 7f 7f 7f 7f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertTrue(mandatoryInt64Decoder.isOverflow());
@@ -169,8 +154,7 @@ class TestInt64 {
 
     @Test
     void testMinOverflowMandatory2() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x7f 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("7f 00 00 00 00 00 00 00 00 00 80");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertTrue(mandatoryInt64Decoder.isOverflow());
@@ -182,8 +166,7 @@ class TestInt64 {
 
     @Test
     void optionalPositive() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x39 0x45 0xa4");
+        ByteBuf buf = FillBuffer.fromHex("39 45 a4");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -193,14 +176,12 @@ class TestInt64 {
 
     @Test
     void optionalPositiveSplit() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x39 0x45");
+        ByteBuf buf = FillBuffer.fromHex("39 45");
         nullableInt64Decoder.decode(buf);
         assertFalse(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
 
-        buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0xa4");
+        buf = FillBuffer.fromHex("a4");
         nullableInt64Decoder.continueDecode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -210,8 +191,7 @@ class TestInt64 {
 
     @Test
     void mandatoryPositive() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x39 0x45 0xa3");
+        ByteBuf buf = FillBuffer.fromHex("39 45 a3");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -221,14 +201,12 @@ class TestInt64 {
 
     @Test
     void mandatoryPositiveSplit() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x39 0x45");
+        ByteBuf buf = FillBuffer.fromHex("39 45");
         mandatoryInt64Decoder.decode(buf);
         assertFalse(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
 
-        buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0xa3");
+        buf = FillBuffer.fromHex("a3");
         mandatoryInt64Decoder.continueDecode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -238,8 +216,7 @@ class TestInt64 {
 
     @Test
     void optionalNegative() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x46 0x3a 0xdd");
+        ByteBuf buf = FillBuffer.fromHex("46 3a dd");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -249,14 +226,12 @@ class TestInt64 {
 
     @Test
     void optionalNegativeSplit() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x46 0x3a");
+        ByteBuf buf = FillBuffer.fromHex("46 3a");
         nullableInt64Decoder.decode(buf);
         assertFalse(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
 
-        buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0xdd");
+        buf = FillBuffer.fromHex("dd");
         nullableInt64Decoder.continueDecode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -266,8 +241,7 @@ class TestInt64 {
 
     @Test
     void mandatoryNegative() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x7c 0x1b 0x1b 0x9d");
+        ByteBuf buf = FillBuffer.fromHex("7c 1b 1b 9d");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -277,14 +251,12 @@ class TestInt64 {
 
     @Test
     void mandatoryNegativeSplit() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x7c 0x1b");
+        ByteBuf buf = FillBuffer.fromHex("7c 1b");
         mandatoryInt64Decoder.decode(buf);
         assertFalse(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
 
-        buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x1b 0x9d");
+        buf = FillBuffer.fromHex("1b 9d");
         mandatoryInt64Decoder.continueDecode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -294,8 +266,7 @@ class TestInt64 {
 
     @Test
     void optionalMinusOne() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0xff");
+        ByteBuf buf = FillBuffer.fromHex("ff");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -305,8 +276,7 @@ class TestInt64 {
 
     @Test
     void mandatoryMinusOne() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0xff");
+        ByteBuf buf = FillBuffer.fromHex("ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -316,8 +286,7 @@ class TestInt64 {
 
     @Test
     void optionalSignExtensionPositive() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x00 0x00 0x40 0x82");
+        ByteBuf buf = FillBuffer.fromHex("00 00 40 82");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -327,8 +296,7 @@ class TestInt64 {
 
     @Test
     void mandatorySignExtensionPositive() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x00 0x00 0x40 0x81");
+        ByteBuf buf = FillBuffer.fromHex("00 00 40 81");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
@@ -338,8 +306,7 @@ class TestInt64 {
 
     @Test
     void optionalSignExtensionNegative() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x7f 0x3f 0xff");
+        ByteBuf buf = FillBuffer.fromHex("7f 3f ff");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverflow());
@@ -349,12 +316,75 @@ class TestInt64 {
 
     @Test
     void mandatorySignExtensionNegative() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x7f 0x3f 0xff");
+        ByteBuf buf = FillBuffer.fromHex("7f 3f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverflow());
         long val = mandatoryInt64Decoder.getValue();
         assertEquals(-8193, val);
+    }
+
+    @Test
+    void mandatoryNegativeTwoValuesInRow() {
+        ByteBuf buf = FillBuffer.fromHex("7f 3f ff 7f 3f ff");
+        mandatoryInt64Decoder.decode(buf);
+        assertTrue(mandatoryInt64Decoder.isReady());
+        assertFalse(mandatoryInt64Decoder.isOverflow());
+        long val = mandatoryInt64Decoder.getValue();
+        assertEquals(-8193, val);
+
+        mandatoryInt64Decoder.decode(buf);
+        assertTrue(mandatoryInt64Decoder.isReady());
+        assertFalse(mandatoryInt64Decoder.isOverflow());
+        val = mandatoryInt64Decoder.getValue();
+        assertEquals(-8193, val);
+    }
+
+    @Test
+    void mandatoryPositiveTwoValuesInRow() {
+        ByteBuf buf = FillBuffer.fromHex("00 00 40 81 00 00 40 81");
+        mandatoryInt64Decoder.decode(buf);
+        assertTrue(mandatoryInt64Decoder.isReady());
+        assertFalse(mandatoryInt64Decoder.isOverflow());
+        long val = mandatoryInt64Decoder.getValue();
+        assertEquals(8193, val);
+
+        mandatoryInt64Decoder.decode(buf);
+        assertTrue(mandatoryInt64Decoder.isReady());
+        assertFalse(mandatoryInt64Decoder.isOverflow());
+        val = mandatoryInt64Decoder.getValue();
+        assertEquals(8193, val);
+    }
+
+    @Test
+    void optionalNegativeTwoValuesInRow() {
+        ByteBuf buf = FillBuffer.fromHex("7f 3f ff 7f 3f ff");
+        nullableInt64Decoder.decode(buf);
+        assertTrue(nullableInt64Decoder.isReady());
+        assertFalse(nullableInt64Decoder.isOverflow());
+        long val = nullableInt64Decoder.getValue();
+        assertEquals(-8193, val);
+
+        nullableInt64Decoder.decode(buf);
+        assertTrue(nullableInt64Decoder.isReady());
+        assertFalse(nullableInt64Decoder.isOverflow());
+        val = nullableInt64Decoder.getValue();
+        assertEquals(-8193, val);
+    }
+
+    @Test
+    void optionalPositiveTwoValuesInRow() {
+        ByteBuf buf = FillBuffer.fromHex("00 00 40 82 00 00 40 82");
+        nullableInt64Decoder.decode(buf);
+        assertTrue(nullableInt64Decoder.isReady());
+        assertFalse(nullableInt64Decoder.isOverflow());
+        long val = nullableInt64Decoder.getValue();
+        assertEquals(8193, val);
+
+        nullableInt64Decoder.decode(buf);
+        assertTrue(nullableInt64Decoder.isReady());
+        assertFalse(nullableInt64Decoder.isOverflow());
+        val = nullableInt64Decoder.getValue();
+        assertEquals(8193, val);
     }
 }

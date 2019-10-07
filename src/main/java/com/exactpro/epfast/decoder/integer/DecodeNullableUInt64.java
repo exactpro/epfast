@@ -15,6 +15,8 @@ public class DecodeNullableUInt64 extends DecodeInteger {
     private long value;
 
     public void decode(ByteBuf buf) {
+        value = 0;
+        ready = false;
         while (buf.isReadable() && !ready) {
             accumulate(buf.readByte());
         }
@@ -32,7 +34,7 @@ public class DecodeNullableUInt64 extends DecodeInteger {
                 longToBytes(-1L, bytes);
                 return new BigInteger(1, bytes);
             } else {
-                longToBytes(--value, bytes);
+                longToBytes(value - 1, bytes);
                 return new BigInteger(1, bytes);
             }
         }

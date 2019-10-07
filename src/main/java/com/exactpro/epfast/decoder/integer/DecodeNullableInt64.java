@@ -13,9 +13,11 @@ public class DecodeNullableInt64 extends DecodeInteger {
     private long value;
 
     public void decode(ByteBuf buf) {
+        ready = false;
         int oneByte = buf.readByte();
         positive = (oneByte & SIGN_BIT_MASK) == 0;
         if (positive) {
+            value = 0;
             accumulatePositive(oneByte);
             while (buf.isReadable() && !ready) {
                 accumulatePositive(buf.readByte());

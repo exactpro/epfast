@@ -1,7 +1,6 @@
 package com.exactpro.epfast.decoder.integer;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +20,7 @@ class TestUInt32 {
 
     @Test
     void testNull() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x80");
+        ByteBuf buf = FillBuffer.fromHex("80");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
         assertFalse(nullableUInt32Decoder.isOverflow());
@@ -36,8 +34,7 @@ class TestUInt32 {
 
     @Test
     void optionalZero() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x81");
+        ByteBuf buf = FillBuffer.fromHex("81");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
         assertFalse(nullableUInt32Decoder.isOverflow());
@@ -47,8 +44,7 @@ class TestUInt32 {
 
     @Test
     void mandatoryZero() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x80");
+        ByteBuf buf = FillBuffer.fromHex("80");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
         assertFalse(mandatoryUInt32Decoder.isOverflow());
@@ -62,8 +58,7 @@ class TestUInt32 {
 
     @Test
     void testMaxNullable() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x10 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("10 00 00 00 80");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
         assertFalse(nullableUInt32Decoder.isOverflow());
@@ -73,8 +68,7 @@ class TestUInt32 {
 
     @Test
     void testMaxMandatory() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x0f 0x7f 0x7f 0x7f 0xff");
+        ByteBuf buf = FillBuffer.fromHex("0f 7f 7f 7f ff");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
         assertFalse(mandatoryUInt32Decoder.isOverflow());
@@ -84,8 +78,7 @@ class TestUInt32 {
 
     @Test
     void testMaxOverflowNullable1() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x10 0x00 0x00 0x00 0x81");
+        ByteBuf buf = FillBuffer.fromHex("10 00 00 00 81");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
         assertTrue(nullableUInt32Decoder.isOverflow());
@@ -93,8 +86,7 @@ class TestUInt32 {
 
     @Test
     void testMaxOverflowNullable2() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x10 0x00 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("10 00 00 00 00 00 80");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
         assertTrue(nullableUInt32Decoder.isOverflow());
@@ -102,8 +94,7 @@ class TestUInt32 {
 
     @Test
     void testMaxOverflowMandatory1() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x10 0x00 0x00 0x00 0x00 0x80");
+        ByteBuf buf = FillBuffer.fromHex("10 00 00 00 00 80");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
         assertTrue(mandatoryUInt32Decoder.isOverflow());
@@ -111,8 +102,7 @@ class TestUInt32 {
 
     @Test
     void testMaxOverflowMandatory2() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x0f 0x7f 0x7f 0x7f 0x7f 0x00 0xff");
+        ByteBuf buf = FillBuffer.fromHex("0f 7f 7f 7f 7f 00 ff");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
         assertTrue(mandatoryUInt32Decoder.isOverflow());
@@ -124,8 +114,7 @@ class TestUInt32 {
 
     @Test
     void optionalSimpleNumber() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x39 0x45 0xa4");
+        ByteBuf buf = FillBuffer.fromHex("39 45 a4");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
         assertFalse(nullableUInt32Decoder.isOverflow());
@@ -135,8 +124,7 @@ class TestUInt32 {
 
     @Test
     void optionalSimpleNumber2() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x0f 0x7f 0x7f 0x7f 0xff");
+        ByteBuf buf = FillBuffer.fromHex("0f 7f 7f 7f ff");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
         assertFalse(nullableUInt32Decoder.isOverflow());
@@ -146,12 +134,67 @@ class TestUInt32 {
 
     @Test
     void mandatorySimpleNumber() {
-        ByteBuf buf = Unpooled.buffer();
-        FillBuffer.fillBuffer(buf, "0x39 0x45 0xa3");
+        ByteBuf buf = FillBuffer.fromHex("39 45 a3");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
         assertFalse(mandatoryUInt32Decoder.isOverflow());
         long val = mandatoryUInt32Decoder.getValue();
+        assertEquals(942755, val);
+    }
+
+    @Test
+    void optionalSimpleNumberGetValueTwice() {
+        ByteBuf buf = FillBuffer.fromHex("39 45 a4");
+        nullableUInt32Decoder.decode(buf);
+        assertTrue(nullableUInt32Decoder.isReady());
+        assertFalse(nullableUInt32Decoder.isOverflow());
+        long val = nullableUInt32Decoder.getValue();
+        assertEquals(942755, val);
+        val = nullableUInt32Decoder.getValue();
+        assertEquals(942755, val);
+    }
+
+    @Test
+    void mandatorySimpleNumberGetValueTwice() {
+        ByteBuf buf = FillBuffer.fromHex("39 45 a3");
+        mandatoryUInt32Decoder.decode(buf);
+        assertTrue(mandatoryUInt32Decoder.isReady());
+        assertFalse(mandatoryUInt32Decoder.isOverflow());
+        long val = mandatoryUInt32Decoder.getValue();
+        assertEquals(942755, val);
+        val = mandatoryUInt32Decoder.getValue();
+        assertEquals(942755, val);
+    }
+
+    @Test
+    void optionalSimpleNumbersTwoValuesInRow() {
+        ByteBuf buf = FillBuffer.fromHex("39 45 a4 0f 7f 7f 7f ff");
+        nullableUInt32Decoder.decode(buf);
+        assertTrue(nullableUInt32Decoder.isReady());
+        assertFalse(nullableUInt32Decoder.isOverflow());
+        long val = nullableUInt32Decoder.getValue();
+        assertEquals(942755, val);
+
+        nullableUInt32Decoder.decode(buf);
+        assertTrue(nullableUInt32Decoder.isReady());
+        assertFalse(nullableUInt32Decoder.isOverflow());
+        val = nullableUInt32Decoder.getValue();
+        assertEquals(4294967294L, val);
+    }
+
+    @Test
+    void mandatorySimpleNumbersTwoValuesInRow() {
+        ByteBuf buf = FillBuffer.fromHex("39 45 a3 39 45 a3");
+        mandatoryUInt32Decoder.decode(buf);
+        assertTrue(mandatoryUInt32Decoder.isReady());
+        assertFalse(mandatoryUInt32Decoder.isOverflow());
+        long val = mandatoryUInt32Decoder.getValue();
+        assertEquals(942755, val);
+
+        mandatoryUInt32Decoder.decode(buf);
+        assertTrue(mandatoryUInt32Decoder.isReady());
+        assertFalse(mandatoryUInt32Decoder.isOverflow());
+        val = mandatoryUInt32Decoder.getValue();
         assertEquals(942755, val);
     }
 }

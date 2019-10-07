@@ -10,7 +10,10 @@ class DecodeMandatoryInt32 extends DecodeInteger {
 
     private int value;
 
+    private String values = " ";
+
     public void decode(ByteBuf buf) {
+        ready = false;
         int oneByte = buf.readByte();
         if ((oneByte & SIGN_BIT_MASK) == 0) {
             value = 0;

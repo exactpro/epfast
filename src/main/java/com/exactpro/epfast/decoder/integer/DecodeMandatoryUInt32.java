@@ -9,6 +9,8 @@ class DecodeMandatoryUInt32 extends DecodeInteger {
     private int value;
 
     public void decode(ByteBuf buf) {
+        value = 0;
+        ready = false;
         while (buf.isReadable() && !ready) {
             accumulate(buf.readByte());
         }
