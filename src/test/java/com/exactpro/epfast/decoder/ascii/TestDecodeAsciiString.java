@@ -1,12 +1,11 @@
 package com.exactpro.epfast.decoder.ascii;
 
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestDecodeAsciiString {
 
@@ -17,165 +16,165 @@ class TestDecodeAsciiString {
     @Test
     void testNull() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x80);
         nullableStringDecoder.decode(buf);
-        while (!nullableStringDecoder.isReady()) {
-            nullableStringDecoder.continueDecode(nextBuf);
+        try {
+            assertNull(nullableStringDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = nullableStringDecoder.getValue();
-        assertNull(val);
+
     }
 
     @Test
     void testOptionalEmptyString() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
         buf.writeByte(0x80);
         nullableStringDecoder.decode(buf);
-        while (!nullableStringDecoder.isReady()) {
-            nullableStringDecoder.continueDecode(nextBuf);
+        String val = null;
+        try {
+            val = nullableStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = nullableStringDecoder.getValue();
         assertEquals("", val);
     }
 
     @Test
     void testMandatoryEmptyString() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x80);
         mandatoryStringDecoder.decode(buf);
-        while (!mandatoryStringDecoder.isReady()) {
-            mandatoryStringDecoder.continueDecode(nextBuf);
+        String val = null;
+        try {
+            val = mandatoryStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = mandatoryStringDecoder.getValue();
         assertEquals("", val);
     }
 
     @Test
     void testSimpleString() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x41);
         buf.writeByte(0x42);
         buf.writeByte(0xc3);
         nullableStringDecoder.decode(buf);
-        while (!nullableStringDecoder.isReady()) {
-            nullableStringDecoder.continueDecode(nextBuf);
+        String val = null;
+        try {
+            val = nullableStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = nullableStringDecoder.getValue();
         assertEquals("ABC", val);
     }
 
     @Test
     void testZeroByteStringNullable1() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x80);
         nullableStringDecoder.decode(buf);
-        while (!nullableStringDecoder.isReady()) {
-            nullableStringDecoder.continueDecode(nextBuf);
+        String val = null;
+        try {
+            val = nullableStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = nullableStringDecoder.getValue();
         assertEquals("\0", val);
     }
 
     @Test
     void testZeroByteStringNullable2() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x80);
         nullableStringDecoder.decode(buf);
-        while (!nullableStringDecoder.isReady()) {
-            nullableStringDecoder.continueDecode(nextBuf);
+        String val = null;
+        try {
+            val = nullableStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = nullableStringDecoder.getValue();
         assertEquals("\0\0\0", val);
     }
 
     @Test
     void testZeroByteStringMandatory1() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x80);
         mandatoryStringDecoder.decode(buf);
-        while (!mandatoryStringDecoder.isReady()) {
-            mandatoryStringDecoder.continueDecode(nextBuf);
+        String val = null;
+        try {
+            val = mandatoryStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = mandatoryStringDecoder.getValue();
         assertEquals("\0\0", val);
     }
 
     @Test
     void testZeroByteStringMandatory2() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x80);
         mandatoryStringDecoder.decode(buf);
-        while (!mandatoryStringDecoder.isReady()) {
-            mandatoryStringDecoder.continueDecode(nextBuf);
+        String val = null;
+        try {
+            val = mandatoryStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = mandatoryStringDecoder.getValue();
         assertEquals("\0\0\0\0", val);
     }
 
     @Test
     void testOverlong1() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
         buf.writeByte(0x81);
         mandatoryStringDecoder.decode(buf);
-        while (!mandatoryStringDecoder.isReady()) {
-            mandatoryStringDecoder.continueDecode(nextBuf);
+        mandatoryStringDecoder.setCheckOverlong();
+        assertThrows(OverflowException.class, () -> mandatoryStringDecoder.getValue());
+        mandatoryStringDecoder.clearCheckOverlong();
+        try {
+            mandatoryStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = mandatoryStringDecoder.getValue();
-        assertTrue(mandatoryStringDecoder.isOverlong());
-        assertNull(val);
     }
 
     @Test
     void testOverlong2() {
-
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x00);
         buf.writeByte(0x81);
         nullableStringDecoder.decode(buf);
-        while (!nullableStringDecoder.isReady()) {
-            nullableStringDecoder.continueDecode(nextBuf);
+        nullableStringDecoder.setCheckOverlong();
+        assertThrows(OverflowException.class, () -> nullableStringDecoder.getValue());
+        nullableStringDecoder.clearCheckOverlong();
+        try {
+            nullableStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
         }
-        String val = nullableStringDecoder.getValue();
-        assertTrue(nullableStringDecoder.isOverlong());
-        assertNull(val);
     }
 
     @Test
-    void testNullableReuse(){
+    void testNullableReuse() {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(0x41);
         buf.writeByte(0x42);
@@ -187,13 +186,26 @@ class TestDecodeAsciiString {
         buf.writeByte(0x44);
         buf.writeByte(0xc3);
         nullableStringDecoder.decode(buf);
-        String val = nullableStringDecoder.getValue();
+        String val = null;
+        try {
+            val = nullableStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
+        }
         assertEquals("ABC", val);
         nullableStringDecoder.decode(buf);
-        val = nullableStringDecoder.getValue();
+        try {
+            val = nullableStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
+        }
         assertEquals("BBC", val);
         nullableStringDecoder.decode(buf);
-        val = nullableStringDecoder.getValue();
+        try {
+            val = nullableStringDecoder.getValue();
+        } catch (OverflowException ex) {
+            fail();
+        }
         assertEquals("ADC", val);
     }
 }

@@ -1,15 +1,24 @@
 package com.exactpro.epfast.decoder.ascii;
 
+import com.exactpro.epfast.decoder.OverflowException;
+
 public class DecodeMandatoryAsciiString extends DecodeNullableAsciiString {
 
-    public String getValue() {
-        if (value.length() == 0 && !overlong) {
-            for (int i = 0; i < relativeLength - 1; i++) {
+    public String getValue() throws OverflowException {
+        if (zeroCount < value.length()) {
+            if (zeroPreamble && checkOverlong) {
+                throw new OverflowException("String with zero preamble can't contain any value except 0");
+            } else {
+                return value.toString();
+            }
+        } else if (zeroCount == 1) {
+            return "";
+        } else {
+            value = new StringBuilder();
+            for (int i = 0; i < zeroCount - 1; i++) {
                 value.append("\0");
             }
             return value.toString();
-        } else {
-            return overlong ? null : value.toString();
         }
     }
 }

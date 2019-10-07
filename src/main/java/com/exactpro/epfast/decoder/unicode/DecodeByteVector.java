@@ -2,29 +2,25 @@ package com.exactpro.epfast.decoder.unicode;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.integer.DecodeInteger;
-import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
-import com.exactpro.epfast.decoder.integer.DecodeNullableUInt32;
 import io.netty.buffer.ByteBuf;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DecodeByteVector implements IDecodeContext {
 
     List<Byte> value;
 
-    int counter;
+    boolean lengthReady;
 
-    int readableBytes;
-
-    int readIndex;
+    boolean ready;
 
     boolean overflow;
 
-    boolean lengthReady;
+    int readLimit;
 
-    protected boolean ready;
+    int readerIndex;
+
+    int counter;
 
     public abstract void decode(ByteBuf buf);
 
@@ -36,7 +32,7 @@ public abstract class DecodeByteVector implements IDecodeContext {
         return ready;
     }
 
-    public boolean isOverflow(){
+    public boolean isOverflow() {
         return overflow;
     }
 }

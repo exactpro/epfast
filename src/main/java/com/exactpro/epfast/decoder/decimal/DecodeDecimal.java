@@ -11,17 +11,17 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     DecodeMandatoryInt64 mantissaDecoder = new DecodeMandatoryInt64();
 
+    long mantissa;
+
     boolean exponentReady;
+
+    protected boolean ready;
 
     boolean startedMantissa;
 
     boolean exponentOverflow;
 
     boolean mantissaOverflow;
-
-    protected boolean ready;
-
-    long mantissa;
 
     public abstract void decode(ByteBuf buf);
 

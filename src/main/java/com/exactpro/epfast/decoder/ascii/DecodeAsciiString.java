@@ -1,25 +1,24 @@
 package com.exactpro.epfast.decoder.ascii;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeAsciiString implements IDecodeContext {
 
     StringBuilder value;
 
+    private boolean ready;
+
     private int readLimit;
 
     private int readerIndex;
 
-    private boolean zeroPreamble;
+    boolean zeroPreamble;
 
-    int relativeLength;
-
-    boolean overlong;
+    int zeroCount;
 
     boolean checkOverlong;
-
-    protected boolean ready;
 
     public void decode(ByteBuf buf) {
         ready = false;
@@ -37,29 +36,25 @@ public abstract class DecodeAsciiString implements IDecodeContext {
     }
 
     public void continueDecode(ByteBuf buf) {
-        readLimit = buf.readableBytes();
         readerIndex = buf.readerIndex();
+        readLimit = buf.readableBytes() + readerIndex;
         while ((readerIndex < readLimit) && !ready) {
             accumulateValue(buf.getByte(readerIndex++));
         }
         buf.readerIndex(readerIndex);
     }
 
-    public abstract String getValue();
+    public abstract String getValue() throws OverflowException;
 
     public boolean isReady() {
         return ready;
     }
 
-    public boolean isOverlong() {
-        return overlong;
-    }
-
-    public void setCheckOverlong() {
+    void setCheckOverlong() {
         checkOverlong = true;
     }
 
-    public void clearCheckOverlong() {
+    void clearCheckOverlong() {
         checkOverlong = false;
     }
 
@@ -68,11 +63,9 @@ public abstract class DecodeAsciiString implements IDecodeContext {
             oneByte &= CLEAR_STOP_BIT_MASK;
             ready = true;
         }
-        if (zeroPreamble && (oneByte != 0)) {
-            overlong = true;
-        } else if (oneByte != 0) {
-            value.append((char) oneByte);
+        if (oneByte == 0) {
+            zeroCount++;
         }
-        relativeLength++;
+        value.append((char) oneByte);
     }
 }

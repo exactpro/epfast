@@ -4,7 +4,6 @@ import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryUInt32;
 import io.netty.buffer.ByteBuf;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class DecodeMandatoryByteVector extends DecodeByteVector {
@@ -21,18 +20,18 @@ public class DecodeMandatoryByteVector extends DecodeByteVector {
             messageLength = lengthDecoder.getValue();
             overflow = lengthDecoder.isOverflow();
             if (messageLength > 0) {
-                readIndex = buf.readerIndex();
-                readableBytes = buf.readableBytes() + readIndex;
-                while ((readIndex < readableBytes) && !ready) {
+                readerIndex = buf.readerIndex();
+                readLimit = buf.readableBytes() + readerIndex;
+                while ((readerIndex < readLimit) && !ready) {
                     if (counter < messageLength) {
-                        value.add(buf.getByte(readIndex++));
+                        value.add(buf.getByte(readerIndex++));
                         counter++;
                     }
                     if (counter == messageLength) {
                         ready = true;
                     }
                 }
-                buf.readerIndex(readIndex);
+                buf.readerIndex(readerIndex);
             } else {
                 ready = true;
             }
@@ -42,18 +41,18 @@ public class DecodeMandatoryByteVector extends DecodeByteVector {
 
     public void continueDecode(ByteBuf buf) {
         if (lengthReady) {
-            readIndex = buf.readerIndex();
-            readableBytes = buf.readableBytes() + readIndex;
-            while ((readIndex < readableBytes) && !ready) {
+            readerIndex = buf.readerIndex();
+            readLimit = buf.readableBytes() + readerIndex;
+            while ((readerIndex < readLimit) && !ready) {
                 if (counter < messageLength) {
-                    value.add(buf.getByte(readIndex++));
+                    value.add(buf.getByte(readerIndex++));
                     counter++;
                 }
                 if (counter == messageLength) {
                     ready = true;
                 }
             }
-            buf.readerIndex(readIndex);
+            buf.readerIndex(readerIndex);
         } else {
             lengthDecoder.continueDecode(buf);
             if (lengthDecoder.isReady()) {
@@ -61,25 +60,25 @@ public class DecodeMandatoryByteVector extends DecodeByteVector {
                 messageLength = lengthDecoder.getValue();
                 overflow = lengthDecoder.isOverflow();
                 if (messageLength > 0) {
-                    readIndex = buf.readerIndex();
-                    readableBytes = buf.readableBytes() + readIndex;
-                    while ((readIndex < readableBytes) && !ready) {
+                    readerIndex = buf.readerIndex();
+                    readLimit = buf.readableBytes() + readerIndex;
+                    while ((readerIndex < readLimit) && !ready) {
                         if (counter < messageLength) {
-                            value.add(buf.getByte(readIndex++));
+                            value.add(buf.getByte(readerIndex++));
                             counter++;
                         }
                         if (counter == messageLength) {
                             ready = true;
                         }
                     }
-                    buf.readerIndex(readIndex);
+                    buf.readerIndex(readerIndex);
                 }
 
             }
         }
     }
 
-    public byte[] getValue() throws OverflowException{
+    public byte[] getValue() throws OverflowException {
         if (overflow) {
             throw new OverflowException("exponent value range is int32");
 

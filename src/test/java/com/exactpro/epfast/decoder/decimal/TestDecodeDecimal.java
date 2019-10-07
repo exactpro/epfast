@@ -8,9 +8,7 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestDecodeDecimal {
 
@@ -21,38 +19,28 @@ class TestDecodeDecimal {
     @Test
     void testNull() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x80);
         nullableDecimalDecoder.decode(buf);
-        while (!nullableDecimalDecoder.isReady()) {
-            nullableDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
         try {
-            val = nullableDecimalDecoder.getValue();
+            assertNull(nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
-        assertNull(val);
     }
 
     @Test
     void testNullablePositive1() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x83);
         buf.writeByte(0x39);
         buf.writeByte(0x45);
         buf.writeByte(0xa3);
         nullableDecimalDecoder.decode(buf);
-        while (!nullableDecimalDecoder.isReady()) {
-            nullableDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = nullableDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("94275500"), val);
     }
@@ -69,11 +57,11 @@ class TestDecodeDecimal {
         while (!nullableDecimalDecoder.isReady()) {
             nullableDecimalDecoder.continueDecode(nextBuf);
         }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = nullableDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("94275500"), val);
     }
@@ -81,21 +69,17 @@ class TestDecodeDecimal {
     @Test
     void testNullablePositive() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x82);
         buf.writeByte(0x04);
         buf.writeByte(0x3f);
         buf.writeByte(0x34);
         buf.writeByte(0xde);
         nullableDecimalDecoder.decode(buf);
-        while (!nullableDecimalDecoder.isReady()) {
-            nullableDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = nullableDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("94275500"), val);
     }
@@ -113,11 +97,11 @@ class TestDecodeDecimal {
         while (!nullableDecimalDecoder.isReady()) {
             nullableDecimalDecoder.continueDecode(nextBuf);
         }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = nullableDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("94275500"), val);
     }
@@ -125,20 +109,16 @@ class TestDecodeDecimal {
     @Test
     void testMandatoryPositive() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x82);
         buf.writeByte(0x39);
         buf.writeByte(0x45);
         buf.writeByte(0xa3);
         mandatoryDecimalDecoder.decode(buf);
-        while (!mandatoryDecimalDecoder.isReady()) {
-            mandatoryDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = mandatoryDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("94275500"), val);
     }
@@ -155,11 +135,11 @@ class TestDecodeDecimal {
         while (!mandatoryDecimalDecoder.isReady()) {
             mandatoryDecimalDecoder.continueDecode(nextBuf);
         }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = mandatoryDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("94275500"), val);
     }
@@ -167,21 +147,17 @@ class TestDecodeDecimal {
     @Test
     void testMandatoryPositive2() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0x81);
         buf.writeByte(0x04);
         buf.writeByte(0x3f);
         buf.writeByte(0x34);
         buf.writeByte(0xde);
         mandatoryDecimalDecoder.decode(buf);
-        while (!mandatoryDecimalDecoder.isReady()) {
-            mandatoryDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = mandatoryDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("94275500"), val);
     }
@@ -199,11 +175,11 @@ class TestDecodeDecimal {
         while (!mandatoryDecimalDecoder.isReady()) {
             mandatoryDecimalDecoder.continueDecode(nextBuf);
         }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = mandatoryDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("94275500"), val);
     }
@@ -211,20 +187,16 @@ class TestDecodeDecimal {
     @Test
     void testMandatoryPositive3() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0xfe);
         buf.writeByte(0x39);
         buf.writeByte(0x45);
         buf.writeByte(0xa3);
         mandatoryDecimalDecoder.decode(buf);
-        while (!mandatoryDecimalDecoder.isReady()) {
-            mandatoryDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = mandatoryDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("9427.55"), val);
     }
@@ -232,20 +204,16 @@ class TestDecodeDecimal {
     @Test
     void testNullablePositive3() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0xfe);
         buf.writeByte(0x39);
         buf.writeByte(0x45);
         buf.writeByte(0xa3);
         nullableDecimalDecoder.decode(buf);
-        while (!nullableDecimalDecoder.isReady()) {
-            nullableDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = nullableDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("9427.55"), val);
     }
@@ -253,20 +221,16 @@ class TestDecodeDecimal {
     @Test
     void testNullableNegative() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0xfe);
         buf.writeByte(0x46);
         buf.writeByte(0x3a);
         buf.writeByte(0xdd);
         nullableDecimalDecoder.decode(buf);
-        while (!nullableDecimalDecoder.isReady()) {
-            nullableDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = nullableDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("-9427.55"), val);
     }
@@ -274,20 +238,16 @@ class TestDecodeDecimal {
     @Test
     void testNullableNegativeSignExtension() {
         ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
         buf.writeByte(0xfd);
         buf.writeByte(0x7f);
         buf.writeByte(0x3f);
         buf.writeByte(0xff);
         nullableDecimalDecoder.decode(buf);
-        while (!nullableDecimalDecoder.isReady()) {
-            nullableDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = new BigDecimal(0);
+        BigDecimal val = null;
         try {
             val = nullableDecimalDecoder.getValue();
         } catch (OverflowException ex) {
-            System.out.println(ex.getMessage());
+            fail();
         }
         assertEquals(new BigDecimal("-8.193"), val);
     }
