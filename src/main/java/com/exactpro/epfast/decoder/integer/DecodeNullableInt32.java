@@ -13,6 +13,7 @@ public class DecodeNullableInt32 extends DecodeInteger {
     private int value;
 
     public void decode(ByteBuf buf) {
+        ready = false;
         int oneByte = buf.readByte();
         positive = (oneByte & SIGN_BIT_MASK) == 0;
         if (positive) {

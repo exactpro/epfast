@@ -13,6 +13,8 @@ public class DecodeMandatoryUInt64 extends DecodeInteger {
     private long value;
 
     public void decode(ByteBuf buf) {
+        value = 0;
+        ready = false;
         while (buf.isReadable() && !ready) {
             accumulate(buf.readByte());
         }

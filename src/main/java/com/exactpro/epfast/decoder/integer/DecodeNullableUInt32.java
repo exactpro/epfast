@@ -11,6 +11,8 @@ public class DecodeNullableUInt32 extends DecodeInteger {
     private int value;
 
     public void decode(ByteBuf buf) {
+        value = 0;
+        ready = false;
         while (buf.isReadable() && !ready) {
             accumulate(buf.readByte());
         }
@@ -24,7 +26,7 @@ public class DecodeNullableUInt32 extends DecodeInteger {
         if (value == 0) {
             return null;
         } else {
-            return isUInt32Limit ? 0x0_FFFFFFFFL : --value & 0x0_FFFFFFFFL;
+            return isUInt32Limit ? 0x0_FFFFFFFFL : value - 1 & 0x0_FFFFFFFFL;
         }
     }
 

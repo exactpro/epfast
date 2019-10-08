@@ -11,6 +11,7 @@ public class DecodeMandatoryInt64 extends DecodeInteger {
     private long value;
 
     public void decode(ByteBuf buf) {
+        ready = false;
         int oneByte = buf.readByte();
         if ((oneByte & SIGN_BIT_MASK) == 0) {
             value = 0;
