@@ -10,8 +10,8 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
-import javax.tools.JavaFileObject;
+import javax.tools.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -86,10 +86,21 @@ public class FastProcessor extends AbstractProcessor {
         // mustache files are in UTF-8 by default
         Mustache mustache = mustacheFactory.compile(
             "com/exactpro/epfast/annotation/processing/CreatorImpl.java.mustache");
+        createResourceFile();
 
         JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(typeName.toString());
         try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
             mustache.execute(out, new CreatorTemplateParameters(typeName, nameClassMap.entrySet())).flush();
+        }
+    }
+
+    private void createResourceFile() throws IOException {
+        FileObject resourceFile = processingEnv.getFiler().createResource(
+            StandardLocation.CLASS_OUTPUT,
+            "",
+            "META-INF" + File.separator + "services" + File.separator + "com.exactpro.epfast.ICreator");
+        try (PrintWriter out = new PrintWriter(resourceFile.openOutputStream())) {
+            out.write("com.exactpro.epfast.annotation.internal.CreatorImpl");
         }
     }
 
