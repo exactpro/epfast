@@ -10,11 +10,12 @@ class FastProcessorTest {
 
     @Test
     void testProcessing() {
-        JavaSourcesSubject.assertThat(JavaFileObjects.forResource("test/DefaultAnnotated.java"))
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/DefaultAnnotated.java"))
             .processedWith(new FastProcessor())
             .compilesWithoutError()
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
-            "com.exactpro.epfast.annotation.internal",
+            "com.exactpro.epfast.annotation.internal.packages",
             "CreatorImpl.class");
     }
 
@@ -33,7 +34,7 @@ class FastProcessorTest {
             .processedWith(new FastProcessor())
             .compilesWithoutError()
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
-                "com.exactpro.epfast.annotation.internal",
+                "com.exactpro.epfast.annotation.internal.packages",
                 "CreatorImpl.class");
     }
 
