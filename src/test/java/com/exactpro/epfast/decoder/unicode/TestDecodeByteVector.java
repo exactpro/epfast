@@ -1,6 +1,5 @@
 package com.exactpro.epfast.decoder.unicode;
 
-import com.exactpro.epfast.decoder.FillBuffer;
 import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static com.exactpro.epfast.decoder.FillBuffer.*;
 
 class TestDecodeByteVector {
 
@@ -16,166 +16,97 @@ class TestDecodeByteVector {
     private DecodeMandatoryByteVector mandatoryByteVectorDecoder = new DecodeMandatoryByteVector();
 
     @Test
-    void testNull() {
-        ByteBuf buf = FillBuffer.fromHex("80");
-        nullableByteVectorDecoder.decode(buf);
+    void testNull() throws OverflowException {
+        nullableByteVectorDecoder.decode(fromHex("80"));
         assertTrue(nullableByteVectorDecoder.isReady());
-        try {
-            assertNull(nullableByteVectorDecoder.getValue());
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertNull(nullableByteVectorDecoder.getValue());
     }
 
     @Test
-    void testNullableZeroLen() {
-        ByteBuf buf = FillBuffer.fromHex("81");
-        nullableByteVectorDecoder.decode(buf);
+    void testNullableZeroLen() throws OverflowException {
+        nullableByteVectorDecoder.decode(fromHex("81"));
         assertTrue(nullableByteVectorDecoder.isReady());
-        try {
-            assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
     }
 
     @Test
-    void testMandatoryZeroLen() {
-        ByteBuf buf = FillBuffer.fromHex("80");
-        mandatoryByteVectorDecoder.decode(buf);
+    void testMandatoryZeroLen() throws OverflowException {
+        mandatoryByteVectorDecoder.decode(fromHex("80"));
         assertTrue(mandatoryByteVectorDecoder.isReady());
-        try {
-            assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
     }
 
     @Test
-    void testSimpleNullableVector() {
-        ByteBuf buf = FillBuffer.fromHex("87 41 42 42 43 44 45");
-        nullableByteVectorDecoder.decode(buf);
+    void testSimpleNullableVector() throws OverflowException {
+        nullableByteVectorDecoder.decode(fromHex("87 41 42 42 43 44 45"));
         assertTrue(nullableByteVectorDecoder.isReady());
-        try {
-            assertEquals("ABBCDE", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("ABBCDE", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
     }
 
     @Test
-    void testSimpleMandatoryVector() {
-        ByteBuf buf = FillBuffer.fromHex("86 41 42 42 43 44 45");
-        mandatoryByteVectorDecoder.decode(buf);
+    void testSimpleMandatoryVector() throws OverflowException {
+        mandatoryByteVectorDecoder.decode(fromHex("86 41 42 42 43 44 45"));
         assertTrue(mandatoryByteVectorDecoder.isReady());
-        try {
-            assertEquals("ABBCDE", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("ABBCDE", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
     }
 
     @Test
-    void testNullableSplitVector() {
-        ByteBuf buf = FillBuffer.fromHex("87 41 42 42");
-        nullableByteVectorDecoder.decode(buf);
+    void testNullableSplitVector() throws OverflowException {
+        nullableByteVectorDecoder.decode(fromHex("87 41 42 42"));
         assertFalse(nullableByteVectorDecoder.isReady());
 
-        buf = FillBuffer.fromHex("43 44 45");
-        nullableByteVectorDecoder.continueDecode(buf);
+        nullableByteVectorDecoder.continueDecode(fromHex("43 44 45"));
         assertTrue(nullableByteVectorDecoder.isReady());
-        try {
-            assertEquals("ABBCDE", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("ABBCDE", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
     }
 
     @Test
-    void testMandatorySplitVector() {
-        ByteBuf buf = FillBuffer.fromHex("86 41 42 42");
-        mandatoryByteVectorDecoder.decode(buf);
+    void testMandatorySplitVector() throws OverflowException {
+        mandatoryByteVectorDecoder.decode(fromHex("86 41 42 42"));
         assertFalse(mandatoryByteVectorDecoder.isReady());
 
-        buf = FillBuffer.fromHex("43 44 45");
-        mandatoryByteVectorDecoder.continueDecode(buf);
+        mandatoryByteVectorDecoder.continueDecode(fromHex("43 44 45"));
         assertTrue(mandatoryByteVectorDecoder.isReady());
-        try {
-            assertEquals("ABBCDE", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("ABBCDE", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
     }
 
     @Test
-    void testNullableZeroLenGetValueTwice() {
-        ByteBuf buf = FillBuffer.fromHex("81");
+    void testNullableZeroLenGetValueTwice() throws OverflowException {
+        nullableByteVectorDecoder.decode(fromHex("81"));
+        assertTrue(nullableByteVectorDecoder.isReady());
+        assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
+        assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void testMandatoryZeroLenGetValueTwice() throws OverflowException {
+        mandatoryByteVectorDecoder.decode(fromHex("80"));
+        assertTrue(mandatoryByteVectorDecoder.isReady());
+        assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
+        assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void testSimpleNullableVectorTwoValuesInRow() throws OverflowException {
+        ByteBuf buf = fromHex("87 41 42 42 43 44 45 81");
         nullableByteVectorDecoder.decode(buf);
         assertTrue(nullableByteVectorDecoder.isReady());
-        try {
-            assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
-        try {
-            assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
-    }
+        assertEquals("ABBCDE", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
 
-    @Test
-    void testMandatoryZeroLenGetValueTwice() {
-        ByteBuf buf = FillBuffer.fromHex("80");
-        mandatoryByteVectorDecoder.decode(buf);
-        assertTrue(mandatoryByteVectorDecoder.isReady());
-        try {
-            assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
-        try {
-            assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
-    }
-
-    @Test
-    void testSimpleNullableVectorTwoValuesInRow() {
-        ByteBuf buf = FillBuffer.fromHex("87 41 42 42 43 44 45 81");
         nullableByteVectorDecoder.decode(buf);
         assertTrue(nullableByteVectorDecoder.isReady());
-        try {
-            assertEquals("ABBCDE", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
-        nullableByteVectorDecoder.decode(buf);
-        assertTrue(nullableByteVectorDecoder.isReady());
-        try {
-            assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
     }
 
     @Test
-    void testSimpleMandatoryVectorTwoValuesInRow() {
-        ByteBuf buf = FillBuffer.fromHex("86 41 42 42 43 44 45 80");
+    void testSimpleMandatoryVectorTwoValuesInRow() throws OverflowException {
+        ByteBuf buf = fromHex("86 41 42 42 43 44 45 80");
         mandatoryByteVectorDecoder.decode(buf);
         assertTrue(mandatoryByteVectorDecoder.isReady());
-        try {
-            assertEquals("ABBCDE", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("ABBCDE", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
+
         mandatoryByteVectorDecoder.decode(buf);
         assertTrue(mandatoryByteVectorDecoder.isReady());
-        try {
-            assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        } catch (OverflowException ex) {
-            fail();
-        }
+        assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
     }
 }
