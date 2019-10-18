@@ -1,14 +1,13 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.epfast.decoder.FillBuffer;
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestUInt64 {
 
@@ -25,9 +24,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("80");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertFalse(nullableUInt64Decoder.isOverflow());
-        BigInteger val = nullableUInt64Decoder.getValue();
-        assertNull(val);
+        try {
+            assertNull(nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -39,9 +40,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("81");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertFalse(nullableUInt64Decoder.isOverflow());
-        BigInteger val = nullableUInt64Decoder.getValue();
-        assertEquals(new BigInteger("0"), val);
+        try {
+            assertEquals(new BigInteger("0"), nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -49,9 +52,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("80");
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertFalse(mandatoryUInt64Decoder.isOverflow());
-        BigInteger val = mandatoryUInt64Decoder.getValue();
-        assertEquals(new BigInteger("0"), val);
+        try {
+            assertEquals(new BigInteger("0"), mandatoryUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -63,9 +68,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("02 00 00 00 00 00 00 00 00 80");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertFalse(nullableUInt64Decoder.isOverflow());
-        BigInteger val = nullableUInt64Decoder.getValue();
-        assertEquals(new BigInteger("18446744073709551615"), val);
+        try {
+            assertEquals(new BigInteger("18446744073709551615"), nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -73,9 +80,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("01 7f 7f 7f 7f 7f 7f 7f 7f ff");
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertFalse(mandatoryUInt64Decoder.isOverflow());
-        BigInteger val = mandatoryUInt64Decoder.getValue();
-        assertEquals(new BigInteger("18446744073709551615"), val);
+        try {
+            assertEquals(new BigInteger("18446744073709551615"), mandatoryUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -83,7 +92,7 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("02 00 00 00 00 00 00 00 00 81");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertTrue(nullableUInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> nullableUInt64Decoder.getValue());
     }
 
     @Test
@@ -91,7 +100,7 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("02 00 00 00 00 00 00 00 00 00 80");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertTrue(nullableUInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> nullableUInt64Decoder.getValue());
     }
 
     @Test
@@ -99,7 +108,7 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("02 00 00 00 00 00 00 00 00 80");
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertTrue(mandatoryUInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> mandatoryUInt64Decoder.getValue());
     }
 
     @Test
@@ -107,7 +116,7 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("01 7f 7f 7f 7f 00 7f 7f 7f 7f ff");
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertTrue(mandatoryUInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> mandatoryUInt64Decoder.getValue());
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -119,9 +128,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a4");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertFalse(nullableUInt64Decoder.isOverflow());
-        BigInteger val = nullableUInt64Decoder.getValue();
-        assertEquals(new BigInteger("942755"), val);
+        try {
+            assertEquals(new BigInteger("942755"), nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -129,9 +140,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("01 7f 7f 7f 7f 7f 7f 7f 7f ff");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertFalse(nullableUInt64Decoder.isOverflow());
-        BigInteger val = nullableUInt64Decoder.getValue();
-        assertEquals(new BigInteger("18446744073709551614"), val);
+        try {
+            assertEquals(new BigInteger("18446744073709551614"), nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -139,9 +152,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a3");
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertFalse(mandatoryUInt64Decoder.isOverflow());
-        BigInteger val = mandatoryUInt64Decoder.getValue();
-        assertEquals(new BigInteger("942755"), val);
+        try {
+            assertEquals(new BigInteger("942755"), mandatoryUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -149,9 +164,11 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("01 10 78 20 76 62 2a 62 51 cf");
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertFalse(mandatoryUInt64Decoder.isOverflow());
-        BigInteger val = mandatoryUInt64Decoder.getValue();
-        assertEquals(new BigInteger("10443992354206034127"), val);
+        try {
+            assertEquals(new BigInteger("10443992354206034127"), mandatoryUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -159,11 +176,16 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a4");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertFalse(nullableUInt64Decoder.isOverflow());
-        BigInteger val = nullableUInt64Decoder.getValue();
-        assertEquals(new BigInteger("942755"), val);
-        val = nullableUInt64Decoder.getValue();
-        assertEquals(new BigInteger("942755"), val);
+        try {
+            assertEquals(new BigInteger("942755"), nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+        try {
+            assertEquals(new BigInteger("942755"), nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -171,11 +193,16 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a3");
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertFalse(mandatoryUInt64Decoder.isOverflow());
-        BigInteger val = mandatoryUInt64Decoder.getValue();
-        assertEquals(new BigInteger("942755"), val);
-        val = mandatoryUInt64Decoder.getValue();
-        assertEquals(new BigInteger("942755"), val);
+        try {
+            assertEquals(new BigInteger("942755"), mandatoryUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+        try {
+            assertEquals(new BigInteger("942755"), mandatoryUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -183,15 +210,18 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a4 01 7f 7f 7f 7f 7f 7f 7f 7f ff");
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertFalse(nullableUInt64Decoder.isOverflow());
-        BigInteger val = nullableUInt64Decoder.getValue();
-        assertEquals(new BigInteger("942755"), val);
-
+        try {
+            assertEquals(new BigInteger("942755"), nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
         nullableUInt64Decoder.decode(buf);
         assertTrue(nullableUInt64Decoder.isReady());
-        assertFalse(nullableUInt64Decoder.isOverflow());
-        val = nullableUInt64Decoder.getValue();
-        assertEquals(new BigInteger("18446744073709551614"), val);
+        try {
+            assertEquals(new BigInteger("18446744073709551614"), nullableUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -199,14 +229,17 @@ class TestUInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a3 01 10 78 20 76 62 2a 62 51 cf");
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertFalse(mandatoryUInt64Decoder.isOverflow());
-        BigInteger val = mandatoryUInt64Decoder.getValue();
-        assertEquals(new BigInteger("942755"), val);
-
+        try {
+            assertEquals(new BigInteger("942755"), mandatoryUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
         mandatoryUInt64Decoder.decode(buf);
         assertTrue(mandatoryUInt64Decoder.isReady());
-        assertFalse(mandatoryUInt64Decoder.isOverflow());
-        val = mandatoryUInt64Decoder.getValue();
-        assertEquals(new BigInteger("10443992354206034127"), val);
+        try {
+            assertEquals(new BigInteger("10443992354206034127"), mandatoryUInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 }

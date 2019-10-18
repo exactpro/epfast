@@ -1,11 +1,11 @@
-package com.exactpro.epfast.decoder.integer;
+package com.exactpro.epfast.decoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-class FillBuffer {
+public class FillBuffer {
 
-    static ByteBuf fromHex(String hex) {
+    public static ByteBuf fromHex(String hex) {
         ByteBuf buf = Unpooled.buffer();
         String[] values = hex.split(" ");
         for (String value : values) {

@@ -10,21 +10,16 @@ public abstract class DecodeAsciiString implements IDecodeContext {
 
     private boolean ready;
 
-    private int readLimit;
-
-    private int readerIndex;
-
     boolean zeroPreamble;
-
-    int zeroCount;
 
     boolean checkOverlong;
 
+    int zeroCount;
+
     public void decode(ByteBuf buf) {
-        ready = false;
-        value = new StringBuilder();
-        readerIndex = buf.readerIndex();
-        readLimit = buf.readableBytes() + readerIndex;
+        reset();
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
         if (buf.getByte(readerIndex) == 0) {
             zeroPreamble = true;
         }
@@ -36,8 +31,8 @@ public abstract class DecodeAsciiString implements IDecodeContext {
     }
 
     public void continueDecode(ByteBuf buf) {
-        readerIndex = buf.readerIndex();
-        readLimit = buf.readableBytes() + readerIndex;
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
         while ((readerIndex < readLimit) && !ready) {
             accumulateValue(buf.getByte(readerIndex++));
         }
@@ -67,5 +62,12 @@ public abstract class DecodeAsciiString implements IDecodeContext {
             zeroCount++;
         }
         value.append((char) oneByte);
+    }
+
+    public final void reset() {
+        value = new StringBuilder();
+        ready = false;
+        zeroCount = 0;
+        zeroPreamble = false;
     }
 }

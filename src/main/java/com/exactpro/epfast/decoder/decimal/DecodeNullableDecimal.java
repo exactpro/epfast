@@ -6,7 +6,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.math.BigDecimal;
 
-public class DecodeNullableDecimal extends DecodeDecimal {
+public final class DecodeNullableDecimal extends DecodeDecimal {
 
     private DecodeNullableInt32 exponentDecoder = new DecodeNullableInt32();
 
@@ -15,18 +15,25 @@ public class DecodeNullableDecimal extends DecodeDecimal {
     private boolean nullValue;
 
     public void decode(ByteBuf buf) {
+        reset();
         exponentDecoder.decode(buf);
         if (exponentDecoder.isReady()) {
-            exponent = exponentDecoder.getValue();
             exponentReady = true;
-            exponentOverflow = exponentDecoder.isOverflow();
+            try {
+                exponent = exponentDecoder.getValue();
+            } catch (OverflowException ex) {
+                exponentOverflow = true;
+            }
             if (exponent != null && buf.isReadable()) {
                 mantissaDecoder.decode(buf);
                 startedMantissa = true;
                 if (mantissaDecoder.isReady()) {
-                    mantissa = mantissaDecoder.getValue();
-                    mantissaOverflow = mantissaDecoder.isOverflow();
                     ready = true;
+                    try {
+                        mantissa = mantissaDecoder.getValue();
+                    } catch (OverflowException ex) {
+                        mantissaOverflow = true;
+                    }
                 }
             } else if (exponent == null) {
                 nullValue = true;
@@ -39,31 +46,43 @@ public class DecodeNullableDecimal extends DecodeDecimal {
         if (exponentReady && startedMantissa) {
             mantissaDecoder.continueDecode(buf);
             if (mantissaDecoder.isReady()) {
-                mantissa = mantissaDecoder.getValue();
                 ready = true;
-                mantissaOverflow = mantissaDecoder.isOverflow();
+                try {
+                    mantissa = mantissaDecoder.getValue();
+                } catch (OverflowException ex) {
+                    mantissaOverflow = true;
+                }
             }
         } else if (exponentReady) {
             startedMantissa = true;
             mantissaDecoder.decode(buf);
             if (mantissaDecoder.isReady()) {
-                mantissa = mantissaDecoder.getValue();
                 ready = true;
-                mantissaOverflow = mantissaDecoder.isOverflow();
+                try {
+                    mantissa = mantissaDecoder.getValue();
+                } catch (OverflowException ex) {
+                    mantissaOverflow = true;
+                }
             }
         } else {
             exponentDecoder.continueDecode(buf);
             if (exponentDecoder.isReady()) {
-                exponent = exponentDecoder.getValue();
                 exponentReady = true;
-                exponentOverflow = exponentDecoder.isOverflow();
+                try {
+                    exponent = exponentDecoder.getValue();
+                } catch (OverflowException ex) {
+                    exponentOverflow = true;
+                }
                 if (exponent != null && buf.isReadable()) {
                     mantissaDecoder.decode(buf);
                     startedMantissa = true;
                     if (mantissaDecoder.isReady()) {
-                        mantissa = mantissaDecoder.getValue();
-                        mantissaOverflow = mantissaDecoder.isOverflow();
                         ready = true;
+                        try {
+                            mantissa = mantissaDecoder.getValue();
+                        } catch (OverflowException ex) {
+                            mantissaOverflow = true;
+                        }
                     }
                 } else if (exponent == null) {
                     nullValue = true;

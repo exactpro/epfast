@@ -15,9 +15,9 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     boolean exponentReady;
 
-    protected boolean ready;
-
     boolean startedMantissa;
+
+    boolean ready;
 
     boolean exponentOverflow;
 
@@ -26,6 +26,14 @@ public abstract class DecodeDecimal implements IDecodeContext {
     public abstract void decode(ByteBuf buf);
 
     public abstract void continueDecode(ByteBuf buf);
+
+    public final void reset() {
+        exponentReady = false;
+        startedMantissa = false;
+        ready = false;
+        exponentOverflow = false;
+        mantissaOverflow = false;
+    }
 
     public abstract BigDecimal getValue() throws OverflowException;
 

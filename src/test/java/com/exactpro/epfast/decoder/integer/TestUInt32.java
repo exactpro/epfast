@@ -1,12 +1,11 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.epfast.decoder.FillBuffer;
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestUInt32 {
 
@@ -23,9 +22,11 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("80");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverflow());
-        Long val = nullableUInt32Decoder.getValue();
-        assertNull(val);
+        try {
+            assertNull(nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -37,9 +38,11 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("81");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverflow());
-        long val = nullableUInt32Decoder.getValue();
-        assertEquals(0, val);
+        try {
+            assertEquals(0, nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -47,9 +50,11 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("80");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertFalse(mandatoryUInt32Decoder.isOverflow());
-        long val = mandatoryUInt32Decoder.getValue();
-        assertEquals(0, val);
+        try {
+            assertEquals(0, mandatoryUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -61,9 +66,11 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("10 00 00 00 80");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverflow());
-        long val = nullableUInt32Decoder.getValue();
-        assertEquals(4294967295L, val);
+        try {
+            assertEquals(4294967295L, nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -71,9 +78,11 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("0f 7f 7f 7f ff");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertFalse(mandatoryUInt32Decoder.isOverflow());
-        long val = mandatoryUInt32Decoder.getValue();
-        assertEquals(4294967295L, val);
+        try {
+            assertEquals(4294967295L, mandatoryUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -81,7 +90,7 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("10 00 00 00 81");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertTrue(nullableUInt32Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> nullableUInt32Decoder.getValue());
     }
 
     @Test
@@ -89,7 +98,7 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("10 00 00 00 00 00 80");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertTrue(nullableUInt32Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> nullableUInt32Decoder.getValue());
     }
 
     @Test
@@ -97,7 +106,7 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("10 00 00 00 00 80");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertTrue(mandatoryUInt32Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> mandatoryUInt32Decoder.getValue());
     }
 
     @Test
@@ -105,7 +114,7 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("0f 7f 7f 7f 7f 00 ff");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertTrue(mandatoryUInt32Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> mandatoryUInt32Decoder.getValue());
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -117,9 +126,11 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a4");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverflow());
-        long val = nullableUInt32Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -127,9 +138,11 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("0f 7f 7f 7f ff");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverflow());
-        long val = nullableUInt32Decoder.getValue();
-        assertEquals(4294967294L, val);
+        try {
+            assertEquals(4294967294L, nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -137,9 +150,11 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a3");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertFalse(mandatoryUInt32Decoder.isOverflow());
-        long val = mandatoryUInt32Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, mandatoryUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -147,11 +162,16 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a4");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverflow());
-        long val = nullableUInt32Decoder.getValue();
-        assertEquals(942755, val);
-        val = nullableUInt32Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+        try {
+            assertEquals(942755, nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -159,11 +179,16 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a3");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertFalse(mandatoryUInt32Decoder.isOverflow());
-        long val = mandatoryUInt32Decoder.getValue();
-        assertEquals(942755, val);
-        val = mandatoryUInt32Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, mandatoryUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+        try {
+            assertEquals(942755, mandatoryUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -171,15 +196,19 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a4 0f 7f 7f 7f ff");
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverflow());
-        long val = nullableUInt32Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
 
         nullableUInt32Decoder.decode(buf);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverflow());
-        val = nullableUInt32Decoder.getValue();
-        assertEquals(4294967294L, val);
+        try {
+            assertEquals(4294967294L, nullableUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -187,14 +216,18 @@ class TestUInt32 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a3 39 45 a3");
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertFalse(mandatoryUInt32Decoder.isOverflow());
-        long val = mandatoryUInt32Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, mandatoryUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
 
         mandatoryUInt32Decoder.decode(buf);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertFalse(mandatoryUInt32Decoder.isOverflow());
-        val = mandatoryUInt32Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, mandatoryUInt32Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 }

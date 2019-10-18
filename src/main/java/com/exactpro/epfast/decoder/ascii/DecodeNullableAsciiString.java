@@ -2,7 +2,7 @@ package com.exactpro.epfast.decoder.ascii;
 
 import com.exactpro.epfast.decoder.OverflowException;
 
-public class DecodeNullableAsciiString extends DecodeAsciiString {
+public final class DecodeNullableAsciiString extends DecodeAsciiString {
 
     public String getValue() throws OverflowException {
         if (zeroCount < value.length()) {

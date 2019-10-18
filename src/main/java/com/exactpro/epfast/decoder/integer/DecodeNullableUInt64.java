@@ -1,10 +1,11 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 
 import java.math.BigInteger;
 
-public class DecodeNullableUInt64 extends DecodeInteger {
+public final class DecodeNullableUInt64 extends DecodeInteger {
 
     private static final long POSITIVE_LIMIT = 0x02000000_00000000L;
 
@@ -15,19 +16,25 @@ public class DecodeNullableUInt64 extends DecodeInteger {
     private long value;
 
     public void decode(ByteBuf buf) {
+        reset();
+        isUInt64Limit = false;
         value = 0;
-        ready = false;
-        while (buf.isReadable() && !ready) {
-            accumulate(buf.readByte());
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
+        while (readerIndex < readLimit && !ready) {
+            accumulate(buf.getByte(readerIndex++));
         }
+        buf.readerIndex(readerIndex);
     }
 
     public void continueDecode(ByteBuf buf) {
         decode(buf);
     }
 
-    public BigInteger getValue() {
-        if (value == 0) {
+    public BigInteger getValue() throws OverflowException {
+        if (overflow) {
+            throw new OverflowException("UInt64 Overflow");
+        } else if (value == 0) {
             return null;
         } else {
             if (isUInt64Limit) {

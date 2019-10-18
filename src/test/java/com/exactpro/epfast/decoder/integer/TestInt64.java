@@ -1,12 +1,11 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.epfast.decoder.FillBuffer;
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TestInt64 {
 
@@ -23,9 +22,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        Long val = nullableInt64Decoder.getValue();
-        assertNull(val);
+        try {
+            assertNull(nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -37,9 +38,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("81");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        Long val = nullableInt64Decoder.getValue();
-        assertEquals(0, val);
+        try {
+            assertEquals(0, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -47,9 +50,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("80");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(0, val);
+        try {
+            assertEquals(0, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -61,9 +66,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("01 00 00 00 00 00 00 00 00 80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(Long.MAX_VALUE, val);
+        try {
+            assertEquals(Long.MAX_VALUE, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -71,9 +78,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("00 7f 7f 7f 7f 7f 7f 7f 7f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(Long.MAX_VALUE, val);
+        try {
+            assertEquals(Long.MAX_VALUE, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -81,9 +90,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7f 00 00 00 00 00 00 00 00 80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(Long.MIN_VALUE, val);
+        try {
+            assertEquals(Long.MIN_VALUE, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -91,9 +102,12 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7f 00 00 00 00 00 00 00 00 80");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(Long.MIN_VALUE, val);
+        
+        try {
+            assertEquals(Long.MIN_VALUE, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -101,7 +115,7 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("01 00 00 00 00 00 00 00 00 81");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertTrue(nullableInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> nullableInt64Decoder.getValue());
     }
 
     @Test
@@ -109,7 +123,7 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("01 00 00 00 00 00 00 00 00 00 80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertTrue(nullableInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> nullableInt64Decoder.getValue());
     }
 
     @Test
@@ -117,7 +131,7 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("01 00 00 00 00 00 00 00 00 80");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertTrue(mandatoryInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> mandatoryInt64Decoder.getValue());
     }
 
     @Test
@@ -125,7 +139,7 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("00 7f 00 7f 7f 7f 7f 7f 7f 7f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertTrue(mandatoryInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> mandatoryInt64Decoder.getValue());
     }
 
     @Test
@@ -133,7 +147,7 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("77 7f 7f 7f 7f 7f 7f 7f 7f ff");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertTrue(nullableInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> nullableInt64Decoder.getValue());
     }
 
     @Test
@@ -141,7 +155,7 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7f 00 00 00 00 00 00 00 00 00 80");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertTrue(nullableInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> nullableInt64Decoder.getValue());
     }
 
     @Test
@@ -149,7 +163,7 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("77 7f 7f 7f 7f 7f 7f 7f 7f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertTrue(mandatoryInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> mandatoryInt64Decoder.getValue());
     }
 
     @Test
@@ -157,7 +171,7 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7f 00 00 00 00 00 00 00 00 00 80");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertTrue(mandatoryInt64Decoder.isOverflow());
+        assertThrows(OverflowException.class, () -> mandatoryInt64Decoder.getValue());
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -169,9 +183,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a4");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -179,14 +195,15 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45");
         nullableInt64Decoder.decode(buf);
         assertFalse(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
 
         buf = FillBuffer.fromHex("a4");
         nullableInt64Decoder.continueDecode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -194,9 +211,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45 a3");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -204,14 +223,15 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("39 45");
         mandatoryInt64Decoder.decode(buf);
         assertFalse(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
 
         buf = FillBuffer.fromHex("a3");
         mandatoryInt64Decoder.continueDecode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(942755, val);
+        try {
+            assertEquals(942755, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -219,9 +239,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("46 3a dd");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(-942755, val);
+        try {
+            assertEquals(-942755, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -229,14 +251,15 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("46 3a");
         nullableInt64Decoder.decode(buf);
         assertFalse(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
 
         buf = FillBuffer.fromHex("dd");
         nullableInt64Decoder.continueDecode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(-942755, val);
+        try {
+            assertEquals(-942755, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -244,9 +267,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7c 1b 1b 9d");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(-7942755, val);
+        try {
+            assertEquals(-7942755, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -254,14 +279,15 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7c 1b");
         mandatoryInt64Decoder.decode(buf);
         assertFalse(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
 
         buf = FillBuffer.fromHex("1b 9d");
         mandatoryInt64Decoder.continueDecode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(-7942755, val);
+        try {
+            assertEquals(-7942755, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -269,9 +295,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("ff");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(-1, val);
+        try {
+            assertEquals(-1, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -279,9 +307,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(-1, val);
+        try {
+            assertEquals(-1, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -289,9 +319,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("00 00 40 82");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(8193, val);
+        try {
+            assertEquals(8193, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -299,9 +331,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("00 00 40 81");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(8193, val);
+        try {
+            assertEquals(8193, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -309,9 +343,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7f 3f ff");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(-8193, val);
+        try {
+            assertEquals(-8193, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -319,9 +355,11 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7f 3f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(-8193, val);
+        try {
+            assertEquals(-8193, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -329,15 +367,19 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7f 3f ff 7f 3f ff");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(-8193, val);
+        try {
+            assertEquals(-8193, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
 
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        val = mandatoryInt64Decoder.getValue();
-        assertEquals(-8193, val);
+        try {
+            assertEquals(-8193, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -345,15 +387,19 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("00 00 40 81 00 00 40 81");
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        long val = mandatoryInt64Decoder.getValue();
-        assertEquals(8193, val);
+        try {
+            assertEquals(8193, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
 
         mandatoryInt64Decoder.decode(buf);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertFalse(mandatoryInt64Decoder.isOverflow());
-        val = mandatoryInt64Decoder.getValue();
-        assertEquals(8193, val);
+        try {
+            assertEquals(8193, mandatoryInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -361,15 +407,19 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("7f 3f ff 7f 3f ff");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(-8193, val);
+        try {
+            assertEquals(-8193, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
 
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        val = nullableInt64Decoder.getValue();
-        assertEquals(-8193, val);
+        try {
+            assertEquals(-8193, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 
     @Test
@@ -377,14 +427,18 @@ class TestInt64 {
         ByteBuf buf = FillBuffer.fromHex("00 00 40 82 00 00 40 82");
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        long val = nullableInt64Decoder.getValue();
-        assertEquals(8193, val);
+        try {
+            assertEquals(8193, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
 
         nullableInt64Decoder.decode(buf);
         assertTrue(nullableInt64Decoder.isReady());
-        assertFalse(nullableInt64Decoder.isOverflow());
-        val = nullableInt64Decoder.getValue();
-        assertEquals(8193, val);
+        try {
+            assertEquals(8193, nullableInt64Decoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 }

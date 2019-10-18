@@ -1,8 +1,8 @@
 package com.exactpro.epfast.decoder.decimal;
 
+import com.exactpro.epfast.decoder.FillBuffer;
 import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 import java.math.BigDecimal;
 
@@ -18,9 +18,9 @@ class TestDecodeDecimal {
 
     @Test
     void testNull() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0x80);
+        ByteBuf buf = FillBuffer.fromHex("80");
         nullableDecimalDecoder.decode(buf);
+        assertTrue(nullableDecimalDecoder.isReady());
         try {
             assertNull(nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
@@ -30,238 +30,241 @@ class TestDecodeDecimal {
 
     @Test
     void testNullablePositive1() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0x83);
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        buf.writeByte(0xa3);
+        ByteBuf buf = FillBuffer.fromHex("83 39 45 a3");
         nullableDecimalDecoder.decode(buf);
-        BigDecimal val = null;
+        assertTrue(nullableDecimalDecoder.isReady());
         try {
-            val = nullableDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("94275500"), val);
     }
 
     @Test
     void testNullablePositiveSplit() {
-        ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x83);
-        buf.writeByte(0x39);
-        nextBuf.writeByte(0x45);
-        nextBuf.writeByte(0xa3);
+        ByteBuf buf = FillBuffer.fromHex("83 39");
         nullableDecimalDecoder.decode(buf);
-        while (!nullableDecimalDecoder.isReady()) {
-            nullableDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = null;
+        assertFalse(nullableDecimalDecoder.isReady());
+
+        buf = FillBuffer.fromHex("45 a3");
+        nullableDecimalDecoder.continueDecode(buf);
+        assertTrue(nullableDecimalDecoder.isReady());
         try {
-            val = nullableDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("94275500"), val);
     }
 
     @Test
     void testNullablePositive() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0x82);
-        buf.writeByte(0x04);
-        buf.writeByte(0x3f);
-        buf.writeByte(0x34);
-        buf.writeByte(0xde);
+        ByteBuf buf = FillBuffer.fromHex("82 04 3f 34 de");
         nullableDecimalDecoder.decode(buf);
-        BigDecimal val = null;
+        assertTrue(nullableDecimalDecoder.isReady());
         try {
-            val = nullableDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("94275500"), val);
     }
 
     @Test
     void testNullablePositiveSplit2() {
-        ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x82);
-        buf.writeByte(0x04);
-        buf.writeByte(0x3f);
-        buf.writeByte(0x34);
-        nextBuf.writeByte(0xde);
+        ByteBuf buf = FillBuffer.fromHex("82 04 3f 34");
         nullableDecimalDecoder.decode(buf);
-        while (!nullableDecimalDecoder.isReady()) {
-            nullableDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = null;
+        assertFalse(nullableDecimalDecoder.isReady());
+
+        buf = FillBuffer.fromHex("de");
+        nullableDecimalDecoder.continueDecode(buf);
+        assertTrue(nullableDecimalDecoder.isReady());
         try {
-            val = nullableDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("94275500"), val);
     }
 
     @Test
     void testMandatoryPositive() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0x82);
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        buf.writeByte(0xa3);
+        ByteBuf buf = FillBuffer.fromHex("82 39 45 a3");
         mandatoryDecimalDecoder.decode(buf);
-        BigDecimal val = null;
+        assertTrue(mandatoryDecimalDecoder.isReady());
         try {
-            val = mandatoryDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("94275500"), val);
     }
 
     @Test
     void testMandatoryPositiveSplit() {
-        ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x82);
-        buf.writeByte(0x39);
-        nextBuf.writeByte(0x45);
-        nextBuf.writeByte(0xa3);
+        ByteBuf buf = FillBuffer.fromHex("82 39");
         mandatoryDecimalDecoder.decode(buf);
-        while (!mandatoryDecimalDecoder.isReady()) {
-            mandatoryDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = null;
+        assertFalse(mandatoryDecimalDecoder.isReady());
+
+        buf = FillBuffer.fromHex("45 a3");
+        mandatoryDecimalDecoder.continueDecode(buf);
+        assertTrue(mandatoryDecimalDecoder.isReady());
         try {
-            val = mandatoryDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("94275500"), val);
     }
 
     @Test
     void testMandatoryPositive2() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0x81);
-        buf.writeByte(0x04);
-        buf.writeByte(0x3f);
-        buf.writeByte(0x34);
-        buf.writeByte(0xde);
+        ByteBuf buf = FillBuffer.fromHex("81 04 3f 34 de");
         mandatoryDecimalDecoder.decode(buf);
-        BigDecimal val = null;
+        assertTrue(mandatoryDecimalDecoder.isReady());
         try {
-            val = mandatoryDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("94275500"), val);
     }
 
     @Test
     void testMandatoryPositiveSplit2() {
-        ByteBuf buf = Unpooled.buffer();
-        ByteBuf nextBuf = Unpooled.buffer();
-        buf.writeByte(0x81);
-        buf.writeByte(0x04);
-        buf.writeByte(0x3f);
-        buf.writeByte(0x34);
-        nextBuf.writeByte(0xde);
+        ByteBuf buf = FillBuffer.fromHex("81 04 3f 34");
         mandatoryDecimalDecoder.decode(buf);
-        while (!mandatoryDecimalDecoder.isReady()) {
-            mandatoryDecimalDecoder.continueDecode(nextBuf);
-        }
-        BigDecimal val = null;
+        assertFalse(mandatoryDecimalDecoder.isReady());
+
+        buf = FillBuffer.fromHex("de");
+        mandatoryDecimalDecoder.continueDecode(buf);
+        assertTrue(mandatoryDecimalDecoder.isReady());
         try {
-            val = mandatoryDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("94275500"), val);
     }
 
     @Test
     void testMandatoryPositive3() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0xfe);
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        buf.writeByte(0xa3);
+        ByteBuf buf = FillBuffer.fromHex("fe 39 45 a3");
         mandatoryDecimalDecoder.decode(buf);
-        BigDecimal val = null;
+        assertTrue(mandatoryDecimalDecoder.isReady());
         try {
-            val = mandatoryDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("9427.55"), mandatoryDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("9427.55"), val);
     }
 
     @Test
     void testNullablePositive3() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0xfe);
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        buf.writeByte(0xa3);
+        ByteBuf buf = FillBuffer.fromHex("fe 39 45 a3");
         nullableDecimalDecoder.decode(buf);
-        BigDecimal val = null;
+        assertTrue(nullableDecimalDecoder.isReady());
         try {
-            val = nullableDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("9427.55"), nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("9427.55"), val);
     }
 
     @Test
     void testNullableNegative() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0xfe);
-        buf.writeByte(0x46);
-        buf.writeByte(0x3a);
-        buf.writeByte(0xdd);
+        ByteBuf buf = FillBuffer.fromHex("fe 46 3a dd");
         nullableDecimalDecoder.decode(buf);
-        BigDecimal val = null;
+        assertTrue(nullableDecimalDecoder.isReady());
         try {
-            val = nullableDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("-9427.55"), nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("-9427.55"), val);
     }
 
     @Test
     void testNullableNegativeSignExtension() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0xfd);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x3f);
-        buf.writeByte(0xff);
+        ByteBuf buf = FillBuffer.fromHex("fd 7f 3f ff");
         nullableDecimalDecoder.decode(buf);
-        BigDecimal val = null;
+        assertTrue(nullableDecimalDecoder.isReady());
         try {
-            val = nullableDecimalDecoder.getValue();
+            assertEquals(new BigDecimal("-8.193"), nullableDecimalDecoder.getValue());
         } catch (OverflowException ex) {
             fail();
         }
-        assertEquals(new BigDecimal("-8.193"), val);
     }
 
     @Test
     void testExponentOverflowException() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(0x39);
-        buf.writeByte(0x45);
-        buf.writeByte(0xa4);
-        buf.writeByte(0x7f);
-        buf.writeByte(0x3f);
-        buf.writeByte(0xff);
+        ByteBuf buf = FillBuffer.fromHex("39 45 a4 7f 3f ff");
         nullableDecimalDecoder.decode(buf);
+        assertTrue(nullableDecimalDecoder.isReady());
         assertThrows(OverflowException.class, () -> nullableDecimalDecoder.getValue());
+    }
+
+    @Test
+    void testNullablePositiveGetValueTwice() {
+        ByteBuf buf = FillBuffer.fromHex("82 04 3f 34 de");
+        nullableDecimalDecoder.decode(buf);
+        assertTrue(nullableDecimalDecoder.isReady());
+        try {
+            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+        try {
+            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+    }
+
+    @Test
+    void testMandatoryPositiveGetValueTwice() {
+        ByteBuf buf = FillBuffer.fromHex("82 39 45 a3");
+        mandatoryDecimalDecoder.decode(buf);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        try {
+            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+        try {
+            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+    }
+
+    @Test
+    void testNullablePositiveTwoValuesInRow() {
+        ByteBuf buf = FillBuffer.fromHex("83 39 45 a3 82 04 3f 34 de");
+        nullableDecimalDecoder.decode(buf);
+        assertTrue(nullableDecimalDecoder.isReady());
+        try {
+            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+        nullableDecimalDecoder.decode(buf);
+        assertTrue(nullableDecimalDecoder.isReady());
+        try {
+            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+    }
+
+    @Test
+    void testMandatoryPositiveTwoValuesInRow() {
+        ByteBuf buf = FillBuffer.fromHex("82 39 45 a3 81 04 3f 34 de");
+        mandatoryDecimalDecoder.decode(buf);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        try {
+            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
+        mandatoryDecimalDecoder.decode(buf);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        try {
+            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
+        } catch (OverflowException ex) {
+            fail();
+        }
     }
 }

@@ -4,24 +4,25 @@ import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeNullableUInt32;
 import io.netty.buffer.ByteBuf;
 
-import java.util.ArrayList;
-
-public class DecodeNullableByteVector extends DecodeByteVector {
+public final class DecodeNullableByteVector extends DecodeByteVector {
 
     private DecodeNullableUInt32 lengthDecoder = new DecodeNullableUInt32();
 
     private Long messageLength;
 
     public void decode(ByteBuf buf) {
-        value = new ArrayList<>();
+        reset();
         lengthDecoder.decode(buf);
         if (lengthDecoder.isReady()) {
             lengthReady = true;
-            messageLength = lengthDecoder.getValue();
-            overflow = lengthDecoder.isOverflow();
+            try {
+                messageLength = lengthDecoder.getValue();
+            } catch (OverflowException ex) {
+                overflow = true;
+            }
             if ((messageLength != null) && (messageLength > 0)) {
-                readerIndex = buf.readerIndex();
-                readLimit = buf.readableBytes() + readerIndex;
+                int readerIndex = buf.readerIndex();
+                int readLimit = buf.writerIndex();
                 while ((readerIndex < readLimit) && !ready) {
                     if (counter < messageLength) {
                         value.add(buf.getByte(readerIndex++));
@@ -41,8 +42,8 @@ public class DecodeNullableByteVector extends DecodeByteVector {
 
     public void continueDecode(ByteBuf buf) {
         if (lengthReady) {
-            readerIndex = buf.readerIndex();
-            readLimit = buf.readableBytes() + readerIndex;
+            int readerIndex = buf.readerIndex();
+            int readLimit = buf.writerIndex();
             while ((readerIndex < readLimit) && !ready) {
                 if (counter < messageLength) {
                     value.add(buf.getByte(readerIndex++));
@@ -57,11 +58,14 @@ public class DecodeNullableByteVector extends DecodeByteVector {
             lengthDecoder.continueDecode(buf);
             if (lengthDecoder.isReady()) {
                 lengthReady = true;
-                messageLength = lengthDecoder.getValue();
-                overflow = lengthDecoder.isOverflow();
-                if (messageLength > 0) {
-                    readerIndex = buf.readerIndex();
-                    readLimit = buf.readableBytes() + readerIndex;
+                try {
+                    messageLength = lengthDecoder.getValue();
+                } catch (OverflowException ex) {
+                    overflow = true;
+                }
+                if (messageLength != null && messageLength > 0) {
+                    int readerIndex = buf.readerIndex();
+                    int readLimit = buf.writerIndex();
                     while ((readerIndex < readLimit) && !ready) {
                         if (counter < messageLength) {
                             value.add(buf.getByte(readerIndex++));
