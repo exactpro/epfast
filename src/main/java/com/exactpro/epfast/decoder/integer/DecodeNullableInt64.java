@@ -1,8 +1,9 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 
-public class DecodeNullableInt64 extends DecodeInteger {
+public final class DecodeNullableInt64 extends DecodeInteger {
 
     private static final long POSITIVE_LIMIT = 0x01000000_00000000L;
 
@@ -13,36 +14,48 @@ public class DecodeNullableInt64 extends DecodeInteger {
     private long value;
 
     public void decode(ByteBuf buf) {
-        int oneByte = buf.readByte();
+        reset();
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
+        int oneByte = buf.getByte(readerIndex++);
         positive = (oneByte & SIGN_BIT_MASK) == 0;
         if (positive) {
+            value = 0;
             accumulatePositive(oneByte);
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
+            while (readerIndex < readLimit && !ready) {
+                accumulatePositive(buf.getByte(readerIndex++));
             }
         } else {
             value = -1;
             accumulateNegative(oneByte);
-            while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
+            while (readerIndex < readLimit && !ready) {
+                accumulateNegative(buf.getByte(readerIndex++));
             }
         }
+        buf.readerIndex(readerIndex);
     }
 
     public void continueDecode(ByteBuf buf) {
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
         if (positive) {
-            while (buf.isReadable() && !ready) {
-                accumulatePositive(buf.readByte());
+            while (readerIndex < readLimit && !ready) {
+                accumulatePositive(buf.getByte(readerIndex++));
             }
         } else {
-            while (buf.isReadable() && !ready) {
-                accumulateNegative(buf.readByte());
+            while (readerIndex < readLimit && !ready) {
+                accumulateNegative(buf.getByte(readerIndex++));
             }
         }
+        buf.readerIndex(readerIndex);
     }
 
-    public Long getValue() {
-        return value == 0 ? null : positive ? value - 1 : value;
+    public Long getValue() throws OverflowException {
+        if (overflow) {
+            throw new OverflowException("Int64 Overflow");
+        } else {
+            return value == 0 ? null : positive ? value - 1 : value;
+        }
     }
 
     private void accumulatePositive(int oneByte) {

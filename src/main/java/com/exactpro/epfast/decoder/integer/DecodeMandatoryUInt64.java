@@ -1,10 +1,11 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 
 import java.math.BigInteger;
 
-public class DecodeMandatoryUInt64 extends DecodeInteger {
+public final class DecodeMandatoryUInt64 extends DecodeInteger {
 
     private static final long OVERFLOW_MASK = 0xFE00000000000000L;
 
@@ -13,18 +14,27 @@ public class DecodeMandatoryUInt64 extends DecodeInteger {
     private long value;
 
     public void decode(ByteBuf buf) {
-        while (buf.isReadable() && !ready) {
-            accumulate(buf.readByte());
+        reset();
+        value = 0;
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
+        while (readerIndex < readLimit && !ready) {
+            accumulate(buf.getByte(readerIndex++));
         }
+        buf.readerIndex(readerIndex);
     }
 
     public void continueDecode(ByteBuf buf) {
         decode(buf);
     }
 
-    public BigInteger getValue() {
-        longToBytes(value, bytes);
-        return new BigInteger(1, bytes);
+    public BigInteger getValue() throws OverflowException {
+        if (overflow) {
+            throw new OverflowException("UInt32 Overflow");
+        } else {
+            longToBytes(value, bytes);
+            return new BigInteger(1, bytes);
+        }
     }
 
     private void accumulate(int oneByte) {

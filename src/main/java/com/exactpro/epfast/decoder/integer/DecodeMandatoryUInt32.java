@@ -1,25 +1,35 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.epfast.decoder.OverflowException;
 import io.netty.buffer.ByteBuf;
 
-class DecodeMandatoryUInt32 extends DecodeInteger {
+public final class DecodeMandatoryUInt32 extends DecodeInteger {
 
     private static final int OVERFLOW_MASK = 0xFE000000;
 
     private int value;
 
     public void decode(ByteBuf buf) {
-        while (buf.isReadable() && !ready) {
-            accumulate(buf.readByte());
+        reset();
+        value = 0;
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
+        while (readerIndex < readLimit && !ready) {
+            accumulate(buf.getByte(readerIndex++));
         }
+        buf.readerIndex(readerIndex);
     }
 
     public void continueDecode(ByteBuf buf) {
         decode(buf);
     }
 
-    public long getValue() {
-        return value & 0x0_FFFFFFFFL;
+    public long getValue() throws OverflowException {
+        if (overflow) {
+            throw new OverflowException("UInt32 Overflow");
+        } else {
+            return value & 0x0_FFFFFFFFL;
+        }
     }
 
     private void accumulate(int oneByte) {
