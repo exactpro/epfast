@@ -11,16 +11,26 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
+import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
-import java.io.IOException;
-import java.io.PrintWriter;
+import javax.tools.StandardLocation;
+import java.io.*;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @SupportedAnnotationTypes("com.exactpro.epfast.annotations.FastType")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
 public class FastProcessor extends AbstractProcessor {
+    private static final TypeName SERVICE_TYPENAME = new TypeName("com.exactpro.epfast.ICreator");
+
+    private static final TypeName SERVICE_PROVIDER = new TypeName(
+        "com.exactpro.epfast.annotation.internal.CreatorImpl");
+
     private MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+
+    private HashMap<String, Element> fastTypesByName;
 
     private TypeElement fastTypeElement;
 
@@ -32,10 +42,25 @@ public class FastProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        if (annotations.contains(fastTypeElement)) {
-            HashMap<String, Element> nameClassMap = collectFastTypes(roundEnv);
+        if (roundEnv.processingOver()) {
             try {
-                buildCreatorClass(nameClassMap);
+                addServiceEntry(SERVICE_TYPENAME, SERVICE_PROVIDER,
+                    fastTypesByName.values().stream().toArray(Element[]::new));
+            } catch (IOException e) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+                    String.format("Unable to create or update java services file for %s service", SERVICE_TYPENAME));
+            }
+        }
+        if (annotations.contains(fastTypeElement)) {
+            if (fastTypesByName != null) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR,
+                    "@FastType annotation processor can not handle classes with @FastType " +
+                        "annotation added after first processing round. " +
+                        "It may be caused by activity of other annotation processors.");
+            }
+            fastTypesByName = collectFastTypes(roundEnv);
+            try {
+                buildCreatorClass(fastTypesByName);
             } catch (Exception e) {
                 processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, e.getMessage());
             }
@@ -76,21 +101,59 @@ public class FastProcessor extends AbstractProcessor {
     private void reportDuplicates(String fastTypeName, Collection<Element> elements) {
         Messager messager = processingEnv.getMessager();
         elements.forEach(element -> messager.printMessage(
-                Diagnostic.Kind.ERROR,
-                String.format("Multiple declarations referring to FastType '%s' are found.", fastTypeName),
-                element));
+            Diagnostic.Kind.ERROR,
+            String.format("Multiple declarations referring to FastType '%s' are found.", fastTypeName),
+            element));
     }
 
     private void buildCreatorClass(HashMap<String, Element> nameClassMap) throws IOException {
-        TypeName typeName = new TypeName("com.exactpro.epfast.annotation.internal.CreatorImpl");
         // mustache files are in UTF-8 by default
         Mustache mustache = mustacheFactory.compile(
             "com/exactpro/epfast/annotation/processing/CreatorImpl.java.mustache");
-
-        JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(typeName.toString());
+        Collection<Element> elements = nameClassMap.values();
+        JavaFileObject builderFile = processingEnv.getFiler().createSourceFile(SERVICE_PROVIDER.toString());
         try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
-            mustache.execute(out, new CreatorTemplateParameters(typeName, nameClassMap.entrySet())).flush();
+            mustache.execute(out, new CreatorTemplateParameters(SERVICE_PROVIDER, nameClassMap.entrySet())).flush();
         }
+    }
+
+    private void addServiceEntry(TypeName service, TypeName provider,
+                                 Element... originatingElements) throws IOException {
+        Set<TypeName> allProviders = getServiceProviders(service);
+        if (allProviders.contains(provider)) {
+            return;
+        }
+        allProviders.add(provider);
+        FileObject resourceFile = processingEnv.getFiler().createResource(
+            StandardLocation.CLASS_OUTPUT,
+            "",
+            getServicesFilePath(service),
+            originatingElements);
+        try (PrintWriter out = new PrintWriter(resourceFile.openOutputStream())) {
+            for (TypeName serviceProvider : allProviders) {
+                out.println(serviceProvider);
+            }
+        }
+    }
+
+    private Set<TypeName> getServiceProviders(TypeName service) throws IOException {
+        HashSet<TypeName> serviceProviders = new HashSet<>();
+        FileObject existingFile = processingEnv.getFiler().getResource(
+            StandardLocation.CLASS_OUTPUT,
+            "",
+            getServicesFilePath(service));
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(existingFile.openInputStream()))) {
+            return br.lines().filter(provider->!provider.isEmpty())
+                .map(TypeName::new).collect(Collectors.toSet());
+        } catch (FileNotFoundException e) {
+            //resource didn't exist before, so we ignore it
+        }
+        return serviceProviders;
+    }
+
+    private String getServicesFilePath(TypeName service) {
+        return Paths.get("META-INF", "services", service.toString()).toString();
     }
 
     private static <T> T getSingleElementOrNull(Collection<T> collection) {
