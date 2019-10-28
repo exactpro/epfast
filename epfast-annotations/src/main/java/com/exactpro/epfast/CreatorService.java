@@ -1,15 +1,13 @@
 package com.exactpro.epfast;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.ServiceLoader;
+import java.util.stream.Collectors;
+
+import static com.exactpro.epfast.util.Stream.streamIterable;
 
 public class CreatorService {
-    public static List<ICreator> providers() {
-        List<ICreator> services = new ArrayList<>();
-        ServiceLoader<ICreator> loader = ServiceLoader.load(ICreator.class);
-        loader.forEach(services::add);
-        return services;
+    public static Collection<ICreator> providers() {
+        return streamIterable(ServiceLoader.load(ICreator.class)).collect(Collectors.toList());
     }
-
 }
