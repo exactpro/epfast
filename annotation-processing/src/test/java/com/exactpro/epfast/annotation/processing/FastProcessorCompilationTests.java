@@ -49,6 +49,9 @@ class FastProcessorCompilationTests {
                 "com.exactpro.epfast.annotation.internal.test$",
                 "CreatorImpl.class")
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
+            "com.exactpro.epfast.annotation.internal.test$",
+            "DefaultAnnotatedFieldSetter.class")
+            .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
             "",
             "META-INF/services/com.exactpro.epfast.ICreator")
             .withStringContents(StandardCharsets.UTF_8,
@@ -63,7 +66,7 @@ class FastProcessorCompilationTests {
             JavaFileObjects.forResource("test/packageA/package-info.java"))
             .processedWith(fastProcessor)
             .failsToCompile()
-            .withErrorContaining("Both anonymous and named package(s) refer to FAST package test.");
+            .withErrorContaining("Multiple @FastPackage annotations referring FAST package test are found.");
     }
 
     @Test
@@ -87,7 +90,8 @@ class FastProcessorCompilationTests {
             JavaFileObjects.forResource("test/packageA/package-info.java"))
             .processedWith(fastProcessor)
             .failsToCompile()
-            .withErrorContaining("Both anonymous and named package(s) refer to FAST package test.");
+            .withErrorContaining(
+                "Multiple @FastPackage annotations referring FAST package test are found.");
     }
 
     @Test
@@ -102,18 +106,23 @@ class FastProcessorCompilationTests {
             "CreatorImpl.class")
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
                 "",
-                "META-INF/services/com.exactpro.epfast.ICreator");
+                "META-INF/services/com.exactpro.epfast.ICreator")
+            .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
+            "com.exactpro.epfast.annotation.internal.test$",
+            "fastAFieldSetter.class")
+            .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
+            "com.exactpro.epfast.annotation.internal.test$",
+            "fastBFieldSetter.class");
     }
 
     @Test
-    void testDuplicateFastPackagesFail() {
+    void testDuplicateFieldsFail() {
         JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/packageA/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/packageB/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/packageA/package-info.java"),
-            JavaFileObjects.forResource("test/packageB/package-info.java"))
+            JavaFileObjects.forResource("test/fields/error/DuplicateStudent.java"),
+            JavaFileObjects.forResource("test/fields/error/package-info.java"))
             .processedWith(fastProcessor)
             .failsToCompile()
-            .withErrorContaining("Multiple @FastPackage annotations referring FAST package test are found.");
+            .withErrorContaining(
+                "Multiple @FastField annotations referring FAST field 'name' are found.");
     }
 }

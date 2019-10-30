@@ -33,43 +33,47 @@ class CreatorTests {
     }
 
     @Test
-    void testCreatorDefaultAnnotation() throws Exception {
-        assertEquals(DefaultAnnotated.class, creator.create("DefaultAnnotated").getClass());
-    }
-
-    @Test
     void testCreatorNonDefaultAnnotation() throws Exception {
-        assertEquals(NamedAnnotated.class, creator.create("named").getClass());
+        assertEquals(NamedAnnotated.class, creator.create("named").getObject().getClass());
     }
 
     @Test
     void testRootCreator() throws Exception {
-        assertEquals(RootFastType.class, rootCreator.create("root").getClass());
+        assertEquals(RootFastType.class, rootCreator.create("root").getObject().getClass());
     }
 
     @Test
     void testInsideCreator() throws Exception {
-        assertEquals(DefAnn.class, insideCreator.create("DefAnn").getClass());
+        assertEquals(DefAnn.class, insideCreator.create("DefAnn").getObject().getClass());
     }
 
     @Test
     void testSameFastTypesAreProcessedInDifferentPackages() throws Exception {
-        assertEquals(com.exactpro.epfast.inside.NamedAnnotated.class, insideCreator.create("named").getClass());
-        assertEquals(com.exactpro.epfast.NamedAnnotated.class, creator.create("named").getClass());
+        assertEquals(com.exactpro.epfast.inside.NamedAnnotated.class,
+            insideCreator.create("named").getObject().getClass());
+        assertEquals(com.exactpro.epfast.NamedAnnotated.class,
+            creator.create("named").getObject().getClass());
     }
 
-    /*
-        com.exactpro.epfast.inside.foo package isn't @FastPackage annotated. so all classes inside it
-        (FastTypeAnnotated) must be distributed to outer FastPackage ("com.exacptro.epfast.inside").
-    */
     @Test
     void testFastTypeWithoutPackage() throws Exception {
-        assertEquals(FastTypeAnnotated.class, insideCreator.create("FastTypeAnnotated").getClass());
+        assertEquals(FastTypeAnnotated.class, insideCreator.create("FastTypeAnnotated").getObject().getClass());
     }
 
     @Test
     void testExceptionThrown() {
         Exception exception = assertThrows(RuntimeException.class, () -> creator.create("null"));
         assertEquals("FastType name=\"null\" not found", exception.getMessage());
+    }
+
+    @Test
+    void testFieldSettings() throws Exception {
+        IFieldSetter<Student> fieldSetter = creator.create("Student");
+        fieldSetter.setField("name", "John");
+        fieldSetter.setField("age", 22);
+
+        Student createdObject = fieldSetter.getObject();
+        assertEquals("John", createdObject.getName());
+        assertEquals(22, createdObject.getAge());
     }
 }

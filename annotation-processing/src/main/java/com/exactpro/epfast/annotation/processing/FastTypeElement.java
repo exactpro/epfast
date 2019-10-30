@@ -3,11 +3,15 @@ package com.exactpro.epfast.annotation.processing;
 import com.exactpro.epfast.annotations.FastType;
 
 import javax.lang.model.element.Element;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FastTypeElement {
     private String fastTypeName;
 
     private Element fastTypeElement;
+
+    private List<FastFieldElement> fastFields = new ArrayList<>();
 
     public FastTypeElement(Element fastTypeElement) {
         this.fastTypeName = getNameFromElement(fastTypeElement);
@@ -23,6 +27,10 @@ public class FastTypeElement {
         }
     }
 
+    public void addFastField(FastFieldElement fastField) {
+        fastFields.add(fastField);
+    }
+
     public String getTypeName() {
         return fastTypeName;
     }
@@ -31,4 +39,7 @@ public class FastTypeElement {
         return fastTypeElement;
     }
 
+    public List<FastFieldElement> getFastFields() {
+        return fastFields;
+    }
 }

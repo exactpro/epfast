@@ -14,11 +14,8 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
-import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,6 +26,8 @@ public class FastProcessor extends AbstractProcessor {
     private static final TypeName SERVICE_TYPENAME = new TypeName(ICreator.class.getTypeName());
 
     private MustacheFactory mustacheFactory = new DefaultMustacheFactory();
+
+    private FastServiceCreator fastServiceCreator;
 
     private TypeElement fastTypeElement;
 
@@ -47,6 +46,7 @@ public class FastProcessor extends AbstractProcessor {
         super.init(processingEnv);
         this.elementUtils = processingEnv.getElementUtils();
         this.filer = processingEnv.getFiler();
+        this.fastServiceCreator = new FastServiceCreator(filer);
         this.fastTypeElement = elementUtils.getTypeElement(FastType.class.getCanonicalName());
         this.fastPackageElement = elementUtils.getTypeElement(FastPackage.class.getCanonicalName());
         Messager messager = processingEnv.getMessager();
@@ -59,7 +59,6 @@ public class FastProcessor extends AbstractProcessor {
 
         if (annotations.contains(fastTypeElement) || annotations.contains(fastPackageElement)) {
             annotationsClaimed = true;
-
             if (fastEnvironment != null) {
                 errorReporter.reportProcessingAfterFirstRound();
             }
@@ -82,7 +81,7 @@ public class FastProcessor extends AbstractProcessor {
                     .map(FastTypeElement::getElement)
                     .collect(Collectors.toList())));
             try {
-                addServiceEntries(SERVICE_TYPENAME, creatorImplTypeNames,
+                fastServiceCreator.updateServiceEntries(SERVICE_TYPENAME, creatorImplTypeNames,
                     originatingElements.stream().toArray(Element[]::new));
             } catch (IOException e) {
                 errorReporter.reportServiceUpdate(SERVICE_TYPENAME);
@@ -93,6 +92,25 @@ public class FastProcessor extends AbstractProcessor {
     }
 
     private void buildCreatorClasses(FastEnvironment fastEnvironment) throws IOException {
+        for (FastPackageElement fastPackage : fastEnvironment.getFastPackages()) {
+            for (FastTypeElement fastTypeElement : fastPackage.getFastTypes()) {
+                TypeName typeName = new TypeName(
+                    String.format("com.exactpro.epfast.annotation.internal.%s.%sFieldSetter",
+                        FastPackageNameEncoder.encode(fastPackage.getPackageName()),
+                        fastTypeElement.getTypeName())
+                    );
+                JavaFileObject fieldSetterFile = filer.createSourceFile(typeName.toString());
+                Mustache mustache = mustacheFactory.compile(
+                    "com/exactpro/epfast/annotation/processing/FieldSetter.java.mustache");
+                try (PrintWriter out = new PrintWriter(fieldSetterFile.openWriter())) {
+                    mustache.execute(out,
+                        new FieldSetterTemplateParameters(
+                            typeName, fastTypeElement.getFastFields(), fastTypeElement.getElement())
+                    ).flush();
+                }
+            }
+        }
+
         for (FastPackageElement packageElement : fastEnvironment.getFastPackages()) {
             TypeName typeName = new TypeName(String.format("com.exactpro.epfast.annotation.internal.%s.CreatorImpl",
                 FastPackageNameEncoder.encode(packageElement.getPackageName())));
@@ -118,45 +136,6 @@ public class FastProcessor extends AbstractProcessor {
                 String.format("com.exactpro.epfast.annotation.internal.%s.CreatorImpl", packageName)));
         }
         return creatorTypeNames;
-    }
-
-    private void addServiceEntries(TypeName service, HashSet<TypeName> providers,
-                                   Element... originatingElements) throws IOException {
-        Set<TypeName> allProviders = getExistingServiceProviders(service);
-        if (allProviders.containsAll(providers)) {
-            return;
-        }
-        allProviders.addAll(providers);
-        FileObject resourceFile = filer.createResource(
-            StandardLocation.CLASS_OUTPUT,
-            "",
-            getServicesFilePath(service),
-            originatingElements);
-        try (PrintWriter out = new PrintWriter(resourceFile.openOutputStream())) {
-            for (TypeName serviceProvider : allProviders) {
-                out.println(serviceProvider);
-            }
-        }
-    }
-
-    private Set<TypeName> getExistingServiceProviders(TypeName service) throws IOException {
-        HashSet<TypeName> serviceProviders = new HashSet<>();
-        FileObject existingFile = filer.getResource(
-            StandardLocation.CLASS_OUTPUT,
-            "",
-            getServicesFilePath(service));
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(existingFile.openInputStream()))) {
-            return br.lines().filter(provider -> !provider.isEmpty())
-                .map(TypeName::new).collect(Collectors.toSet());
-        } catch (FileNotFoundException e) {
-            // Resource didn't exist before, so we ignore it
-        }
-        return serviceProviders;
-    }
-
-    private String getServicesFilePath(TypeName service) {
-        return Paths.get("META-INF", "services", service.toString()).toString();
     }
 
 }

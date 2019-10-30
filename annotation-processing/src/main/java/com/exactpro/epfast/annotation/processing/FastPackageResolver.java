@@ -2,12 +2,10 @@ package com.exactpro.epfast.annotation.processing;
 
 import com.exactpro.epfast.annotations.FastPackage;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.util.Elements;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.TreeSet;
+import java.util.*;
 
 class FastPackageResolver {
     private final Elements elementUtils;
@@ -53,4 +51,25 @@ class FastPackageResolver {
         }
         return packageString.substring(0, lastDotIndex);
     }
+
+    public void addFieldToFastType(Element element) {
+        FastFieldElement fastField = new FastFieldElement(element);
+        FastTypeElement fastType = getFastTypeForField(element);
+        if (fastType != null) {
+            fastType.addFastField(fastField);
+        } // otherwise ignore @FastFields if class is not annotated with @FastType
+    }
+
+    private FastTypeElement getFastTypeForField(Element element) {
+        Element ownerFastType = element.getEnclosingElement();
+        for (FastPackageElement fastPackage : cache.values()) {
+            for (FastTypeElement fastType : fastPackage.getFastTypes()) {
+                if (fastType.getElement().equals(ownerFastType)) {
+                    return fastType;
+                }
+            }
+        }
+        return null;
+    }
+
 }
