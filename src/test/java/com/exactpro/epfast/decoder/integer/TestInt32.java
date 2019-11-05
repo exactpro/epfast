@@ -1,11 +1,12 @@
 package com.exactpro.epfast.decoder.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.decoder.FillBuffer.*;
+import static com.exactpro.epfast.ByteBufUtils.*;
+import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestInt32 {
 
@@ -18,10 +19,12 @@ class TestInt32 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void testNull() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("80"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertNull(nullableInt32Decoder.getValue());
+    void testNull() throws IOException {
+        withByteBuf("80", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertNull(nullableInt32Decoder.getValue());
+        });
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -29,17 +32,21 @@ class TestInt32 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void optionalZero() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("81"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(0, nullableInt32Decoder.getValue());
+    void optionalZero() throws IOException {
+        withByteBuf("81", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(0, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void mandatoryZero() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("80"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(0, mandatoryInt32Decoder.getValue());
+    void mandatoryZero() throws IOException {
+        withByteBuf("80", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(0, mandatoryInt32Decoder.getValue());
+        });
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -47,87 +54,111 @@ class TestInt32 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void testMaxNullable() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("08 00 00 00 80"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(Integer.MAX_VALUE, nullableInt32Decoder.getValue());
+    void testMaxNullable() throws IOException {
+        withByteBuf("08 00 00 00 80", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(Integer.MAX_VALUE, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMaxMandatory() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("07 7f 7f 7f ff"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(Integer.MAX_VALUE, mandatoryInt32Decoder.getValue());
+    void testMaxMandatory() throws IOException {
+        withByteBuf("07 7f 7f 7f ff", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(Integer.MAX_VALUE, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMinNullable() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("78 00 00 00 80"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(Integer.MIN_VALUE, nullableInt32Decoder.getValue());
+    void testMinNullable() throws IOException {
+        withByteBuf("78 00 00 00 80", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(Integer.MIN_VALUE, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMinMandatory() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("78 00 00 00 80"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(Integer.MIN_VALUE, mandatoryInt32Decoder.getValue());
+    void testMinMandatory() throws IOException {
+        withByteBuf("78 00 00 00 80", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(Integer.MIN_VALUE, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMaxOverflowNullable1() {
-        nullableInt32Decoder.decode(fromHex("08 00 00 00 81"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertThrows(OverflowException.class, () -> nullableInt32Decoder.getValue());
+    void testMaxOverflowNullable1() throws IOException {
+        withByteBuf("08 00 00 00 81", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertThrows(IOException.class, () -> nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMaxOverflowNullable2() {
-        nullableInt32Decoder.decode(fromHex("08 00 00 00 00 00 00 80"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertThrows(OverflowException.class, () -> nullableInt32Decoder.getValue());
+    void testMaxOverflowNullable2() throws IOException {
+        withByteBuf("08 00 00 00 00 00 00 80", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertThrows(IOException.class, () -> nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMaxOverflowMandatory1() {
-        mandatoryInt32Decoder.decode(fromHex("08 00 00 00 80"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertThrows(OverflowException.class, () -> mandatoryInt32Decoder.getValue());
+    void testMaxOverflowMandatory1() throws IOException {
+        withByteBuf("08 00 00 00 80", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertThrows(IOException.class, () -> mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMaxOverflowMandatory2() {
-        mandatoryInt32Decoder.decode(fromHex("07 7f 00 7f 7f 7f ff"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertThrows(OverflowException.class, () -> mandatoryInt32Decoder.getValue());
+    void testMaxOverflowMandatory2() throws IOException {
+        withByteBuf("07 7f 00 7f 7f 7f ff", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertThrows(IOException.class, () -> mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMinOverflowNullable1() {
-        nullableInt32Decoder.decode(fromHex("77 7f 7f 7f ff"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertThrows(OverflowException.class, () -> nullableInt32Decoder.getValue());
+    void testMinOverflowNullable1() throws IOException {
+        withByteBuf("77 7f 7f 7f ff", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertThrows(IOException.class, () -> nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMinOverflowNullable2() {
-        nullableInt32Decoder.decode(fromHex("78 00 00 00 00 80"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertThrows(OverflowException.class, () -> nullableInt32Decoder.getValue());
+    void testMinOverflowNullable2() throws IOException {
+        withByteBuf("78 00 00 00 00 80", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertThrows(IOException.class, () -> nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMinOverflowMandatory1() {
-        mandatoryInt32Decoder.decode(fromHex("77 7f 7f 7f ff"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertThrows(OverflowException.class, () -> mandatoryInt32Decoder.getValue());
+    void testMinOverflowMandatory1() throws IOException {
+        withByteBuf("77 7f 7f 7f ff", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertThrows(IOException.class, () -> mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void testMinOverflowMandatory2() {
-        mandatoryInt32Decoder.decode(fromHex("78 00 00 00 00 80"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertThrows(OverflowException.class, () -> mandatoryInt32Decoder.getValue());
+    void testMinOverflowMandatory2() throws IOException {
+        withByteBuf("78 00 00 00 00 80", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertThrows(IOException.class, () -> mandatoryInt32Decoder.getValue());
+        });
     }
 
     //-----------------------------------------------------------------------------------------------
@@ -135,160 +166,144 @@ class TestInt32 {
     //-----------------------------------------------------------------------------------------------
 
     @Test
-    void optionalPositive() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("39 45 a4"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(942755, nullableInt32Decoder.getValue());
+    void optionalPositive() throws IOException {
+        withByteBuf("39 45 a4", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(942755, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void optionalPositiveSplit() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("39 45"));
-        assertFalse(nullableInt32Decoder.isReady());
-
-        nullableInt32Decoder.continueDecode(fromHex("a4"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(942755, nullableInt32Decoder.getValue());
+    void mandatoryPositive() throws IOException {
+        withByteBuf("39 45 a3", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(942755, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void mandatoryPositive() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("39 45 a3"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(942755, mandatoryInt32Decoder.getValue());
+    void optionalNegative() throws IOException {
+        withByteBuf("46 3a dd", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(-942755, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void mandatoryPositiveSplit() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("39 45"));
-        assertFalse(mandatoryInt32Decoder.isReady());
-
-        mandatoryInt32Decoder.continueDecode(fromHex("a3"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(942755, mandatoryInt32Decoder.getValue());
+    void mandatoryNegative() throws IOException {
+        withByteBuf("7c 1b 1b 9d", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(-7942755, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void optionalNegative() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("46 3a dd"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(-942755, nullableInt32Decoder.getValue());
+    void optionalMinusOne() throws IOException {
+        withByteBuf("ff", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(-1, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void optionalNegativeSplit() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("46 3a"));
-        assertFalse(nullableInt32Decoder.isReady());
-
-        nullableInt32Decoder.continueDecode(fromHex("dd"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(-942755, nullableInt32Decoder.getValue());
+    void mandatoryMinusOne() throws IOException {
+        withByteBuf("ff", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(-1, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void mandatoryNegative() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("7c 1b 1b 9d"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(-7942755, mandatoryInt32Decoder.getValue());
+    void optionalSignExtensionPositive() throws IOException {
+        withByteBuf("00 00 40 82", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(8193, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void mandatoryNegativeSplit() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("7c 1b"));
-        assertFalse(mandatoryInt32Decoder.isReady());
-
-        mandatoryInt32Decoder.continueDecode(fromHex("1b 9d"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(-7942755, mandatoryInt32Decoder.getValue());
+    void mandatorySignExtensionPositive() throws IOException {
+        withByteBuf("00 00 40 81", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(8193, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void optionalMinusOne() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("ff"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(-1, nullableInt32Decoder.getValue());
+    void optionalSignExtensionNegative() throws IOException {
+        withByteBuf("7f 3f ff", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(-8193, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void mandatoryMinusOne() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("ff"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(-1, mandatoryInt32Decoder.getValue());
+    void mandatorySignExtensionNegative() throws IOException {
+        withByteBuf("7f 3f ff", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(-8193, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void optionalSignExtensionPositive() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("00 00 40 82"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(8193, nullableInt32Decoder.getValue());
+    void mandatoryNegativeTwoValuesInRow() throws IOException {
+        withByteBuf("7f 3f ff 7f 3f ff", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(-8193, mandatoryInt32Decoder.getValue());
+
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(-8193, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void mandatorySignExtensionPositive() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("00 00 40 81"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(8193, mandatoryInt32Decoder.getValue());
+    void mandatoryPositiveTwoValuesInRow() throws IOException {
+        withByteBuf("00 00 40 81 00 00 40 81", buffers -> {
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(8193, mandatoryInt32Decoder.getValue());
+
+            decode(mandatoryInt32Decoder, buffers);
+            assertTrue(mandatoryInt32Decoder.isReady());
+            assertEquals(8193, mandatoryInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void optionalSignExtensionNegative() throws OverflowException {
-        nullableInt32Decoder.decode(fromHex("7f 3f ff"));
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(-8193, nullableInt32Decoder.getValue());
+    void optionalNegativeTwoValuesInRow() throws IOException {
+        withByteBuf("7f 3f ff 7f 3f ff", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(-8193, nullableInt32Decoder.getValue());
+
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(-8193, nullableInt32Decoder.getValue());
+        });
     }
 
     @Test
-    void mandatorySignExtensionNegative() throws OverflowException {
-        mandatoryInt32Decoder.decode(fromHex("7f 3f ff"));
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(-8193, mandatoryInt32Decoder.getValue());
-    }
+    void optionalPositiveTwoValuesInRow() throws IOException {
+        withByteBuf("00 00 40 82 00 00 40 82", buffers -> {
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(8193, nullableInt32Decoder.getValue());
 
-    @Test
-    void mandatoryNegativeTwoValuesInRow() throws OverflowException {
-        ByteBuf buf = fromHex("7f 3f ff 7f 3f ff");
-        mandatoryInt32Decoder.decode(buf);
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(-8193, mandatoryInt32Decoder.getValue());
-
-        mandatoryInt32Decoder.decode(buf);
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(-8193, mandatoryInt32Decoder.getValue());
-    }
-
-    @Test
-    void mandatoryPositiveTwoValuesInRow() throws OverflowException {
-        ByteBuf buf = fromHex("00 00 40 81 00 00 40 81");
-        mandatoryInt32Decoder.decode(buf);
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(8193, mandatoryInt32Decoder.getValue());
-
-        mandatoryInt32Decoder.decode(buf);
-        assertTrue(mandatoryInt32Decoder.isReady());
-        assertEquals(8193, mandatoryInt32Decoder.getValue());
-    }
-
-    @Test
-    void optionalNegativeTwoValuesInRow() throws OverflowException {
-        ByteBuf buf = fromHex("7f 3f ff 7f 3f ff");
-        nullableInt32Decoder.decode(buf);
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(-8193, nullableInt32Decoder.getValue());
-
-        nullableInt32Decoder.decode(buf);
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(-8193, nullableInt32Decoder.getValue());
-    }
-
-    @Test
-    void optionalPositiveTwoValuesInRow() throws OverflowException {
-        ByteBuf buf = fromHex("00 00 40 82 00 00 40 82");
-        nullableInt32Decoder.decode(buf);
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(8193, nullableInt32Decoder.getValue());
-
-        nullableInt32Decoder.decode(buf);
-        assertTrue(nullableInt32Decoder.isReady());
-        assertEquals(8193, nullableInt32Decoder.getValue());
+            decode(nullableInt32Decoder, buffers);
+            assertTrue(nullableInt32Decoder.isReady());
+            assertEquals(8193, nullableInt32Decoder.getValue());
+        });
     }
 }

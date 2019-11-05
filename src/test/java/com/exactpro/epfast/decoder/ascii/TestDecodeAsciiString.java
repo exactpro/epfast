@@ -1,11 +1,12 @@
 package com.exactpro.epfast.decoder.ascii;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.decoder.FillBuffer.*;
+import static com.exactpro.epfast.ByteBufUtils.*;
+import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestDecodeAsciiString {
 
@@ -14,132 +15,159 @@ class TestDecodeAsciiString {
     private DecodeMandatoryAsciiString mandatoryStringDecoder = new DecodeMandatoryAsciiString();
 
     @Test
-    void testNull() throws OverflowException {
-        nullableStringDecoder.decode(fromHex("80"));
-        assertTrue(nullableStringDecoder.isReady());
-        assertNull(nullableStringDecoder.getValue());
+    void testNull() throws IOException {
+        withByteBuf("80", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertNull(nullableStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testOptionalEmptyString() throws OverflowException {
-        nullableStringDecoder.decode(fromHex("00 80"));
-        assertTrue(nullableStringDecoder.isReady());
-        assertEquals("", nullableStringDecoder.getValue());
+    void testOptionalEmptyString() throws IOException {
+        withByteBuf("00 80", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertEquals("", nullableStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testMandatoryEmptyString() throws OverflowException {
-        mandatoryStringDecoder.decode(fromHex("80"));
-        assertTrue(mandatoryStringDecoder.isReady());
-        assertEquals("", mandatoryStringDecoder.getValue());
+    void testMandatoryEmptyString() throws IOException {
+        withByteBuf("80", buffers -> {
+            decode(mandatoryStringDecoder, buffers);
+            assertTrue(mandatoryStringDecoder.isReady());
+            assertEquals("", mandatoryStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testSimpleString() throws OverflowException {
-        nullableStringDecoder.decode(fromHex("41 42 c3"));
-        assertTrue(nullableStringDecoder.isReady());
-        assertEquals("ABC", nullableStringDecoder.getValue());
+    void testSimpleString() throws IOException {
+        withByteBuf("41 42 c3", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertEquals("ABC", nullableStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testZeroByteStringNullable1() throws OverflowException {
-        nullableStringDecoder.decode(fromHex("00 00 80"));
-        assertTrue(nullableStringDecoder.isReady());
-        assertEquals("\0", nullableStringDecoder.getValue());
+    void testZeroByteStringNullable1() throws IOException {
+        withByteBuf("00 00 80", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertEquals("\0", nullableStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testZeroByteStringNullable2() throws OverflowException {
-        nullableStringDecoder.decode(fromHex("00 00 00 00 80"));
-        assertTrue(nullableStringDecoder.isReady());
-        assertEquals("\0\0\0", nullableStringDecoder.getValue());
+    void testZeroByteStringNullable2() throws IOException {
+        withByteBuf("00 00 00 00 80", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertEquals("\0\0\0", nullableStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testZeroByteStringMandatory1() throws OverflowException {
-        mandatoryStringDecoder.decode(fromHex("00 00 80"));
-        assertTrue(mandatoryStringDecoder.isReady());
-        assertEquals("\0\0", mandatoryStringDecoder.getValue());
+    void testZeroByteStringMandatory1() throws IOException {
+        withByteBuf("00 00 80", buffers -> {
+            decode(mandatoryStringDecoder, buffers);
+            assertTrue(mandatoryStringDecoder.isReady());
+            assertEquals("\0\0", mandatoryStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testZeroByteStringMandatory2() throws OverflowException {
-        mandatoryStringDecoder.decode(fromHex("00 00 00 00 80"));
-        assertTrue(mandatoryStringDecoder.isReady());
-        assertEquals("\0\0\0\0", mandatoryStringDecoder.getValue());
+    void testZeroByteStringMandatory2() throws IOException {
+        withByteBuf("00 00 00 00 80", buffers -> {
+            decode(mandatoryStringDecoder, buffers);
+            assertTrue(mandatoryStringDecoder.isReady());
+            assertEquals("\0\0\0\0", mandatoryStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testOverlong1() throws OverflowException {
-        mandatoryStringDecoder.decode(fromHex("00 81"));
-        assertTrue(mandatoryStringDecoder.isReady());
+    void testOverlong1() throws IOException {
+        withByteBuf("00 81", buffers -> {
+            decode(mandatoryStringDecoder, buffers);
+            assertTrue(mandatoryStringDecoder.isReady());
+            mandatoryStringDecoder.setCheckOverlong();
 
-        mandatoryStringDecoder.setCheckOverlong();
-        assertThrows(OverflowException.class, () -> mandatoryStringDecoder.getValue());
-        mandatoryStringDecoder.clearCheckOverlong();
-        mandatoryStringDecoder.getValue();
+            assertThrows(IOException.class, () -> mandatoryStringDecoder.getValue());
+            mandatoryStringDecoder.clearCheckOverlong();
+            mandatoryStringDecoder.getValue();
+        });
     }
 
     @Test
-    void testOverlong2() throws OverflowException {
-        nullableStringDecoder.decode(fromHex("00 00 00 81"));
-        assertTrue(nullableStringDecoder.isReady());
+    void testOverlong2() throws IOException {
+        withByteBuf("00 00 00 81", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            nullableStringDecoder.setCheckOverlong();
 
-        nullableStringDecoder.setCheckOverlong();
-        assertThrows(OverflowException.class, () -> nullableStringDecoder.getValue());
-        nullableStringDecoder.clearCheckOverlong();
-        nullableStringDecoder.getValue();
+            assertThrows(IOException.class, () -> nullableStringDecoder.getValue());
+            nullableStringDecoder.clearCheckOverlong();
+            nullableStringDecoder.getValue();
+        });
     }
 
     @Test
-    void testNullableReuse() throws OverflowException {
-        ByteBuf buf = fromHex("41 42 c3 42 42 c3 41 44 c3");
-        nullableStringDecoder.decode(buf);
-        assertTrue(nullableStringDecoder.isReady());
-        assertEquals("ABC", nullableStringDecoder.getValue());
-        nullableStringDecoder.decode(buf);
-        assertEquals("BBC", nullableStringDecoder.getValue());
-        nullableStringDecoder.decode(buf);
-        assertEquals("ADC", nullableStringDecoder.getValue());
+    void testNullableReuse() throws IOException {
+        withByteBuf("41 42 c3 42 42 c3 41 44 c3", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertEquals("ABC", nullableStringDecoder.getValue());
+            decode(nullableStringDecoder, buffers);
+            assertEquals("BBC", nullableStringDecoder.getValue());
+            decode(nullableStringDecoder, buffers);
+            assertEquals("ADC", nullableStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testSimpleStringGetValueTwice() throws OverflowException {
-        nullableStringDecoder.decode(fromHex("41 42 c3"));
-        assertTrue(nullableStringDecoder.isReady());
-        assertEquals("ABC", nullableStringDecoder.getValue());
-        assertEquals("ABC", nullableStringDecoder.getValue());
+    void testSimpleStringGetValueTwice() throws IOException {
+        withByteBuf("41 42 c3", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertEquals("ABC", nullableStringDecoder.getValue());
+            assertEquals("ABC", nullableStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testMandatoryEmptyStringGetValueTwice() throws OverflowException {
-        mandatoryStringDecoder.decode(fromHex("80"));
-        assertTrue(mandatoryStringDecoder.isReady());
-        assertEquals("", mandatoryStringDecoder.getValue());
-        assertEquals("", mandatoryStringDecoder.getValue());
+    void testMandatoryEmptyStringGetValueTwice() throws IOException {
+        withByteBuf("80", buffers -> {
+            decode(mandatoryStringDecoder, buffers);
+            assertTrue(mandatoryStringDecoder.isReady());
+            assertEquals("", mandatoryStringDecoder.getValue());
+            assertEquals("", mandatoryStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testZeroByteStringNullableTwoValuesInRow() throws OverflowException {
-        ByteBuf buf = fromHex("00 00 80 00 00 00 00 80");
-        nullableStringDecoder.decode(buf);
-        assertTrue(nullableStringDecoder.isReady());
-        assertEquals("\0", nullableStringDecoder.getValue());
+    void testZeroByteStringNullableTwoValuesInRow() throws IOException {
+        withByteBuf("00 00 80 00 00 00 00 80", buffers -> {
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertEquals("\0", nullableStringDecoder.getValue());
 
-        nullableStringDecoder.decode(buf);
-        assertTrue(nullableStringDecoder.isReady());
-        assertEquals("\0\0\0", nullableStringDecoder.getValue());
+            decode(nullableStringDecoder, buffers);
+            assertTrue(nullableStringDecoder.isReady());
+            assertEquals("\0\0\0", nullableStringDecoder.getValue());
+        });
     }
 
     @Test
-    void testZeroByteStringMandatoryTwoValuesInRow() throws OverflowException {
-        ByteBuf buf = fromHex("00 00 80 00 00 00 00 80");
-        mandatoryStringDecoder.decode(buf);
-        assertTrue(mandatoryStringDecoder.isReady());
-        assertEquals("\0\0", mandatoryStringDecoder.getValue());
+    void testZeroByteStringMandatoryTwoValuesInRow() throws IOException {
+        withByteBuf("00 00 80 00 00 00 00 80", buffers -> {
+            decode(mandatoryStringDecoder, buffers);
+            assertTrue(mandatoryStringDecoder.isReady());
+            assertEquals("\0\0", mandatoryStringDecoder.getValue());
 
-        mandatoryStringDecoder.decode(buf);
-        assertTrue(mandatoryStringDecoder.isReady());
-        assertEquals("\0\0\0\0", mandatoryStringDecoder.getValue());
+            decode(mandatoryStringDecoder, buffers);
+            assertTrue(mandatoryStringDecoder.isReady());
+            assertEquals("\0\0\0\0", mandatoryStringDecoder.getValue());
+        });
     }
 }
