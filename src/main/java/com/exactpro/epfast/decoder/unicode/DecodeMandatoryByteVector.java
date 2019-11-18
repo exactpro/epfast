@@ -21,8 +21,8 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
                 overflow = true;
             }
             if (messageLength > 0) {
-               int readerIndex = buf.readerIndex();
-               int readLimit = buf.writerIndex();
+                int readerIndex = buf.readerIndex();
+                int readLimit = buf.writerIndex();
                 while ((readerIndex < readLimit) && !ready) {
                     if (counter < messageLength) {
                         value.add(buf.getByte(readerIndex++));
@@ -36,7 +36,6 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
             } else {
                 ready = true;
             }
-
         }
     }
 
@@ -77,7 +76,6 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
                     }
                     buf.readerIndex(readerIndex);
                 }
-
             }
         }
     }
@@ -85,7 +83,6 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
     public byte[] getValue() throws OverflowException {
         if (overflow) {
             throw new OverflowException("exponent value range is int32");
-
         } else {
             byte[] finalVal = new byte[value.size()];
             for (int i = 0; i < value.size(); i++) {

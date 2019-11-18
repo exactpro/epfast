@@ -36,7 +36,6 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
             } else {
                 ready = true;
             }
-
         }
     }
 
@@ -77,7 +76,6 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
                     }
                     buf.readerIndex(readerIndex);
                 }
-
             }
         }
     }
