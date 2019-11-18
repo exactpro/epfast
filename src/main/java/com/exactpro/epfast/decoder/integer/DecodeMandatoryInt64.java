@@ -33,7 +33,7 @@ public final class DecodeMandatoryInt64 extends DecodeInteger {
     }
 
     public void continueDecode(ByteBuf buf) {
-        int  readerIndex = buf.readerIndex();
+        int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         if (value >= 0) {
             while (readerIndex < readLimit && !ready) {
@@ -78,5 +78,4 @@ public final class DecodeMandatoryInt64 extends DecodeInteger {
             overflow = true;
         }
     }
-
 }

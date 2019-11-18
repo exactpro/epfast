@@ -9,9 +9,19 @@ public class DecoderUtils {
 
     public static void decode(IDecodeContext decoder, Iterable<ByteBuf> buffers) {
         Iterator<ByteBuf> it = buffers.iterator();
-        decoder.decode(it.next());
-        while (!decoder.isReady() && it.hasNext()) {
-            decoder.continueDecode(it.next());
+        decoder.decode(nextNonEmptyBuffer(it));
+        while (!decoder.isReady()) {
+            decoder.continueDecode(nextNonEmptyBuffer(it));
         }
+    }
+
+    private static ByteBuf nextNonEmptyBuffer(Iterator<ByteBuf> buffers) {
+        while (buffers.hasNext()) {
+            ByteBuf buffer = buffers.next();
+            if (buffer.isReadable()) {
+                return buffer;
+            }
+        }
+        throw new IllegalArgumentException("No non-empty buffers are left");
     }
 }

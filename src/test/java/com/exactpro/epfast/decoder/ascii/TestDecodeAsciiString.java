@@ -1,8 +1,11 @@
 package com.exactpro.epfast.decoder.ascii;
 
+import com.exactpro.epfast.decoder.OverflowException;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.security.InvalidParameterException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static com.exactpro.epfast.ByteBufUtils.*;
@@ -10,164 +13,202 @@ import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestDecodeAsciiString {
 
-    private DecodeNullableAsciiString nullableStringDecoder = new DecodeNullableAsciiString();
-
-    private DecodeMandatoryAsciiString mandatoryStringDecoder = new DecodeMandatoryAsciiString();
-
-    @Test
-    void testNull() throws IOException {
-        withByteBuf("80", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertNull(nullableStringDecoder.getValue());
-        });
+    static String fastAsciiStringOf(char character, int length) {
+        if (character > 0 && character < 128) {
+            StringBuilder stringBuilder = new StringBuilder(length);
+            for (int i = 1; i < length; i++) {
+                stringBuilder.append(Integer.toHexString(character)).append(' ');
+            }
+            stringBuilder.append(Integer.toHexString(character | 0x80));
+            return stringBuilder.toString();
+        }
+        throw new InvalidParameterException("Character must be in range [1, 127]");
     }
 
-    @Test
-    void testOptionalEmptyString() throws IOException {
-        withByteBuf("00 80", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertEquals("", nullableStringDecoder.getValue());
-        });
+    @Nested
+    class TestNullable {
+
+        private DecodeNullableAsciiString decoder = new DecodeNullableAsciiString();
+
+        @Test
+        void testNull() throws IOException {
+            withByteBuf("80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertNull(decoder.getValue());
+            });
+        }
+
+        @Test
+        void testOptionalEmptyString() throws IOException {
+            withByteBuf("00 80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("", decoder.getValue());
+            });
+        }
+
+        @Test
+        void testSimpleString() throws IOException {
+            withByteBuf("41 42 c3", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("ABC", decoder.getValue());
+            });
+        }
+
+        @Test
+        void testZeroByteStringNullable1() throws IOException {
+            withByteBuf("00 00 80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("\0", decoder.getValue());
+            });
+        }
+
+        @Test
+        void testZeroByteStringNullable2() throws IOException {
+            withByteBuf("00 00 00 00 80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("\0\0\0", decoder.getValue());
+            });
+        }
+
+        @Test
+        void testNullableReuse() throws IOException {
+            withByteBuf("41 42 c3 42 42 c3 41 44 c3", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("ABC", decoder.getValue());
+                decode(decoder, buffers);
+                assertEquals("BBC", decoder.getValue());
+                decode(decoder, buffers);
+                assertEquals("ADC", decoder.getValue());
+            });
+        }
+
+        @Test
+        void testSimpleStringGetValueTwice() throws IOException {
+            withByteBuf("41 42 c3", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("ABC", decoder.getValue());
+                assertEquals("ABC", decoder.getValue());
+            });
+        }
+
+        @Nested
+        class TestOverflowException {
+
+            private DecodeNullableAsciiString decoder = new DecodeNullableAsciiString(true);
+
+            @Test
+            void testNullableOverlong1() throws IOException {
+                withByteBuf("00 00 00 81", buffers -> {
+                    decode(decoder, buffers);
+                    assertTrue(decoder.isReady());
+                    assertThrows(OverflowException.class, () -> decoder.getValue());
+                });
+            }
+
+            @Test
+            void testNullableOverlong2() {
+                decoder.decode(fromHex(fastAsciiStringOf(')', 2 * DecodeAsciiString.MAX_ALLOWED_LENGTH)));
+                assertTrue(decoder.isReady());
+                assertThrows(OverflowException.class, () -> decoder.getValue());
+            }
+        }
+
+        @Test
+        void testZeroByteStringNullableTwoValuesInRow() throws IOException {
+            withByteBuf("00 00 80 00 00 00 00 80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("\0", decoder.getValue());
+
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("\0\0\0", decoder.getValue());
+            });
+        }
     }
 
-    @Test
-    void testMandatoryEmptyString() throws IOException {
-        withByteBuf("80", buffers -> {
-            decode(mandatoryStringDecoder, buffers);
-            assertTrue(mandatoryStringDecoder.isReady());
-            assertEquals("", mandatoryStringDecoder.getValue());
-        });
-    }
+    @Nested
+    class TestMandatory {
 
-    @Test
-    void testSimpleString() throws IOException {
-        withByteBuf("41 42 c3", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertEquals("ABC", nullableStringDecoder.getValue());
-        });
-    }
+        private DecodeMandatoryAsciiString decoder = new DecodeMandatoryAsciiString();
 
-    @Test
-    void testZeroByteStringNullable1() throws IOException {
-        withByteBuf("00 00 80", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertEquals("\0", nullableStringDecoder.getValue());
-        });
-    }
+        @Test
+        void testMandatoryEmptyString() throws IOException {
+            withByteBuf("80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("", decoder.getValue());
+            });
+        }
 
-    @Test
-    void testZeroByteStringNullable2() throws IOException {
-        withByteBuf("00 00 00 00 80", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertEquals("\0\0\0", nullableStringDecoder.getValue());
-        });
-    }
+        @Test
+        void testZeroByteStringMandatory1() throws IOException {
+            withByteBuf("00 00 80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("\0\0", decoder.getValue());
+            });
+        }
 
-    @Test
-    void testZeroByteStringMandatory1() throws IOException {
-        withByteBuf("00 00 80", buffers -> {
-            decode(mandatoryStringDecoder, buffers);
-            assertTrue(mandatoryStringDecoder.isReady());
-            assertEquals("\0\0", mandatoryStringDecoder.getValue());
-        });
-    }
+        @Test
+        void testZeroByteStringMandatory2() throws IOException {
+            withByteBuf("00 00 00 00 80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("\0\0\0\0", decoder.getValue());
+            });
+        }
 
-    @Test
-    void testZeroByteStringMandatory2() throws IOException {
-        withByteBuf("00 00 00 00 80", buffers -> {
-            decode(mandatoryStringDecoder, buffers);
-            assertTrue(mandatoryStringDecoder.isReady());
-            assertEquals("\0\0\0\0", mandatoryStringDecoder.getValue());
-        });
-    }
+        @Test
+        void testMandatoryEmptyStringGetValueTwice() throws IOException {
+            withByteBuf("80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("", decoder.getValue());
+                assertEquals("", decoder.getValue());
+            });
+        }
 
-    @Test
-    void testOverlong1() throws IOException {
-        withByteBuf("00 81", buffers -> {
-            decode(mandatoryStringDecoder, buffers);
-            assertTrue(mandatoryStringDecoder.isReady());
-            mandatoryStringDecoder.setCheckOverlong();
+        @Nested
+        class TestOverflowException {
 
-            assertThrows(IOException.class, () -> mandatoryStringDecoder.getValue());
-            mandatoryStringDecoder.clearCheckOverlong();
-            mandatoryStringDecoder.getValue();
-        });
-    }
+            private DecodeMandatoryAsciiString decoder = new DecodeMandatoryAsciiString(true);
 
-    @Test
-    void testOverlong2() throws IOException {
-        withByteBuf("00 00 00 81", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            nullableStringDecoder.setCheckOverlong();
+            @Test
+            void testMandatoryOverlong1() throws IOException {
+                withByteBuf("00 81", buffers -> {
+                    decode(decoder, buffers);
+                    assertTrue(decoder.isReady());
+                    assertThrows(OverflowException.class, () -> decoder.getValue());
+                });
+            }
 
-            assertThrows(IOException.class, () -> nullableStringDecoder.getValue());
-            nullableStringDecoder.clearCheckOverlong();
-            nullableStringDecoder.getValue();
-        });
-    }
+            @Test
+            void testMandatoryOverlong2() {
+                decoder.decode(fromHex(fastAsciiStringOf('*', 3 * DecodeAsciiString.MAX_ALLOWED_LENGTH)));
+                assertTrue(decoder.isReady());
+                assertThrows(OverflowException.class, () -> decoder.getValue());
+            }
+        }
 
-    @Test
-    void testNullableReuse() throws IOException {
-        withByteBuf("41 42 c3 42 42 c3 41 44 c3", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertEquals("ABC", nullableStringDecoder.getValue());
-            decode(nullableStringDecoder, buffers);
-            assertEquals("BBC", nullableStringDecoder.getValue());
-            decode(nullableStringDecoder, buffers);
-            assertEquals("ADC", nullableStringDecoder.getValue());
-        });
-    }
+        @Test
+        void testZeroByteStringMandatoryTwoValuesInRow() throws IOException {
+            withByteBuf("00 00 80 00 00 00 00 80", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("\0\0", decoder.getValue());
 
-    @Test
-    void testSimpleStringGetValueTwice() throws IOException {
-        withByteBuf("41 42 c3", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertEquals("ABC", nullableStringDecoder.getValue());
-            assertEquals("ABC", nullableStringDecoder.getValue());
-        });
-    }
-
-    @Test
-    void testMandatoryEmptyStringGetValueTwice() throws IOException {
-        withByteBuf("80", buffers -> {
-            decode(mandatoryStringDecoder, buffers);
-            assertTrue(mandatoryStringDecoder.isReady());
-            assertEquals("", mandatoryStringDecoder.getValue());
-            assertEquals("", mandatoryStringDecoder.getValue());
-        });
-    }
-
-    @Test
-    void testZeroByteStringNullableTwoValuesInRow() throws IOException {
-        withByteBuf("00 00 80 00 00 00 00 80", buffers -> {
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertEquals("\0", nullableStringDecoder.getValue());
-
-            decode(nullableStringDecoder, buffers);
-            assertTrue(nullableStringDecoder.isReady());
-            assertEquals("\0\0\0", nullableStringDecoder.getValue());
-        });
-    }
-
-    @Test
-    void testZeroByteStringMandatoryTwoValuesInRow() throws IOException {
-        withByteBuf("00 00 80 00 00 00 00 80", buffers -> {
-            decode(mandatoryStringDecoder, buffers);
-            assertTrue(mandatoryStringDecoder.isReady());
-            assertEquals("\0\0", mandatoryStringDecoder.getValue());
-
-            decode(mandatoryStringDecoder, buffers);
-            assertTrue(mandatoryStringDecoder.isReady());
-            assertEquals("\0\0\0\0", mandatoryStringDecoder.getValue());
-        });
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertEquals("\0\0\0\0", decoder.getValue());
+            });
+        }
     }
 }

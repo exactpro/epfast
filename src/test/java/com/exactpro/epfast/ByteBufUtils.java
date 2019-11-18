@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 public class ByteBufUtils {
 
-    private static ByteBuf fromHex(String hex) {
+    public static ByteBuf fromHex(String hex) {
         ByteBuf buffer = Unpooled.buffer();
         if (!hex.isEmpty()) {
-            String[] values = hex.split(" ");
+            String[] values = hex.split(" +");
             for (String value : values) {
                 buffer.writeByte(Integer.parseInt(value, 16));
             }

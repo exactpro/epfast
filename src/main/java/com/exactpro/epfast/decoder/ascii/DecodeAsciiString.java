@@ -6,15 +6,21 @@ import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeAsciiString implements IDecodeContext {
 
-    StringBuilder value;
+    final StringBuilder stringBuilder = new StringBuilder();
 
     private boolean ready;
 
     boolean zeroPreamble;
 
-    boolean checkOverlong;
+    final boolean checkOverlong;
 
     int zeroCount;
+
+    static final int MAX_ALLOWED_LENGTH = 0x20000;
+
+    DecodeAsciiString(boolean checkOverlong) {
+        this.checkOverlong = checkOverlong;
+    }
 
     public void decode(ByteBuf buf) {
         reset();
@@ -45,14 +51,6 @@ public abstract class DecodeAsciiString implements IDecodeContext {
         return ready;
     }
 
-    void setCheckOverlong() {
-        checkOverlong = true;
-    }
-
-    void clearCheckOverlong() {
-        checkOverlong = false;
-    }
-
     private void accumulateValue(int oneByte) {
         if (oneByte < 0) { // if stop bit is set
             oneByte &= CLEAR_STOP_BIT_MASK;
@@ -61,11 +59,13 @@ public abstract class DecodeAsciiString implements IDecodeContext {
         if (oneByte == 0) {
             zeroCount++;
         }
-        value.append((char) oneByte);
+        if (stringBuilder.length() < MAX_ALLOWED_LENGTH) {
+            stringBuilder.append((char) oneByte);
+        }
     }
 
     public final void reset() {
-        value = new StringBuilder();
+        stringBuilder.setLength(0);
         ready = false;
         zeroCount = 0;
         zeroPreamble = false;
