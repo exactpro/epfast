@@ -11,6 +11,8 @@ public abstract class DecodeInteger implements IDecodeContext {
 
     protected boolean overflow;
 
+    protected boolean overlong;
+
     public abstract void decode(ByteBuf buf);
 
     public abstract void continueDecode(ByteBuf buf);
@@ -19,9 +21,14 @@ public abstract class DecodeInteger implements IDecodeContext {
         return ready;
     }
 
+    protected boolean isOverlong() {
+        return overlong;
+    }
+
     protected final void reset() {
         ready = false;
         overflow = false;
+        overlong = false;
     }
 
     static void longToBytes(long value, byte[] bytes) {
