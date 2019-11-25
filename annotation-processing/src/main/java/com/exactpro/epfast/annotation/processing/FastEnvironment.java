@@ -45,6 +45,8 @@ public class FastEnvironment {
             typeElement -> resolver.getFastPackageOf(elements.getPackageOf(typeElement))
                 .addFastType(new FastTypeElement(typeElement)));
         getFastFields(environment).forEach(resolver::addFieldToFastType);
+        resolver.inheritFields();
+
         return new FastEnvironment(resolver.getKnownFastPackages());
     }
 

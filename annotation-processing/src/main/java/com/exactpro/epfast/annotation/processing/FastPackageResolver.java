@@ -4,6 +4,8 @@ import com.exactpro.epfast.annotations.FastPackage;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import java.util.*;
 
@@ -70,6 +72,42 @@ class FastPackageResolver {
             }
         }
         return null;
+    }
+
+    void inheritFields() {
+        HashSet<FastTypeElement> fastTypes = getAllFastTypes();
+        for (FastTypeElement fastType : fastTypes) {
+            Element currentType = fastType.getElement();
+            while (true) {
+                currentType = getSuperClass(currentType);
+                if (currentType == null) {
+                    break;
+                }
+                ArrayList<FastFieldElement> fastFieldElements = new ArrayList<>(getFastFieldsFor(currentType));
+                fastFieldElements.forEach(fastType::addFastField);
+            }
+        }
+    }
+
+    private HashSet<FastTypeElement> getAllFastTypes() {
+        HashSet<FastTypeElement> fastTypes = new HashSet<>();
+        cache.values().forEach(fastPackage -> fastTypes.addAll(fastPackage.getFastTypes()));
+        fastTypes.addAll(anonymousPackage.getFastTypes());
+        return fastTypes;
+    }
+
+    private ArrayList<FastFieldElement> getFastFieldsFor(Element superClass) {
+        ArrayList<FastFieldElement> fastFields = new ArrayList<>();
+        HashSet<FastTypeElement> allFastTypes = getAllFastTypes();
+        allFastTypes.stream().filter(fastType -> fastType.getElement().equals(superClass))
+            .forEach(fastTypeElement -> fastFields.addAll(fastTypeElement.getFastFields()));
+
+        return fastFields;
+    }
+
+    private Element getSuperClass(Element element) {
+        TypeMirror superClass = ((TypeElement) element).getSuperclass();
+        return elementUtils.getTypeElement(superClass.toString());
     }
 
 }

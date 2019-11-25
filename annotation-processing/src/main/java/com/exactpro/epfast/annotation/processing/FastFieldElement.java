@@ -56,4 +56,15 @@ public class FastFieldElement {
     public String getMethodName() {
         return methodName;
     }
+
+    @Override
+    public String toString() {
+        return "FastFieldElement{" +
+            "fastField=" + fastField +
+            ", fieldName='" + fieldName + '\'' +
+            ", parameterType=" + parameterType +
+            ", fastType=" + fastType +
+            ", methodName='" + methodName + '\'' +
+            '}';
+    }
 }

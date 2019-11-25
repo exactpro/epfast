@@ -76,4 +76,17 @@ class CreatorTests {
         assertEquals("John", createdObject.getName());
         assertEquals(22, createdObject.getAge());
     }
+
+    @Test
+    void testInheritedFastFields() throws Exception {
+        IFieldSetter<ThirdGradeStudent> fieldSetter = creator.create("ThirdGradeStudent");
+        fieldSetter.setField("name", "John");
+        fieldSetter.setField("lastName", "Doe");
+        fieldSetter.setField("age", 15);
+        ThirdGradeStudent createdObject = fieldSetter.getObject();
+        assertEquals("John", createdObject.getName());
+        assertEquals(15, createdObject.getAge());
+        assertEquals("Doe", createdObject.getLastName());
+
+    }
 }
