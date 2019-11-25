@@ -78,15 +78,14 @@ class CreatorTests {
     }
 
     @Test
-    void testInheritedFastFields() throws Exception {
+    void testOverridenFieldIsNotPresentFromParent() throws Exception {
         IFieldSetter<ThirdGradeStudent> fieldSetter = creator.create("ThirdGradeStudent");
         fieldSetter.setField("name", "John");
         fieldSetter.setField("lastName", "Doe");
-        fieldSetter.setField("age", 15);
+        fieldSetter.setField("years", 15);
         ThirdGradeStudent createdObject = fieldSetter.getObject();
         assertEquals("John", createdObject.getName());
-        assertEquals(15, createdObject.getAge());
+        assertEquals(21, createdObject.getAge());
         assertEquals("Doe", createdObject.getLastName());
-
     }
 }

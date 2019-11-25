@@ -84,9 +84,15 @@ class FastPackageResolver {
                     break;
                 }
                 ArrayList<FastFieldElement> fastFieldElements = new ArrayList<>(getFastFieldsFor(currentType));
-                fastFieldElements.forEach(fastType::addFastField);
+                fastFieldElements.stream()
+                    .filter(fastField -> !isOverrideMethod(fastType.getFastFields(), fastField.getMethodName()))
+                    .forEach(fastType::addFastField);
             }
         }
+    }
+
+    private boolean isOverrideMethod(List<FastFieldElement> fastFields, String methodName) {
+        return fastFields.stream().anyMatch(fastField -> fastField.getMethodName().equals(methodName));
     }
 
     private HashSet<FastTypeElement> getAllFastTypes() {

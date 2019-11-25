@@ -1,7 +1,9 @@
 package test.inherit;
 
 import com.exactpro.epfast.annotations.FastField;
+import com.exactpro.epfast.annotations.FastType;
 
+@FastType
 public class ThirdGradeStudent extends Student {
     private Integer age = 21;
 
