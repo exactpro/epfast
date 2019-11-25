@@ -92,7 +92,6 @@ class FastPackageResolver {
     private HashSet<FastTypeElement> getAllFastTypes() {
         HashSet<FastTypeElement> fastTypes = new HashSet<>();
         cache.values().forEach(fastPackage -> fastTypes.addAll(fastPackage.getFastTypes()));
-        fastTypes.addAll(anonymousPackage.getFastTypes());
         return fastTypes;
     }
 
