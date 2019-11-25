@@ -1,6 +1,5 @@
 package com.exactpro.epfast.annotation.processing;
 
-import com.exactpro.epfast.annotations.FastField;
 import com.exactpro.epfast.annotations.FastPackage;
 import com.exactpro.epfast.annotations.FastType;
 
@@ -10,7 +9,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVisitor;
 import javax.lang.model.util.Elements;
-import javax.lang.model.util.SimpleTypeVisitor6;
+import javax.lang.model.util.SimpleTypeVisitor8;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,7 +18,7 @@ public class FastEnvironment {
     private Collection<FastPackageElement> fastPackages;
 
     private static final TypeVisitor<Boolean, Void> noArgsVisitor =
-        new SimpleTypeVisitor6<Boolean, Void>() {
+        new SimpleTypeVisitor8<Boolean, Void>() {
             public Boolean visitExecutable(ExecutableType t, Void v) {
                 return t.getParameterTypes().isEmpty();
             }
@@ -44,7 +43,6 @@ public class FastEnvironment {
         getFastTypes(environment).forEach(
             typeElement -> resolver.getFastPackageOf(elements.getPackageOf(typeElement))
                 .addFastType(new FastTypeElement(typeElement)));
-        getFastFields(environment).forEach(resolver::addFieldToFastType);
         resolver.inheritFields();
 
         return new FastEnvironment(resolver.getKnownFastPackages());
@@ -58,11 +56,6 @@ public class FastEnvironment {
     @SuppressWarnings("unchecked")
     private static Collection<TypeElement> getFastTypes(RoundEnvironment roundEnv) {
         return (Set<TypeElement>) roundEnv.getElementsAnnotatedWith(FastType.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Set<? extends Element> getFastFields(RoundEnvironment roundEnv) {
-        return roundEnv.getElementsAnnotatedWith(FastField.class);
     }
 
     private class Validator {

@@ -54,26 +54,6 @@ class FastPackageResolver {
         return packageString.substring(0, lastDotIndex);
     }
 
-    public void addFieldToFastType(Element element) {
-        FastFieldElement fastField = new FastFieldElement(element);
-        FastTypeElement fastType = getFastTypeForField(element);
-        if (fastType != null) {
-            fastType.addFastField(fastField);
-        } // otherwise ignore @FastFields if class is not annotated with @FastType
-    }
-
-    private FastTypeElement getFastTypeForField(Element element) {
-        Element ownerFastType = element.getEnclosingElement();
-        for (FastPackageElement fastPackage : cache.values()) {
-            for (FastTypeElement fastType : fastPackage.getFastTypes()) {
-                if (fastType.getElement().equals(ownerFastType)) {
-                    return fastType;
-                }
-            }
-        }
-        return null;
-    }
-
     void inheritFields() {
         HashSet<FastTypeElement> fastTypes = getAllFastTypes();
         for (FastTypeElement fastType : fastTypes) {
@@ -83,7 +63,7 @@ class FastPackageResolver {
                 if (currentType == null) {
                     break;
                 }
-                ArrayList<FastFieldElement> fastFieldElements = new ArrayList<>(getFastFieldsFor(currentType));
+                ArrayList<FastFieldElement> fastFieldElements = getFastFieldsFor(currentType);
                 fastFieldElements.stream()
                     .filter(fastField -> !isOverrideMethod(fastType.getFastFields(), fastField.getMethodName()))
                     .forEach(fastType::addFastField);
