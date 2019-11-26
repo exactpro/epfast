@@ -3,9 +3,8 @@ package test.constructor;
 import com.exactpro.epfast.annotations.FastType;
 
 @FastType
-class PrivateClass {
-    public PrivateClass() {
+public class PrivateConstructorClass {
+    private PrivateConstructorClass() {
 
     }
 }
-

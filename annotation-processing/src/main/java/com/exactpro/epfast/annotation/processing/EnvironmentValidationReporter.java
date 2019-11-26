@@ -12,7 +12,4 @@ interface EnvironmentValidationReporter {
 
     void reportFastTypeNotInstantiatable(Element element);
 
-    void reportAbstractFastType(Element fastTypeElement);
-
-    void reportInnerFastType(Element fastTypeElement);
 }

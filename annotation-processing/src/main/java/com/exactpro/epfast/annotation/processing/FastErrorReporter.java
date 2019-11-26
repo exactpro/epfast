@@ -29,13 +29,7 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
         "Both anonymous and named package(s) refer to FAST package %s.";
 
     private static final String DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE =
-        "@FastTypes must be instantiatable with no argument constructor";
-
-    private static final String ABSTRACT_FASTTYPE_TEMPLATE =
-        "@FastTypes must be instantiatable with default constructor, found Abstract modifier";
-
-    private static final String INNER_FASTTYPE_TEMPLATE =
-        "@FastTypes must be instantiatable with default constructor, found inner class";
+        "Class annotated with @FastType should be instantiable with default constructor";
 
     FastErrorReporter(Messager messager) {
         this.messager = messager;
@@ -69,18 +63,6 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
     public void reportFastTypeNotInstantiatable(Element element) {
         errorRaised = true;
         messager.printMessage(Diagnostic.Kind.ERROR, DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE, element);
-    }
-
-    @Override
-    public void reportAbstractFastType(Element fastTypeElement) {
-        errorRaised = true;
-        messager.printMessage(Diagnostic.Kind.ERROR, ABSTRACT_FASTTYPE_TEMPLATE, fastTypeElement);
-    }
-
-    @Override
-    public void reportInnerFastType(Element fastTypeElement) {
-        errorRaised = true;
-        messager.printMessage(Diagnostic.Kind.ERROR, INNER_FASTTYPE_TEMPLATE, fastTypeElement);
     }
 
     void reportProcessingAfterFirstRound() {

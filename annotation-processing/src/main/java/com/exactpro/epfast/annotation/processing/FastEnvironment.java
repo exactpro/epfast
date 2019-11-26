@@ -58,19 +58,16 @@ public class FastEnvironment {
             validatePackageNameDuplicates();
             getFastPackages().forEach(it -> {
                 validateTypeNameDuplicates(it);
-                it.getFastTypes().forEach(this::validateDefaultConstructor);
+                it.getFastTypes().forEach(this::validateInstantiable);
             });
         }
 
-        private void validateDefaultConstructor(FastTypeElement fastType) {
+        private void validateInstantiable(FastTypeElement fastType) {
             Element fastTypeElement = fastType.getElement();
-            if (FastTypeConstructorValidator.isAbstract(fastTypeElement)) {
-                reporter.reportAbstractFastType(fastTypeElement);
-            }
-            if (FastTypeConstructorValidator.isInnerClass(fastTypeElement)) {
-                reporter.reportInnerFastType(fastTypeElement);
-            }
-            if (!FastTypeConstructorValidator.acceptsDefaultConstructor(fastTypeElement)) {
+            if (FastTypeConstructorValidator.isAbstract(fastTypeElement) ||
+                FastTypeConstructorValidator.isInnerClass(fastTypeElement) ||
+                FastTypeConstructorValidator.isPrivateClass(fastTypeElement) ||
+                !FastTypeConstructorValidator.acceptsDefaultConstructor(fastTypeElement)) {
                 reporter.reportFastTypeNotInstantiatable(fastTypeElement);
             }
         }

@@ -9,7 +9,7 @@ import javax.lang.model.type.TypeVisitor;
 import javax.lang.model.util.SimpleTypeVisitor8;
 
 public class FastTypeConstructorValidator {
-    private static final TypeVisitor<Boolean, Void> noArgsVisitor =
+    private static final TypeVisitor<Boolean, Void> hasNoArguments =
         new SimpleTypeVisitor8<Boolean, Void>() {
             public Boolean visitExecutable(ExecutableType t, Void v) {
                 return t.getParameterTypes().isEmpty();
@@ -17,12 +17,11 @@ public class FastTypeConstructorValidator {
         };
 
     public static boolean acceptsDefaultConstructor(Element element) {
-
         for (Element childElement : element.getEnclosedElements()) {
             if (childElement.getKind() == ElementKind.CONSTRUCTOR &&
                 childElement.getModifiers().contains(Modifier.PUBLIC)) {
                 TypeMirror mirror = childElement.asType();
-                if (mirror.accept(noArgsVisitor, null)) {
+                if (mirror.accept(hasNoArguments, null)) {
                     return true;
                 }
             }
@@ -32,6 +31,10 @@ public class FastTypeConstructorValidator {
 
     public static boolean isInnerClass(Element element) {
         return element.getEnclosingElement().getKind().isClass();
+    }
+
+    public static boolean isPrivateClass(Element element) {
+        return !element.getModifiers().contains(Modifier.PUBLIC);
     }
 
     public static boolean isAbstract(Element element) {

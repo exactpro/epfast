@@ -124,7 +124,7 @@ class FastProcessorCompilationTests {
             .processedWith(fastProcessor)
             .failsToCompile()
             .withErrorContaining(
-                "@FastTypes must be instantiatable with default constructor, found Abstract modifier");
+                "Class annotated with @FastType should be instantiable with default constructor");
     }
 
     @Test
@@ -134,16 +134,26 @@ class FastProcessorCompilationTests {
             .processedWith(fastProcessor)
             .failsToCompile()
             .withErrorContaining(
-                "@FastTypes must be instantiatable with default constructor, found inner class");
+                "Class annotated with @FastType should be instantiable with default constructor");
     }
 
     @Test
     void testPrivateConstructorFails() {
         JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/constructor/PrivateConstructorClass.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining(
+                "Class annotated with @FastType should be instantiable with default constructor");
+    }
+
+    @Test
+    void testPackagePrivateClassFails() {
+        JavaSourcesSubject.assertThat(
             JavaFileObjects.forResource("test/constructor/PrivateClass.java"))
             .processedWith(fastProcessor)
             .failsToCompile()
             .withErrorContaining(
-                "@FastTypes must be instantiatable with no argument constructor");
+                "Class annotated with @FastType should be instantiable with default constructor");
     }
 }
