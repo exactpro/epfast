@@ -1,6 +1,7 @@
 package com.exactpro.epfast.annotation.processing;
 
 import javax.annotation.processing.Messager;
+import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import java.util.Collection;
 
@@ -26,6 +27,9 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
 
     private static final String ANONYMOUS_EQUALS_NAMED_TEMPLATE =
         "Both anonymous and named package(s) refer to FAST package %s.";
+
+    private static final String DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE =
+        "Class annotated with @FastType should be instantiable with default constructor";
 
     FastErrorReporter(Messager messager) {
         this.messager = messager;
@@ -53,6 +57,12 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
     public void reportDuplicateTypes(Collection<FastTypeElement> fastTypes) {
         errorRaised = true;
         fastTypes.forEach(this::reportDuplicateType);
+    }
+
+    @Override
+    public void reportFastTypeNotInstantiable(Element element) {
+        errorRaised = true;
+        messager.printMessage(Diagnostic.Kind.ERROR, DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE, element);
     }
 
     void reportProcessingAfterFirstRound() {
