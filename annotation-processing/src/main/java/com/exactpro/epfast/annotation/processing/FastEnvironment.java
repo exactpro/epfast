@@ -4,7 +4,6 @@ import com.exactpro.epfast.annotations.FastPackage;
 import com.exactpro.epfast.annotations.FastType;
 
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
@@ -56,21 +55,7 @@ public class FastEnvironment {
         void validate() {
             validatePackageNames();
             validatePackageNameDuplicates();
-            getFastPackages().forEach(it -> {
-                validateTypeNameDuplicates(it);
-                it.getFastTypes().forEach(this::validateInstantiable);
-            });
-        }
-
-        private void validateInstantiable(FastTypeElement fastType) {
-            Element fastTypeElement = fastType.getElement();
-            FastTypeConstructorValidator constructorValidator = new FastTypeConstructorValidator(fastTypeElement);
-            if (constructorValidator.isAbstract() ||
-                constructorValidator.isInnerClass() ||
-                constructorValidator.isPrivateClass() ||
-                !constructorValidator.hasDefaultConstructor()) {
-                reporter.reportFastTypeNotInstantiable(fastTypeElement);
-            }
+            getFastPackages().forEach(it -> validateTypeNameDuplicates(it));
         }
 
         private void validatePackageNames() {

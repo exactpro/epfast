@@ -116,44 +116,4 @@ class FastProcessorCompilationTests {
             .failsToCompile()
             .withErrorContaining("Multiple @FastPackage annotations referring FAST package test are found.");
     }
-
-    @Test
-    void testAbstractFastTypeFails() {
-        JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/constructor/AbstractClass.java"))
-            .processedWith(fastProcessor)
-            .failsToCompile()
-            .withErrorContaining(
-                "Class annotated with @FastType should be instantiable with default constructor");
-    }
-
-    @Test
-    void testInnerFastTypeFails() {
-        JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/constructor/InnerClass.java"))
-            .processedWith(fastProcessor)
-            .failsToCompile()
-            .withErrorContaining(
-                "Class annotated with @FastType should be instantiable with default constructor");
-    }
-
-    @Test
-    void testPrivateConstructorFails() {
-        JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/constructor/PrivateConstructorClass.java"))
-            .processedWith(fastProcessor)
-            .failsToCompile()
-            .withErrorContaining(
-                "Class annotated with @FastType should be instantiable with default constructor");
-    }
-
-    @Test
-    void testPackagePrivateClassFails() {
-        JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/constructor/PrivateClass.java"))
-            .processedWith(fastProcessor)
-            .failsToCompile()
-            .withErrorContaining(
-                "Class annotated with @FastType should be instantiable with default constructor");
-    }
 }
