@@ -28,12 +28,17 @@ public class FastEnvironment {
     }
 
     public static FastEnvironment build(RoundEnvironment environment, Elements elements) {
-        final FastPackageResolver resolver = new FastPackageResolver(elements);
-        getFastPackages(environment).forEach(resolver::registerFastPackage);
+        final FastPackageResolver packageResolver = new FastPackageResolver(elements);
+        final FastFieldsResolver fieldsResolver = new FastFieldsResolver(elements);
+
+        getFastPackages(environment).forEach(packageResolver::registerFastPackage);
         getFastTypes(environment).forEach(
-            typeElement -> resolver.getFastPackageOf(elements.getPackageOf(typeElement))
+            typeElement -> packageResolver.getFastPackageOf(elements.getPackageOf(typeElement))
                 .addFastType(new FastTypeElement(typeElement)));
-        return new FastEnvironment(resolver.getKnownFastPackages());
+        packageResolver.getKnownFastPackages().forEach(fastPackage -> fastPackage.getFastTypes()
+            .forEach(fieldsResolver::resolveFields));
+        fieldsResolver.inheritFields();
+        return new FastEnvironment(packageResolver.getKnownFastPackages());
     }
 
     @SuppressWarnings("unchecked")
@@ -58,8 +63,20 @@ public class FastEnvironment {
             validatePackageNameDuplicates();
             getFastPackages().forEach(it -> {
                 validateTypeNameDuplicates(it);
-                it.getFastTypes().forEach(this::validateInstantiable);
+                it.getFastTypes().forEach(fastType -> {
+                    validateInstantiable(fastType);
+                    validateFastFieldDuplicates(fastType.getFastFields());
+                });
             });
+        }
+
+        private void validateFastFieldDuplicates(List<FastFieldElement> fastFields) {
+            HashMap<String, ArrayList<FastFieldElement>> fastFieldNames = new HashMap<>();
+            fastFields.forEach(fastField ->
+                fastFieldNames.computeIfAbsent(fastField.getFieldName(), key -> new ArrayList<>())
+                    .add(fastField));
+            fastFieldNames.values().stream().filter(fastFieldElements -> fastFieldElements.size() > 1)
+                .forEach(reporter::reportDuplicateFields);
         }
 
         private void validateInstantiable(FastTypeElement fastType) {

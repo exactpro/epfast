@@ -1,13 +1,9 @@
 package com.exactpro.epfast.annotation.processing;
 
 import com.exactpro.epfast.annotations.FastPackage;
-
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.util.Elements;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.TreeSet;
+import java.util.*;
 
 class FastPackageResolver {
     private final Elements elementUtils;
@@ -53,4 +49,5 @@ class FastPackageResolver {
         }
         return packageString.substring(0, lastDotIndex);
     }
+
 }

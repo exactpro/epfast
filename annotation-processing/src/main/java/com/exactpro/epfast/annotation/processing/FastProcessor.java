@@ -2,6 +2,7 @@ package com.exactpro.epfast.annotation.processing;
 
 import com.exactpro.epfast.ICreator;
 import com.exactpro.epfast.annotation.processing.helpers.FastPackageNameEncoder;
+import com.exactpro.epfast.annotation.processing.helpers.FieldSetterNameGenerator;
 import com.exactpro.epfast.annotations.FastPackage;
 import com.exactpro.epfast.annotations.FastType;
 import com.github.mustachejava.DefaultMustacheFactory;
@@ -66,7 +67,7 @@ public class FastProcessor extends AbstractProcessor {
                 try {
                     buildCreatorClasses(fastEnvironment);
                 } catch (IOException e) {
-                    errorReporter.reportIOException(e);
+                    errorReporter.reportException(e);
                 }
             }
         }
@@ -91,11 +92,31 @@ public class FastProcessor extends AbstractProcessor {
     }
 
     private void buildCreatorClasses(FastEnvironment fastEnvironment) throws IOException {
+        Mustache mustache = mustacheFactory.compile(
+            "com/exactpro/epfast/annotation/processing/FieldSetter.java.mustache");
+        for (FastPackageElement fastPackage : fastEnvironment.getFastPackages()) {
+            for (FastTypeElement fastTypeElement : fastPackage.getFastTypes()) {
+                TypeName typeName = new TypeName(
+                    String.format("com.exactpro.epfast.annotation.internal.%s.%s",
+                        FastPackageNameEncoder.encode(fastPackage.getPackageName()),
+                        FieldSetterNameGenerator.generateClassName(fastTypeElement.getTypeName()))
+                );
+                fastTypeElement.setFieldSetterTypeName(typeName);
+                JavaFileObject fieldSetterFile = filer.createSourceFile(typeName.toString());
+                try (PrintWriter out = new PrintWriter(fieldSetterFile.openWriter())) {
+                    mustache.execute(out,
+                        new FieldSetterTemplateParameters(
+                            typeName, fastTypeElement.getFastFields(), fastTypeElement.getElement())
+                    ).flush();
+                }
+            }
+        }
+
         for (FastPackageElement packageElement : fastEnvironment.getFastPackages()) {
             TypeName typeName = new TypeName(String.format("com.exactpro.epfast.annotation.internal.%s.CreatorImpl",
                 FastPackageNameEncoder.encode(packageElement.getPackageName())));
             // mustache files are in UTF-8 by default
-            Mustache mustache = mustacheFactory.compile(
+            mustache = mustacheFactory.compile(
                 "com/exactpro/epfast/annotation/processing/CreatorImpl.java.mustache");
             JavaFileObject builderFile = filer.createSourceFile(typeName.toString());
             try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {

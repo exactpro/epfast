@@ -1,5 +1,6 @@
 package com.exactpro.epfast.annotation.processing;
 
+import com.exactpro.epfast.annotation.processing.helpers.FieldSetterNameGenerator;
 import com.google.testing.compile.JavaFileObjects;
 import com.google.testing.compile.JavaSourcesSubject;
 import org.junit.jupiter.api.BeforeEach;
@@ -101,8 +102,14 @@ class FastProcessorCompilationTests {
             "com.exactpro.epfast.annotation.internal.test$",
             "CreatorImpl.class")
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
-                "",
-                "META-INF/services/com.exactpro.epfast.ICreator");
+            "",
+            "META-INF/services/com.exactpro.epfast.ICreator")
+            .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
+            "com.exactpro.epfast.annotation.internal.test$",
+            String.format("%s.class", FieldSetterNameGenerator.generateClassName("fastA")))
+            .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
+            "com.exactpro.epfast.annotation.internal.test$",
+            String.format("%s.class", FieldSetterNameGenerator.generateClassName("fastB")));
     }
 
     @Test
@@ -155,5 +162,26 @@ class FastProcessorCompilationTests {
             .failsToCompile()
             .withErrorContaining(
                 "Class annotated with @FastType should be instantiable with default constructor");
+    }
+
+    @Test
+    void testDuplicateFieldsFail() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/error/DuplicateStudent.java"),
+            JavaFileObjects.forResource("test/fields/error/package-info.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining(
+                "Multiple @FastField annotations referring FAST field 'name' are found.");
+    }
+
+    @Test
+    void testInheritedFastFieldDuplicates() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/inherit/Student.java"),
+            JavaFileObjects.forResource("test/inherit/ThirdGradeStudent.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining("Multiple @FastField annotations referring FAST field 'name' are found.");
     }
 }
