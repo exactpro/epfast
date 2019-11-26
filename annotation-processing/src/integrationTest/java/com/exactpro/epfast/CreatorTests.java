@@ -2,6 +2,7 @@ package com.exactpro.epfast;
 
 import com.exactpro.epfast.inside.DefAnn;
 import com.exactpro.epfast.inside.foo.FastTypeAnnotated;
+import com.exactpro.epfast.withoutfasttype.FreshmanStudent;
 import org.exactpro.epfast.RootFastType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,14 @@ class CreatorTests {
 
     private static ICreator rootCreator;
 
+    private static ICreator woFastTypeCreator;
+
     @BeforeAll
     static void setUp() {
         creator = CreatorService.getCreator("packageA");
         insideCreator = CreatorService.getCreator("com.exactpro.epfast.inside");
         rootCreator = CreatorService.getCreator("org.exactpro.epfast");
+        woFastTypeCreator = CreatorService.getCreator("com.exactpro.epfast.withoutfasttype");
     }
 
     @Test
@@ -86,6 +90,17 @@ class CreatorTests {
         ThirdGradeStudent createdObject = fieldSetter.getObject();
         assertEquals("John", createdObject.getName());
         assertEquals(21, createdObject.getAge());
+        assertEquals("Doe", createdObject.getLastName());
+    }
+
+    @Test
+    void testInheritedFieldsFromBaseWithoutFastType() throws Exception {
+        IFieldSetter<FreshmanStudent> fieldSetter = woFastTypeCreator.create("FreshmanStudent");
+        fieldSetter.setField("firstName", "John");
+        fieldSetter.setField("lastName", "Doe");
+        FreshmanStudent createdObject = fieldSetter.getObject();
+        assertEquals("John", createdObject.getName());
+        assertEquals(18, createdObject.getAge());
         assertEquals("Doe", createdObject.getLastName());
     }
 }

@@ -1,5 +1,6 @@
 package com.exactpro.epfast.annotation.processing;
 
+import com.exactpro.epfast.annotations.FastField;
 import com.exactpro.epfast.annotations.FastPackage;
 
 import javax.lang.model.element.Element;
@@ -83,10 +84,11 @@ class FastPackageResolver {
 
     private ArrayList<FastFieldElement> getFastFieldsFor(Element superClass) {
         ArrayList<FastFieldElement> fastFields = new ArrayList<>();
-        HashSet<FastTypeElement> allFastTypes = getAllFastTypes();
-        allFastTypes.stream().filter(fastType -> fastType.getElement().equals(superClass))
-            .forEach(fastTypeElement -> fastFields.addAll(fastTypeElement.getFastFields()));
-
+        for (Element fastFieldElement : superClass.getEnclosedElements()) {
+            if (fastFieldElement.getAnnotation(FastField.class) != null) {
+                fastFields.add(new FastFieldElement(fastFieldElement));
+            }
+        }
         return fastFields;
     }
 

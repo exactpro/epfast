@@ -145,13 +145,4 @@ class FastProcessorCompilationTests {
             .withErrorContaining("Multiple @FastField annotations referring FAST field 'name' are found.");
     }
 
-    @Test
-    void testInheritedFastFieldOverrides() {
-        JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/inherit/Student.java"),
-            JavaFileObjects.forResource("test/inherit/ThirdGradeStudent.java"))
-            .processedWith(fastProcessor)
-            .failsToCompile()
-            .withErrorContaining("Multiple @FastField annotations referring FAST field 'name' are found.");
-    }
 }
