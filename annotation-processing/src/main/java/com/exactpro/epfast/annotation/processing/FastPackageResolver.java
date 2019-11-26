@@ -55,23 +55,6 @@ class FastPackageResolver {
         return packageString.substring(0, lastDotIndex);
     }
 
-    void inheritFields() {
-        HashSet<FastTypeElement> fastTypes = getAllFastTypes();
-        for (FastTypeElement fastType : fastTypes) {
-            Element currentType = fastType.getElement();
-            while (true) {
-                currentType = getSuperClass(currentType);
-                if (currentType == null) {
-                    break;
-                }
-                ArrayList<FastFieldElement> fastFieldElements = getFastFieldsFor(currentType);
-                fastFieldElements.stream()
-                    .filter(fastField -> !isOverrideMethod(fastType.getFastFields(), fastField.getMethodName()))
-                    .forEach(fastType::addFastField);
-            }
-        }
-    }
-
     private boolean isOverrideMethod(List<FastFieldElement> fastFields, String methodName) {
         return fastFields.stream().anyMatch(fastField -> fastField.getMethodName().equals(methodName));
     }
@@ -97,4 +80,27 @@ class FastPackageResolver {
         return elementUtils.getTypeElement(superClass.toString());
     }
 
+    public void resolveFields() {
+        HashSet<FastTypeElement> fastTypes = getAllFastTypes();
+        fastTypes.forEach(
+            fastType -> fastType.getElement().getEnclosedElements().stream()
+                .filter(element -> element.getAnnotation(FastField.class) != null)
+                .forEach(element -> fastType.addFastField(new FastFieldElement(element)))
+        );
+
+        for (FastTypeElement fastType : fastTypes) {
+            Element currentType = fastType.getElement();
+            while (true) {
+                currentType = getSuperClass(currentType);
+                if (currentType == null) {
+                    break;
+                }
+                ArrayList<FastFieldElement> fastFieldElements = getFastFieldsFor(currentType);
+                fastFieldElements.stream()
+                    .filter(fastField -> !isOverrideMethod(fastType.getFastFields(), fastField.getMethodName()))
+                    .forEach(fastType::addFastField);
+            }
+        }
+
+    }
 }

@@ -1,7 +1,6 @@
 package com.exactpro.epfast.annotation.processing;
 
 import javax.annotation.processing.Messager;
-import javax.lang.model.element.Element;
 import javax.tools.Diagnostic;
 import java.util.Collection;
 
@@ -30,9 +29,6 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
 
     private static final String DUPLICATE_FIELD_TEMPLATE =
         "Multiple @FastField annotations referring FAST field '%s' are found.";
-
-    private static final String DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE =
-        "@FastTypes must be instantiatable with no argument constructor";
 
     FastErrorReporter(Messager messager) {
         this.messager = messager;
@@ -68,12 +64,6 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
         fastFields.forEach(this::reportDuplicateField);
     }
 
-    @Override
-    public void reportFastTypeNotInstantiatable(Element element) {
-        errorRaised = true;
-        messager.printMessage(Diagnostic.Kind.ERROR, DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE, element);
-    }
-
     private void reportDuplicateField(FastFieldElement fastField) {
         messager.printMessage(Diagnostic.Kind.ERROR,
             String.format(DUPLICATE_FIELD_TEMPLATE, fastField.getFieldName()),
@@ -90,7 +80,7 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
         messager.printMessage(Diagnostic.Kind.ERROR, String.format(SERVICE_ERROR_TEMPLATE, serviceTypeName));
     }
 
-    void reportIOException(Exception e) {
+    void reportException(Exception e) {
         errorRaised = true;
         messager.printMessage(Diagnostic.Kind.ERROR, e.getMessage());
     }

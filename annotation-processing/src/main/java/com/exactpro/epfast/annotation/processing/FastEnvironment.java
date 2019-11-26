@@ -6,7 +6,6 @@ import com.exactpro.epfast.annotations.FastType;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ExecutableType;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVisitor;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.SimpleTypeVisitor8;
@@ -43,7 +42,7 @@ public class FastEnvironment {
         getFastTypes(environment).forEach(
             typeElement -> resolver.getFastPackageOf(elements.getPackageOf(typeElement))
                 .addFastType(new FastTypeElement(typeElement)));
-        resolver.inheritFields();
+        resolver.resolveFields();
 
         return new FastEnvironment(resolver.getKnownFastPackages());
     }
@@ -71,26 +70,10 @@ public class FastEnvironment {
             getFastPackages().forEach(it -> {
                 validateTypeNameDuplicates(it);
                 it.getFastTypes().forEach(fastType -> {
-                    validateDefaultConstructor(fastType);
                     validateFastFieldDuplicates(fastType.getFastFields());
                 });
             });
 
-        }
-
-        private void validateDefaultConstructor(FastTypeElement fastType) {
-            for (Element childElement : fastType.getElement().getEnclosedElements()) {
-                if (childElement.getKind() == ElementKind.CONSTRUCTOR) {
-                    if (!childElement.getModifiers().contains(Modifier.PUBLIC)) {
-                        reporter.reportFastTypeNotInstantiatable(fastType.getElement());
-                    } else {
-                        TypeMirror mirror = childElement.asType();
-                        if (!mirror.accept(noArgsVisitor, null)) {
-                            reporter.reportFastTypeNotInstantiatable(fastType.getElement());
-                        }
-                    }
-                }
-            }
         }
 
         private void validateFastFieldDuplicates(List<FastFieldElement> fastFields) {

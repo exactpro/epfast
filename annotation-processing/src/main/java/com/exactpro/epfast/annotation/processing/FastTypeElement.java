@@ -1,6 +1,5 @@
 package com.exactpro.epfast.annotation.processing;
 
-import com.exactpro.epfast.annotations.FastField;
 import com.exactpro.epfast.annotations.FastType;
 
 import javax.lang.model.element.Element;
@@ -12,22 +11,13 @@ public class FastTypeElement {
 
     private Element fastTypeElement;
 
-    private List<FastFieldElement> fastFields;
+    private List<FastFieldElement> fastFields = new ArrayList<>();
+
+    private TypeName fieldSetterTypeName;
 
     public FastTypeElement(Element fastTypeElement) {
         this.fastTypeName = getNameFromElement(fastTypeElement);
         this.fastTypeElement = fastTypeElement;
-        this.fastFields = processFastFields(fastTypeElement);
-    }
-
-    private List<FastFieldElement> processFastFields(Element fastTypeElement) {
-        ArrayList<FastFieldElement> fastFieldElements = new ArrayList<>();
-        for (Element element : fastTypeElement.getEnclosedElements()) {
-            if (element.getAnnotation(FastField.class) != null) {
-                fastFieldElements.add(new FastFieldElement(element));
-            }
-        }
-        return fastFieldElements;
     }
 
     private String getNameFromElement(Element fastTypeElement) {
@@ -53,5 +43,13 @@ public class FastTypeElement {
 
     public List<FastFieldElement> getFastFields() {
         return fastFields;
+    }
+
+    public TypeName getFieldSetterTypeName() {
+        return fieldSetterTypeName;
+    }
+
+    public void setFieldSetterTypeName(TypeName fieldSetterTypeName) {
+        this.fieldSetterTypeName = fieldSetterTypeName;
     }
 }

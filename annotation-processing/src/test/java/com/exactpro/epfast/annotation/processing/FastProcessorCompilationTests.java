@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.tools.StandardLocation;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 
 class FastProcessorCompilationTests {
     private FastProcessor fastProcessor;
@@ -39,7 +40,7 @@ class FastProcessorCompilationTests {
     }
 
     @Test
-    void testMultipleSourceProcessing() {
+    void testMultipleSourceProcessing() throws NoSuchAlgorithmException {
         JavaSourcesSubject.assertThat(
             JavaFileObjects.forResource("test/NoProcessing.java"),
             JavaFileObjects.forResource("test/DefaultAnnotated.java"))
@@ -50,7 +51,7 @@ class FastProcessorCompilationTests {
                 "CreatorImpl.class")
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
             "com.exactpro.epfast.annotation.internal.test$",
-            "DefaultAnnotatedFieldSetter.class")
+            String.format("%s.class", FieldSetterNameGenerator.generateClassName("DefaultAnnotated")))
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
             "",
             "META-INF/services/com.exactpro.epfast.ICreator")
@@ -95,7 +96,7 @@ class FastProcessorCompilationTests {
     }
 
     @Test
-    void testSameFastTypesInDifferentPackagesSucceeds() {
+    void testSameFastTypesInDifferentPackagesSucceeds() throws NoSuchAlgorithmException {
         JavaSourcesSubject.assertThat(
             JavaFileObjects.forResource("test/insideA/FastTypeElement.java"),
             JavaFileObjects.forResource("test/insideB/FastTypeElement.java"))
@@ -109,10 +110,10 @@ class FastProcessorCompilationTests {
                 "META-INF/services/com.exactpro.epfast.ICreator")
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
             "com.exactpro.epfast.annotation.internal.test$",
-            "fastAFieldSetter.class")
+            String.format("%s.class", FieldSetterNameGenerator.generateClassName("fastA")))
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
             "com.exactpro.epfast.annotation.internal.test$",
-            "fastBFieldSetter.class");
+            String.format("%s.class", FieldSetterNameGenerator.generateClassName("fastB")));
     }
 
     @Test
@@ -124,15 +125,6 @@ class FastProcessorCompilationTests {
             .failsToCompile()
             .withErrorContaining(
                 "Multiple @FastField annotations referring FAST field 'name' are found.");
-    }
-
-    @Test
-    void testNonDefaultConstructorFastTypeFails() {
-        JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/NonEmptyConstructorFastType.java"))
-            .processedWith(fastProcessor)
-            .failsToCompile()
-            .withErrorContaining("@FastTypes must be instantiatable with no argument constructor");
     }
 
     @Test
