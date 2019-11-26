@@ -60,7 +60,7 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
     }
 
     @Override
-    public void reportFastTypeNotInstantiatable(Element element) {
+    public void reportFastTypeNotInstantiable(Element element) {
         errorRaised = true;
         messager.printMessage(Diagnostic.Kind.ERROR, DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE, element);
     }

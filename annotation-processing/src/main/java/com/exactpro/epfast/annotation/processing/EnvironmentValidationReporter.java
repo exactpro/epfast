@@ -10,6 +10,6 @@ interface EnvironmentValidationReporter {
 
     void reportDuplicateTypes(Collection<FastTypeElement> fastTypes);
 
-    void reportFastTypeNotInstantiatable(Element element);
+    void reportFastTypeNotInstantiable(Element element);
 
 }

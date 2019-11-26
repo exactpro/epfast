@@ -64,11 +64,12 @@ public class FastEnvironment {
 
         private void validateInstantiable(FastTypeElement fastType) {
             Element fastTypeElement = fastType.getElement();
-            if (FastTypeConstructorValidator.isAbstract(fastTypeElement) ||
-                FastTypeConstructorValidator.isInnerClass(fastTypeElement) ||
-                FastTypeConstructorValidator.isPrivateClass(fastTypeElement) ||
-                !FastTypeConstructorValidator.acceptsDefaultConstructor(fastTypeElement)) {
-                reporter.reportFastTypeNotInstantiatable(fastTypeElement);
+            FastTypeConstructorValidator constructorValidator = new FastTypeConstructorValidator(fastTypeElement);
+            if (constructorValidator.isAbstract() ||
+                constructorValidator.isInnerClass() ||
+                constructorValidator.isPrivateClass() ||
+                !constructorValidator.hasDefaultConstructor()) {
+                reporter.reportFastTypeNotInstantiable(fastTypeElement);
             }
         }
 

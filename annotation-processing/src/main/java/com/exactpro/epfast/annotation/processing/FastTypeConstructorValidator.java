@@ -16,8 +16,14 @@ public class FastTypeConstructorValidator {
             }
         };
 
-    public static boolean acceptsDefaultConstructor(Element element) {
-        for (Element childElement : element.getEnclosedElements()) {
+    private final Element fastTypeElement;
+
+    public FastTypeConstructorValidator(Element fastTypeElement) {
+        this.fastTypeElement = fastTypeElement;
+    }
+
+    public boolean hasDefaultConstructor() {
+        for (Element childElement : fastTypeElement.getEnclosedElements()) {
             if (childElement.getKind() == ElementKind.CONSTRUCTOR &&
                 childElement.getModifiers().contains(Modifier.PUBLIC)) {
                 TypeMirror mirror = childElement.asType();
@@ -29,15 +35,15 @@ public class FastTypeConstructorValidator {
         return false;
     }
 
-    public static boolean isInnerClass(Element element) {
-        return element.getEnclosingElement().getKind().isClass();
+    public boolean isInnerClass() {
+        return fastTypeElement.getEnclosingElement().getKind().isClass();
     }
 
-    public static boolean isPrivateClass(Element element) {
-        return !element.getModifiers().contains(Modifier.PUBLIC);
+    public boolean isPrivateClass() {
+        return !fastTypeElement.getModifiers().contains(Modifier.PUBLIC);
     }
 
-    public static boolean isAbstract(Element element) {
-        return element.getModifiers().contains(Modifier.ABSTRACT);
+    public boolean isAbstract() {
+        return fastTypeElement.getModifiers().contains(Modifier.ABSTRACT);
     }
 }
