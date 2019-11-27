@@ -28,11 +28,9 @@ page at http://checkstyle.sourceforge.net/config.html -->
 <module name="Checker">
 
     <property name="charset" value="UTF-8"/>
-
     <module name="FileTabCharacter">
-        <property name="severity" value="error" />
         <!-- Checks that there are no tab characters in the file.
-        -->
+       -->
     </module>
 
     <!--
@@ -45,7 +43,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
         <property name="max" value="3000" />
         <property name="severity" value="warning" />
     </module>
-
 
     <module name="NewlineAtEndOfFile">
         <property name="lineSeparator" value="lf" />
@@ -65,17 +62,15 @@ page at http://checkstyle.sourceforge.net/config.html -->
         <property name="message" value='All TODOs should be named.  e.g. "TODO: (ENG-123) - Refactor when v2 is released."' />
     </module>
 
-    <!--<module name="JavadocPackage">-->
-    <!--&lt;!&ndash; Checks that each Java package has a Javadoc file used for commenting.-->
-    <!--Only allows a package-info.java, not package.html. &ndash;&gt;-->
-    <!--<property name="severity" value="warning"/>-->
-    <!--</module>-->
+
+    <module name="LineLength">
+        <!-- Checks if a line is too long. -->
+        <property name="max" value="120"/>
+    </module>
+
 
     <!-- All Java AST specific tests live under TreeWalker module. -->
     <module name="TreeWalker">
-
-        <!-- required for SupressionCommentFilter and SuppressWithNearbyCommentFilter -->
-        <module name="FileContentsHolder" />
 
         <!--
 
@@ -86,7 +81,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
         <module name="RedundantImport">
             <!-- Checks for redundant import statements. -->
-            <property name="severity" value="error" />
         </module>
 
         <module name="IllegalImport">
@@ -123,14 +117,12 @@ page at http://checkstyle.sourceforge.net/config.html -->
               seven characters, this is not in line with common practice at Google.
             -->
             <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]{1,})*$" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="TypeNameCheck">
             <!-- Validates static, final fields against the
             expression "^[A-Z][a-zA-Z0-9]*$". -->
             <metadata name="altname" value="TypeName" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="ConstantNameCheck">
@@ -144,7 +136,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="format" value="^([A-Z][A-Z0-9]*(_[A-Z0-9]+)*|FLAG_.*)$" />
             <message key="name.invalidPattern"
                      value="Variable ''{0}'' should be in ALL_CAPS (if it is a constant) or be private (otherwise)." />
-            <property name="severity" value="error" />
         </module>
 
         <module name="StaticVariableNameCheck">
@@ -156,7 +147,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="applyToPackage" value="true" />
             <property name="applyToPrivate" value="true" />
             <property name="format" value="^[a-z][a-zA-Z0-9]*_?$" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="MemberNameCheck">
@@ -167,32 +157,29 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="applyToPackage" value="true" />
             <property name="applyToPrivate" value="true" />
             <property name="format" value="^[a-z][a-zA-Z0-9]*$" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="MethodNameCheck">
             <!-- Validates identifiers for method names. -->
             <metadata name="altname" value="MethodName" />
             <property name="format" value="^[a-z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="ParameterName">
             <!-- Validates identifiers for method parameters against the
               expression "^[a-z][a-zA-Z0-9]*$". -->
-            <property name="severity" value="error" />
         </module>
+
 
         <module name="LocalFinalVariableName">
             <!-- Validates identifiers for local final variables against the
               expression "^[a-z][a-zA-Z0-9]*$". -->
-            <property name="severity" value="error" />
         </module>
+
 
         <module name="LocalVariableName">
             <!-- Validates identifiers for local variables against the
               expression "^[a-z][a-zA-Z0-9]*$". -->
-            <property name="severity" value="error" />
         </module>
 
 
@@ -202,24 +189,11 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
         -->
 
-        <module name="LineLength">
-            <!-- Checks if a line is too long. -->
-            <property name="max" value="120" default="120" />
-            <property name="severity" value="error" />
-
-            <!--
-              The default ignore pattern exempts the following elements:
-                - import statements
-                - long URLs inside comments
-            -->
-
-            <property name="ignorePattern" value="^(package .*;\s*)|(import .*;\s*)|( *\* *https?://.*)$" />
-        </module>
 
         <module name="LeftCurly">
             <!-- Checks for placement of the left curly brace ('{'). -->
-            <property name="severity" value="error" />
         </module>
+
 
         <module name="RightCurly">
             <!-- Checks right curlies on CATCH, ELSE, and TRY blocks are on
@@ -239,18 +213,15 @@ page at http://checkstyle.sourceforge.net/config.html -->
             </pre>
             -->
             <property name="option" value="same" />
-            <property name="severity" value="error" />
         </module>
 
-        <!-- Checks for braces around if and else blocks -->
         <module name="NeedBraces">
-            <property name="severity" value="error" />
+            <!-- Checks for braces around if and else blocks -->
             <property name="tokens" value="LITERAL_IF, LITERAL_ELSE, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO" />
         </module>
 
         <module name="UpperEll">
             <!-- Checks that long constants are defined with an upper ell.-->
-            <property name="severity" value="error" />
         </module>
 
         <module name="FallThrough">
@@ -261,7 +232,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
             -->
             <property name="reliefPattern"
                       value="fall through|Fall through|fallthru|Fallthru|falls through|Falls through|fallthrough|Fallthrough|No break|NO break|no break|continue on" />
-            <property name="severity" value="error" />
         </module>
 
 
@@ -273,12 +243,11 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
         <module name="ModifierOrder">
             <!-- Warn if modifier order is inconsistent with JLS3 8.1.1, 8.3.1, and
-                 8.4.3.  The prescribed order is:
-                 public, protected, private, abstract, static, final, transient, volatile,
-                 synchronized, native, strictfp
-              -->
+                             8.4.3.  The prescribed order is:
+                             public, protected, private, abstract, static, final, transient, volatile,
+                             synchronized, native, strictfp
+                          -->
         </module>
-
 
         <!--
 
@@ -303,7 +272,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
         SL, SLIST, SL_ASSIGN, SR_ASSIGN, STAR, STAR_ASSIGN, LAMBDA" />
             <property name="allowEmptyConstructors" value="true" />
             <property name="allowEmptyMethods" value="true" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="WhitespaceAfter">
@@ -311,7 +279,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
                  whitespace.
             -->
             <property name="tokens" value="COMMA, SEMI, TYPECAST" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="NoWhitespaceAfter">
@@ -321,7 +288,6 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS,
         UNARY_PLUS" />
             <property name="allowLineBreaks" value="true" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="NoWhitespaceBefore">
@@ -330,50 +296,39 @@ page at http://checkstyle.sourceforge.net/config.html -->
             -->
             <property name="tokens" value="SEMI, DOT, POST_DEC, POST_INC" />
             <property name="allowLineBreaks" value="true" />
-            <property name="severity" value="error" />
         </module>
 
         <module name="ParenPad">
             <!-- Checks that there is no whitespace before close parens or after
                  open parens.
             -->
-            <property name="severity" value="error" />
         </module>
+
 
         <module name="EmptyLineSeparator" >
             <property name="allowMultipleEmptyLines" value="false"/>
         </module>
 
-        <!-- No System.out -->
         <module name="Regexp">
+            <!-- No System.out -->
             <property name="format" value="System\.out\.println" />
             <property name="illegalPattern" value="true" />
         </module>
 
-        <!-- No System.err -->
         <module name="Regexp">
+            <!-- No System.err -->
             <!-- . matches any character, so we need to escape it and use \. to match dots. -->
             <property name="format" value="System\.err\.println" />
             <property name="illegalPattern" value="true" />
         </module>
 
-        <!-- No printStackTrace -->
         <module name="Regexp">
+            <!-- No printStackTrace -->
             <!-- . matches any character, so we need to escape it and use \. to match dots. -->
             <property name="format" value="e\.printStackTrace\(\)" />
             <property name="illegalPattern" value="true" />
         </module>
-    </module>
 
-    <!--module name="SuppressionFilter">
-        <property name="file" value="suppressions.xml"/>
-    </module-->
-
-    <module name="SuppressionCommentFilter">
-        <property name="offCommentFormat" value="CHECKSTYLE OFF: (.+)" />
-        <property name="onCommentFormat" value="CHECKSTYLE ON" />
-        <property name="checkFormat" value="Javadoc.*" />
-        <property name="messageFormat" value="$1" />
     </module>
 
 </module>
