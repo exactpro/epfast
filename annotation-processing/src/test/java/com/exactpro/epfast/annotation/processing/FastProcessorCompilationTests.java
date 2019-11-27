@@ -46,8 +46,8 @@ class FastProcessorCompilationTests {
             .processedWith(fastProcessor)
             .compilesWithoutError()
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
-                "com.exactpro.epfast.annotation.internal.test$",
-                "CreatorImpl.class")
+            "com.exactpro.epfast.annotation.internal.test$",
+            "CreatorImpl.class")
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
             "",
             "META-INF/services/com.exactpro.epfast.ICreator")
@@ -101,8 +101,8 @@ class FastProcessorCompilationTests {
             "com.exactpro.epfast.annotation.internal.test$",
             "CreatorImpl.class")
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
-                "",
-                "META-INF/services/com.exactpro.epfast.ICreator");
+            "",
+            "META-INF/services/com.exactpro.epfast.ICreator");
     }
 
     @Test
@@ -115,5 +115,45 @@ class FastProcessorCompilationTests {
             .processedWith(fastProcessor)
             .failsToCompile()
             .withErrorContaining("Multiple @FastPackage annotations referring FAST package test are found.");
+    }
+
+    @Test
+    void testAbstractFastTypeFails() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/constructor/AbstractClass.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining(
+                "Class annotated with @FastType should be instantiable with default constructor");
+    }
+
+    @Test
+    void testInnerFastTypeFails() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/constructor/InnerClass.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining(
+                "Class annotated with @FastType should be instantiable with default constructor");
+    }
+
+    @Test
+    void testPrivateConstructorFails() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/constructor/PrivateConstructorClass.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining(
+                "Class annotated with @FastType should be instantiable with default constructor");
+    }
+
+    @Test
+    void testPackagePrivateClassFails() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/constructor/PrivateClass.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining(
+                "Class annotated with @FastType should be instantiable with default constructor");
     }
 }
