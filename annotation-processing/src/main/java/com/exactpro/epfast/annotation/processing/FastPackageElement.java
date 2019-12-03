@@ -10,6 +10,7 @@ public abstract class FastPackageElement {
 
     public void addFastType(FastTypeElement fastType) {
         fastTypes.add(fastType);
+        fastType.setPackage(this);
     }
 
     public Collection<FastTypeElement> getFastTypes() {

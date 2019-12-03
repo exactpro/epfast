@@ -1,0 +1,26 @@
+{{#fieldSetterTypeName.packageName}}
+package {{{fieldSetterTypeName.packageName}}};
+{{/fieldSetterTypeName.packageName}}
+import com.exactpro.epfast.IFieldSetter;
+
+public class {{{fieldSetterTypeName.className}}} implements IFieldSetter{
+    private {{{element}}} object = new {{{element}}}();
+    @Override
+    public void setField(String name, Object value) throws Exception {
+        boolean found = false;
+        {{#fastFields}}
+            if (name.equals("{{{fieldName}}}")) {
+                object.{{methodName}}(({{{parameterType}}})value);
+                found = true;
+            }
+        {{/fastFields}}
+        if (!found) {
+            throw new NoSuchFieldException("Field name=\""+name+"\" for class {{{element}}} not found");
+        }
+    }
+
+    @Override
+    public {{{element}}} getObject() {
+        return object;
+    }
+}

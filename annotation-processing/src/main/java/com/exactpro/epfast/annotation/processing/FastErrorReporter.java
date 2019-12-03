@@ -31,6 +31,12 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
     private static final String DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE =
         "Class annotated with @FastType should be instantiable with default constructor";
 
+    private static final String DUPLICATE_FIELD_TEMPLATE =
+        "Multiple @FastField annotations referring FAST field '%s' are found.";
+
+    private static final String INVALID_FIELD_TEMPLATE = "@FastField must be a valid java bean setter." +
+            " Method must be public, name must start with set, must have exactly 1 parameter";
+
     FastErrorReporter(Messager messager) {
         this.messager = messager;
     }
@@ -63,6 +69,12 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
     public void reportFastTypeNotInstantiable(Element element) {
         errorRaised = true;
         messager.printMessage(Diagnostic.Kind.ERROR, DEFAULT_CONSTRUCTOR_ERROR_TEMPLATE, element);
+    }
+
+    @Override
+    public void reportInvalidFastField(Element fastFieldElement) {
+        errorRaised = true;
+        messager.printMessage(Diagnostic.Kind.ERROR, INVALID_FIELD_TEMPLATE, fastFieldElement);
     }
 
     void reportProcessingAfterFirstRound() {
@@ -101,4 +113,15 @@ final class FastErrorReporter implements EnvironmentValidationReporter {
             fastType.getElement());
     }
 
+    @Override
+    public void reportDuplicateFields(Collection<FastFieldElement> fastFields) {
+        errorRaised = true;
+        fastFields.forEach(this::reportDuplicateField);
+    }
+
+    private void reportDuplicateField(FastFieldElement fastField) {
+        messager.printMessage(Diagnostic.Kind.ERROR,
+            String.format(DUPLICATE_FIELD_TEMPLATE, fastField.getFieldName()),
+            fastField.getFastField());
+    }
 }

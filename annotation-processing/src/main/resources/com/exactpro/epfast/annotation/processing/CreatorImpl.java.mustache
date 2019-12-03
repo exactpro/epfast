@@ -3,9 +3,9 @@
 public class {{{typeName.className}}} implements com.exactpro.epfast.ICreator {
     private static final String FAST_PACKAGE = "{{{fastPackage.packageName}}}";
 
-    public Object create(String name) {
+    public com.exactpro.epfast.IFieldSetter createSetter(String name) {
 {{#fastPackage.fastTypes}}
-        if ("{{{typeName}}}".equals(name)) return new {{{element}}}();
+        if ("{{{typeName}}}".equals(name)) return new {{{fieldSetterTypeName}}}();
 {{/fastPackage.fastTypes}}
         throw new RuntimeException("FastType name=\"" + name + "\" not found");
     }
