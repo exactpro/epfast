@@ -26,7 +26,7 @@ allprojects{
     }
 
     checkstyle {
-        toolVersion = "7.8.2"
+        toolVersion = "8.26"
         configFile = rootProject.file("config/checkstyle/checkstyle.xml")
     }
 }
