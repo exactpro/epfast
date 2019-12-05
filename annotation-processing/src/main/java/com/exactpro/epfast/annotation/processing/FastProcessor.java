@@ -14,11 +14,8 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
-import javax.tools.FileObject;
 import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -82,7 +79,8 @@ public class FastProcessor extends AbstractProcessor {
                     .map(FastTypeElement::getElement)
                     .collect(Collectors.toList())));
             try {
-                addServiceEntries(SERVICE_TYPENAME, creatorImplTypeNames,
+                FastServiceCreator fastServiceCreator = new FastServiceCreator(processingEnv);
+                fastServiceCreator.updateServiceEntries(SERVICE_TYPENAME, creatorImplTypeNames,
                     originatingElements.stream().toArray(Element[]::new));
             } catch (IOException e) {
                 errorReporter.reportServiceUpdate(SERVICE_TYPENAME);
@@ -118,45 +116,6 @@ public class FastProcessor extends AbstractProcessor {
                 String.format("com.exactpro.epfast.annotation.internal.%s.CreatorImpl", packageName)));
         }
         return creatorTypeNames;
-    }
-
-    private void addServiceEntries(TypeName service, HashSet<TypeName> providers,
-                                   Element... originatingElements) throws IOException {
-        Set<TypeName> allProviders = getExistingServiceProviders(service);
-        if (allProviders.containsAll(providers)) {
-            return;
-        }
-        allProviders.addAll(providers);
-        FileObject resourceFile = filer.createResource(
-            StandardLocation.CLASS_OUTPUT,
-            "",
-            getServicesFilePath(service),
-            originatingElements);
-        try (PrintWriter out = new PrintWriter(resourceFile.openOutputStream())) {
-            for (TypeName serviceProvider : allProviders) {
-                out.println(serviceProvider);
-            }
-        }
-    }
-
-    private Set<TypeName> getExistingServiceProviders(TypeName service) throws IOException {
-        HashSet<TypeName> serviceProviders = new HashSet<>();
-        FileObject existingFile = filer.getResource(
-            StandardLocation.CLASS_OUTPUT,
-            "",
-            getServicesFilePath(service));
-
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(existingFile.openInputStream()))) {
-            return br.lines().filter(provider -> !provider.isEmpty())
-                .map(TypeName::new).collect(Collectors.toSet());
-        } catch (FileNotFoundException e) {
-            // Resource didn't exist before, so we ignore it
-        }
-        return serviceProviders;
-    }
-
-    private String getServicesFilePath(TypeName service) {
-        return Paths.get("META-INF", "services", service.toString()).toString();
     }
 
 }
