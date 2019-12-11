@@ -1,16 +1,18 @@
 package com.exactpro.epfast.decoder.integer;
 
-import com.exactpro.epfast.ByteBufUtils;
+import com.exactpro.junit5.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 
+import com.exactpro.junit5.WithByteBuf;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.ByteBufUtils.*;
+import static com.exactpro.junit5.ByteBufUtils.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestInt32 {
@@ -394,5 +396,26 @@ class TestInt32 {
         assertTrue(mandatoryInt32Decoder.isReady());
         assertFalse(mandatoryInt32Decoder.isOverlong());
         assertEquals(-8193, mandatoryInt32Decoder.getValue());
+    }
+
+    @WithByteBuf("39 45 a3")
+    void mandatoryNumWithAnnotation(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryInt32Decoder, buffers);
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertEquals(942755, mandatoryInt32Decoder.getValue());
+    }
+
+    @WithByteBuf("7c 1b 1b 9d")
+    void mandatoryNegativeNumWithAnnotation(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryInt32Decoder, buffers);
+        assertTrue(mandatoryInt32Decoder.isReady());
+        assertEquals(-7942755, mandatoryInt32Decoder.getValue());
+    }
+
+    @WithByteBuf("00 00 00 80")
+    void nullWithAnnotation(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableInt32Decoder, buffers);
+        assertTrue(nullableInt32Decoder.isReady());
+        assertNull(nullableInt32Decoder.getValue());
     }
 }
