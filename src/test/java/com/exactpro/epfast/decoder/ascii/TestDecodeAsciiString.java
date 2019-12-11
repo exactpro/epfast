@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.ByteBufUtils.*;
+import static com.exactpro.junit5.ByteBufUtils.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestDecodeAsciiString {

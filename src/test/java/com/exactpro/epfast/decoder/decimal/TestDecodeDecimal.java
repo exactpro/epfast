@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.ByteBufUtils.*;
+import static com.exactpro.junit5.ByteBufUtils.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestDecodeDecimal {

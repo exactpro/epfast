@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.ByteBufUtils.*;
+import static com.exactpro.junit5.ByteBufUtils.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestDecodeByteVector {
