@@ -9,13 +9,10 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
 
     private static final int NEGATIVE_LIMIT = Integer.MIN_VALUE >> 7;
 
-    private boolean checkForSignExtension = false;
-
     private int value;
 
     public void decode(ByteBuf buf) {
         reset();
-        checkForSignExtension = false;
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         int oneByte = buf.getByte(readerIndex++);

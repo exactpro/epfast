@@ -11,7 +11,9 @@ public abstract class DecodeInteger implements IDecodeContext {
 
     protected boolean overflow;
 
-    protected boolean overlong;
+    boolean overlong;
+
+    boolean checkForSignExtension = false;
 
     public abstract void decode(ByteBuf buf);
 
@@ -21,7 +23,7 @@ public abstract class DecodeInteger implements IDecodeContext {
         return ready;
     }
 
-    protected boolean isOverlong() {
+    public boolean isOverlong() {
         return overlong;
     }
 
@@ -29,6 +31,7 @@ public abstract class DecodeInteger implements IDecodeContext {
         ready = false;
         overflow = false;
         overlong = false;
+        checkForSignExtension = false;
     }
 
     static void longToBytes(long value, byte[] bytes) {

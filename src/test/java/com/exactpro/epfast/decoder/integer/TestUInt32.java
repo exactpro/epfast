@@ -1,8 +1,11 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.junit5.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static com.exactpro.junit5.ByteBufUtils.*;
@@ -182,5 +185,89 @@ class TestUInt32 {
             assertTrue(mandatoryUInt32Decoder.isReady());
             assertEquals(942755, mandatoryUInt32Decoder.getValue());
         });
+    }
+
+    @Test
+    void mandatoryOverlong() throws IOException {
+        withByteBuf("00 39 45 a4", buffers -> {
+            decode(mandatoryUInt32Decoder, buffers);
+            assertTrue(mandatoryUInt32Decoder.isReady());
+            assertTrue(mandatoryUInt32Decoder.isOverlong());
+            assertEquals(942756, mandatoryUInt32Decoder.getValue());
+        });
+    }
+
+    @Test
+    void mandatoryNotOverlong() throws IOException {
+        withByteBuf("00 40 81", buffers -> {
+            decode(mandatoryUInt32Decoder, buffers);
+            assertTrue(mandatoryUInt32Decoder.isReady());
+            assertFalse(mandatoryUInt32Decoder.isOverlong());
+            assertEquals(8193, mandatoryUInt32Decoder.getValue());
+        });
+    }
+
+    @Test
+    void mandatoryOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("39 45 a4"));
+        decode(mandatoryUInt32Decoder, buffers);
+        assertTrue(mandatoryUInt32Decoder.isReady());
+        assertTrue(mandatoryUInt32Decoder.isOverlong());
+        assertEquals(942756, mandatoryUInt32Decoder.getValue());
+    }
+
+    @Test
+    void mandatoryNotOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("40 81"));
+        decode(mandatoryUInt32Decoder, buffers);
+        assertTrue(mandatoryUInt32Decoder.isReady());
+        assertFalse(mandatoryUInt32Decoder.isOverlong());
+        assertEquals(8193, mandatoryUInt32Decoder.getValue());
+    }
+
+    @Test
+    void nullableOverlong() throws IOException {
+        withByteBuf("00 39 45 a4", buffers -> {
+            decode(nullableUInt32Decoder, buffers);
+            assertTrue(nullableUInt32Decoder.isReady());
+            assertTrue(nullableUInt32Decoder.isOverlong());
+            assertEquals(942755, nullableUInt32Decoder.getValue());
+        });
+    }
+
+    @Test
+    void nullableNotOverlong() throws IOException {
+        withByteBuf("00 40 81", buffers -> {
+            decode(nullableUInt32Decoder, buffers);
+            assertTrue(nullableUInt32Decoder.isReady());
+            assertFalse(nullableUInt32Decoder.isOverlong());
+            assertEquals(8192, nullableUInt32Decoder.getValue());
+        });
+    }
+
+    @Test
+    void nullableOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("39 45 a4"));
+        decode(nullableUInt32Decoder, buffers);
+        assertTrue(nullableUInt32Decoder.isReady());
+        assertTrue(nullableUInt32Decoder.isOverlong());
+        assertEquals(942755, nullableUInt32Decoder.getValue());
+    }
+
+    @Test
+    void nullableNotOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("40 81"));
+        decode(nullableUInt32Decoder, buffers);
+        assertTrue(nullableUInt32Decoder.isReady());
+        assertFalse(nullableUInt32Decoder.isOverlong());
+        assertEquals(8192, nullableUInt32Decoder.getValue());
     }
 }

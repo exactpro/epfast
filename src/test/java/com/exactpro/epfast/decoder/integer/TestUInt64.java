@@ -1,9 +1,12 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.junit5.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static com.exactpro.junit5.ByteBufUtils.*;
@@ -192,5 +195,89 @@ class TestUInt64 {
             assertTrue(mandatoryUInt64Decoder.isReady());
             assertEquals(new BigInteger("10443992354206034127"), mandatoryUInt64Decoder.getValue());
         });
+    }
+
+    @Test
+    void mandatoryOverlong() throws IOException {
+        withByteBuf("00 39 45 a4", buffers -> {
+            decode(mandatoryUInt64Decoder, buffers);
+            assertTrue(mandatoryUInt64Decoder.isReady());
+            assertTrue(mandatoryUInt64Decoder.isOverlong());
+            assertEquals(new BigInteger("942756"), mandatoryUInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void mandatoryNotOverlong() throws IOException {
+        withByteBuf("00 40 81", buffers -> {
+            decode(mandatoryUInt64Decoder, buffers);
+            assertTrue(mandatoryUInt64Decoder.isReady());
+            assertFalse(mandatoryUInt64Decoder.isOverlong());
+            assertEquals(new BigInteger("8193"), mandatoryUInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void mandatoryOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("39 45 a4"));
+        decode(mandatoryUInt64Decoder, buffers);
+        assertTrue(mandatoryUInt64Decoder.isReady());
+        assertTrue(mandatoryUInt64Decoder.isOverlong());
+        assertEquals(new BigInteger("942756"), mandatoryUInt64Decoder.getValue());
+    }
+
+    @Test
+    void mandatoryNotOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("40 81"));
+        decode(mandatoryUInt64Decoder, buffers);
+        assertTrue(mandatoryUInt64Decoder.isReady());
+        assertFalse(mandatoryUInt64Decoder.isOverlong());
+        assertEquals(new BigInteger("8193"), mandatoryUInt64Decoder.getValue());
+    }
+
+    @Test
+    void nullableOverlong() throws IOException {
+        withByteBuf("00 39 45 a4", buffers -> {
+            decode(nullableUInt64Decoder, buffers);
+            assertTrue(nullableUInt64Decoder.isReady());
+            assertTrue(nullableUInt64Decoder.isOverlong());
+            assertEquals(new BigInteger("942755"), nullableUInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void nullableNotOverlong() throws IOException {
+        withByteBuf("00 40 81", buffers -> {
+            decode(nullableUInt64Decoder, buffers);
+            assertTrue(nullableUInt64Decoder.isReady());
+            assertFalse(nullableUInt64Decoder.isOverlong());
+            assertEquals(new BigInteger("8192"), nullableUInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void nullableOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("39 45 a4"));
+        decode(nullableUInt64Decoder, buffers);
+        assertTrue(nullableUInt64Decoder.isReady());
+        assertTrue(nullableUInt64Decoder.isOverlong());
+        assertEquals(new BigInteger("942755"), nullableUInt64Decoder.getValue());
+    }
+
+    @Test
+    void nullableNotOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("40 81"));
+        decode(nullableUInt64Decoder, buffers);
+        assertTrue(nullableUInt64Decoder.isReady());
+        assertFalse(nullableUInt64Decoder.isOverlong());
+        assertEquals(new BigInteger("8192"), nullableUInt64Decoder.getValue());
     }
 }

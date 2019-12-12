@@ -1,8 +1,11 @@
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.junit5.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static com.exactpro.junit5.ByteBufUtils.*;
@@ -305,5 +308,173 @@ class TestInt64 {
             assertTrue(nullableInt64Decoder.isReady());
             assertEquals(8193, nullableInt64Decoder.getValue());
         });
+    }
+
+    @Test
+    void mandatoryOverlong() throws IOException {
+        withByteBuf("00 39 45 a4", buffers -> {
+            decode(mandatoryInt64Decoder, buffers);
+            assertTrue(mandatoryInt64Decoder.isReady());
+            assertTrue(mandatoryInt64Decoder.isOverlong());
+            assertEquals(942756, mandatoryInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void mandatoryNotOverlong() throws IOException {
+        withByteBuf("00 40 81", buffers -> {
+            decode(mandatoryInt64Decoder, buffers);
+            assertTrue(mandatoryInt64Decoder.isReady());
+            assertFalse(mandatoryInt64Decoder.isOverlong());
+            assertEquals(8193, mandatoryInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void mandatoryOverlongNegative() throws IOException {
+        withByteBuf("7f 7c 1b 1b 9d", buffers -> {
+            decode(mandatoryInt64Decoder, buffers);
+            assertTrue(mandatoryInt64Decoder.isReady());
+            assertTrue(mandatoryInt64Decoder.isOverlong());
+            assertEquals(-7942755, mandatoryInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void mandatoryNotOverlongNegative() throws IOException {
+        withByteBuf("7f 3f ff", buffers -> {
+            decode(mandatoryInt64Decoder, buffers);
+            assertTrue(mandatoryInt64Decoder.isReady());
+            assertFalse(mandatoryInt64Decoder.isOverlong());
+            assertEquals(-8193, mandatoryInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void mandatoryOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("39 45 a4"));
+        decode(mandatoryInt64Decoder, buffers);
+        assertTrue(mandatoryInt64Decoder.isReady());
+        assertTrue(mandatoryInt64Decoder.isOverlong());
+        assertEquals(942756, mandatoryInt64Decoder.getValue());
+    }
+
+    @Test
+    void mandatoryOverlongSplitNegative() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("7f"));
+        buffers.add(ByteBufUtils.fromHex("7c 1b 1b 9d"));
+        decode(mandatoryInt64Decoder, buffers);
+        assertTrue(mandatoryInt64Decoder.isReady());
+        assertTrue(mandatoryInt64Decoder.isOverlong());
+        assertEquals(-7942755, mandatoryInt64Decoder.getValue());
+    }
+
+    @Test
+    void mandatoryNotOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("40 81"));
+        decode(mandatoryInt64Decoder, buffers);
+        assertTrue(mandatoryInt64Decoder.isReady());
+        assertFalse(mandatoryInt64Decoder.isOverlong());
+        assertEquals(8193, mandatoryInt64Decoder.getValue());
+    }
+
+    @Test
+    void mandatoryNotOverlongNegativeSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("7f"));
+        buffers.add(ByteBufUtils.fromHex("3f ff"));
+        decode(mandatoryInt64Decoder, buffers);
+        assertTrue(mandatoryInt64Decoder.isReady());
+        assertFalse(mandatoryInt64Decoder.isOverlong());
+        assertEquals(-8193, mandatoryInt64Decoder.getValue());
+    }
+
+    @Test
+    void nullableOverlong() throws IOException {
+        withByteBuf("00 39 45 a4", buffers -> {
+            decode(nullableInt64Decoder, buffers);
+            assertTrue(nullableInt64Decoder.isReady());
+            assertTrue(nullableInt64Decoder.isOverlong());
+            assertEquals(942755, nullableInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void nullableNotOverlong() throws IOException {
+        withByteBuf("00 40 81", buffers -> {
+            decode(nullableInt64Decoder, buffers);
+            assertTrue(nullableInt64Decoder.isReady());
+            assertFalse(nullableInt64Decoder.isOverlong());
+            assertEquals(8192, nullableInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void nullableOverlongNegative() throws IOException {
+        withByteBuf("7f 7c 1b 1b 9d", buffers -> {
+            decode(nullableInt64Decoder, buffers);
+            assertTrue(nullableInt64Decoder.isReady());
+            assertTrue(nullableInt64Decoder.isOverlong());
+            assertEquals(-7942755, nullableInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void nullableNotOverlongNegative() throws IOException {
+        withByteBuf("7f 3f ff", buffers -> {
+            decode(nullableInt64Decoder, buffers);
+            assertTrue(nullableInt64Decoder.isReady());
+            assertFalse(nullableInt64Decoder.isOverlong());
+            assertEquals(-8193, nullableInt64Decoder.getValue());
+        });
+    }
+
+    @Test
+    void nullableOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("39 45 a4"));
+        decode(nullableInt64Decoder, buffers);
+        assertTrue(nullableInt64Decoder.isReady());
+        assertTrue(nullableInt64Decoder.isOverlong());
+        assertEquals(942755, nullableInt64Decoder.getValue());
+    }
+
+    @Test
+    void nullableOverlongSplitNegative() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("7f"));
+        buffers.add(ByteBufUtils.fromHex("7c 1b 1b 9d"));
+        decode(nullableInt64Decoder, buffers);
+        assertTrue(nullableInt64Decoder.isReady());
+        assertTrue(nullableInt64Decoder.isOverlong());
+        assertEquals(-7942755, nullableInt64Decoder.getValue());
+    }
+
+    @Test
+    void nullableNotOverlongSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("00"));
+        buffers.add(ByteBufUtils.fromHex("40 81"));
+        decode(nullableInt64Decoder, buffers);
+        assertTrue(nullableInt64Decoder.isReady());
+        assertFalse(nullableInt64Decoder.isOverlong());
+        assertEquals(8192, nullableInt64Decoder.getValue());
+    }
+
+    @Test
+    void nullableNotOverlongNegativeSplit() throws IOException {
+        ArrayList<ByteBuf> buffers = new ArrayList<>();
+        buffers.add(ByteBufUtils.fromHex("7f"));
+        buffers.add(ByteBufUtils.fromHex("3f ff"));
+        decode(nullableInt64Decoder, buffers);
+        assertTrue(nullableInt64Decoder.isReady());
+        assertFalse(nullableInt64Decoder.isOverlong());
+        assertEquals(-8193, nullableInt64Decoder.getValue());
     }
 }
