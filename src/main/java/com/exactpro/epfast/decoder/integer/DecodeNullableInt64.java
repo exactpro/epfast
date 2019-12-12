@@ -18,18 +18,37 @@ public final class DecodeNullableInt64 extends DecodeInteger {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         int oneByte = buf.getByte(readerIndex++);
-        positive = (oneByte & SIGN_BIT_MASK) == 0;
-        if (positive) {
+        if ((oneByte & SIGN_BIT_MASK) == 0) {
+            positive = true;
             value = 0;
             accumulatePositive(oneByte);
-            while (readerIndex < readLimit && !ready) {
-                accumulatePositive(buf.getByte(readerIndex++));
+            if (oneByte < 0) {
+                buf.readerIndex(readerIndex);
+                return;
+            }
+            if (readerIndex < readLimit) {
+                checkOverlongPositive(buf.getByte(readerIndex)); //check second byte
+                do {
+                    accumulatePositive(buf.getByte(readerIndex++));
+                } while (!ready && readerIndex < readLimit);
+            } else {
+                checkForSignExtension = true;
             }
         } else {
+            positive = false;
             value = -1;
             accumulateNegative(oneByte);
-            while (readerIndex < readLimit && !ready) {
-                accumulateNegative(buf.getByte(readerIndex++));
+            if (oneByte < 0) {
+                buf.readerIndex(readerIndex);
+                return;
+            }
+            if (readerIndex < readLimit) {
+                checkOverlongNegative(buf.getByte(readerIndex)); //check second byte
+                do {
+                    accumulateNegative(buf.getByte(readerIndex++));
+                } while (!ready && readerIndex < readLimit);
+            } else {
+                checkForSignExtension = true;
             }
         }
         buf.readerIndex(readerIndex);
@@ -38,14 +57,22 @@ public final class DecodeNullableInt64 extends DecodeInteger {
     public void continueDecode(ByteBuf buf) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
-        if (positive) {
-            while (readerIndex < readLimit && !ready) {
+        if (value >= 0) {
+            if (checkForSignExtension) {
+                checkOverlongPositive(buf.getByte(readerIndex)); //continue checking
+                checkForSignExtension = false;
+            }
+            do {
                 accumulatePositive(buf.getByte(readerIndex++));
-            }
+            } while (!ready && readerIndex < readLimit);
         } else {
-            while (readerIndex < readLimit && !ready) {
-                accumulateNegative(buf.getByte(readerIndex++));
+            if (checkForSignExtension) {
+                checkOverlongNegative(buf.getByte(readerIndex)); //check first and second bytes
+                checkForSignExtension = false;
             }
+            do {
+                accumulateNegative(buf.getByte(readerIndex++));
+            } while (!ready && readerIndex < readLimit);
         }
         buf.readerIndex(readerIndex);
     }
@@ -82,5 +109,13 @@ public final class DecodeNullableInt64 extends DecodeInteger {
         } else {
             overflow = true;
         }
+    }
+
+    private void checkOverlongPositive(int secondByte) {
+        overlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
+    }
+
+    private void checkOverlongNegative(int secondByte) {
+        overlong = value == -1 && ((secondByte & SIGN_BIT_MASK) != 0);
     }
 }

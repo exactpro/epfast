@@ -40,4 +40,6 @@ public abstract class DecodeDecimal implements IDecodeContext {
     public boolean isReady() {
         return ready;
     }
+
+    public abstract boolean isOverlong();
 }

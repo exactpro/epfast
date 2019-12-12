@@ -11,4 +11,6 @@ public interface IDecodeContext {
     void continueDecode(ByteBuf buf);
 
     boolean isReady();
+
+    boolean isOverlong();
 }
