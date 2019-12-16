@@ -2,6 +2,7 @@ package com.exactpro.epfast.annotation.processing;
 
 import org.junit.jupiter.api.Test;
 
+import static com.exactpro.epfast.annotation.processing.FastFieldElement.getBeanPropertyName;
 import static com.exactpro.epfast.annotation.processing.NamedFastPackage.isValidPackage;
 import static com.exactpro.epfast.annotation.processing.helpers.FastPackageNameEncoder.encode;
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,4 +36,11 @@ public class FastProcessorTests {
         assertEquals("$", encode(""));
     }
 
+    @Test
+    void testGetFieldNameFromSetter() {
+        assertEquals("name", getBeanPropertyName("setName"));
+        assertEquals("age", getBeanPropertyName("setAge"));
+        assertEquals("a", getBeanPropertyName("setA"));
+        assertEquals("company", getBeanPropertyName("setCompany"));
+    }
 }

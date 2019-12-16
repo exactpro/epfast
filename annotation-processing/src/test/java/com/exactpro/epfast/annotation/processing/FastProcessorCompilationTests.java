@@ -156,4 +156,83 @@ class FastProcessorCompilationTests {
             .withErrorContaining(
                 "Class annotated with @FastType should be instantiable with default constructor");
     }
+
+    @Test
+    void testDuplicateFieldsFail() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/error/DuplicateStudent.java"),
+            JavaFileObjects.forResource("test/fields/error/package-info.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining(
+                "Multiple @FastField annotations referring FAST field 'name' are found.");
+    }
+
+    @Test
+    void testInheritedFastFieldDuplicates() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/inherit/Student.java"),
+            JavaFileObjects.forResource("test/inherit/ThirdGradeStudent.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining("Multiple @FastField annotations referring FAST field 'name' are found.");
+    }
+
+    @Test
+    void testPrivateFastFieldFails() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/priv/Student.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining("@FastField must be a valid java bean setter");
+    }
+
+    @Test
+    void testMultiParameterFastFieldFails() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/multiparameter/Student.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining("@FastField must be a valid java bean setter");
+    }
+
+    @Test
+    void testFastFieldNameEqualsSetFails() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/setter/Student.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining("@FastField must be a valid java bean setter");
+    }
+
+    @Test
+    void testInvalidJavaSetter() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/setter/InvalidStudent.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining("@FastField must be a valid java bean setter");
+    }
+
+    @Test
+    void testInvalidOverride() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/override/invalid/Student.java"),
+            JavaFileObjects.forResource("test/fields/override/invalid/FreshmanStudent.java"))
+            .processedWith(fastProcessor)
+            .failsToCompile()
+            .withErrorContaining("Multiple @FastField annotations referring FAST field 'name' are found");
+    }
+
+    @Test
+    void testValidOverride() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/override/valid/Student.java"),
+            JavaFileObjects.forResource("test/fields/override/valid/FreshmanStudent.java"))
+            .processedWith(fastProcessor)
+            .compilesWithoutError()
+            .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
+            "com.exactpro.epfast.annotation.internal.test$.fields$.override$.valid$",
+            "CreatorImpl.class");
+    }
 }

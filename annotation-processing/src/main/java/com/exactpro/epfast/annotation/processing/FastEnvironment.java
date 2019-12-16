@@ -4,14 +4,14 @@ import com.exactpro.epfast.annotations.FastPackage;
 import com.exactpro.epfast.annotations.FastType;
 
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.PackageElement;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.*;
 import javax.lang.model.util.Elements;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FastEnvironment {
+    private static final Set<Modifier> FAST_FIELD_MODIFIERS = Stream.of(Modifier.PUBLIC).collect(Collectors.toSet());
 
     private Collection<FastPackageElement> fastPackages;
 
@@ -28,12 +28,17 @@ public class FastEnvironment {
     }
 
     public static FastEnvironment build(RoundEnvironment environment, Elements elements) {
-        final FastPackageResolver resolver = new FastPackageResolver(elements);
-        getFastPackages(environment).forEach(resolver::registerFastPackage);
+        final FastPackageResolver packageResolver = new FastPackageResolver(elements);
+        final FastFieldResolver fieldResolver = new FastFieldResolver(elements);
+
+        getFastPackages(environment).forEach(packageResolver::registerFastPackage);
         getFastTypes(environment).forEach(
-            typeElement -> resolver.getFastPackageOf(elements.getPackageOf(typeElement))
+            typeElement -> packageResolver.getFastPackageOf(elements.getPackageOf(typeElement))
                 .addFastType(new FastTypeElement(typeElement)));
-        return new FastEnvironment(resolver.getKnownFastPackages());
+        Collection<FastPackageElement> knownFastPackages = packageResolver.getKnownFastPackages();
+        knownFastPackages.forEach(fastPackage -> fastPackage.getFastTypes()
+            .forEach(fieldResolver::resolveFields));
+        return new FastEnvironment(knownFastPackages);
     }
 
     @SuppressWarnings("unchecked")
@@ -56,6 +61,37 @@ public class FastEnvironment {
         void validate() {
             validatePackageNames();
             validatePackageNameDuplicates();
+            getFastPackages().forEach(it -> {
+                validateTypeNameDuplicates(it);
+                it.getFastTypes().forEach(fastType -> {
+                    List<FastFieldElement> fastFields = fastType.getFastFields();
+                    validateFastFieldDuplicates(fastFields);
+                    fastFields.forEach(this::validateFastField);
+                });
+            });
+        }
+
+        private void validateFastField(FastFieldElement fastFieldElement) {
+            String methodName = fastFieldElement.getMethodName();
+            if (!methodName.startsWith("set") || methodName.length() <= 3) {
+                reporter.reportInvalidFastField(fastFieldElement.getFastField());
+            }
+            List<? extends VariableElement> parameters = ((ExecutableElement) fastFieldElement.getFastField())
+                .getParameters();
+            if (parameters.size() != 1) {
+                reporter.reportInvalidFastField(fastFieldElement.getFastField());
+            }
+
+            if (!fastFieldElement.getFastField().getModifiers().equals(FAST_FIELD_MODIFIERS)) {
+                reporter.reportInvalidFastField(fastFieldElement.getFastField());
+            }
+        }
+
+        private void validateFastFieldDuplicates(List<FastFieldElement> fastFields) {
+            Map<String, List<FastFieldElement>> fastFieldNames
+                = fastFields.stream().collect(Collectors.groupingBy(FastFieldElement::getFieldName));
+            fastFieldNames.values().stream().filter(fastFieldElements -> fastFieldElements.size() > 1)
+                .forEach(reporter::reportDuplicateFields);
             getFastPackages().forEach(it -> {
                 validateTypeNameDuplicates(it);
                 it.getFastTypes().forEach(this::validateInstantiable);
