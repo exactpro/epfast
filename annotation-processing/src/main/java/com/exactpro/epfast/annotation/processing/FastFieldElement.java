@@ -30,7 +30,7 @@ public class FastFieldElement {
         return setterMethodName.substring(3, 4).toLowerCase() + setterMethodName.substring(4);
     }
 
-    public Element getFastField() {
+    public ExecutableElement getFastField() {
         return setterMethod;
     }
 
@@ -45,12 +45,7 @@ public class FastFieldElement {
         return setterMethod.getParameters().get(0).asType();
     }
 
-    public Element getFastType() {
-        return setterMethod.getEnclosingElement();
-    }
-
     public String getMethodName() {
         return setterMethod.getSimpleName().toString();
     }
-
 }

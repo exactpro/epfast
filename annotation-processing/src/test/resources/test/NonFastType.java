@@ -8,6 +8,7 @@ public class NonFastType {
     public String getName() {
         return name;
     }
+
     @FastField(name = "name")
     public void setName(String name) {
         this.name = name;

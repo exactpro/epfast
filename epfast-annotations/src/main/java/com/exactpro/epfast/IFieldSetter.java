@@ -2,7 +2,7 @@ package com.exactpro.epfast;
 
 public interface IFieldSetter {
 
-    void setField(String name, Object value) throws Exception;
+    void setField(String name, Object value);
 
     Object getObject();
 }

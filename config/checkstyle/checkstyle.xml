@@ -329,6 +329,10 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <property name="illegalPattern" value="true" />
         </module>
 
+        <module name="SuppressWarningsHolder" />
+
     </module>
+
+    <module name="SuppressWarningsFilter" />
 
 </module>

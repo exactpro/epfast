@@ -6,6 +6,7 @@ import com.exactpro.epfast.annotations.FastType;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -27,13 +28,12 @@ public class FastEnvironment {
         new Validator(reporter).validate();
     }
 
-    public static FastEnvironment build(RoundEnvironment environment, Elements elements) {
-        final FastPackageResolver packageResolver = new FastPackageResolver(elements);
-        final FastFieldResolver fieldResolver = new FastFieldResolver(elements);
-
+    public static FastEnvironment build(RoundEnvironment environment, Elements elementUtils, Types typeUtils) {
+        final FastPackageResolver packageResolver = new FastPackageResolver(elementUtils);
+        final FastFieldResolver fieldResolver = new FastFieldResolver(typeUtils);
         getFastPackages(environment).forEach(packageResolver::registerFastPackage);
         getFastTypes(environment).forEach(
-            typeElement -> packageResolver.getFastPackageOf(elements.getPackageOf(typeElement))
+            typeElement -> packageResolver.getFastPackageOf(elementUtils.getPackageOf(typeElement))
                 .addFastType(new FastTypeElement(typeElement)));
         Collection<FastPackageElement> knownFastPackages = packageResolver.getKnownFastPackages();
         knownFastPackages.forEach(fastPackage -> fastPackage.getFastTypes()
@@ -65,8 +65,8 @@ public class FastEnvironment {
                 validateTypeNameDuplicates(it);
                 it.getFastTypes().forEach(fastType -> {
                     List<FastFieldElement> fastFields = fastType.getFastFields();
-                    validateFastFieldDuplicates(fastFields);
                     fastFields.forEach(this::validateFastField);
+                    validateFastFieldDuplicates(fastFields);
                 });
             });
         }
