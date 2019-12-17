@@ -91,16 +91,28 @@ public class FastProcessor extends AbstractProcessor {
     }
 
     private void buildCreatorClasses(FastEnvironment fastEnvironment) throws IOException {
+        Mustache mustache = mustacheFactory.compile(
+            "com/exactpro/epfast/annotation/processing/FieldSetter.java.mustache");
+        for (FastPackageElement fastPackage : fastEnvironment.getFastPackages()) {
+            for (FastTypeElement fastTypeElement : fastPackage.getFastTypes()) {
+                TypeName typeName = fastTypeElement.getFieldSetterTypeName();
+                JavaFileObject fieldSetterFile = filer.createSourceFile(typeName.toString());
+                try (PrintWriter out = new PrintWriter(fieldSetterFile.openWriter())) {
+                    mustache.execute(out, fastTypeElement);
+                }
+            }
+        }
+
         for (FastPackageElement packageElement : fastEnvironment.getFastPackages()) {
             TypeName typeName = new TypeName(String.format("com.exactpro.epfast.annotation.internal.%s.CreatorImpl",
                 FastPackageNameEncoder.encode(packageElement.getPackageName())));
             // mustache files are in UTF-8 by default
-            Mustache mustache = mustacheFactory.compile(
+            mustache = mustacheFactory.compile(
                 "com/exactpro/epfast/annotation/processing/CreatorImpl.java.mustache");
             JavaFileObject builderFile = filer.createSourceFile(typeName.toString());
             try (PrintWriter out = new PrintWriter(builderFile.openWriter())) {
                 mustache.execute(out, new CreatorTemplateParameters(
-                    typeName, packageElement)).flush();
+                    typeName, packageElement));
             }
         }
     }

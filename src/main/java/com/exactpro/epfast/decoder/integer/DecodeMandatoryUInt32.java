@@ -14,14 +14,33 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
         value = 0;
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
-        while (readerIndex < readLimit && !ready) {
-            accumulate(buf.getByte(readerIndex++));
+        int oneByte = buf.getByte(readerIndex++);
+        accumulate(oneByte);
+        if (oneByte < 0) {
+            buf.readerIndex(readerIndex);
+            return;
+        }
+        if (readerIndex < readLimit) {
+            checkOverlong(buf.getByte(readerIndex)); //check second byte
+            do {
+                accumulate(buf.getByte(readerIndex++));
+            } while (!ready && readerIndex < readLimit);
+        } else {
+            checkForSignExtension = true;
         }
         buf.readerIndex(readerIndex);
     }
 
     public void continueDecode(ByteBuf buf) {
-        decode(buf);
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
+        if (checkForSignExtension) {
+            checkOverlong(buf.getByte(readerIndex)); //continue checking
+            checkForSignExtension = false;
+        }
+        do {
+            accumulate(buf.getByte(readerIndex++));
+        } while (!ready && readerIndex < readLimit);
     }
 
     public long getValue() throws OverflowException {
@@ -42,5 +61,9 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
         } else {
             overflow = true;
         }
+    }
+
+    private void checkOverlong(int secondByte) {
+        overlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
     }
 }

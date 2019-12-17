@@ -95,4 +95,9 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
             throw new OverflowException("exponent value allowed range is -63 ... 63");
         }
     }
+
+    @Override
+    public boolean isOverlong() {
+        return exponentDecoder.isOverlong() || mantissaDecoder.isOverlong();
+    }
 }

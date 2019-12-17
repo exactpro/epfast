@@ -51,6 +51,10 @@ public abstract class DecodeAsciiString implements IDecodeContext {
         return ready;
     }
 
+    public boolean isOverlong() {
+        return (zeroPreamble && (zeroCount < stringBuilder.length()));
+    }
+
     private void accumulateValue(int oneByte) {
         if (oneByte < 0) { // if stop bit is set
             oneByte &= CLEAR_STOP_BIT_MASK;

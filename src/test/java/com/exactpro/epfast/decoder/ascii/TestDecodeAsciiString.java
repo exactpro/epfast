@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.ByteBufUtils.*;
+import static com.exactpro.junit5.ByteBufUtils.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestDecodeAsciiString {
@@ -36,6 +36,7 @@ class TestDecodeAsciiString {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
                 assertNull(decoder.getValue());
+                assertFalse(decoder.isOverlong());
             });
         }
 
@@ -45,6 +46,7 @@ class TestDecodeAsciiString {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
                 assertEquals("", decoder.getValue());
+                assertFalse(decoder.isOverlong());
             });
         }
 
@@ -54,6 +56,7 @@ class TestDecodeAsciiString {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
                 assertEquals("ABC", decoder.getValue());
+                assertFalse(decoder.isOverlong());
             });
         }
 
@@ -63,6 +66,7 @@ class TestDecodeAsciiString {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
                 assertEquals("\0", decoder.getValue());
+                assertFalse(decoder.isOverlong());
             });
         }
 
@@ -72,6 +76,7 @@ class TestDecodeAsciiString {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
                 assertEquals("\0\0\0", decoder.getValue());
+                assertFalse(decoder.isOverlong());
             });
         }
 
@@ -80,6 +85,7 @@ class TestDecodeAsciiString {
             withByteBuf("41 42 c3 42 42 c3 41 44 c3", buffers -> {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("ABC", decoder.getValue());
                 decode(decoder, buffers);
                 assertEquals("BBC", decoder.getValue());
@@ -93,8 +99,18 @@ class TestDecodeAsciiString {
             withByteBuf("41 42 c3", buffers -> {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("ABC", decoder.getValue());
                 assertEquals("ABC", decoder.getValue());
+            });
+        }
+
+        @Test
+        void testNullableOverlongNoException() throws IOException {
+            withByteBuf("00 00 00 81", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertTrue(decoder.isOverlong());
             });
         }
 
@@ -108,6 +124,7 @@ class TestDecodeAsciiString {
                 withByteBuf("00 00 00 81", buffers -> {
                     decode(decoder, buffers);
                     assertTrue(decoder.isReady());
+                    assertTrue(decoder.isOverlong());
                     assertThrows(OverflowException.class, () -> decoder.getValue());
                 });
             }
@@ -125,10 +142,12 @@ class TestDecodeAsciiString {
             withByteBuf("00 00 80 00 00 00 00 80", buffers -> {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("\0", decoder.getValue());
 
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("\0\0\0", decoder.getValue());
             });
         }
@@ -144,6 +163,7 @@ class TestDecodeAsciiString {
             withByteBuf("80", buffers -> {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("", decoder.getValue());
             });
         }
@@ -153,6 +173,7 @@ class TestDecodeAsciiString {
             withByteBuf("00 00 80", buffers -> {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("\0\0", decoder.getValue());
             });
         }
@@ -162,6 +183,7 @@ class TestDecodeAsciiString {
             withByteBuf("00 00 00 00 80", buffers -> {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("\0\0\0\0", decoder.getValue());
             });
         }
@@ -171,8 +193,18 @@ class TestDecodeAsciiString {
             withByteBuf("80", buffers -> {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("", decoder.getValue());
                 assertEquals("", decoder.getValue());
+            });
+        }
+
+        @Test
+        void testMandatoryOverlongNoException() throws IOException {
+            withByteBuf("00 00 00 81", buffers -> {
+                decode(decoder, buffers);
+                assertTrue(decoder.isReady());
+                assertTrue(decoder.isOverlong());
             });
         }
 
@@ -186,6 +218,7 @@ class TestDecodeAsciiString {
                 withByteBuf("00 81", buffers -> {
                     decode(decoder, buffers);
                     assertTrue(decoder.isReady());
+                    assertTrue(decoder.isOverlong());
                     assertThrows(OverflowException.class, () -> decoder.getValue());
                 });
             }
@@ -203,10 +236,12 @@ class TestDecodeAsciiString {
             withByteBuf("00 00 80 00 00 00 00 80", buffers -> {
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("\0\0", decoder.getValue());
 
                 decode(decoder, buffers);
                 assertTrue(decoder.isReady());
+                assertFalse(decoder.isOverlong());
                 assertEquals("\0\0\0\0", decoder.getValue());
             });
         }
