@@ -1,4 +1,4 @@
 @FastPackage(name = "test")
-package test.packageB;
+package test.packageb;
 
 import com.exactpro.epfast.annotations.FastPackage;

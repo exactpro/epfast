@@ -6,7 +6,7 @@ import com.exactpro.epfast.IFieldSetter;
 public class {{{fieldSetterTypeName.className}}} implements IFieldSetter{
     private {{{element}}} object = new {{{element}}}();
     @Override
-    public void setField(String name, Object value) throws Exception {
+    public void setField(String name, Object value) {
         boolean found = false;
         {{#fastFields}}
             if (name.equals("{{{fieldName}}}")) {
@@ -15,7 +15,7 @@ public class {{{fieldSetterTypeName.className}}} implements IFieldSetter{
             }
         {{/fastFields}}
         if (!found) {
-            throw new NoSuchFieldException("Field name=\""+name+"\" for class {{{element}}} not found");
+            throw new RuntimeException("Field name=\""+name+"\" for class {{{element}}} not found");
         }
     }
 
