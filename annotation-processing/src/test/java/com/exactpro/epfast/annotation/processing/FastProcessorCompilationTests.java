@@ -28,7 +28,7 @@ class FastProcessorCompilationTests {
             "",
             "META-INF/services/com.exactpro.epfast.ICreator")
             .withStringContents(StandardCharsets.UTF_8,
-                "com.exactpro.epfast.annotation.internal.test$.CreatorImpl\n");
+                "com.exactpro.epfast.annotation.internal.test$.CreatorImpl" + System.lineSeparator());
     }
 
     @Test
@@ -52,7 +52,7 @@ class FastProcessorCompilationTests {
             "",
             "META-INF/services/com.exactpro.epfast.ICreator")
             .withStringContents(StandardCharsets.UTF_8,
-                "com.exactpro.epfast.annotation.internal.test$.CreatorImpl\n");
+                "com.exactpro.epfast.annotation.internal.test$.CreatorImpl" + System.lineSeparator());
     }
 
     @Test
