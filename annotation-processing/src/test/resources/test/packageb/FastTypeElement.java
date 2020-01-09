@@ -1,4 +1,4 @@
-package test.packageA;
+package test.packageb;
 
 import com.exactpro.epfast.annotations.FastType;
 

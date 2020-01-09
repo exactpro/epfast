@@ -14,6 +14,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.JavaFileObject;
 import java.io.*;
 import java.util.*;
@@ -39,6 +40,8 @@ public class FastProcessor extends AbstractProcessor {
 
     private FastErrorReporter errorReporter;
 
+    private Types typeUtils;
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
@@ -46,6 +49,7 @@ public class FastProcessor extends AbstractProcessor {
         this.filer = processingEnv.getFiler();
         this.fastTypeElement = elementUtils.getTypeElement(FastType.class.getCanonicalName());
         this.fastPackageElement = elementUtils.getTypeElement(FastPackage.class.getCanonicalName());
+        this.typeUtils = processingEnv.getTypeUtils();
         Messager messager = processingEnv.getMessager();
         this.errorReporter = new FastErrorReporter(messager);
     }
@@ -60,7 +64,7 @@ public class FastProcessor extends AbstractProcessor {
             if (fastEnvironment != null) {
                 errorReporter.reportProcessingAfterFirstRound();
             }
-            fastEnvironment = FastEnvironment.build(roundEnv, elementUtils);
+            fastEnvironment = FastEnvironment.build(roundEnv, elementUtils, typeUtils);
             fastEnvironment.validate(errorReporter);
             if (!errorReporter.errorRaised()) {
                 try {

@@ -1,7 +1,7 @@
-package test.insideA;
+package test.packagea;
 
 import com.exactpro.epfast.annotations.FastType;
 
-@FastType(name = "fastA")
+@FastType
 public class FastTypeElement {
 }

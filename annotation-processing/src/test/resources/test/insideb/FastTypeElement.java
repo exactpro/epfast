@@ -1,4 +1,4 @@
-package test.insideB;
+package test.insideb;
 
 import com.exactpro.epfast.annotations.FastType;
 

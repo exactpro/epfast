@@ -28,7 +28,7 @@ class FastProcessorCompilationTests {
             "",
             "META-INF/services/com.exactpro.epfast.ICreator")
             .withStringContents(StandardCharsets.UTF_8,
-                "com.exactpro.epfast.annotation.internal.test$.CreatorImpl\n");
+                "com.exactpro.epfast.annotation.internal.test$.CreatorImpl" + System.lineSeparator());
     }
 
     @Test
@@ -52,15 +52,15 @@ class FastProcessorCompilationTests {
             "",
             "META-INF/services/com.exactpro.epfast.ICreator")
             .withStringContents(StandardCharsets.UTF_8,
-                "com.exactpro.epfast.annotation.internal.test$.CreatorImpl\n");
+                "com.exactpro.epfast.annotation.internal.test$.CreatorImpl" + System.lineSeparator());
     }
 
     @Test
     void testJavaPackageEqualsFastPackageFails() {
         JavaSourcesSubject.assertThat(
             JavaFileObjects.forResource("test/DefaultAnnotated.java"),
-            JavaFileObjects.forResource("test/packageA/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/packageA/package-info.java"))
+            JavaFileObjects.forResource("test/packagea/FastTypeElement.java"),
+            JavaFileObjects.forResource("test/packagea/package-info.java"))
             .processedWith(fastProcessor)
             .failsToCompile()
             .withErrorContaining("Both anonymous and named package(s) refer to FAST package test.");
@@ -81,10 +81,10 @@ class FastProcessorCompilationTests {
     @Test
     void testRootPackageEqualsFastPackageFails() {
         JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/insideA/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/insideB/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/packageA/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/packageA/package-info.java"))
+            JavaFileObjects.forResource("test/insidea/FastTypeElement.java"),
+            JavaFileObjects.forResource("test/insideb/FastTypeElement.java"),
+            JavaFileObjects.forResource("test/packagea/FastTypeElement.java"),
+            JavaFileObjects.forResource("test/packagea/package-info.java"))
             .processedWith(fastProcessor)
             .failsToCompile()
             .withErrorContaining("Both anonymous and named package(s) refer to FAST package test.");
@@ -93,8 +93,8 @@ class FastProcessorCompilationTests {
     @Test
     void testSameFastTypesInDifferentPackagesSucceeds() {
         JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/insideA/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/insideB/FastTypeElement.java"))
+            JavaFileObjects.forResource("test/insidea/FastTypeElement.java"),
+            JavaFileObjects.forResource("test/insideb/FastTypeElement.java"))
             .processedWith(fastProcessor)
             .compilesWithoutError()
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
@@ -108,10 +108,10 @@ class FastProcessorCompilationTests {
     @Test
     void testDuplicateFastPackagesFail() {
         JavaSourcesSubject.assertThat(
-            JavaFileObjects.forResource("test/packageA/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/packageB/FastTypeElement.java"),
-            JavaFileObjects.forResource("test/packageA/package-info.java"),
-            JavaFileObjects.forResource("test/packageB/package-info.java"))
+            JavaFileObjects.forResource("test/packagea/FastTypeElement.java"),
+            JavaFileObjects.forResource("test/packageb/FastTypeElement.java"),
+            JavaFileObjects.forResource("test/packagea/package-info.java"),
+            JavaFileObjects.forResource("test/packageb/package-info.java"))
             .processedWith(fastProcessor)
             .failsToCompile()
             .withErrorContaining("Multiple @FastPackage annotations referring FAST package test are found.");
@@ -219,9 +219,9 @@ class FastProcessorCompilationTests {
         JavaSourcesSubject.assertThat(
             JavaFileObjects.forResource("test/fields/override/invalid/Student.java"),
             JavaFileObjects.forResource("test/fields/override/invalid/FreshmanStudent.java"))
-            .processedWith(fastProcessor)
-            .failsToCompile()
+            .processedWith(fastProcessor).failsToCompile()
             .withErrorContaining("Multiple @FastField annotations referring FAST field 'name' are found");
+
     }
 
     @Test
@@ -234,5 +234,16 @@ class FastProcessorCompilationTests {
             .and().generatesFileNamed(StandardLocation.CLASS_OUTPUT,
             "com.exactpro.epfast.annotation.internal.test$.fields$.override$.valid$",
             "CreatorImpl.class");
+    }
+
+    @Test
+    void testMultiLevelInheritance() {
+        JavaSourcesSubject.assertThat(
+            JavaFileObjects.forResource("test/fields/multilevelinheritance/A.java"),
+            JavaFileObjects.forResource("test/fields/multilevelinheritance/B.java"),
+            JavaFileObjects.forResource("test/fields/multilevelinheritance/C.java"),
+            JavaFileObjects.forResource("test/fields/multilevelinheritance/D.java"))
+            .processedWith(fastProcessor)
+            .compilesWithoutError();
     }
 }

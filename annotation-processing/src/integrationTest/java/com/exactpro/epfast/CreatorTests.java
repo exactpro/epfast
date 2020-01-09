@@ -37,22 +37,22 @@ class CreatorTests {
     }
 
     @Test
-    void testCreatorNonDefaultAnnotation() throws Exception {
+    void testCreatorNonDefaultAnnotation() {
         assertEquals(NamedAnnotated.class, creator.createSetter("named").getObject().getClass());
     }
 
     @Test
-    void testRootCreator() throws Exception {
+    void testRootCreator() {
         assertEquals(RootFastType.class, rootCreator.createSetter("root").getObject().getClass());
     }
 
     @Test
-    void testInsideCreator() throws Exception {
+    void testInsideCreator() {
         assertEquals(DefAnn.class, insideCreator.createSetter("DefAnn").getObject().getClass());
     }
 
     @Test
-    void testSameFastTypesAreProcessedInDifferentPackages() throws Exception {
+    void testSameFastTypesAreProcessedInDifferentPackages() {
         assertEquals(com.exactpro.epfast.inside.NamedAnnotated.class,
             insideCreator.createSetter("named").getObject().getClass());
         assertEquals(NamedAnnotated.class,
@@ -60,7 +60,7 @@ class CreatorTests {
     }
 
     @Test
-    void testFastTypeWithoutPackage() throws Exception {
+    void testFastTypeWithoutPackage() {
         assertEquals(FastTypeAnnotated.class, insideCreator.createSetter("FastTypeAnnotated").getObject().getClass());
     }
 
@@ -71,7 +71,7 @@ class CreatorTests {
     }
 
     @Test
-    void testFieldSettings() throws Exception {
+    void testFieldSettings() {
         IFieldSetter fieldSetter = creator.createSetter("Student");
         fieldSetter.setField("name", "John");
         fieldSetter.setField("age", 22);
@@ -82,7 +82,7 @@ class CreatorTests {
     }
 
     @Test
-    void testOverridenFieldIsNotPresentFromParent() throws Exception {
+    void testOverridenFieldIsNotPresentFromParent() {
         IFieldSetter fieldSetter = creator.createSetter("ThirdGradeStudent");
         fieldSetter.setField("name", "John");
         fieldSetter.setField("lastName", "Doe");
@@ -94,7 +94,7 @@ class CreatorTests {
     }
 
     @Test
-    void testInheritedFieldsFromBaseWithoutFastType() throws Exception {
+    void testInheritedFieldsFromBaseWithoutFastType() {
         IFieldSetter fieldSetter = woFastTypeCreator.createSetter("FreshmanStudent");
         fieldSetter.setField("firstName", "John");
         fieldSetter.setField("lastName", "Doe");
@@ -105,12 +105,24 @@ class CreatorTests {
     }
 
     @Test
-    void testDefaultFields() throws Exception {
+    void testDefaultFields() {
         IFieldSetter fieldSetter = creator.createSetter("DefaultFieldStudent");
         fieldSetter.setField("name", "John");
         fieldSetter.setField("age", 22);
         DefaultFieldStudent createdObject = (DefaultFieldStudent) fieldSetter.getObject();
         assertEquals("John", createdObject.getName());
         assertEquals(22, createdObject.getAge());
+    }
+
+    @Test
+    void testFieldOverride() {
+        IFieldSetter setter = creator.createSetter("BClass");
+        setter.setField("XXX", 25);
+        setter.setField("YYY", 50L);
+        setter.setField("name", "name");
+        BClass bClass = (BClass) setter.getObject();
+        assertEquals(50, bClass.getFoo());
+        assertEquals("name", bClass.getName());
+        assertEquals(25, bClass.getSuperFoo());
     }
 }

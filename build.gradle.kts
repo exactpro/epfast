@@ -29,6 +29,12 @@ allprojects{
         toolVersion = "8.26"
         configFile = rootProject.file("config/checkstyle/checkstyle.xml")
     }
+
+    tasks.checkstyleTest {
+        source += fileTree("src/test/resources") {
+            include("**/*.java")
+        }
+    }
 }
 
 dependencies {

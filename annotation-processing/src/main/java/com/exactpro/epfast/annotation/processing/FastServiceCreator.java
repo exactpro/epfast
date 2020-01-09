@@ -6,7 +6,6 @@ import javax.lang.model.element.Element;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,7 +37,7 @@ public class FastServiceCreator {
     }
 
     private static String getServicesFilePath(TypeName service) {
-        return Paths.get("META-INF", "services", service.toString()).toString();
+        return "META-INF/services/" + service.toString();
     }
 
     private Set<TypeName> getExistingServiceProviders(TypeName service) throws IOException {
