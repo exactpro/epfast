@@ -15,7 +15,7 @@ class Instruction extends MainFields {
 
     private List<Int32> int32s;
 
-    private List<Decimal> decimals;
+    private List<DecimalField> decimalFields;
 
     private List<StringClass> strings;
 
@@ -70,13 +70,13 @@ class Instruction extends MainFields {
         this.int32s = int32s;
     }
 
-    public List<Decimal> getDecimals() {
-        return decimals;
+    public List<DecimalField> getDecimalFields() {
+        return decimalFields;
     }
 
     @XmlElement(name = "decimal", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setDecimals(List<Decimal> decimals) {
-        this.decimals = decimals;
+    public void setDecimalFields(List<DecimalField> decimalFields) {
+        this.decimalFields = decimalFields;
     }
 
     public List<StringClass> getStrings() {

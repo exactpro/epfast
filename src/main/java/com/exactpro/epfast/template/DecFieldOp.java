@@ -2,7 +2,7 @@ package com.exactpro.epfast.template;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class Decimal extends FieldInstrContent {
+public class DecFieldOp {
 
     private Exponent exponent;
 
@@ -25,4 +25,5 @@ public class Decimal extends FieldInstrContent {
     public void setMantissa(Mantissa mantissa) {
         this.mantissa = mantissa;
     }
+
 }
