@@ -5,16 +5,16 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class Group extends Instruction {
 
-    private Dictionary dictionary;
+    private String dictionary;
 
     private TypeRef typeRef;
 
-    public Dictionary getDictionary() {
+    public String getDictionary() {
         return dictionary;
     }
 
     @XmlAttribute(name = "dictionary")
-    public void setDictionary(Dictionary dictionary) {
+    public void setDictionary(String dictionary) {
         this.dictionary = dictionary;
     }
 

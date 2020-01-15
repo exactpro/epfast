@@ -1,5 +1,5 @@
 package com.exactpro.epfast.template;
 
-enum Presence {
+enum PresenceAttr {
     mandatory, optional
 }

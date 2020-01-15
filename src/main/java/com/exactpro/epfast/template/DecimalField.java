@@ -1,14 +1,28 @@
 package com.exactpro.epfast.template;
 
+import javax.xml.bind.annotation.XmlElement;
+
 public class DecimalField extends FieldInstrContent {
 
-    private DecFieldOp decFieldOp;
+    private Exponent exponent;
 
-    public DecFieldOp getDecFieldOp() {
-        return decFieldOp;
+    private Mantissa mantissa;
+
+    public Exponent getExponent() {
+        return exponent;
     }
 
-    public void setDecFieldOp(DecFieldOp decFieldOp) {
-        this.decFieldOp = decFieldOp;
+    @XmlElement(name = "exponent", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    public void setExponent(Exponent exponent) {
+        this.exponent = exponent;
+    }
+
+    public Mantissa getMantissa() {
+        return mantissa;
+    }
+
+    @XmlElement(name = "mantissa", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    public void setMantissa(Mantissa mantissa) {
+        this.mantissa = mantissa;
     }
 }

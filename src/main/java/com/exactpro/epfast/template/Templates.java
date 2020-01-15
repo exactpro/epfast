@@ -8,16 +8,16 @@ import java.util.List;
 @XmlRootElement(name = "templates", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
 public class Templates {
 
-    private Dictionary dictionary;
+    private String dictionary;
 
     private List<Template> templates;
 
-    public Dictionary getDictionary() {
+    public String getDictionary() {
         return dictionary;
     }
 
     @XmlAttribute(name = "dictionary")
-    public void setDictionary(Dictionary dictionary) {
+    public void setDictionary(String dictionary) {
         this.dictionary = dictionary;
     }
 

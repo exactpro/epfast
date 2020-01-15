@@ -4,26 +4,15 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 class OpContext extends InitialValueAttr {
 
-    private Dictionary dictionary;
+    private String dictionary;
 
-    private String key;
-
-    public Dictionary getDictionary() {
+    public String getDictionary() {
         return dictionary;
     }
 
     @XmlAttribute(name = "dictionary")
-    public void setDictionary(Dictionary dictionary) {
+    public void setDictionary(String dictionary) {
         this.dictionary = dictionary;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    @XmlAttribute(name = "key")
-    public void setKey(String key) {
-        this.key = key;
     }
 }
 

@@ -8,7 +8,7 @@ class MainFields {
 
     private Integer id;
 
-    private Presence presence;
+    private PresenceAttr presenceAttr;
 
     public String getName() {
         return name;
@@ -28,12 +28,12 @@ class MainFields {
         this.id = id;
     }
 
-    public Presence getPresence() {
-        return presence;
+    public PresenceAttr getPresenceAttr() {
+        return presenceAttr;
     }
 
     @XmlAttribute(name = "presence")
-    public void setPresence(Presence presence) {
-        this.presence = presence;
+    public void setPresenceAttr(PresenceAttr presenceAttr) {
+        this.presenceAttr = presenceAttr;
     }
 }
