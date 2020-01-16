@@ -1,5 +1,8 @@
 package com.exactpro.epfast.template;
 
+import com.exactpro.epfast.template.additionalclasses.Exponent;
+import com.exactpro.epfast.template.additionalclasses.Mantissa;
+
 import javax.xml.bind.annotation.XmlElement;
 
 public class DecimalField extends FieldInstrContent {

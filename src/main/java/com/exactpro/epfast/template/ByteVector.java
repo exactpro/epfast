@@ -1,5 +1,7 @@
 package com.exactpro.epfast.template;
 
+import com.exactpro.epfast.template.additionalclasses.Length;
+
 import javax.xml.bind.annotation.XmlElement;
 
 public class ByteVector extends FieldInstrContent {

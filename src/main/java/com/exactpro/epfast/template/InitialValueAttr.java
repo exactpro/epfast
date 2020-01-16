@@ -2,7 +2,7 @@ package com.exactpro.epfast.template;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-class InitialValueAttr {
+public class InitialValueAttr {
 
     private String value;
 

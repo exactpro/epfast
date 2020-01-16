@@ -1,5 +1,8 @@
 package com.exactpro.epfast.template;
 
+import com.exactpro.epfast.template.additionalclasses.Length;
+import com.exactpro.epfast.template.additionalclasses.TypeRef;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 

@@ -1,117 +1,34 @@
 package com.exactpro.epfast.template;
 
+import com.exactpro.epfast.template.additionalclasses.*;
+
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import java.util.List;
 
-class Instruction extends MainFields {
+public class Instruction extends MainFields {
 
-    private TemplateRef templateRef;
+    final String namespace = "http://www.fixprotocol.org/ns/fast/td/1.1";
 
-    private List<UInt64> uInt64s;
+    private List elements;
 
-    private List<UInt32> uInt32s;
-
-    private List<Int64> int64s;
-
-    private List<Int32> int32s;
-
-    private List<DecimalField> decimalFields;
-
-    private List<StringClass> strings;
-
-    private List<ByteVector> byteVectors;
-
-    private List<Sequence> sequences;
-
-    private List<Group> groups;
-
-    public TemplateRef getTemplateRef() {
-        return templateRef;
+    public List getElements() {
+        return elements;
     }
 
-    @XmlElement(name = "templateRef", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setTemplateRef(TemplateRef templateRef) {
-        this.templateRef = templateRef;
-    }
-
-    public List<UInt64> getuInt64s() {
-        return uInt64s;
-    }
-
-    @XmlElement(name = "uInt64", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setuInt64s(List<UInt64> uInt64s) {
-        this.uInt64s = uInt64s;
-    }
-
-    public List<UInt32> getuInt32s() {
-        return uInt32s;
-    }
-
-    @XmlElement(name = "uInt32", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setuInt32s(List<UInt32> uInt32s) {
-        this.uInt32s = uInt32s;
-    }
-
-    public List<Int64> getInt64s() {
-        return int64s;
-    }
-
-    @XmlElement(name = "int64", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setInt64s(List<Int64> int64s) {
-        this.int64s = int64s;
-    }
-
-    public List<Int32> getInt32s() {
-        return int32s;
-    }
-
-    @XmlElement(name = "int32", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setInt32s(List<Int32> int32s) {
-        this.int32s = int32s;
-    }
-
-    public List<DecimalField> getDecimalFields() {
-        return decimalFields;
-    }
-
-    @XmlElement(name = "decimal", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setDecimalFields(List<DecimalField> decimalFields) {
-        this.decimalFields = decimalFields;
-    }
-
-    public List<StringClass> getStrings() {
-        return strings;
-    }
-
-    @XmlElement(name = "string", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setStrings(List<StringClass> strings) {
-        this.strings = strings;
-    }
-
-    public List<ByteVector> getByteVectors() {
-        return byteVectors;
-    }
-
-    @XmlElement(name = "byteVector", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setByteVectors(List<ByteVector> byteVectors) {
-        this.byteVectors = byteVectors;
-    }
-
-    public List<Sequence> getSequences() {
-        return sequences;
-    }
-
-    @XmlElement(name = "sequence", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setSequences(List<Sequence> sequences) {
-        this.sequences = sequences;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    @XmlElement(name = "group", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
+    @XmlElements({
+        @XmlElement(name = "templateRef", type = TemplateRef.class, namespace = namespace),
+        @XmlElement(name = "uInt64", type = UInt64.class, namespace = namespace),
+        @XmlElement(name = "uInt32", type = UInt32.class, namespace = namespace),
+        @XmlElement(name = "int64", type = Int64.class, namespace = namespace),
+        @XmlElement(name = "int32", type = Int32.class, namespace = namespace),
+        @XmlElement(name = "decimal", type = DecimalField.class, namespace = namespace),
+        @XmlElement(name = "string", type = StringClass.class, namespace = namespace),
+        @XmlElement(name = "byteVector", type = ByteVector.class, namespace = namespace),
+        @XmlElement(name = "sequence", type = Sequence.class, namespace = namespace),
+        @XmlElement(name = "group", type = Group.class, namespace = namespace)
+    })
+    public void setElements(List elements) {
+        this.elements = elements;
     }
 }

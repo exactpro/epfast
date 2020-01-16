@@ -1,8 +1,12 @@
 package com.exactpro.epfast.template;
 
+import com.exactpro.epfast.template.fieldop.*;
+
 import javax.xml.bind.annotation.XmlElement;
 
-class FieldInstrContent extends MainFields {
+public class FieldInstrContent extends MainFields {
+
+    final String namespace = "http://www.fixprotocol.org/ns/fast/td/1.1";
 
     private Constant constant;
 
@@ -20,7 +24,7 @@ class FieldInstrContent extends MainFields {
         return constant;
     }
 
-    @XmlElement(name = "constant", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "constant", namespace = namespace)
     public void setConstant(Constant constant) {
         this.constant = constant;
     }
@@ -29,7 +33,7 @@ class FieldInstrContent extends MainFields {
         return copy;
     }
 
-    @XmlElement(name = "copy", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "copy", namespace = namespace)
     public void setCopy(Copy copy) {
         this.copy = copy;
     }
@@ -38,7 +42,7 @@ class FieldInstrContent extends MainFields {
         return aDefault;
     }
 
-    @XmlElement(name = "default", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "default", namespace = namespace)
     public void setaDefault(Default aDefault) {
         this.aDefault = aDefault;
     }
@@ -47,7 +51,7 @@ class FieldInstrContent extends MainFields {
         return delta;
     }
 
-    @XmlElement(name = "delta", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "delta", namespace = namespace)
     public void setDelta(Delta delta) {
         this.delta = delta;
     }
@@ -56,7 +60,7 @@ class FieldInstrContent extends MainFields {
         return increment;
     }
 
-    @XmlElement(name = "increment", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "increment", namespace = namespace)
     public void setIncrement(Increment increment) {
         this.increment = increment;
     }
@@ -65,7 +69,7 @@ class FieldInstrContent extends MainFields {
         return tail;
     }
 
-    @XmlElement(name = "tail", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "tail", namespace = namespace)
     public void setTail(Tail tail) {
         this.tail = tail;
     }

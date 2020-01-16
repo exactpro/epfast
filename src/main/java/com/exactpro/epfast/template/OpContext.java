@@ -2,7 +2,7 @@ package com.exactpro.epfast.template;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-class OpContext extends InitialValueAttr {
+public class OpContext extends InitialValueAttr {
 
     private String dictionary;
 
