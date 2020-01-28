@@ -1,6 +1,6 @@
 package com.exactpro.epfast.template;
 
-enum CharSet {
-    ascii, unicode
+public enum CharSet {
+    ASCII, UNICODE
 }
 

@@ -2,11 +2,11 @@ package com.exactpro.epfast.template;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class MainFields {
+public class TypeRef {
 
     private String name;
 
-    private String id;
+    private String ns;
 
     public String getName() {
         return name;
@@ -17,13 +17,12 @@ public class MainFields {
         this.name = name;
     }
 
-    public String getId() {
-        return id;
+    public String getNs() {
+        return ns;
     }
 
-    @XmlAttribute(name = "id")
-    public void setId(String id) {
-        this.id = id;
+    @XmlAttribute(name = "ns")
+    public void setNs(String ns) {
+        this.ns = ns;
     }
-
 }

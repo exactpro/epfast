@@ -1,15 +1,17 @@
-package com.exactpro.epfast.template;
+package com.exactpro.epfast.template.instructionfields;
 
-import com.exactpro.epfast.template.additionalclasses.Length;
+import com.exactpro.epfast.template.ByteVectorLength;
+import com.exactpro.epfast.template.CharSet;
+import com.exactpro.epfast.template.FieldInstrContent;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class StringClass extends FieldInstrContent {
+public class StringField extends FieldInstrContent {
 
     private CharSet charset;
 
-    private Length byteVectorLength;
+    private ByteVectorLength byteVectorLength;
 
     public CharSet getCharset() {
         return charset;
@@ -20,12 +22,12 @@ public class StringClass extends FieldInstrContent {
         this.charset = charset;
     }
 
-    public Length getByteVectorLength() {
+    public ByteVectorLength getByteVectorLength() {
         return byteVectorLength;
     }
 
     @XmlElement(name = "length", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
-    public void setByteVectorLength(Length byteVectorLength) {
+    public void setByteVectorLength(ByteVectorLength byteVectorLength) {
         this.byteVectorLength = byteVectorLength;
     }
 }

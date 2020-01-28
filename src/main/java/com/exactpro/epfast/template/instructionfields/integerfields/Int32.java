@@ -1,4 +1,4 @@
-package com.exactpro.epfast.template.additionalclasses;
+package com.exactpro.epfast.template.instructionfields.integerfields;
 
 import com.exactpro.epfast.template.FieldInstrContent;
 

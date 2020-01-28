@@ -1,76 +1,32 @@
 package com.exactpro.epfast.template;
 
-import com.exactpro.epfast.template.fieldop.*;
+import com.exactpro.epfast.template.namespacefields.NsName;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class FieldInstrContent extends MainFields {
+public class FieldInstrContent extends FieldOp {
 
-    final String namespace = "http://www.fixprotocol.org/ns/fast/td/1.1";
+    private NsName nsName;
 
-    private Constant constant;
+    private PresenceAttr presenceAttr;
 
-    private Copy copy;
-
-    private Default aDefault;
-
-    private Delta delta;
-
-    private Increment increment;
-
-    private Tail tail;
-
-    public Constant getConstant() {
-        return constant;
+    public NsName getNsName() {
+        return nsName;
     }
 
-    @XmlElement(name = "constant", namespace = namespace)
-    public void setConstant(Constant constant) {
-        this.constant = constant;
+    @XmlElement(name = "nsName", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    public void setNsName(NsName nsName) {
+        this.nsName = nsName;
     }
 
-    public Copy getCopy() {
-        return copy;
+    public PresenceAttr getPresenceAttr() {
+        return presenceAttr;
     }
 
-    @XmlElement(name = "copy", namespace = namespace)
-    public void setCopy(Copy copy) {
-        this.copy = copy;
+    @XmlAttribute(name = "presence")
+    public void setPresenceAttr(PresenceAttr presenceAttr) {
+        this.presenceAttr = presenceAttr;
     }
 
-    public Default getaDefault() {
-        return aDefault;
-    }
-
-    @XmlElement(name = "default", namespace = namespace)
-    public void setaDefault(Default aDefault) {
-        this.aDefault = aDefault;
-    }
-
-    public Delta getDelta() {
-        return delta;
-    }
-
-    @XmlElement(name = "delta", namespace = namespace)
-    public void setDelta(Delta delta) {
-        this.delta = delta;
-    }
-
-    public Increment getIncrement() {
-        return increment;
-    }
-
-    @XmlElement(name = "increment", namespace = namespace)
-    public void setIncrement(Increment increment) {
-        this.increment = increment;
-    }
-
-    public Tail getTail() {
-        return tail;
-    }
-
-    @XmlElement(name = "tail", namespace = namespace)
-    public void setTail(Tail tail) {
-        this.tail = tail;
-    }
 }
