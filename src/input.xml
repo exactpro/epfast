@@ -1,0 +1,18 @@
+<templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+	<template ns = "ns" dictionary = "dict">
+		<templateNsName templateNs = "templNs"/>
+		<int64>
+			<copy dictionary = "64"/>
+		</int64>
+		<int32>
+			<copy dictionary = "32"/>
+		</int32>
+		<decimal presence = "OPTIONAL">
+			<exponent>
+				<copy dictionary = "exponent">
+					<nsKey key = "key"/>
+				</copy>
+			</exponent>
+		</decimal>
+	</template>
+</templates>
