@@ -1,81 +1,27 @@
 package com.exactpro.epfast.template;
 
 import javax.xml.bind.annotation.XmlElement;
-import java.util.*;
+import javax.xml.bind.annotation.XmlElements;
 
 public class FieldOp {
+    final static String XML_NAMESPACE = "http://www.fixprotocol.org/ns/fast/td/1.1"; // TODO define it in single place and reuse
 
-    final String namespace = "http://www.fixprotocol.org/ns/fast/td/1.1";
+    private InitialValueAttr operator;
 
-    private List<InitialValueAttr> operator = new ArrayList<>(Arrays.asList(new InitialValueAttr[6]));
-
-    public List<InitialValueAttr> getOperator() {
+    public InitialValueAttr getOperator() {
         return operator;
     }
 
-//    private InitialValueAttr constant;
-//
-//    private InitialValueAttr aDefault;
-//
-//    private OpContext copy;
-//
-//    private OpContext increment;
-//
-//    private OpContext delta;
-//
-//    private OpContext tail;
-
-    public InitialValueAttr getConstant() {
-        return operator.get(0);
+    @XmlElements({
+        @XmlElement(name = "constant", type = InitialValueAttr.Constant.class, namespace = XML_NAMESPACE),
+        @XmlElement(name = "default", type = InitialValueAttr.Default.class, namespace = XML_NAMESPACE),
+        @XmlElement(name = "copy", type = InitialValueAttr.Copy.class, namespace = XML_NAMESPACE),
+        @XmlElement(name = "increment", type = InitialValueAttr.Increment.class, namespace = XML_NAMESPACE),
+        @XmlElement(name = "delta", type = InitialValueAttr.Delta.class, namespace = XML_NAMESPACE),
+        @XmlElement(name = "tail", type = InitialValueAttr.Tail.class, namespace = XML_NAMESPACE)
+    })
+    public void setOperator(InitialValueAttr operator) {
+        this.operator = operator;
     }
 
-    @XmlElement(name = "constant", namespace = namespace)
-    public void setConstant(InitialValueAttr constant) {
-        operator.add(0, constant);
-    }
-
-    public InitialValueAttr getaDefault() {
-        return operator.get(1);
-    }
-
-    @XmlElement(name = "default", namespace = namespace)
-    public void setaDefault(InitialValueAttr aDefault) {
-        operator.add(1, aDefault);
-    }
-
-    public OpContext getCopy() {
-        return (OpContext) operator.get(2);
-    }
-
-    @XmlElement(name = "copy", namespace = namespace)
-    public void setCopy(OpContext copy) {
-        operator.add(2, copy);
-    }
-
-    public OpContext getIncrement() {
-        return (OpContext) operator.get(3);
-    }
-
-    @XmlElement(name = "increment", namespace = namespace)
-    public void setIncrement(OpContext increment) {
-        operator.add(3, increment);
-    }
-
-    public OpContext getDelta() {
-        return (OpContext) operator.get(4);
-    }
-
-    @XmlElement(name = "delta", namespace = namespace)
-    public void setDelta(OpContext delta) {
-        operator.add(4, delta);
-    }
-
-    public OpContext getTail() {
-        return (OpContext) operator.get(5);
-    }
-
-    @XmlElement(name = "tail", namespace = namespace)
-    public void setTail(OpContext tail) {
-        operator.add(5, tail);
-    }
 }
