@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "template", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
 public class Template extends Instructions {
 
     private TemplateNsName templateNsName;
@@ -51,5 +52,5 @@ public class Template extends Instructions {
     public void setTypeRef(TypeRef typeRef) {
         this.typeRef = typeRef;
     }
-}
 
+}
