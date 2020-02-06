@@ -50,4 +50,5 @@ dependencies {
 
     // temporary. don't forget to remove
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.10.2")
+    testImplementation("org.assertj:assertj-core:3.6.2")
 }

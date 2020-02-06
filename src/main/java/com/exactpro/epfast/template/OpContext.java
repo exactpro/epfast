@@ -24,7 +24,7 @@ public class OpContext extends InitialValueAttr {
         return nsKey;
     }
 
-    @XmlElement(name = "nsKey", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "nsKey", namespace = Namespace.XML_NAMESPACE)
     public void setNsKey(NsKey nsKey) {
         this.nsKey = nsKey;
     }

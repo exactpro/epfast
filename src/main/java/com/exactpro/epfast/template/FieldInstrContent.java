@@ -15,7 +15,7 @@ public class FieldInstrContent extends FieldOp {
         return nsName;
     }
 
-    @XmlElement(name = "nsName", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "nsName", namespace = Namespace.XML_NAMESPACE)
     public void setNsName(NsName nsName) {
         this.nsName = nsName;
     }

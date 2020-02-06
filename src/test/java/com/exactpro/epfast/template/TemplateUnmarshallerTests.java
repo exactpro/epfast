@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +13,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
 import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TemplateUnmarshallerTests {
 
@@ -27,7 +28,7 @@ public class TemplateUnmarshallerTests {
     @Test
     void testUnmarshal() throws Exception {
         Object template = templateUnmarshaller.unmarshal(getResourceInputStream("input.xml"));
-        Assertions.assertTrue(template instanceof Templates); // TODO change to assertj assertion
+        assertThat(template).isInstanceOf(Templates.class);
 
         ObjectMapper mapper = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT)

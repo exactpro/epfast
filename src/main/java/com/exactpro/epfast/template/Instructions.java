@@ -9,8 +9,6 @@ import java.util.List;
 
 public class Instructions {
 
-    final String namespace = "http://www.fixprotocol.org/ns/fast/td/1.1";
-
     private List<Object> instructions;
 
     public List<Object> getInstructions() {
@@ -18,16 +16,16 @@ public class Instructions {
     }
 
     @XmlElements({
-        @XmlElement(name = "templateRef", type = TemplateRef.class, namespace = namespace),
-        @XmlElement(name = "int32", type = Int32.class, namespace = namespace),
-        @XmlElement(name = "uInt32", type = UInt32.class, namespace = namespace),
-        @XmlElement(name = "int64", type = Int64.class, namespace = namespace),
-        @XmlElement(name = "uInt64", type = UInt64.class, namespace = namespace),
-        @XmlElement(name = "decimal", type = DecimalField.class, namespace = namespace),
-        @XmlElement(name = "string", type = StringField.class, namespace = namespace),
-        @XmlElement(name = "byteVector", type = ByteVector.class, namespace = namespace),
-        @XmlElement(name = "sequence", type = Sequence.class, namespace = namespace),
-        @XmlElement(name = "group", type = Group.class, namespace = namespace)
+        @XmlElement(name = "templateRef", type = TemplateRef.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "int32", type = Int32.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "uInt32", type = UInt32.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "int64", type = Int64.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "uInt64", type = UInt64.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "decimal", type = DecimalField.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "string", type = StringField.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "byteVector", type = ByteVector.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "sequence", type = Sequence.class, namespace = Namespace.XML_NAMESPACE),
+        @XmlElement(name = "group", type = Group.class, namespace = Namespace.XML_NAMESPACE)
     })
     public void setInstructions(List<Object> instructions) {
         this.instructions = instructions;

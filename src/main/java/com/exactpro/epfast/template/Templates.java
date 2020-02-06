@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "templates", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+@XmlRootElement(name = "templates", namespace = Namespace.XML_NAMESPACE)
 public class Templates {
 
     private String ns;
@@ -47,7 +47,7 @@ public class Templates {
         return templates;
     }
 
-    @XmlElement(name = "template", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "template", namespace = Namespace.XML_NAMESPACE)
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
     }

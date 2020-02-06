@@ -15,21 +15,4 @@ public class InitialValueAttr {
         this.value = value;
     }
 
-    public static class Constant extends InitialValueAttr {
-    }
-
-    public static class Default extends InitialValueAttr {
-    }
-
-    public static class Copy extends InitialValueAttr {
-    }
-
-    public static class Increment extends InitialValueAttr {
-    }
-
-    public static class Delta extends InitialValueAttr {
-    }
-
-    public static class Tail extends InitialValueAttr {
-    }
 }

@@ -1,6 +1,7 @@
 package com.exactpro.epfast.template.instructionfields;
 
 import com.exactpro.epfast.template.Instructions;
+import com.exactpro.epfast.template.Namespace;
 import com.exactpro.epfast.template.PresenceAttr;
 import com.exactpro.epfast.template.TypeRef;
 import com.exactpro.epfast.template.namespacefields.NsName;
@@ -22,7 +23,7 @@ public class Group extends Instructions {
         return nsName;
     }
 
-    @XmlElement(name = "nsName", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "nsName", namespace = Namespace.XML_NAMESPACE)
     public void setNsName(NsName nsName) {
         this.nsName = nsName;
     }
@@ -49,7 +50,7 @@ public class Group extends Instructions {
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "typeRef", namespace = Namespace.XML_NAMESPACE)
     public void setTypeRef(TypeRef typeRef) {
         this.typeRef = typeRef;
     }

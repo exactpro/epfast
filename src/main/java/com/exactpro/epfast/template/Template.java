@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "template", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+@XmlRootElement(name = "template", namespace = Namespace.XML_NAMESPACE)
 public class Template extends Instructions {
 
     private TemplateNsName templateNsName;
@@ -21,7 +21,7 @@ public class Template extends Instructions {
         return templateNsName;
     }
 
-    @XmlElement(name = "templateNsName", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "templateNsName", namespace = Namespace.XML_NAMESPACE)
     public void setTemplateNsName(TemplateNsName templateNsName) {
         this.templateNsName = templateNsName;
     }
@@ -48,7 +48,7 @@ public class Template extends Instructions {
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "typeRef", namespace = Namespace.XML_NAMESPACE)
     public void setTypeRef(TypeRef typeRef) {
         this.typeRef = typeRef;
     }

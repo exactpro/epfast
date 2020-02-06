@@ -1,9 +1,6 @@
 package com.exactpro.epfast.template.instructionfields;
 
-import com.exactpro.epfast.template.Instructions;
-import com.exactpro.epfast.template.Length;
-import com.exactpro.epfast.template.PresenceAttr;
-import com.exactpro.epfast.template.TypeRef;
+import com.exactpro.epfast.template.*;
 import com.exactpro.epfast.template.namespacefields.NsName;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -25,7 +22,7 @@ public class Sequence extends Instructions {
         return nsName;
     }
 
-    @XmlElement(name = "nsName", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "nsName", namespace = Namespace.XML_NAMESPACE)
     public void setNsName(NsName nsName) {
         this.nsName = nsName;
     }
@@ -52,7 +49,7 @@ public class Sequence extends Instructions {
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "typeRef", namespace = Namespace.XML_NAMESPACE)
     public void setTypeRef(TypeRef typeRef) {
         this.typeRef = typeRef;
     }
@@ -61,7 +58,7 @@ public class Sequence extends Instructions {
         return length;
     }
 
-    @XmlElement(name = "length", namespace = "http://www.fixprotocol.org/ns/fast/td/1.1")
+    @XmlElement(name = "length", namespace = Namespace.XML_NAMESPACE)
     public void setLength(Length length) {
         this.length = length;
     }
