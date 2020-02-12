@@ -1,7 +1,5 @@
 package com.exactpro.epfast.template;
 
-import com.exactpro.epfast.template.namespacefields.TemplateNsName;
-
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -9,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "template", namespace = Namespace.XML_NAMESPACE)
 public class Template extends Instructions {
 
-    private TemplateNsName templateNsName;
+    private Identity templateId = new Identity();
 
     private String ns;
 
@@ -17,13 +15,23 @@ public class Template extends Instructions {
 
     private TypeRef typeRef;
 
-    public TemplateNsName getTemplateNsName() {
-        return templateNsName;
+    public Identity getTemplateId() {
+        return templateId;
     }
 
-    @XmlElement(name = "templateNsName", namespace = Namespace.XML_NAMESPACE)
-    public void setTemplateNsName(TemplateNsName templateNsName) {
-        this.templateNsName = templateNsName;
+    @XmlAttribute(name = "name")
+    public void setName(String name) {
+        this.templateId.setName(name);
+    }
+
+    @XmlAttribute(name = "templateNs")
+    public void setTemplateNs(String templateNs) {
+        this.templateId.setNamespace(templateNs);
+    }
+
+    @XmlAttribute(name = "id")
+    public void setId(String id) {
+        this.templateId.setOptionalId(id);
     }
 
     public String getNs() {
