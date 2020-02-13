@@ -5,14 +5,17 @@
 			<copy dictionary="64" value="A" />
 		</int64>
 		<int32>
-			<copy dictionary="32"/>
+			<constant value="value"/>
 		</int32>
 		<decimal presence="OPTIONAL">
-			<exponent>
-				<copy dictionary="exponent">
-					<nsKey key="key"/>
-				</copy>
-			</exponent>
+			<copy dictionary="D">
+				<nsKey key="key"/>
+			</copy>
 		</decimal>
+		<byteVector presence="MANDATORY">
+			<byteVectorLength>
+				<nsName ns="nsName" id="ID"/>
+			</byteVectorLength>
+		</byteVector>
 	</template>
 </templates>

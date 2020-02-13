@@ -12,7 +12,7 @@ public class Length extends FieldOp {
         return nsName;
     }
 
-    @XmlElement(name = "nsName")
+    @XmlElement(name = "nsName", namespace = Namespace.XML_NAMESPACE)
     public void setNsName(NsName nsName) {
         this.nsName = nsName;
     }

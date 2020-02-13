@@ -14,7 +14,7 @@ public class ByteVector extends FieldInstrContent {
         return byteVectorLength;
     }
 
-    @XmlElement(name = "length", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "byteVectorLength", namespace = Namespace.XML_NAMESPACE)
     public void setByteVectorLength(ByteVectorLength byteVectorLength) {
         this.byteVectorLength = byteVectorLength;
     }
