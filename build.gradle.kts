@@ -1,4 +1,5 @@
 val junitVersion by extra { "5.5.2" }
+val assertjVersion by extra { "3.14.0" }
 
 plugins {
     java
