@@ -1,25 +1,25 @@
 package com.exactpro.epfast.template.instructionfields;
 
 import com.exactpro.epfast.template.ByteVectorLength;
-import com.exactpro.epfast.template.CharSet;
+import com.exactpro.epfast.template.Helper.Charset;
 import com.exactpro.epfast.template.FieldInstrContent;
-import com.exactpro.epfast.template.Namespace;
+import com.exactpro.epfast.template.Helper.Namespace;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 public class StringField extends FieldInstrContent {
 
-    private CharSet charset;
+    private Charset charset;
 
     private ByteVectorLength byteVectorLength;
 
-    public CharSet getCharset() {
+    public Charset getCharset() {
         return charset;
     }
 
     @XmlAttribute(name = "charset")
-    public void setCharset(CharSet charset) {
+    public void setCharset(Charset charset) {
         this.charset = charset;
     }
 

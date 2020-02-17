@@ -1,8 +1,8 @@
 package com.exactpro.epfast.template.instructionfields;
 
 import com.exactpro.epfast.template.Instructions;
-import com.exactpro.epfast.template.Namespace;
-import com.exactpro.epfast.template.PresenceAttr;
+import com.exactpro.epfast.template.Helper.Namespace;
+import com.exactpro.epfast.template.Helper.PresenceAttr;
 import com.exactpro.epfast.template.TypeRef;
 import com.exactpro.epfast.template.namespacefields.NsName;
 

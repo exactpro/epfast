@@ -1,6 +1,6 @@
 package com.exactpro.epfast.template.namespacefields;
 
-import com.exactpro.epfast.template.MainFields;
+import com.exactpro.epfast.template.Helper.MainFields;
 
 import javax.xml.bind.annotation.XmlAttribute;
 

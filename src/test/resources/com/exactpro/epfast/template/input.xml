@@ -2,10 +2,10 @@
 	<template ns="ns" dictionary="dict">
 		<templateNsName templateNs="templNs"/>
 		<int64>
-			<copy dictionary="64" value="A" />
+			<copy dictionary="copy" value="64"/>
 		</int64>
 		<int32>
-			<constant value="value"/>
+			<constant dictionary="constant" value="32"/>
 		</int32>
 		<decimal presence="OPTIONAL">
 			<copy dictionary="D">

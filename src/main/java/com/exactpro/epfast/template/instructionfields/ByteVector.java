@@ -2,7 +2,7 @@ package com.exactpro.epfast.template.instructionfields;
 
 import com.exactpro.epfast.template.ByteVectorLength;
 import com.exactpro.epfast.template.FieldInstrContent;
-import com.exactpro.epfast.template.Namespace;
+import com.exactpro.epfast.template.Helper.Namespace;
 
 import javax.xml.bind.annotation.XmlElement;
 

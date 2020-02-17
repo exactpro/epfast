@@ -1,5 +1,7 @@
 package com.exactpro.epfast.template;
 
+import com.exactpro.epfast.template.Helper.Namespace;
+import com.exactpro.epfast.template.Helper.PresenceAttr;
 import com.exactpro.epfast.template.namespacefields.NsName;
 
 import javax.xml.bind.annotation.XmlAttribute;
