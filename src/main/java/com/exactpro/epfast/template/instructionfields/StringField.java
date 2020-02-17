@@ -1,9 +1,9 @@
 package com.exactpro.epfast.template.instructionfields;
 
 import com.exactpro.epfast.template.ByteVectorLength;
-import com.exactpro.epfast.template.Helper.Charset;
+import com.exactpro.epfast.template.helper.Charset;
 import com.exactpro.epfast.template.FieldInstrContent;
-import com.exactpro.epfast.template.Helper.Namespace;
+import com.exactpro.epfast.template.helper.Namespace;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;

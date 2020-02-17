@@ -1,4 +1,4 @@
-package com.exactpro.epfast.template.Helper;
+package com.exactpro.epfast.template.helper;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
