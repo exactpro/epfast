@@ -11,7 +11,7 @@ public class FieldInstrContent extends FieldOp {
 
     private NsName nsName;
 
-    private PresenceAttr presenceAttr;
+    private PresenceAttr presenceAttr = PresenceAttr.MANDATORY;
 
     public NsName getNsName() {
         return nsName;

@@ -22,13 +22,13 @@ public class TemplateUnmarshallerTests {
 
     @BeforeEach
     public void setupUnmarshaller() throws JAXBException {
-        templateUnmarshaller = JAXBContext.newInstance(Templates.class).createUnmarshaller();
+        templateUnmarshaller = JAXBContext.newInstance(Templates.class, Template.class).createUnmarshaller();
     }
 
     @Test
     void testUnmarshal() throws Exception {
         Object template = templateUnmarshaller.unmarshal(getResourceInputStream("input.xml"));
-        assertThat(template).isInstanceOf(Templates.class);
+        assertThat(template).isInstanceOfAny(Templates.class, Template.class);
 
         ObjectMapper mapper = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT)

@@ -1,21 +1,20 @@
-<templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-	<template ns="ns" dictionary="dict">
-		<templateNsName templateNs="templNs"/>
-		<int64>
-			<copy dictionary="copy" value="64"/>
-		</int64>
-		<int32>
-			<constant dictionary="constant" value="32"/>
-		</int32>
-		<decimal presence="OPTIONAL">
-			<copy dictionary="D">
-				<nsKey key="key"/>
-			</copy>
-		</decimal>
-		<byteVector presence="MANDATORY">
-			<byteVectorLength>
-				<nsName ns="nsName" id="ID"/>
-			</byteVectorLength>
-		</byteVector>
-	</template>
-</templates>
+<template xmlns="http://www.fixprotocol.org/ns/fast/td/1.1" ns="ns" dictionary="dict">
+	<templateNsName templateNs="tempNs"/>
+	<int64>
+		<copy dictionary="copy" value="64"/>
+	</int64>
+	<int32>
+		<constant dictionary="constant" value="32"/>
+	</int32>
+	<decimal presence="OPTIONAL">
+		<copy dictionary="D">
+			<nsKey key="key"/>
+		</copy>
+	</decimal>
+	<byteVector presence="MANDATORY">
+		<byteVectorLength>
+			<nsName ns="nsName" id="ID"/>
+		</byteVectorLength>
+	</byteVector>
+	<string charset="UNICODE"/>
+</template>

@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class StringField extends FieldInstrContent {
 
-    private Charset charset;
+    private Charset charset = Charset.ASCII;
 
     private ByteVectorLength byteVectorLength;
 

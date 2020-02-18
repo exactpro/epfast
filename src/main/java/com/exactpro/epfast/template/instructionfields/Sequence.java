@@ -12,7 +12,7 @@ public class Sequence extends Instructions {
 
     private NsName nsName;
 
-    private PresenceAttr presenceAttr;
+    private PresenceAttr presenceAttr = PresenceAttr.MANDATORY;
 
     private String dictionary;
 
