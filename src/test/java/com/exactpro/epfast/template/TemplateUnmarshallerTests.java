@@ -1,5 +1,6 @@
 package com.exactpro.epfast.template;
 
+import com.exactpro.epfast.template.xml.Template;
 import com.exactpro.epfast.template.xml.Templates;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
