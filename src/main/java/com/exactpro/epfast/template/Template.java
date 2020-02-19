@@ -1,5 +1,7 @@
 package com.exactpro.epfast.template;
 
+import java.util.List;
+
 public interface Template {
 
     Identity getTemplateId();
@@ -8,6 +10,6 @@ public interface Template {
 
     IdentityRef getTypeRef();
 
-    Instructions getInstructions();
+    List<Instruction> getInstructions();
 
 }

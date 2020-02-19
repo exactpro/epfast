@@ -1,5 +1,7 @@
 package com.exactpro.epfast.template;
 
+import java.util.List;
+
 public interface Sequence extends Instruction {
 
     IdentityRef getFieldId();
@@ -12,6 +14,6 @@ public interface Sequence extends Instruction {
 
     Length getLength();
 
-    Instructions getInstructions();
+    List<Instruction> getInstructions();
 
 }

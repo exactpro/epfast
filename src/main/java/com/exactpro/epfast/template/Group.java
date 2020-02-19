@@ -1,5 +1,7 @@
 package com.exactpro.epfast.template;
 
+import java.util.List;
+
 public interface Group extends Instruction {
 
     IdentityRef getFieldId();
@@ -10,6 +12,6 @@ public interface Group extends Instruction {
 
     IdentityRef getTypeRef();
 
-    Instructions getInstructions();
+    List<Instruction> getInstructions();
 
 }
