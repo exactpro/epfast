@@ -8,10 +8,10 @@ public interface Sequence extends Instruction {
 
     Dictionary getDictionary();
 
-    Length getLength();
-
     IdentityRef getTypeRef();
 
-    Instruction getInstruction();
+    Length getLength();
+
+    Instructions getInstructions();
 
 }

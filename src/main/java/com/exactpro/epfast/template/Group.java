@@ -10,6 +10,6 @@ public interface Group extends Instruction {
 
     IdentityRef getTypeRef();
 
-    Instruction getInstruction();
+    Instructions getInstructions();
 
 }

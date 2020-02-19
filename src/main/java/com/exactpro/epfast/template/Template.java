@@ -8,5 +8,6 @@ public interface Template {
 
     IdentityRef getTypeRef();
 
-    Instruction getInstruction();
+    Instructions getInstructions();
+
 }
