@@ -6,6 +6,4 @@ public interface TailOperator extends FieldOperator {
 
     String getKey();
 
-    String getInitialValue();
-
 }

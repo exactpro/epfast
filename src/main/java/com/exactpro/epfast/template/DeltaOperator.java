@@ -6,6 +6,4 @@ public interface DeltaOperator extends FieldOperator {
 
     String getKey();
 
-    String getInitialValue();
-
 }

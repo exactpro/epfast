@@ -6,6 +6,4 @@ public interface IncrementOperator extends FieldOperator {
 
     String getKey();
 
-    String getInitialValue();
-
 }

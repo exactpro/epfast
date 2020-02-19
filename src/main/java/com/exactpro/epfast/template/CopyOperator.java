@@ -6,6 +6,4 @@ public interface CopyOperator extends FieldOperator {
 
     String getKey();
 
-    String getInitialValue();
-
 }
