@@ -1,8 +1,6 @@
 package com.exactpro.epfast.template;
 
-public interface StringField extends Instruction {
-
-    IdentityRef getFieldId();
+public interface UnicodeStringField extends FieldInstruction {
 
     Presence getPresence();
 

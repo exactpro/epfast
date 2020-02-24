@@ -1,9 +1,7 @@
 package com.exactpro.epfast.template;
 
-public interface Length {
+public interface FieldInstruction extends Instruction {
 
     Identity getFieldId();
-
-    FieldOperator getOperator();
 
 }

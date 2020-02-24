@@ -1,11 +1,10 @@
 package com.exactpro.epfast.template;
 
-public interface DecimalField extends FieldInstruction {
+public interface AsciiStringField extends FieldInstruction {
 
     Presence getPresence();
 
     FieldOperator getOperator();
 
-    DecFieldOperator getDecimalOperator();
-
+    Charset getCharset();
 }

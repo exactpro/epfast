@@ -1,8 +1,6 @@
 package com.exactpro.epfast.template;
 
-public interface UInt64Field extends Instruction {
-
-    IdentityRef getFieldId();
+public interface UInt64Field extends FieldInstruction {
 
     Presence getPresence();
 

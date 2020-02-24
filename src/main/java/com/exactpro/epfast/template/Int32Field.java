@@ -1,8 +1,6 @@
 package com.exactpro.epfast.template;
 
-public interface Int32Field extends Instruction {
-
-    IdentityRef getFieldId();
+public interface Int32Field extends FieldInstruction {
 
     Presence getPresence();
 
