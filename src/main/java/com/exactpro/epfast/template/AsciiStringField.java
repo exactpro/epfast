@@ -2,7 +2,7 @@ package com.exactpro.epfast.template;
 
 public interface AsciiStringField extends FieldInstruction {
 
-    Presence getPresence();
+    boolean isOptional();
 
     FieldOperator getOperator();
 

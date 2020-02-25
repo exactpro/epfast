@@ -4,11 +4,11 @@ import java.util.List;
 
 public interface Sequence extends FieldInstruction {
 
-    Presence getPresence();
+    boolean isOptional();
 
-    IdentityRef getTypeRef();
+    Reference getTypeRef();
 
-    Length getLength();
+    LengthField getLength();
 
     List<Instruction> getInstructions();
 

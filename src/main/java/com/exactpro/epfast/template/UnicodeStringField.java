@@ -2,10 +2,10 @@ package com.exactpro.epfast.template;
 
 public interface UnicodeStringField extends FieldInstruction {
 
-    Presence getPresence();
+    boolean isOptional();
 
     FieldOperator getOperator();
 
-    ByteVectorLength getByteVectorLength();
+    Identity getLengthFieldId();
 
 }

@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface Group extends FieldInstruction {
 
-    Presence getPresence();
+    boolean isOptional();
 
-    IdentityRef getTypeRef();
+    Reference getTypeRef();
 
     List<Instruction> getInstructions();
 

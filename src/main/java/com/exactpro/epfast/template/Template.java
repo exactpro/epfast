@@ -6,7 +6,7 @@ public interface Template {
 
     Identity getTemplateId();
 
-    IdentityRef getTypeRef();
+    Reference getTypeRef();
 
     List<Instruction> getInstructions();
 

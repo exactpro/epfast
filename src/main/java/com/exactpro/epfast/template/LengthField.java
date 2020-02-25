@@ -1,6 +1,6 @@
 package com.exactpro.epfast.template;
 
-public interface Length {
+public interface LengthField {
 
     Identity getFieldId();
 
