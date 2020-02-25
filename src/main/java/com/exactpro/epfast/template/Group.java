@@ -6,8 +6,6 @@ public interface Group extends FieldInstruction {
 
     Presence getPresence();
 
-    Dictionary getDictionary();
-
     IdentityRef getTypeRef();
 
     List<Instruction> getInstructions();

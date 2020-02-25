@@ -6,5 +6,4 @@ public interface AsciiStringField extends FieldInstruction {
 
     FieldOperator getOperator();
 
-    Charset getCharset();
 }

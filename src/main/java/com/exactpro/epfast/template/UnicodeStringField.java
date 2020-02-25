@@ -6,8 +6,6 @@ public interface UnicodeStringField extends FieldInstruction {
 
     FieldOperator getOperator();
 
-    Charset getCharset();
-
     ByteVectorLength getByteVectorLength();
 
 }

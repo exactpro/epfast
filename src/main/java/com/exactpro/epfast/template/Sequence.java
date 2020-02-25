@@ -6,8 +6,6 @@ public interface Sequence extends FieldInstruction {
 
     Presence getPresence();
 
-    Dictionary getDictionary();
-
     IdentityRef getTypeRef();
 
     Length getLength();
