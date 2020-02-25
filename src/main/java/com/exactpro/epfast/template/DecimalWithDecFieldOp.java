@@ -1,6 +1,8 @@
 package com.exactpro.epfast.template;
 
-public interface DecFieldOperator {
+public interface DecimalWithDecFieldOp extends FieldInstruction {
+
+    Presence getPresence();
 
     FieldOperator getExponent();
 

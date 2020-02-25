@@ -5,11 +5,17 @@ public class Dictionary {
     private String name;
 
     // TODO create proper constants
-    public static final Dictionary PREDEFINED_1 = new Dictionary("predefined-1");
+    public static final Dictionary TEMPLATE = new Dictionary("template");
+    public static final Dictionary TYPE = new Dictionary("type");
+    public static final Dictionary GLOBAL = new Dictionary("global");
 
     public static Dictionary getDictionary(String name) {
-        if (PREDEFINED_1.getName().equals(name)) {
-            return PREDEFINED_1;
+        if (TEMPLATE.getName().equals(name)) {
+            return TEMPLATE;
+        } else if (TYPE.getName().equals(name)) {
+            return TYPE;
+        } else if (GLOBAL.getName().equals(name)) {
+            return GLOBAL;
         }
         return new Dictionary(name);
     }
