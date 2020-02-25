@@ -4,4 +4,6 @@ public interface FieldInstruction extends Instruction {
 
     Identity getFieldId();
 
+    boolean isOptional();
+
 }

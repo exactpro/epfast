@@ -4,8 +4,6 @@ import java.util.List;
 
 public interface Sequence extends FieldInstruction {
 
-    boolean isOptional();
-
     Reference getTypeRef();
 
     LengthField getLength();
