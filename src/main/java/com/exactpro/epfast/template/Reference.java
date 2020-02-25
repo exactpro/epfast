@@ -1,6 +1,6 @@
 package com.exactpro.epfast.template;
 
-public interface IdentityRef {
+public interface Reference {
 
     String getName();
 

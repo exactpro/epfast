@@ -1,12 +1,15 @@
 package com.exactpro.epfast.template;
 
+import java.util.Objects;
+
 public class Dictionary {
 
     private String name;
 
-    // TODO create proper constants
     public static final Dictionary TEMPLATE = new Dictionary("template");
+
     public static final Dictionary TYPE = new Dictionary("type");
+
     public static final Dictionary GLOBAL = new Dictionary("global");
 
     public static Dictionary getDictionary(String name) {
@@ -28,5 +31,20 @@ public class Dictionary {
         return this.name;
     }
 
-    // TODO implement equals and hashCode
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Dictionary that = (Dictionary) o;
+        return getName().equals(that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName());
+    }
 }

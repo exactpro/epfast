@@ -4,6 +4,6 @@ public interface IncrementOperator extends FieldOperator {
 
     Dictionary getDictionary();
 
-    String getKey();
+    Reference getDictionaryKey();
 
 }
