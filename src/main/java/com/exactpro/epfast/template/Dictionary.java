@@ -1,10 +1,8 @@
 package com.exactpro.epfast.template;
 
-import java.util.Objects;
-
 public class Dictionary {
 
-    private String name;
+    private final String name;
 
     public static final Dictionary TEMPLATE = new Dictionary("template");
 
@@ -24,6 +22,9 @@ public class Dictionary {
     }
 
     private Dictionary(String name) {
+        if (name == null) {
+            throw new NullPointerException();
+        }
         this.name = name;
     }
 
@@ -33,18 +34,11 @@ public class Dictionary {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Dictionary that = (Dictionary) o;
-        return getName().equals(that.getName());
+        return (o instanceof Dictionary) && (getName().equals(((Dictionary) o).getName()));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName());
+        return getName().hashCode();
     }
 }
