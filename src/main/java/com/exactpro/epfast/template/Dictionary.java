@@ -23,7 +23,7 @@ public class Dictionary {
 
     private Dictionary(String name) {
         if (name == null) {
-            throw new NullPointerException();
+            throw new NullPointerException("name cannot be null");
         }
         this.name = name;
     }
@@ -34,7 +34,7 @@ public class Dictionary {
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof Dictionary) && (getName().equals(((Dictionary) o).getName()));
+        return (o instanceof Dictionary) && getName().equals(((Dictionary) o).getName());
     }
 
     @Override
