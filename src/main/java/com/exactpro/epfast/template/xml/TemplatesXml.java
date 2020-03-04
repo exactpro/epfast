@@ -1,5 +1,8 @@
 package com.exactpro.epfast.template.xml;
 
+import com.exactpro.epfast.template.Dictionary;
+import com.exactpro.epfast.template.Template;
+import com.exactpro.epfast.template.Templates;
 import com.exactpro.epfast.template.xml.helper.Namespace;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -8,13 +11,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement(name = "templates", namespace = Namespace.XML_NAMESPACE)
-public class Templates {
+public class TemplatesXml implements Templates {
 
     private String ns;
 
     private String templateNs;
 
-    private String dictionary;
+    private Dictionary dictionary;
 
     private List<Template> templates;
 
@@ -36,22 +39,24 @@ public class Templates {
         this.templateNs = templateNs;
     }
 
-    public String getDictionary() {
+    public Dictionary getDictionary() {
         return dictionary;
     }
 
-    @XmlAttribute(name = "dictionary")
-    public void setDictionary(String dictionary) {
+    @XmlElement(name = "dictionary", namespace = Namespace.XML_NAMESPACE)
+    public void setDictionary(Dictionary dictionary) {
         this.dictionary = dictionary;
     }
 
+    @Override
     public List<Template> getTemplates() {
         return templates;
     }
 
-    @XmlElement(name = "template", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "template", type = TemplateXml.class, namespace = Namespace.XML_NAMESPACE)
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
     }
+
 }
 

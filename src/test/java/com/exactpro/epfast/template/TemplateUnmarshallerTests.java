@@ -1,7 +1,7 @@
 package com.exactpro.epfast.template;
 
-import com.exactpro.epfast.template.xml.Template;
-import com.exactpro.epfast.template.xml.Templates;
+import com.exactpro.epfast.template.xml.TemplateXml;
+import com.exactpro.epfast.template.xml.TemplatesXml;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,13 +24,13 @@ public class TemplateUnmarshallerTests {
 
     @BeforeEach
     public void setupUnmarshaller() throws JAXBException {
-        templateUnmarshaller = JAXBContext.newInstance(Templates.class, Template.class).createUnmarshaller();
+        templateUnmarshaller = JAXBContext.newInstance(TemplatesXml.class, TemplateXml.class).createUnmarshaller();
     }
 
     @Test
     void testUnmarshal() throws Exception {
         Object template = templateUnmarshaller.unmarshal(getResourceInputStream("input.xml"));
-        assertThat(template).isInstanceOfAny(Templates.class, Template.class);
+        assertThat(template).isInstanceOfAny(TemplatesXml.class, TemplateXml.class);
 
         ObjectMapper mapper = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT)

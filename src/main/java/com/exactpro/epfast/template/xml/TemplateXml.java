@@ -1,5 +1,7 @@
 package com.exactpro.epfast.template.xml;
 
+import com.exactpro.epfast.template.Dictionary;
+import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.xml.helper.Namespace;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -7,17 +9,18 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "template", namespace = Namespace.XML_NAMESPACE)
-public class Template extends Instructions {
+public class TemplateXml extends InstructionsXml implements Template {
 
-    private Identity templateId = new Identity();
+    private IdentityXml templateId = new IdentityXml();
 
     private String ns;
 
-    private String dictionary;
+    private Dictionary dictionary;
 
-    private TypeRef typeRef;
+    private ReferenceImpl typeRef;
 
-    public Identity getTemplateId() {
+    @Override
+    public IdentityXml getTemplateId() {
         return templateId;
     }
 
@@ -33,7 +36,7 @@ public class Template extends Instructions {
 
     @XmlAttribute(name = "id")
     public void setId(String id) {
-        this.templateId.setOptionalId(id);
+        this.templateId.setAuxiliaryId(id);
     }
 
     public String getNs() {
@@ -45,21 +48,22 @@ public class Template extends Instructions {
         this.ns = ns;
     }
 
-    public String getDictionary() {
+    public Dictionary getDictionary() {
         return dictionary;
     }
 
-    @XmlAttribute(name = "dictionary")
-    public void setDictionary(String dictionary) {
+    @XmlElement(name = "dictionary", namespace = Namespace.XML_NAMESPACE)
+    public void setDictionary(Dictionary dictionary) {
         this.dictionary = dictionary;
     }
 
-    public TypeRef getTypeRef() {
+    @Override
+    public ReferenceImpl getTypeRef() {
         return typeRef;
     }
 
     @XmlElement(name = "typeRef", namespace = Namespace.XML_NAMESPACE)
-    public void setTypeRef(TypeRef typeRef) {
+    public void setTypeRef(ReferenceImpl typeRef) {
         this.typeRef = typeRef;
     }
 

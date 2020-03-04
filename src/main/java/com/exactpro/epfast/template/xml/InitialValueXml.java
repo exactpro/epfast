@@ -1,17 +1,20 @@
 package com.exactpro.epfast.template.xml;
 
+import com.exactpro.epfast.template.FieldOperator;
+
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class InitialValueAttr {
+public class InitialValueXml implements FieldOperator {
 
     private String value;
 
-    public String getValue() {
+    @Override
+    public String getInitialValue() {
         return value;
     }
 
     @XmlAttribute(name = "value")
-    public void setValue(String value) {
+    public void setInitialValue(String value) {
         this.value = value;
     }
 

@@ -1,15 +1,14 @@
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.xml.helper.Presence;
+import com.exactpro.epfast.template.LengthField;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldInstrContent extends FieldOpXml {
+public class LengthXml extends FieldOpXml implements LengthField {
 
     private IdentityXml fieldId = new IdentityXml();
 
-    private Presence presence = Presence.MANDATORY;
-
+    @Override
     public IdentityXml getFieldId() {
         return fieldId;
     }
@@ -27,19 +26,6 @@ public class FieldInstrContent extends FieldOpXml {
     @XmlAttribute(name = "id")
     public void setId(String id) {
         this.fieldId.setAuxiliaryId(id);
-    }
-
-    public Presence getPresence() {
-        return presence;
-    }
-
-    @XmlAttribute(name = "presence")
-    public void setPresence(Presence presence) {
-        this.presence = presence;
-    }
-
-    public boolean isOptional() {
-        return presence.equals(Presence.OPTIONAL);
     }
 
 }

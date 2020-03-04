@@ -1,13 +1,16 @@
 package com.exactpro.epfast.template.xml;
 
-public class Identity {
+import com.exactpro.epfast.template.Identity;
+
+public class IdentityXml implements Identity {
 
     private String name;
 
     private String namespace;
 
-    private String optionalId;
+    private String auxiliaryId;
 
+    @Override
     public String getName() {
         return name;
     }
@@ -16,6 +19,7 @@ public class Identity {
         this.name = name;
     }
 
+    @Override
     public String getNamespace() {
         return namespace;
     }
@@ -24,11 +28,12 @@ public class Identity {
         this.namespace = namespace;
     }
 
-    public String getOptionalId() {
-        return optionalId;
+    @Override
+    public String getAuxiliaryId() {
+        return auxiliaryId;
     }
 
-    public void setOptionalId(String optionalId) {
-        this.optionalId = optionalId;
+    public void setAuxiliaryId(String auxiliaryId) {
+        this.auxiliaryId = auxiliaryId;
     }
 }

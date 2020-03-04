@@ -1,6 +1,8 @@
 package com.exactpro.epfast.template.xml.instructionfields;
 
-import com.exactpro.epfast.template.xml.ByteVectorLength;
+import com.exactpro.epfast.template.AsciiStringField;
+import com.exactpro.epfast.template.UnicodeStringField;
+import com.exactpro.epfast.template.xml.IdentityXml;
 import com.exactpro.epfast.template.xml.helper.Charset;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
 import com.exactpro.epfast.template.xml.helper.Namespace;
@@ -8,11 +10,11 @@ import com.exactpro.epfast.template.xml.helper.Namespace;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class StringField extends FieldInstrContent {
+public class StringFieldXml extends FieldInstrContent implements AsciiStringField, UnicodeStringField {
 
     private Charset charset = Charset.ASCII;
 
-    private ByteVectorLength byteVectorLength;
+    private IdentityXml lengthFieldId;
 
     public Charset getCharset() {
         return charset;
@@ -23,13 +25,14 @@ public class StringField extends FieldInstrContent {
         this.charset = charset;
     }
 
-    public ByteVectorLength getByteVectorLength() {
-        return byteVectorLength;
+    public IdentityXml getLengthFieldId() {
+        return lengthFieldId;
     }
 
-    @XmlElement(name = "byteVectorLength", namespace = Namespace.XML_NAMESPACE)
-    public void setByteVectorLength(ByteVectorLength byteVectorLength) {
-        this.byteVectorLength = byteVectorLength;
+    @XmlElement(name = "length", namespace = Namespace.XML_NAMESPACE)
+    public void setLengthFieldId(IdentityXml lengthFieldId) {
+        this.lengthFieldId = lengthFieldId;
     }
+
 }
 

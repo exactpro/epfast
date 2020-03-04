@@ -1,20 +1,16 @@
 <template xmlns="http://www.fixprotocol.org/ns/fast/td/1.1" ns="ns" dictionary="dict">
-	<templateNsName templateNs="tempNs"/>
-	<int64>
-		<copy dictionary="copy" value="64"/>
-	</int64>
-	<int32>
-		<constant dictionary="constant" value="32"/>
-	</int32>
-	<decimal presence="OPTIONAL">
-		<copy dictionary="D">
-			<nsKey key="key"/>
-		</copy>
-	</decimal>
-	<byteVector presence="MANDATORY">
-		<byteVectorLength>
-			<nsName ns="nsName" id="ID"/>
-		</byteVectorLength>
-	</byteVector>
-	<string charset="UNICODE"/>
+    <identity id="25"/>
+    <int64>
+        <copy value="64"/>
+    </int64>
+    <int32>
+        <constant value="32"/>
+    </int32>
+    	<decimal presence="OPTIONAL"/>
+    <byteVector presence="MANDATORY">
+        <length>
+            <nsName ns="nsName" id="ID"/>
+        </length>
+    </byteVector>
+    	<string charset="UNICODE"/>
 </template>

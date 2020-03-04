@@ -1,5 +1,5 @@
 package com.exactpro.epfast.template.xml.helper;
 
-public enum PresenceAttr {
+public enum Presence {
     MANDATORY, OPTIONAL
 }
