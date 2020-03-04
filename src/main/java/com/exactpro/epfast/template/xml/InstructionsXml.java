@@ -7,6 +7,7 @@ import com.exactpro.epfast.template.xml.instructionfields.integerfields.*;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.List;
 
 public class InstructionsXml {
@@ -29,6 +30,7 @@ public class InstructionsXml {
         @XmlElement(name = "sequence", type = SequenceXml.class, namespace = Namespace.XML_NAMESPACE),
         @XmlElement(name = "group", type = GroupXml.class, namespace = Namespace.XML_NAMESPACE)
     })
+    @XmlJavaTypeAdapter(InstructionAdapter.class)
     public void setInstructions(List<Instruction> instructions) {
         this.instructions = instructions;
     }

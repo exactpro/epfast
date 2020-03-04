@@ -1,10 +1,11 @@
 package com.exactpro.epfast.template.xml;
 
+import com.exactpro.epfast.template.FieldInstruction;
 import com.exactpro.epfast.template.xml.helper.Presence;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldInstrContent extends FieldOpXml {
+public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
     private IdentityXml fieldId = new IdentityXml();
 

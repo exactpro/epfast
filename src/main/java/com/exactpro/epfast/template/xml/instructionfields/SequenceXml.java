@@ -1,18 +1,16 @@
 package com.exactpro.epfast.template.xml.instructionfields;
 
 import com.exactpro.epfast.template.Dictionary;
+import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.Sequence;
-import com.exactpro.epfast.template.xml.IdentityXml;
-import com.exactpro.epfast.template.xml.InstructionsXml;
-import com.exactpro.epfast.template.xml.LengthXml;
-import com.exactpro.epfast.template.xml.ReferenceImpl;
+import com.exactpro.epfast.template.xml.*;
 import com.exactpro.epfast.template.xml.helper.Namespace;
 import com.exactpro.epfast.template.xml.helper.Presence;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class SequenceXml extends InstructionsXml implements Sequence {
+public class SequenceXml extends InstructionsXml implements Sequence, InstructionXml {
 
     private IdentityXml fieldId;
 
@@ -77,5 +75,9 @@ public class SequenceXml extends InstructionsXml implements Sequence {
         return presence.equals(Presence.OPTIONAL);
     }
 
+    @Override
+    public Instruction toXmlInstruction() {
+        return this;
+    }
 }
 

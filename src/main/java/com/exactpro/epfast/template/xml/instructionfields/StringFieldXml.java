@@ -1,8 +1,8 @@
 package com.exactpro.epfast.template.xml.instructionfields;
 
-import com.exactpro.epfast.template.AsciiStringField;
-import com.exactpro.epfast.template.UnicodeStringField;
+import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.xml.IdentityXml;
+import com.exactpro.epfast.template.xml.InstructionXml;
 import com.exactpro.epfast.template.xml.helper.Charset;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
 import com.exactpro.epfast.template.xml.helper.Namespace;
@@ -10,7 +10,7 @@ import com.exactpro.epfast.template.xml.helper.Namespace;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class StringFieldXml extends FieldInstrContent implements AsciiStringField, UnicodeStringField {
+public class StringFieldXml extends FieldInstrContent implements InstructionXml {
 
     private Charset charset = Charset.ASCII;
 
@@ -34,5 +34,9 @@ public class StringFieldXml extends FieldInstrContent implements AsciiStringFiel
         this.lengthFieldId = lengthFieldId;
     }
 
+    @Override
+    public Instruction toXmlInstruction() {
+        return this;
+    }
 }
 

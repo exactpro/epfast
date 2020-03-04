@@ -2,7 +2,9 @@ package com.exactpro.epfast.template.xml.instructionfields;
 
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Group;
+import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.xml.IdentityXml;
+import com.exactpro.epfast.template.xml.InstructionXml;
 import com.exactpro.epfast.template.xml.InstructionsXml;
 import com.exactpro.epfast.template.xml.helper.Namespace;
 import com.exactpro.epfast.template.xml.helper.Presence;
@@ -11,7 +13,7 @@ import com.exactpro.epfast.template.xml.ReferenceImpl;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class GroupXml extends InstructionsXml implements Group {
+public class GroupXml extends InstructionsXml implements Group, InstructionXml {
 
     private IdentityXml fieldId;
 
@@ -62,6 +64,11 @@ public class GroupXml extends InstructionsXml implements Group {
     @Override
     public boolean isOptional() {
         return presence.equals(Presence.OPTIONAL);
+    }
+
+    @Override
+    public Instruction toXmlInstruction() {
+        return this;
     }
 
 }

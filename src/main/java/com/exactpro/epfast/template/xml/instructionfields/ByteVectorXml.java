@@ -1,13 +1,15 @@
 package com.exactpro.epfast.template.xml.instructionfields;
 
 import com.exactpro.epfast.template.ByteVectorField;
+import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
 import com.exactpro.epfast.template.xml.IdentityXml;
+import com.exactpro.epfast.template.xml.InstructionXml;
 import com.exactpro.epfast.template.xml.helper.Namespace;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class ByteVectorXml extends FieldInstrContent implements ByteVectorField {
+public class ByteVectorXml extends FieldInstrContent implements ByteVectorField, InstructionXml {
 
     private IdentityXml lengthFieldId;
 
@@ -21,4 +23,8 @@ public class ByteVectorXml extends FieldInstrContent implements ByteVectorField 
         this.lengthFieldId = lengthFieldId;
     }
 
+    @Override
+    public Instruction toXmlInstruction() {
+        return this;
+    }
 }
