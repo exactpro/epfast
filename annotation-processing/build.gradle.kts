@@ -2,7 +2,6 @@ val junitVersion: String by rootProject.extra
 
 plugins {
     `java-library`
-    java
 }
 
 sourceSets {
@@ -53,4 +52,6 @@ val integrationTest = task<Test>("integrationTest") {
     classpath = sourceSets["integrationTest"].runtimeClasspath
 }
 
-tasks.check { dependsOn(integrationTest) }
+tasks.check {
+    dependsOn(integrationTest)
+}
