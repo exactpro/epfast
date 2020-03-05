@@ -44,7 +44,7 @@ dependencies {
     implementation("io.netty:netty-all:$nettyVersion")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
 
-    runtimeOnly("com.sun.xml.bind:jaxb-impl:2.3.2")
+    runtimeOnly("com.sun.xml.bind:jaxb-impl:2.4.0-b180830.0438")
     // istack-commons-runtime should be auto-dependency of jaxb-impl, but isn't for unknown reason
     runtimeOnly("com.sun.istack:istack-commons-runtime:3.0.10")
 
