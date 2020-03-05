@@ -22,5 +22,4 @@ public class ReferenceImpl implements Reference {
     public String getNamespace() {
         return namespace;
     }
-
 }

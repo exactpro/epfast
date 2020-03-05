@@ -70,5 +70,4 @@ public class GroupXml extends InstructionsXml implements Group, InstructionXml {
     public Instruction toXmlInstruction() {
         return this;
     }
-
 }

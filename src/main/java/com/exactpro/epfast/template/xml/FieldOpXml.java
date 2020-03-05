@@ -25,5 +25,4 @@ public class FieldOpXml {
     public void setOperator(InitialValueXml operator) {
         this.operator = operator;
     }
-
 }

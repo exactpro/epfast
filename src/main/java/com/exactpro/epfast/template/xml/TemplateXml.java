@@ -66,5 +66,4 @@ public class TemplateXml extends InstructionsXml implements Template {
     public void setTypeRef(ReferenceImpl typeRef) {
         this.typeRef = typeRef;
     }
-
 }

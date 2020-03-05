@@ -57,6 +57,5 @@ public class TemplatesXml implements Templates {
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
     }
-
 }
 

@@ -34,5 +34,4 @@ public class InstructionsXml {
     public void setInstructions(List<Instruction> instructions) {
         this.instructions = instructions;
     }
-
 }

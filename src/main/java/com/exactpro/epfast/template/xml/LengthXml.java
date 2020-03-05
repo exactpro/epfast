@@ -27,5 +27,4 @@ public class LengthXml extends FieldOpXml implements LengthField {
     public void setId(String id) {
         this.fieldId.setAuxiliaryId(id);
     }
-
 }

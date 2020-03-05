@@ -28,6 +28,5 @@ public class OpContextXml extends InitialValueXml {
     public void setDictionaryKey(ReferenceImpl nsKey) {
         this.dictionaryKey = nsKey;
     }
-
 }
 

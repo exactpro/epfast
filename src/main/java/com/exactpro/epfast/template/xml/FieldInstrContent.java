@@ -42,5 +42,4 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
     public boolean isOptional() {
         return presence.equals(Presence.OPTIONAL);
     }
-
 }

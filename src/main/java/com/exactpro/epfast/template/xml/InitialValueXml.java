@@ -17,5 +17,4 @@ public class InitialValueXml implements FieldOperator {
     public void setInitialValue(String value) {
         this.value = value;
     }
-
 }
