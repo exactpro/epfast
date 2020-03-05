@@ -76,7 +76,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
     }
 
     @Override
-    public Instruction toXmlInstruction() {
+    public Instruction toInstruction() {
         return this;
     }
 }

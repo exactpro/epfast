@@ -67,7 +67,7 @@ public class GroupXml extends InstructionsXml implements Group, InstructionXml {
     }
 
     @Override
-    public Instruction toXmlInstruction() {
+    public Instruction toInstruction() {
         return this;
     }
 }

@@ -30,7 +30,7 @@ public class TemplateRefXml implements TemplateRef, InstructionXml {
     }
 
     @Override
-    public Instruction toXmlInstruction() {
+    public Instruction toInstruction() {
         return this;
     }
 }

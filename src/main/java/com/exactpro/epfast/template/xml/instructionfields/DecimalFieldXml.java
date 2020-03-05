@@ -36,7 +36,8 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
     }
 
     @Override
-    public Instruction toXmlInstruction() {
-        return this;
+    public Instruction toInstruction() {
+        // TODO implement
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

@@ -11,6 +11,7 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
     private Presence presence = Presence.MANDATORY;
 
+    @Override
     public IdentityXml getFieldId() {
         return fieldId;
     }
@@ -30,16 +31,13 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
         this.fieldId.setAuxiliaryId(id);
     }
 
-    public Presence getPresence() {
-        return presence;
-    }
-
     @XmlAttribute(name = "presence")
     public void setPresence(Presence presence) {
         this.presence = presence;
     }
 
+    @Override
     public boolean isOptional() {
-        return presence.equals(Presence.OPTIONAL);
+        return presence == Presence.OPTIONAL;
     }
 }

@@ -8,7 +8,7 @@ import com.exactpro.epfast.template.xml.InstructionXml;
 public class Int32Xml extends FieldInstrContent implements Int32Field, InstructionXml {
 
     @Override
-    public Instruction toXmlInstruction() {
+    public Instruction toInstruction() {
         return this;
     }
 }

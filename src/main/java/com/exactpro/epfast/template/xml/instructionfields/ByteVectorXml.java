@@ -24,7 +24,7 @@ public class ByteVectorXml extends FieldInstrContent implements ByteVectorField,
     }
 
     @Override
-    public Instruction toXmlInstruction() {
+    public Instruction toInstruction() {
         return this;
     }
 }

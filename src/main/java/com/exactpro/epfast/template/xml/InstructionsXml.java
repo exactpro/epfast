@@ -7,21 +7,20 @@ import com.exactpro.epfast.template.xml.instructionfields.integerfields.*;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class InstructionsXml {
 
-    private List<InstructionXml> instructions;
+    private List<Instruction> instructions ;
 
     public List<Instruction> getInstructions() {
-        return instructions.stream().map(v -> v.toXmlInstruction()).collect(Collectors.toList());
-    }
-
-    public List<InstructionXml> getInstructionsXml() {
         return instructions;
     }
 
+    @XmlJavaTypeAdapter(InstructionAdapter.class)
     @XmlElements({
         @XmlElement(name = "templateRef", type = TemplateRefXml.class, namespace = Namespace.XML_NAMESPACE),
         @XmlElement(name = "int32", type = Int32Xml.class, namespace = Namespace.XML_NAMESPACE),
@@ -34,7 +33,7 @@ public class InstructionsXml {
         @XmlElement(name = "sequence", type = SequenceXml.class, namespace = Namespace.XML_NAMESPACE),
         @XmlElement(name = "group", type = GroupXml.class, namespace = Namespace.XML_NAMESPACE)
     })
-    public void setInstructionsXml(List<InstructionXml> instructions) {
+    public void setInstructions(List<Instruction> instructions) {
         this.instructions = instructions;
     }
 }

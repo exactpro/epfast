@@ -4,15 +4,15 @@ import com.exactpro.epfast.template.Instruction;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class InstructionAdapter extends XmlAdapter<Instruction, InstructionXml> {
+public class InstructionAdapter extends XmlAdapter<InstructionXml, Instruction> {
 
     @Override
-    public InstructionXml unmarshal(Instruction v) {
-        throw new UnsupportedOperationException("The method is not implemented!");
+    public Instruction unmarshal(InstructionXml v) {
+        return v.toInstruction();
     }
 
     @Override
-    public Instruction marshal(InstructionXml v) {
-        return v.toXmlInstruction();
+    public InstructionXml marshal(Instruction v) {
+        throw new UnsupportedOperationException("Marshalling of FAST XML schema is not supported");
     }
 }
