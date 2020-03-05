@@ -1,8 +1,10 @@
-val junitVersion by extra { "5.5.2" }
-val assertjVersion by extra { "3.14.0" }
+val assertjVersion by extra { "3.15.0" }
+val junitVersion by extra { "5.6.0" }
+val nettyVersion by extra { "4.1.45.Final" }
 
 plugins {
-    java
+    kotlin("jvm") version "1.3.61"
+    `java-library`
     checkstyle
 }
 
@@ -22,13 +24,13 @@ allprojects {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    tasks.test {
-        useJUnitPlatform()
-    }
-
     checkstyle {
         toolVersion = "8.26"
         configFile = rootProject.file("config/checkstyle/checkstyle.xml")
+    }
+
+    tasks.test {
+        useJUnitPlatform()
     }
 
     tasks.checkstyleTest {
@@ -39,13 +41,15 @@ allprojects {
 }
 
 dependencies {
-    implementation("io.netty:netty-all:4.1.5.Final")
+    implementation("io.netty:netty-all:$nettyVersion")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
 
     runtimeOnly("com.sun.xml.bind:jaxb-impl:2.3.2")
     // istack-commons-runtime should be auto-dependency of jaxb-impl, but isn't for unknown reason
     runtimeOnly("com.sun.istack:istack-commons-runtime:3.0.10")
 
+
+    testImplementation(kotlin("stdlib-jdk8"))
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 
