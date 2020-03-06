@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class StringFieldXml extends FieldInstrContent implements InstructionXml {
 
-    private Charset charset = Charset.ASCII;
+    private Charset charset = Charset.ascii;
 
     private IdentityXml lengthFieldId;
 

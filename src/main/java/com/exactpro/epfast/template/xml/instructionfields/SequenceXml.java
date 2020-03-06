@@ -14,7 +14,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
 
     private IdentityXml fieldId;
 
-    private Presence presence = Presence.MANDATORY;
+    private Presence presence = Presence.mandatory;
 
     private Dictionary dictionary;
 
@@ -72,7 +72,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
 
     @Override
     public boolean isOptional() {
-        return presence.equals(Presence.OPTIONAL);
+        return presence.equals(Presence.optional);
     }
 
     @Override

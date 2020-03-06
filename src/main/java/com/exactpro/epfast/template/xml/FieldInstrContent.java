@@ -9,7 +9,7 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
     private IdentityXml fieldId = new IdentityXml();
 
-    private Presence presence = Presence.MANDATORY;
+    private Presence presence = Presence.mandatory;
 
     @Override
     public IdentityXml getFieldId() {
@@ -38,6 +38,6 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
     @Override
     public boolean isOptional() {
-        return presence == Presence.OPTIONAL;
+        return presence == Presence.optional;
     }
 }

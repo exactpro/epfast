@@ -5,11 +5,11 @@
     <int32>
         <constant value="32"/>
     </int32>
-    <decimal presence="OPTIONAL"/>
-    <byteVector presence="MANDATORY">
+    <decimal presence="optional"/>
+    <byteVector presence="mandatory">
         <length>
             <nsName ns="nsName" id="ID"/>
         </length>
     </byteVector>
-    <string charset="UNICODE"/>
+    <string charset="unicode"/>
 </template>
