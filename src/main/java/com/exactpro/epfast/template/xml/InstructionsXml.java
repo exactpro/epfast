@@ -12,7 +12,7 @@ import java.util.List;
 
 public class InstructionsXml {
 
-    private List<Instruction> instructions ;
+    private List<Instruction> instructions;
 
     public List<Instruction> getInstructions() {
         return instructions;

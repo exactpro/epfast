@@ -18,8 +18,8 @@ public class LengthXml extends FieldOpXml implements LengthField {
         this.fieldId.setName(name);
     }
 
-    @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
+    @XmlAttribute(name = "namespace")
+    public void setNamespace(String templateNs) {
         this.fieldId.setNamespace(templateNs);
     }
 
