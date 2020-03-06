@@ -8,9 +8,7 @@ import com.exactpro.epfast.template.xml.instructionfields.integerfields.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InstructionsXml {
 
