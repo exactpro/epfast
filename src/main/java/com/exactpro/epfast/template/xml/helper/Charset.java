@@ -1,6 +1,9 @@
 package com.exactpro.epfast.template.xml.helper;
 
+import javax.xml.bind.annotation.XmlEnumValue;
+
 public enum Charset {
-    ascii, unicode
+    @XmlEnumValue("ascii") ASCII,
+    @XmlEnumValue("unicode") UNICODE
 }
 

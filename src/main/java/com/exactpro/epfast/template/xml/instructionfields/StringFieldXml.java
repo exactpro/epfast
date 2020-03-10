@@ -1,6 +1,6 @@
 package com.exactpro.epfast.template.xml.instructionfields;
 
-import com.exactpro.epfast.template.Instruction;
+import com.exactpro.epfast.template.*;
 import com.exactpro.epfast.template.xml.IdentityXml;
 import com.exactpro.epfast.template.xml.InstructionXml;
 import com.exactpro.epfast.template.xml.helper.Charset;
@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class StringFieldXml extends FieldInstrContent implements InstructionXml {
 
-    private Charset charset = Charset.ascii;
+    private Charset charset = Charset.ASCII;
 
     private IdentityXml lengthFieldId;
 
@@ -34,9 +34,50 @@ public class StringFieldXml extends FieldInstrContent implements InstructionXml 
         this.lengthFieldId = lengthFieldId;
     }
 
+    private class AsciiString implements AsciiStringField {
+        @Override
+        public FieldOperator getOperator() {
+            return StringFieldXml.this.getOperator();
+        }
+
+        @Override
+        public Identity getFieldId() {
+            return StringFieldXml.this.getFieldId();
+        }
+
+        @Override
+        public boolean isOptional() {
+            return StringFieldXml.this.isOptional();
+        }
+    }
+
+    private class UnicodeString implements UnicodeStringField {
+        @Override
+        public FieldOperator getOperator() {
+            return StringFieldXml.this.getOperator();
+        }
+
+        @Override
+        public Identity getLengthFieldId() {
+            return StringFieldXml.this.getLengthFieldId();
+        }
+
+        @Override
+        public Identity getFieldId() {
+            return StringFieldXml.this.getFieldId();
+        }
+
+        @Override
+        public boolean isOptional() {
+            return StringFieldXml.this.isOptional();
+        }
+    }
+
     @Override
     public Instruction toInstruction() {
-        // TODO implement
-        throw new UnsupportedOperationException("Not implemented");
+        if (charset == Charset.ASCII) {
+            return new AsciiString();
+        }
+        return new UnicodeString();
     }
 }

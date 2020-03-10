@@ -37,7 +37,8 @@ public class TemplateUnmarshallerTests {
             .activateDefaultTypingAsProperty(
                 LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.EVERYTHING, "_class")
             .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
-            .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+            .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.writeValue(System.out, template);
     }
 

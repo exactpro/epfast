@@ -1,6 +1,6 @@
 package com.exactpro.epfast.template.xml.instructionfields;
 
-import com.exactpro.epfast.template.Instruction;
+import com.exactpro.epfast.template.*;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
 import com.exactpro.epfast.template.xml.FieldOpXml;
 import com.exactpro.epfast.template.xml.InstructionXml;
@@ -32,9 +32,50 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
         this.mantissa = mantissa;
     }
 
+    class CompoundDecimal implements CompoundDecimalField {
+        @Override
+        public FieldOperator getExponent() {
+            return (FieldOperator) DecimalFieldXml.this.getExponent();
+        }
+
+        @Override
+        public FieldOperator getMantissa() {
+            return (FieldOperator) DecimalFieldXml.this.getMantissa();
+        }
+
+        @Override
+        public Identity getFieldId() {
+            return DecimalFieldXml.this.getFieldId();
+        }
+
+        @Override
+        public boolean isOptional() {
+            return DecimalFieldXml.this.isOptional();
+        }
+    }
+
+    class SimpleDecimal implements SimpleDecimalField {
+        @Override
+        public FieldOperator getOperator() {
+            return DecimalFieldXml.this.getOperator();
+        }
+
+        @Override
+        public Identity getFieldId() {
+            return DecimalFieldXml.this.getFieldId();
+        }
+
+        @Override
+        public boolean isOptional() {
+            return DecimalFieldXml.this.isOptional();
+        }
+    }
+
     @Override
     public Instruction toInstruction() {
-        // TODO implement
-        throw new UnsupportedOperationException("Not implemented");
+        if (mantissa == null) {
+            return new SimpleDecimal();
+        }
+        return new CompoundDecimal();
     }
 }

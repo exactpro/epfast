@@ -1,5 +1,8 @@
 package com.exactpro.epfast.template.xml.helper;
 
+import javax.xml.bind.annotation.XmlEnumValue;
+
 public enum Presence {
-    mandatory, optional
+    @XmlEnumValue("mandatory") MANDATORY,
+    @XmlEnumValue("optional") OPTIONAL
 }

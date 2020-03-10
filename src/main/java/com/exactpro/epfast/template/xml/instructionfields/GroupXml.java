@@ -17,7 +17,7 @@ public class GroupXml extends InstructionsXml implements Group, InstructionXml {
 
     private IdentityXml fieldId;
 
-    private Presence presence = Presence.mandatory;
+    private Presence presence = Presence.MANDATORY;
 
     private Dictionary dictionary;
 
@@ -63,7 +63,7 @@ public class GroupXml extends InstructionsXml implements Group, InstructionXml {
 
     @Override
     public boolean isOptional() {
-        return presence.equals(Presence.optional);
+        return presence.equals(Presence.OPTIONAL);
     }
 
     @Override

@@ -5,8 +5,12 @@
     <int32>
         <constant value="32"/>
     </int32>
-    <decimal presence="optional"/>
-    <byteVector presence="mandatory">
+    <decimal presence="mandatory">
+        <mantissa>
+            <delta/>
+        </mantissa>
+    </decimal>
+    <byteVector presence="optional">
         <length>
             <nsName ns="nsName" id="ID"/>
         </length>

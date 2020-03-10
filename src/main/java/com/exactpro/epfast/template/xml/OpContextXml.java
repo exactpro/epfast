@@ -25,8 +25,8 @@ public class OpContextXml extends InitialValueXml {
     }
 
     @XmlElement(name = "nsKey", namespace = Namespace.XML_NAMESPACE)
-    public void setDictionaryKey(ReferenceImpl nsKey) {
-        this.dictionaryKey = nsKey;
+    public void setDictionaryKey(ReferenceImpl dictionaryKey) {
+        this.dictionaryKey = dictionaryKey;
     }
 }
 
