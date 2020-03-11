@@ -33,10 +33,6 @@ public class GroupXml extends InstructionsXml implements Group, InstructionXml {
         this.fieldId = fieldId;
     }
 
-    public Presence getPresence() {
-        return presence;
-    }
-
     @XmlAttribute(name = "presence")
     public void setPresence(Presence presence) {
         this.presence = presence;
