@@ -6,6 +6,6 @@ public interface Group extends FieldInstruction {
 
     Reference getTypeRef();
 
-    List<Instruction> getInstructions();
+    List<? extends Instruction> getInstructions();
 
 }
