@@ -5,10 +5,11 @@ import com.exactpro.epfast.template.xml.FieldInstrContent;
 import com.exactpro.epfast.template.xml.FieldOpXml;
 import com.exactpro.epfast.template.xml.InstructionXml;
 import com.exactpro.epfast.template.xml.helper.Namespace;
+import com.exactpro.epfast.template.xml.helper.NsXmlParent;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class DecimalFieldXml extends FieldInstrContent implements InstructionXml {
+public class DecimalFieldXml extends FieldInstrContent implements InstructionXml, NsXmlParent {
 
     private FieldOpXml exponent;
 

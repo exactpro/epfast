@@ -4,6 +4,7 @@ import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.Templates;
 import com.exactpro.epfast.template.xml.helper.Namespace;
+import com.exactpro.epfast.template.xml.helper.TemplateNsXmlParent;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -11,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement(name = "templates", namespace = Namespace.XML_NAMESPACE)
-public class TemplatesXml implements Templates {
+public class TemplatesXml implements Templates, TemplateNsXmlParent {
 
     private String ns;
 
@@ -30,6 +31,7 @@ public class TemplatesXml implements Templates {
         this.ns = ns;
     }
 
+    @Override
     public String getTemplateNs() {
         return templateNs;
     }
@@ -56,6 +58,10 @@ public class TemplatesXml implements Templates {
     @XmlElement(name = "template", type = TemplateXml.class, namespace = Namespace.XML_NAMESPACE)
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
+    }
+
+    public void afterUnmarshal(Object target, Object parent) {
+
     }
 }
 

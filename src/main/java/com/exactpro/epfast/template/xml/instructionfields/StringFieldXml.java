@@ -6,11 +6,12 @@ import com.exactpro.epfast.template.xml.InstructionXml;
 import com.exactpro.epfast.template.xml.helper.Charset;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
 import com.exactpro.epfast.template.xml.helper.Namespace;
+import com.exactpro.epfast.template.xml.helper.NsXmlParent;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class StringFieldXml extends FieldInstrContent implements InstructionXml {
+public class StringFieldXml extends FieldInstrContent implements InstructionXml, NsXmlParent {
 
     private Charset charset = Charset.ASCII;
 

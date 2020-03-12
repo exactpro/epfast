@@ -47,5 +47,4 @@ public class TemplateUnmarshallerTests {
         String path = thisClass.getPackage().getName().replaceAll(Pattern.quote("."), "/");
         return thisClass.getClassLoader().getResourceAsStream(path + "/" + resourceName);
     }
-
 }

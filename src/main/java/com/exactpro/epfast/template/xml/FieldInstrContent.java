@@ -1,19 +1,29 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.FieldInstruction;
+import com.exactpro.epfast.template.Identity;
+import com.exactpro.epfast.template.xml.helper.AfterUnmarshal;
+import com.exactpro.epfast.template.xml.helper.NsXmlParent;
 import com.exactpro.epfast.template.xml.helper.Presence;
 
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
-    private IdentityXml fieldId = new IdentityXml();
+    private AfterUnmarshal.ApplicationIdentity fieldId = new AfterUnmarshal.ApplicationIdentity();
 
     private Presence presence = Presence.MANDATORY;
 
+    private FieldInstruction instruction;
+
     @Override
-    public IdentityXml getFieldId() {
+    public Identity getFieldId() {
         return fieldId;
+    }
+
+    public String getNs() {
+        return fieldId.getNs();
     }
 
     @XmlAttribute(name = "name")
@@ -21,9 +31,9 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
         this.fieldId.setName(name);
     }
 
-    @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        this.fieldId.setNamespace(templateNs);
+    @XmlAttribute(name = "ns")
+    public void setNs(String ns) {
+        this.fieldId.setNs(ns);
     }
 
     @XmlAttribute(name = "id")
@@ -39,5 +49,11 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
     @Override
     public boolean isOptional() {
         return presence == Presence.OPTIONAL;
+    }
+
+    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+        if (parent instanceof TemplateXml) {
+            fieldId.parent = (NsXmlParent) parent;
+        }
     }
 }

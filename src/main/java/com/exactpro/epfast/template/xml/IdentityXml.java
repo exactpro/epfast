@@ -20,7 +20,7 @@ public class IdentityXml implements Identity {
     }
 
     @Override
-    public String getNamespace() {
+    public String getNs() {
         return namespace;
     }
 

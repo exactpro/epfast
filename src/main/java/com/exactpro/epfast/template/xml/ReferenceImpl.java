@@ -6,11 +6,11 @@ public class ReferenceImpl implements Reference {
 
     private final String name;
 
-    private final String namespace;
+    private final String ns;
 
-    public ReferenceImpl(String name, String namespace) {
+    public ReferenceImpl(String name, String ns) {
         this.name = name;
-        this.namespace = namespace;
+        this.ns = ns;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class ReferenceImpl implements Reference {
     }
 
     @Override
-    public String getNamespace() {
-        return namespace;
+    public String getNs() {
+        return ns;
     }
 }

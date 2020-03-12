@@ -6,10 +6,11 @@ import com.exactpro.epfast.template.xml.FieldInstrContent;
 import com.exactpro.epfast.template.xml.IdentityXml;
 import com.exactpro.epfast.template.xml.InstructionXml;
 import com.exactpro.epfast.template.xml.helper.Namespace;
+import com.exactpro.epfast.template.xml.helper.NsXmlParent;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class ByteVectorXml extends FieldInstrContent implements ByteVectorField, InstructionXml {
+public class ByteVectorXml extends FieldInstrContent implements ByteVectorField, InstructionXml, NsXmlParent {
 
     private IdentityXml lengthFieldId;
 

@@ -3,13 +3,14 @@ package com.exactpro.epfast.template.xml;
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.xml.helper.Namespace;
+import com.exactpro.epfast.template.xml.helper.NsXmlParent;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "template", namespace = Namespace.XML_NAMESPACE)
-public class TemplateXml extends InstructionsXml implements Template {
+public class TemplateXml extends InstructionsXml implements Template, NsXmlParent {
 
     private IdentityXml templateId = new IdentityXml();
 
@@ -39,6 +40,7 @@ public class TemplateXml extends InstructionsXml implements Template {
         this.templateId.setAuxiliaryId(id);
     }
 
+    @Override
     public String getNs() {
         return ns;
     }
