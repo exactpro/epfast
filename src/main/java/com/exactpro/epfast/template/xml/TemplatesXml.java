@@ -59,9 +59,5 @@ public class TemplatesXml implements Templates, TemplateNsXmlParent {
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
     }
-
-    public void afterUnmarshal(Object target, Object parent) {
-
-    }
 }
 

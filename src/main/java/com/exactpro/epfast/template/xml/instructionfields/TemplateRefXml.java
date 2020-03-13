@@ -3,7 +3,7 @@ package com.exactpro.epfast.template.xml.instructionfields;
 import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.TemplateRef;
-import com.exactpro.epfast.template.xml.InstructionXml;
+import com.exactpro.epfast.template.xml.helper.InstructionXml;
 import com.exactpro.epfast.template.xml.ReferenceImpl;
 
 import javax.xml.bind.annotation.XmlAttribute;

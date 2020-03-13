@@ -5,11 +5,9 @@ import com.exactpro.epfast.template.Identity;
 import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.Sequence;
 import com.exactpro.epfast.template.xml.*;
-import com.exactpro.epfast.template.xml.helper.AfterUnmarshal;
-import com.exactpro.epfast.template.xml.helper.Namespace;
-import com.exactpro.epfast.template.xml.helper.NsXmlParent;
-import com.exactpro.epfast.template.xml.helper.Presence;
+import com.exactpro.epfast.template.xml.helper.*;
 
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
@@ -92,6 +90,12 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
     @Override
     public Instruction toInstruction() {
         return this;
+    }
+
+    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+        if (parent instanceof NsXmlParent) {
+            fieldId.ns = ((NsXmlParent) parent).getNs();
+        }
     }
 }
 

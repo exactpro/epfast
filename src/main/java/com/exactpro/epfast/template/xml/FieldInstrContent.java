@@ -15,15 +15,9 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
     private Presence presence = Presence.MANDATORY;
 
-    private FieldInstruction instruction;
-
     @Override
     public Identity getFieldId() {
         return fieldId;
-    }
-
-    public String getNs() {
-        return fieldId.getNs();
     }
 
     @XmlAttribute(name = "name")
@@ -52,8 +46,8 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof TemplateXml) {
-            fieldId.parent = (NsXmlParent) parent;
+        if (parent instanceof NsXmlParent) {
+            fieldId.ns = ((NsXmlParent) parent).getNs();
         }
     }
 }

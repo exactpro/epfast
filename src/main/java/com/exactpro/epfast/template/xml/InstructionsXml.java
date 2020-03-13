@@ -1,6 +1,7 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Instruction;
+import com.exactpro.epfast.template.xml.helper.InstructionAdapter;
 import com.exactpro.epfast.template.xml.helper.Namespace;
 import com.exactpro.epfast.template.xml.instructionfields.*;
 import com.exactpro.epfast.template.xml.instructionfields.integerfields.*;

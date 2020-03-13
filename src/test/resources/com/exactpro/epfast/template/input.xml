@@ -1,5 +1,5 @@
-<templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-    <template ns="TNS" id="25">
+<templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1" templateNs="tempNS">
+    <template ns="fieldNS" id="25">
         <int64>
             <copy value="64"/>
         </int64>
@@ -11,11 +11,7 @@
                 <delta/>
             </mantissa>
         </decimal>
-        <byteVector presence="optional">
-            <length>
-                <nsName ns="nsName" id="ID"/>
-            </length>
-        </byteVector>
+        <byteVector presence="optional" lengthName="lengthNAME"/>
         <string charset="unicode"/>
     </template>
 </templates>

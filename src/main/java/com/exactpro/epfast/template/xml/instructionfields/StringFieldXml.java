@@ -2,20 +2,17 @@ package com.exactpro.epfast.template.xml.instructionfields;
 
 import com.exactpro.epfast.template.*;
 import com.exactpro.epfast.template.xml.IdentityXml;
-import com.exactpro.epfast.template.xml.InstructionXml;
+import com.exactpro.epfast.template.xml.helper.InstructionXml;
 import com.exactpro.epfast.template.xml.helper.Charset;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
-import com.exactpro.epfast.template.xml.helper.Namespace;
-import com.exactpro.epfast.template.xml.helper.NsXmlParent;
 
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 
-public class StringFieldXml extends FieldInstrContent implements InstructionXml, NsXmlParent {
+public class StringFieldXml extends FieldInstrContent implements InstructionXml {
 
     private Charset charset = Charset.ASCII;
 
-    private IdentityXml lengthFieldId;
+    private IdentityXml lengthFieldId = new IdentityXml();
 
     public Charset getCharset() {
         return charset;
@@ -30,9 +27,19 @@ public class StringFieldXml extends FieldInstrContent implements InstructionXml,
         return lengthFieldId;
     }
 
-    @XmlElement(name = "length", namespace = Namespace.XML_NAMESPACE)
-    public void setLengthFieldId(IdentityXml lengthFieldId) {
-        this.lengthFieldId = lengthFieldId;
+    @XmlAttribute(name = "lengthName")
+    public void setName(String name) {
+        this.lengthFieldId.setName(name);
+    }
+
+    @XmlAttribute(name = "lengthNamespace")
+    public void setNamespace(String templateNs) {
+        this.lengthFieldId.setNamespace(templateNs);
+    }
+
+    @XmlAttribute(name = "lengthId")
+    public void setId(String id) {
+        this.lengthFieldId.setAuxiliaryId(id);
     }
 
     private class AsciiString implements AsciiStringField {
