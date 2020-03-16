@@ -16,7 +16,7 @@ public class AfterUnmarshal {
             this.name = name;
         }
 
-        public void setNs(String namespace) {
+        public void setNamespace(String namespace) {
             this.namespace = namespace;
         }
 
@@ -40,7 +40,7 @@ public class AfterUnmarshal {
         public String parentNs;
 
         @Override
-        public String getNs() {
+        public String getNamespace() {
             if (namespace != null) {
                 return namespace;
             }
@@ -56,7 +56,7 @@ public class AfterUnmarshal {
         public String parentTemplateNs;
 
         @Override
-        public String getNs() {
+        public String getNamespace() {
             if (namespace != null) {
                 return namespace;
             }

@@ -4,6 +4,6 @@ public interface Reference {
 
     String getName();
 
-    String getNs();
+    String getNamespace();
 
 }

@@ -30,7 +30,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
 
     @Override
     public String getNs() {
-        return fieldId.getNs();
+        return fieldId.getNamespace();
     }
 
     @XmlAttribute(name = "name")
@@ -40,7 +40,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
 
     @XmlAttribute(name = "ns")
     public void setNs(String ns) {
-        this.fieldId.setNs(ns);
+        this.fieldId.setNamespace(ns);
     }
 
     @XmlAttribute(name = "id")

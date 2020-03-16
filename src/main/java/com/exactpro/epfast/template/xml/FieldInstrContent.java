@@ -27,7 +27,7 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
     @XmlAttribute(name = "ns")
     public void setNs(String ns) {
-        this.fieldId.setNs(ns);
+        this.fieldId.setNamespace(ns);
     }
 
     @XmlAttribute(name = "id")

@@ -33,7 +33,7 @@ public class GroupXml extends InstructionsXml implements Group, InstructionXml, 
 
     @Override
     public String getNs() {
-        return fieldId.getNs();
+        return fieldId.getNamespace();
     }
 
     @XmlAttribute(name = "name")
@@ -43,7 +43,7 @@ public class GroupXml extends InstructionsXml implements Group, InstructionXml, 
 
     @XmlAttribute(name = "ns")
     public void setNs(String ns) {
-        this.fieldId.setNs(ns);
+        this.fieldId.setNamespace(ns);
     }
 
     @XmlAttribute(name = "id")

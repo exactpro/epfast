@@ -36,7 +36,7 @@ public class TemplateXml extends InstructionsXml implements Template, NsXmlParen
 
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
-        this.templateId.setNs(templateNs);
+        this.templateId.setNamespace(templateNs);
     }
 
     @XmlAttribute(name = "id")

@@ -19,7 +19,7 @@ public class ReferenceImpl implements Reference {
     }
 
     @Override
-    public String getNs() {
+    public String getNamespace() {
         return ns;
     }
 }
