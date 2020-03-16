@@ -47,7 +47,7 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NsXmlParent) {
-            fieldId.ns = ((NsXmlParent) parent).getNs();
+            fieldId.parentNs = ((NsXmlParent) parent).getNs();
         }
     }
 }

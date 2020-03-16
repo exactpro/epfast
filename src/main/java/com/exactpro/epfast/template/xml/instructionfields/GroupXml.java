@@ -87,7 +87,7 @@ public class GroupXml extends InstructionsXml implements Group, InstructionXml, 
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NsXmlParent) {
-            fieldId.ns = ((NsXmlParent) parent).getNs();
+            fieldId.parentNs = ((NsXmlParent) parent).getNs();
         }
     }
 }

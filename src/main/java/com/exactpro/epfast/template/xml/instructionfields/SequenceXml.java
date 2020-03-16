@@ -94,7 +94,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NsXmlParent) {
-            fieldId.ns = ((NsXmlParent) parent).getNs();
+            fieldId.parentNs = ((NsXmlParent) parent).getNs();
         }
     }
 }

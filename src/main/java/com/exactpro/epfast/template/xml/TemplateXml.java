@@ -75,7 +75,7 @@ public class TemplateXml extends InstructionsXml implements Template, NsXmlParen
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof TemplateNsXmlParent) {
-            templateId.templateNs = ((TemplateNsXmlParent) parent).getTemplateNs();
+            templateId.parentTemplateNs = ((TemplateNsXmlParent) parent).getTemplateNs();
         }
     }
 }

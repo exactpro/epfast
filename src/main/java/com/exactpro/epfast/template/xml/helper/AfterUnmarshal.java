@@ -4,11 +4,11 @@ import com.exactpro.epfast.template.Identity;
 
 public class AfterUnmarshal {
 
-    public static class IdentityBase implements Identity {
+    public abstract static class IdentityBase implements Identity {
 
         private String name;
 
-        private String namespace;
+        protected String namespace;
 
         private String auxiliaryId;
 
@@ -30,11 +30,6 @@ public class AfterUnmarshal {
         }
 
         @Override
-        public String getNs() {
-            return namespace;
-        }
-
-        @Override
         public String getAuxiliaryId() {
             return auxiliaryId;
         }
@@ -42,15 +37,15 @@ public class AfterUnmarshal {
 
     public static class ApplicationIdentity extends IdentityBase {
 
-        public String ns;
+        public String parentNs;
 
         @Override
         public String getNs() {
-            if (super.getNs() != null) {
-                return super.getNs();
+            if (namespace != null) {
+                return namespace;
             }
-            if (ns != null) {
-                return ns;
+            if (parentNs != null) {
+                return parentNs;
             }
             return "";
         }
@@ -58,15 +53,15 @@ public class AfterUnmarshal {
 
     public static class TemplateIdentity extends IdentityBase {
 
-        public String templateNs;
+        public String parentTemplateNs;
 
         @Override
         public String getNs() {
-            if (super.getNs() != null) {
-                return super.getNs();
+            if (namespace != null) {
+                return namespace;
             }
-            if (templateNs != null) {
-                return templateNs;
+            if (parentTemplateNs != null) {
+                return parentTemplateNs;
             }
             return "";
         }
