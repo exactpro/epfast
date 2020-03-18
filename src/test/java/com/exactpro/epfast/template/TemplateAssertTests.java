@@ -1,6 +1,5 @@
 package com.exactpro.epfast.template;
 
-import com.exactpro.epfast.template.assertions.TemplateAssert;
 import com.exactpro.epfast.template.simple.Identity;
 import com.exactpro.epfast.template.simple.Reference;
 import com.exactpro.epfast.template.simple.Template;
