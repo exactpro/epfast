@@ -1,7 +1,5 @@
 package com.exactpro.epfast.template;
 
-import com.exactpro.epfast.template.assertions.IdentityAssert;
-import com.exactpro.epfast.template.assertions.ReferenceAssert;
 import com.exactpro.epfast.template.assertions.TemplateAssert;
 import com.exactpro.epfast.template.simple.Identity;
 import com.exactpro.epfast.template.simple.Reference;
@@ -11,10 +9,15 @@ import org.junit.jupiter.api.Test;
 class TemplateAssertTests {
 
     private Template temp1 = new Template();
+
     private Template temp2 = new Template();
+
     private Reference ref1 = new Reference();
+
     private Reference ref2 = new Reference();
+
     private Identity id1 = new Identity();
+
     private Identity id2 = new Identity();
 
     public TemplateAssertTests() {
@@ -33,15 +36,5 @@ class TemplateAssertTests {
     @Test
     void testTemplateEquality() {
         TemplateAssert.assertThat(temp1).isSameTemplateAs(temp2);
-    }
-
-    @Test
-    void testReferenceEquality() {
-        ReferenceAssert.assertThat(ref1).isSameReferenceAs(ref2);
-    }
-
-    @Test
-    void testIdentityEquality() {
-        IdentityAssert.assertThat(id1).isSameIdentityAs(id2);
     }
 }
