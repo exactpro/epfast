@@ -1,43 +1,17 @@
-package com.exactpro.epfast.template;
+package com.exactpro.epfast.template.assertion;
 
-import org.assertj.core.api.AbstractAssert;
+import com.exactpro.epfast.template.*;
 
 import java.util.List;
 import java.util.Objects;
 
-public class TemplateAssert extends AbstractAssert<TemplateAssert, Template> {
+import static com.exactpro.epfast.template.assertion.OpEqualityChecker.areSameOperators;
+import static com.exactpro.epfast.template.assertion.TemplateAssert.areSameIdentities;
+import static com.exactpro.epfast.template.assertion.TemplateAssert.areSameReferences;
 
-    public TemplateAssert(Template actual) {
-        super(actual, TemplateAssert.class);
-    }
+public class InstrEqualityChecker {
 
-    public static TemplateAssert assertThat(Template actual) {
-        return new TemplateAssert(actual);
-    }
-
-    public TemplateAssert isSameTemplateAs(Template template) {
-        isNotNull();
-        if (!areSameReferences(actual.getTypeRef(), template.getTypeRef()) ||
-            !areSameIdentities(actual.getTemplateId(), template.getTemplateId()) ||
-            !areSameInstructions(actual.getInstructions(), template.getInstructions())) {
-            failWithMessage("Not The Same Template");
-        }
-        return this;
-    }
-
-    private static boolean areSameReferences(Reference actual, Reference ref) {
-        return actual == ref || (Objects.equals(actual.getName(), ref.getName()) &&
-            Objects.equals(actual.getNamespace(), ref.getNamespace()));
-    }
-
-    private static boolean areSameIdentities(Identity actual, Identity id) {
-        return actual == id || (areSameReferences(actual, id) &&
-            Objects.equals(actual.getAuxiliaryId(), id.getAuxiliaryId()));
-    }
-
-    // Check Instructions
-
-    private static boolean areSameInstructions(List<? extends Instruction> actual, List<? extends Instruction> instr) {
+    static boolean areSameInstructions(List<? extends Instruction> actual, List<? extends Instruction> instr) {
         if (actual == instr) {
             return true;
         }
@@ -182,64 +156,5 @@ public class TemplateAssert extends AbstractAssert<TemplateAssert, Template> {
     private static boolean fieldInstrEquality(FieldInstruction actual, FieldInstruction instr) {
         return areSameIdentities(actual.getFieldId(), instr.getFieldId()) &&
             actual.isOptional() == instr.isOptional();
-    }
-
-    // Check Operators
-
-    private static boolean areSameOperators(FieldOperator actual, FieldOperator operator) {
-        if (actual == operator) {
-            return true;
-        }
-        if (actual.getClass() != operator.getClass()) {
-            return false;
-        }
-        switch (actual.getClass().getSimpleName()) {
-            case "ConstantOperator":
-                return constantEquality((ConstantOperator) actual, (ConstantOperator) operator);
-            case "CopyOperator":
-                return copyEquality((CopyOperator) actual, (CopyOperator) operator);
-            case "DefaultOperator":
-                return defaultEquality((DefaultOperator) actual, (DefaultOperator) operator);
-            case "DeltaOperator":
-                return deltaEquality((DeltaOperator) actual, (DeltaOperator) operator);
-            case "IncrementOperator":
-                return incrementEquality((IncrementOperator) actual, (IncrementOperator) operator);
-            case "TailOperator":
-                return tailEquality((TailOperator) actual, (TailOperator) operator);
-            default:
-                return false;
-        }
-    }
-
-    private static boolean constantEquality(ConstantOperator actual, ConstantOperator operator) {
-        return fieldOpEquality(actual, operator);
-    }
-
-    private static boolean copyEquality(CopyOperator actual, CopyOperator operator) {
-        return fieldOpEquality(actual, operator) && actual.getDictionary().equals(operator.getDictionary()) &&
-            areSameReferences(actual.getDictionaryKey(), operator.getDictionaryKey());
-    }
-
-    private static boolean defaultEquality(DefaultOperator actual, DefaultOperator operator) {
-        return fieldOpEquality(actual, operator);
-    }
-
-    private static boolean deltaEquality(DeltaOperator actual, DeltaOperator operator) {
-        return fieldOpEquality(actual, operator) && actual.getDictionary().equals(operator.getDictionary()) &&
-            areSameReferences(actual.getDictionaryKey(), operator.getDictionaryKey());
-    }
-
-    private static boolean incrementEquality(IncrementOperator actual, IncrementOperator operator) {
-        return fieldOpEquality(actual, operator) && actual.getDictionary().equals(operator.getDictionary()) &&
-            areSameReferences(actual.getDictionaryKey(), operator.getDictionaryKey());
-    }
-
-    private static boolean tailEquality(TailOperator actual, TailOperator operator) {
-        return fieldOpEquality(actual, operator) && actual.getDictionary().equals(operator.getDictionary()) &&
-            areSameReferences(actual.getDictionaryKey(), operator.getDictionaryKey());
-    }
-
-    private static boolean fieldOpEquality(FieldOperator actual, FieldOperator fieldOp) {
-        return Objects.equals(actual.getInitialValue(), fieldOp.getInitialValue());
     }
 }
