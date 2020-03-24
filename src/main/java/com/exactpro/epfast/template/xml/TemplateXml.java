@@ -3,10 +3,7 @@ package com.exactpro.epfast.template.xml;
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Identity;
 import com.exactpro.epfast.template.Template;
-import com.exactpro.epfast.template.xml.helper.AfterUnmarshal;
-import com.exactpro.epfast.template.xml.helper.Namespace;
-import com.exactpro.epfast.template.xml.helper.NsXmlParent;
-import com.exactpro.epfast.template.xml.helper.TemplateNsXmlParent;
+import com.exactpro.epfast.template.xml.helper.*;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -16,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "template", namespace = Namespace.XML_NAMESPACE)
 public class TemplateXml extends InstructionsXml implements Template, NsXmlParent {
 
-    private AfterUnmarshal.TemplateIdentity templateId = new AfterUnmarshal.TemplateIdentity();
+    private TemplateIdentity templateId = new TemplateIdentity();
 
     private String ns;
 
@@ -74,8 +71,8 @@ public class TemplateXml extends InstructionsXml implements Template, NsXmlParen
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof TemplateNsXmlParent) {
-            templateId.parentTemplateNs = ((TemplateNsXmlParent) parent).getTemplateNs();
+        if (parent instanceof NamespaceProvider) {
+            templateId.parentTemplateNs = ((NamespaceProvider) parent).getTemplateNs();
         }
     }
 }

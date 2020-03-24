@@ -4,7 +4,7 @@ import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.Templates;
 import com.exactpro.epfast.template.xml.helper.Namespace;
-import com.exactpro.epfast.template.xml.helper.TemplateNsXmlParent;
+import com.exactpro.epfast.template.xml.helper.NamespaceProvider;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -12,33 +12,34 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement(name = "templates", namespace = Namespace.XML_NAMESPACE)
-public class TemplatesXml implements Templates, TemplateNsXmlParent {
+public class TemplatesXml implements Templates, NamespaceProvider {
 
-    private String ns;
+    private String nsXml;
 
-    private String templateNs;
+    private String templateNsXml;
 
     private Dictionary dictionary;
 
     private List<Template> templates;
 
+    @Override
     public String getNs() {
-        return ns;
+        return nsXml;
     }
 
     @XmlAttribute(name = "ns")
-    public void setNs(String ns) {
-        this.ns = ns;
+    public void setNsXml(String nsXml) {
+        this.nsXml = nsXml;
     }
 
     @Override
     public String getTemplateNs() {
-        return templateNs;
+        return templateNsXml;
     }
 
     @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        this.templateNs = templateNs;
+    public void setTemplateNsXml(String templateNsXml) {
+        this.templateNsXml = templateNsXml;
     }
 
     public Dictionary getDictionary() {

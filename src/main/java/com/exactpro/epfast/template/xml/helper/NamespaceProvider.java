@@ -1,5 +1,9 @@
 package com.exactpro.epfast.template.xml.helper;
 
-public interface TemplateNsXmlParent {
+public interface NamespaceProvider {
+
     String getTemplateNs();
+
+    String getNs();
+
 }

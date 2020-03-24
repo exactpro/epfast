@@ -2,7 +2,7 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.FieldInstruction;
 import com.exactpro.epfast.template.Identity;
-import com.exactpro.epfast.template.xml.helper.AfterUnmarshal;
+import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
 import com.exactpro.epfast.template.xml.helper.NsXmlParent;
 import com.exactpro.epfast.template.xml.helper.Presence;
 
@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
 
-    private AfterUnmarshal.ApplicationIdentity fieldId = new AfterUnmarshal.ApplicationIdentity();
+    private ApplicationIdentity fieldId = new ApplicationIdentity();
 
     private Presence presence = Presence.MANDATORY;
 

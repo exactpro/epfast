@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class SequenceXml extends InstructionsXml implements Sequence, InstructionXml, NsXmlParent {
 
-    private AfterUnmarshal.ApplicationIdentity fieldId = new AfterUnmarshal.ApplicationIdentity();
+    private ApplicationIdentity fieldId = new ApplicationIdentity();
 
     private Presence presence = Presence.MANDATORY;
 
