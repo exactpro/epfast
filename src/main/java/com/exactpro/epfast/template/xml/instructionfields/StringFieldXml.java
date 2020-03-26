@@ -1,29 +1,29 @@
 package com.exactpro.epfast.template.xml.instructionfields;
 
 import com.exactpro.epfast.template.*;
-import com.exactpro.epfast.template.xml.IdentityXml;
+import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
 import com.exactpro.epfast.template.xml.helper.InstructionXml;
-import com.exactpro.epfast.template.xml.helper.Charset;
+import com.exactpro.epfast.template.xml.helper.CharsetXml;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class StringFieldXml extends FieldInstrContent implements InstructionXml {
 
-    private Charset charset = Charset.ASCII;
+    private CharsetXml charset = CharsetXml.ASCII;
 
-    private IdentityXml lengthFieldId = new IdentityXml();
+    private ApplicationIdentity lengthFieldId = new ApplicationIdentity(null);
 
-    public Charset getCharset() {
+    public CharsetXml getCharset() {
         return charset;
     }
 
     @XmlAttribute(name = "charset")
-    public void setCharset(Charset charset) {
+    public void setCharset(CharsetXml charset) {
         this.charset = charset;
     }
 
-    public IdentityXml getLengthFieldId() {
+    public ApplicationIdentity getLengthFieldId() {
         return lengthFieldId;
     }
 
@@ -83,9 +83,13 @@ public class StringFieldXml extends FieldInstrContent implements InstructionXml 
 
     @Override
     public Instruction toInstruction() {
-        if (charset == Charset.ASCII) {
-            return new AsciiString();
+        switch (charset) {
+            case ASCII:
+                return new AsciiString();
+            case UNICODE:
+                return new UnicodeString();
+            default:
+                throw new IllegalArgumentException("Illegal Charset Value");
         }
-        return new UnicodeString();
     }
 }

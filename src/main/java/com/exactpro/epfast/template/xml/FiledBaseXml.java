@@ -6,11 +6,11 @@ import com.exactpro.epfast.template.xml.operatorfields.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
-public class FieldOpXml {
+public class FiledBaseXml {
 
-    private InitialValueXml operator;
+    private FieldOperatorXml operator;
 
-    public InitialValueXml getOperator() {
+    public FieldOperatorXml getOperator() {
         return operator;
     }
 
@@ -22,7 +22,7 @@ public class FieldOpXml {
         @XmlElement(name = "delta", type = DeltaXml.class, namespace = Namespace.XML_NAMESPACE),
         @XmlElement(name = "tail", type = TailXml.class, namespace = Namespace.XML_NAMESPACE)
     })
-    public void setOperator(InitialValueXml operator) {
+    public void setOperator(FieldOperatorXml operator) {
         this.operator = operator;
     }
 }

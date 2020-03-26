@@ -1,15 +1,16 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.LengthField;
+import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class LengthXml extends FieldOpXml implements LengthField {
+public class LengthXml extends FiledBaseXml implements LengthField {
 
-    private IdentityXml fieldId = new IdentityXml();
+    private ApplicationIdentity fieldId = new ApplicationIdentity(null);
 
     @Override
-    public IdentityXml getFieldId() {
+    public ApplicationIdentity getFieldId() {
         return fieldId;
     }
 

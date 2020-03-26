@@ -1,7 +1,7 @@
 package com.exactpro.epfast.template.xml.operatorfields;
 
 import com.exactpro.epfast.template.IncrementOperator;
-import com.exactpro.epfast.template.xml.OpContextXml;
+import com.exactpro.epfast.template.xml.DictionaryFieldOperatorXml;
 
-public class IncrementXml extends OpContextXml implements IncrementOperator {
+public class IncrementXml extends DictionaryFieldOperatorXml implements IncrementOperator {
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @XmlRootElement(name = "templates", namespace = Namespace.XML_NAMESPACE)
 public class TemplatesXml implements Templates, NamespaceProvider {
 
-    private String nsXml;
+    private String applicationNs;
 
     private String templateNsXml;
 
@@ -24,12 +24,12 @@ public class TemplatesXml implements Templates, NamespaceProvider {
 
     @Override
     public String getNs() {
-        return nsXml;
+        return applicationNs;
     }
 
     @XmlAttribute(name = "ns")
-    public void setNsXml(String nsXml) {
-        this.nsXml = nsXml;
+    public void setApplicationNs(String ns) {
+        this.applicationNs = ns;
     }
 
     @Override
@@ -38,8 +38,8 @@ public class TemplatesXml implements Templates, NamespaceProvider {
     }
 
     @XmlAttribute(name = "templateNs")
-    public void setTemplateNsXml(String templateNsXml) {
-        this.templateNsXml = templateNsXml;
+    public void setTemplateNsXml(String templateNs) {
+        this.templateNsXml = templateNs;
     }
 
     public Dictionary getDictionary() {

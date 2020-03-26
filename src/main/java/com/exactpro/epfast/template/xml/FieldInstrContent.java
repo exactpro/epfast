@@ -2,18 +2,21 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.FieldInstruction;
 import com.exactpro.epfast.template.Identity;
+import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
-import com.exactpro.epfast.template.xml.helper.NsXmlParent;
-import com.exactpro.epfast.template.xml.helper.Presence;
+import com.exactpro.epfast.template.xml.helper.NamespaceProvider;
+import com.exactpro.epfast.template.xml.helper.PresenceXml;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
+public class FieldInstrContent extends FiledBaseXml implements FieldInstruction {
 
-    private ApplicationIdentity fieldId = new ApplicationIdentity();
+    private NamespaceProvider parentNsProvider;
 
-    private Presence presence = Presence.MANDATORY;
+    private ApplicationIdentity fieldId = new ApplicationIdentity(parentNsProvider);
+
+    private PresenceXml presence = PresenceXml.MANDATORY;
 
     @Override
     public Identity getFieldId() {
@@ -36,18 +39,22 @@ public class FieldInstrContent extends FieldOpXml implements FieldInstruction {
     }
 
     @XmlAttribute(name = "presence")
-    public void setPresence(Presence presence) {
+    public void setPresence(PresenceXml presence) {
         this.presence = presence;
     }
 
     @Override
     public boolean isOptional() {
-        return presence == Presence.OPTIONAL;
+        return presence == PresenceXml.OPTIONAL;
+    }
+
+    public Instruction toInstruction() {
+        return this;
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NsXmlParent) {
-            fieldId.parentNs = ((NsXmlParent) parent).getNs();
+        if (parent instanceof NamespaceProvider) {
+            parentNsProvider = (NamespaceProvider) parent;
         }
     }
 }

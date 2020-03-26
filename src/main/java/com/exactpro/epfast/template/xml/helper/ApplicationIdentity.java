@@ -2,15 +2,17 @@ package com.exactpro.epfast.template.xml.helper;
 
 public class ApplicationIdentity extends AbstractIdentity {
 
-    public String parentNs;
+    public ApplicationIdentity(NamespaceProvider nsProvider) {
+        super(nsProvider);
+    }
 
     @Override
     public String getNamespace() {
         if (namespace != null) {
             return namespace;
         }
-        if (parentNs != null) {
-            return parentNs;
+        if (getNsProvider() != null) {
+            return getNsProvider().getNs();
         }
         return "";
     }

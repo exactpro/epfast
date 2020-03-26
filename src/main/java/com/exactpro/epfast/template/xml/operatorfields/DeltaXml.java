@@ -1,7 +1,7 @@
 package com.exactpro.epfast.template.xml.operatorfields;
 
 import com.exactpro.epfast.template.DeltaOperator;
-import com.exactpro.epfast.template.xml.OpContextXml;
+import com.exactpro.epfast.template.xml.DictionaryFieldOperatorXml;
 
-public class DeltaXml extends OpContextXml implements DeltaOperator {
+public class DeltaXml extends DictionaryFieldOperatorXml implements DeltaOperator {
 }

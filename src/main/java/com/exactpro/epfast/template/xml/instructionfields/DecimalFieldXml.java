@@ -2,7 +2,7 @@ package com.exactpro.epfast.template.xml.instructionfields;
 
 import com.exactpro.epfast.template.*;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
-import com.exactpro.epfast.template.xml.FieldOpXml;
+import com.exactpro.epfast.template.xml.FiledBaseXml;
 import com.exactpro.epfast.template.xml.helper.InstructionXml;
 import com.exactpro.epfast.template.xml.helper.Namespace;
 
@@ -10,25 +10,25 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class DecimalFieldXml extends FieldInstrContent implements InstructionXml {
 
-    private FieldOpXml exponent;
+    private FiledBaseXml exponent;
 
-    private FieldOpXml mantissa;
+    private FiledBaseXml mantissa;
 
-    public FieldOpXml getExponent() {
+    public FiledBaseXml getExponent() {
         return exponent;
     }
 
     @XmlElement(name = "exponent", namespace = Namespace.XML_NAMESPACE)
-    public void setExponent(FieldOpXml exponent) {
+    public void setExponent(FiledBaseXml exponent) {
         this.exponent = exponent;
     }
 
-    public FieldOpXml getMantissa() {
+    public FiledBaseXml getMantissa() {
         return mantissa;
     }
 
     @XmlElement(name = "mantissa", namespace = Namespace.XML_NAMESPACE)
-    public void setMantissa(FieldOpXml mantissa) {
+    public void setMantissa(FiledBaseXml mantissa) {
         this.mantissa = mantissa;
     }
 

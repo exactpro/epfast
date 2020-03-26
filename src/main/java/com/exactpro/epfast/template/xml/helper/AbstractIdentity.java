@@ -10,6 +10,16 @@ public abstract class AbstractIdentity implements Identity {
 
     private String auxiliaryId;
 
+    private final NamespaceProvider nsProvider;
+
+    protected AbstractIdentity(NamespaceProvider nsProvider) {
+        this.nsProvider = nsProvider;
+    }
+
+    public NamespaceProvider getNsProvider() {
+        return nsProvider;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

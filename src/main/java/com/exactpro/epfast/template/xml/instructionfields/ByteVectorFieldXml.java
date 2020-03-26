@@ -1,19 +1,18 @@
 package com.exactpro.epfast.template.xml.instructionfields;
 
 import com.exactpro.epfast.template.ByteVectorField;
-import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.xml.FieldInstrContent;
-import com.exactpro.epfast.template.xml.IdentityXml;
+import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
 import com.exactpro.epfast.template.xml.helper.InstructionXml;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class ByteVectorXml extends FieldInstrContent implements ByteVectorField, InstructionXml {
+public class ByteVectorFieldXml extends FieldInstrContent implements ByteVectorField, InstructionXml {
 
-    private IdentityXml lengthFieldId = new IdentityXml();
+    private ApplicationIdentity lengthFieldId = new ApplicationIdentity(null);
 
     @Override
-    public IdentityXml getLengthFieldId() {
+    public ApplicationIdentity getLengthFieldId() {
         return lengthFieldId;
     }
 
@@ -30,10 +29,5 @@ public class ByteVectorXml extends FieldInstrContent implements ByteVectorField,
     @XmlAttribute(name = "lengthId")
     public void setId(String id) {
         this.lengthFieldId.setAuxiliaryId(id);
-    }
-
-    @Override
-    public Instruction toInstruction() {
-        return this;
     }
 }

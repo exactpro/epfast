@@ -5,7 +5,7 @@ import com.exactpro.epfast.template.xml.helper.Namespace;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class OpContextXml extends InitialValueXml {
+public class DictionaryFieldOperatorXml extends FieldOperatorXml {
 
     private Dictionary dictionary;
 

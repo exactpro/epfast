@@ -11,11 +11,13 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class SequenceXml extends InstructionsXml implements Sequence, InstructionXml, NsXmlParent {
+public class SequenceFieldXml extends InstructionsXml implements Sequence, InstructionXml, NsXmlParent {
 
-    private ApplicationIdentity fieldId = new ApplicationIdentity();
+    private NamespaceProvider parentNsProvider;
 
-    private Presence presence = Presence.MANDATORY;
+    private ApplicationIdentity fieldId = new ApplicationIdentity(parentNsProvider);
+
+    private PresenceXml presence = PresenceXml.MANDATORY;
 
     private Dictionary dictionary;
 
@@ -49,7 +51,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
     }
 
     @XmlAttribute(name = "presence")
-    public void setPresence(Presence presence) {
+    public void setPresence(PresenceXml presence) {
         this.presence = presence;
     }
 
@@ -84,7 +86,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
 
     @Override
     public boolean isOptional() {
-        return presence.equals(Presence.OPTIONAL);
+        return presence.equals(PresenceXml.OPTIONAL);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class SequenceXml extends InstructionsXml implements Sequence, Instructio
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NsXmlParent) {
-            fieldId.parentNs = ((NsXmlParent) parent).getNs();
+            parentNsProvider = (NamespaceProvider) parent;
         }
     }
 }

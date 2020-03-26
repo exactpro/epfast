@@ -4,7 +4,7 @@ import com.exactpro.epfast.template.FieldOperator;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class InitialValueXml implements FieldOperator {
+public class FieldOperatorXml implements FieldOperator {
 
     private String value;
 

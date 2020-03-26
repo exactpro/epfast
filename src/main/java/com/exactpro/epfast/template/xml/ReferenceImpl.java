@@ -6,11 +6,11 @@ public class ReferenceImpl implements Reference {
 
     private final String name;
 
-    private final String ns;
+    private final String applicationNs;
 
     public ReferenceImpl(String name, String ns) {
         this.name = name;
-        this.ns = ns;
+        this.applicationNs = ns;
     }
 
     @Override
@@ -20,6 +20,6 @@ public class ReferenceImpl implements Reference {
 
     @Override
     public String getNamespace() {
-        return ns;
+        return applicationNs;
     }
 }

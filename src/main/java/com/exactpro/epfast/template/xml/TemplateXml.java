@@ -13,9 +13,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "template", namespace = Namespace.XML_NAMESPACE)
 public class TemplateXml extends InstructionsXml implements Template, NsXmlParent {
 
-    private TemplateIdentity templateId = new TemplateIdentity();
+    private NamespaceProvider parentNsProvider;
 
-    private String ns;
+    private TemplateIdentity templateId = new TemplateIdentity(parentNsProvider);
+
+    private String applicationNs;
 
     private Dictionary dictionary;
 
@@ -43,12 +45,12 @@ public class TemplateXml extends InstructionsXml implements Template, NsXmlParen
 
     @Override
     public String getNs() {
-        return ns;
+        return applicationNs;
     }
 
     @XmlAttribute(name = "ns")
-    public void setNs(String ns) {
-        this.ns = ns;
+    public void setApplicationNs(String ns) {
+        this.applicationNs = ns;
     }
 
     public Dictionary getDictionary() {
@@ -72,7 +74,7 @@ public class TemplateXml extends InstructionsXml implements Template, NsXmlParen
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NamespaceProvider) {
-            templateId.parentTemplateNs = ((NamespaceProvider) parent).getTemplateNs();
+            parentNsProvider = (NamespaceProvider) parent;
         }
     }
 }
