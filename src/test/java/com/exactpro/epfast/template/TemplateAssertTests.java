@@ -6,6 +6,8 @@ import com.exactpro.epfast.template.simple.Reference;
 import com.exactpro.epfast.template.simple.Template;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 class TemplateAssertTests {
 
     private Template temp = new Template();
@@ -32,12 +34,9 @@ class TemplateAssertTests {
     }
 
     @Test
-    void testTemplateEquality() {
+    void testTemplateAssert() {
         TemplateAssert.assertThat(temp).isSameTemplateAs(temp);
-        try {
-            TemplateAssert.assertThat(temp).isSameTemplateAs(otherTemp);
-        } catch (AssertionError error) {
-            System.out.print(error.getMessage() + "\n");
-        }
+        assertThatThrownBy(() -> TemplateAssert.assertThat(temp).isSameTemplateAs(otherTemp))
+            .isInstanceOf(AssertionError.class);
     }
 }

@@ -12,8 +12,8 @@ group = "com.exactpro"
 version = "0.1-SNAPSHOT"
 
 allprojects {
-    apply(plugin="java")
-    apply(plugin="checkstyle")
+    apply(plugin = "java")
+    apply(plugin = "checkstyle")
 
     repositories {
         mavenCentral()
@@ -42,8 +42,8 @@ allprojects {
 
 dependencies {
     implementation("io.netty:netty-all:$nettyVersion")
-    implementation("org.assertj:assertj-core:$assertjVersion")
 
+    testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation(kotlin("stdlib-jdk8"))
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
 
