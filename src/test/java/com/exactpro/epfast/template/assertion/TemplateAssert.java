@@ -5,7 +5,7 @@ import org.assertj.core.api.AbstractAssert;
 
 import java.util.Objects;
 
-import static com.exactpro.epfast.template.assertion.InstrEqualityChecker.areEqualInstructions;
+import static com.exactpro.epfast.template.assertion.InstrEqualityChecker.areEqualInstructionLists;
 
 public class TemplateAssert extends AbstractAssert<TemplateAssert, Template> {
 
@@ -21,8 +21,8 @@ public class TemplateAssert extends AbstractAssert<TemplateAssert, Template> {
         isNotNull();
         if (!areEqualReferences(actual.getTypeRef(), template.getTypeRef()) ||
             !areEqualIdentities(actual.getTemplateId(), template.getTemplateId()) ||
-            !areEqualInstructions(actual.getInstructions(), template.getInstructions())) {
-            failWithMessage("Not The Same Template");
+            !areEqualInstructionLists(actual.getInstructions(), template.getInstructions())) {
+            failWithMessage("FAST templates aren't equal.");
         }
         return this;
     }

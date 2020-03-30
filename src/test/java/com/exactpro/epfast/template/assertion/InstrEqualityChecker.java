@@ -10,7 +10,7 @@ import static com.exactpro.epfast.template.assertion.TemplateAssert.areEqualRefe
 
 public class InstrEqualityChecker {
 
-    static boolean areEqualInstructions(List<? extends Instruction> actual, List<? extends Instruction> expected) {
+    static boolean areEqualInstructionLists(List<? extends Instruction> actual, List<? extends Instruction> expected) {
         if (actual == expected) {
             return true;
         }
@@ -136,13 +136,13 @@ public class InstrEqualityChecker {
     private static boolean areEqual(Group actual, Group expected) {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualReferences(actual.getTypeRef(), expected.getTypeRef()) &&
-            areEqualInstructions(actual.getInstructions(), expected.getInstructions());
+            areEqualInstructionLists(actual.getInstructions(), expected.getInstructions());
     }
 
     private static boolean areEqual(Sequence actual, Sequence expected) {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualReferences(actual.getTypeRef(), expected.getTypeRef()) &&
-            areEqualInstructions(actual.getInstructions(), expected.getInstructions()) &&
+            areEqualInstructionLists(actual.getInstructions(), expected.getInstructions()) &&
             (actual.getLength() == expected.getLength() ||
                 (areEqualIdentities(actual.getLength().getFieldId(), expected.getLength().getFieldId()) &&
                     areEqualOperators(actual.getLength().getOperator(), expected.getLength().getOperator())));

@@ -43,8 +43,8 @@ allprojects {
 dependencies {
     implementation("io.netty:netty-all:$nettyVersion")
 
-    testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation(kotlin("stdlib-jdk8"))
+    testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")

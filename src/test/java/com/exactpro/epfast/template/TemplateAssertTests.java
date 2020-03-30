@@ -10,33 +10,36 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TemplateAssertTests {
 
-    private Template temp = new Template();
+    private Template template;
 
-    private Template otherTemp = new Template();
+    private Template otherTemplate;
 
     public TemplateAssertTests() {
-        Reference ref = new Reference();
-        Reference otherRef = new Reference();
-        Identity id = new Identity();
-        Identity otherId = new Identity();
+        template = new Template();
+        otherTemplate = new Template();
 
-        ref.setNamespace("namespace");
-        otherRef.setNamespace("otherNamespace");
-        id.setName("name");
-        otherId.setName("otherName");
-        id.setAuxiliaryId("ID");
-        otherId.setAuxiliaryId("otherID");
+        Reference reference = new Reference();
+        Reference otherReference = new Reference();
+        Identity identity = new Identity();
+        Identity otherIdentity = new Identity();
 
-        temp.setTypeRef(ref);
-        otherTemp.setTypeRef(otherRef);
-        temp.setTemplateId(id);
-        otherTemp.setTemplateId(otherId);
+        reference.setNamespace("namespace");
+        otherReference.setNamespace("otherNamespace");
+        identity.setName("name");
+        otherIdentity.setName("otherName");
+        identity.setAuxiliaryId("ID");
+        otherIdentity.setAuxiliaryId("otherID");
+
+        template.setTypeRef(reference);
+        otherTemplate.setTypeRef(otherReference);
+        template.setTemplateId(identity);
+        otherTemplate.setTemplateId(otherIdentity);
     }
 
     @Test
     void testTemplateAssert() {
-        TemplateAssert.assertThat(temp).isEqualToTemplate(temp);
-        assertThatThrownBy(() -> TemplateAssert.assertThat(temp).isEqualToTemplate(otherTemp))
+        TemplateAssert.assertThat(template).isEqualToTemplate(template);
+        assertThatThrownBy(() -> TemplateAssert.assertThat(template).isEqualToTemplate(otherTemplate))
             .isInstanceOf(AssertionError.class);
     }
 }
