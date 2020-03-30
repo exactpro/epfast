@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "template", namespace = Namespace.XML_NAMESPACE)
-public class TemplateXml extends InstructionsXml implements Template, NsXmlParent {
+public class TemplateXml extends InstructionsXml implements Template, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -33,14 +33,19 @@ public class TemplateXml extends InstructionsXml implements Template, NsXmlParen
         this.templateId.setName(name);
     }
 
-    @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        this.templateId.setNamespace(templateNs);
-    }
+//    @XmlAttribute(name = "templateNs")
+//    public void setTemplateNs(String templateNs) {
+//        this.templateId.setNamespace(templateNs);
+//    }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {
         this.templateId.setAuxiliaryId(id);
+    }
+
+    @Override
+    public String getTemplateNs() {
+        return templateId.getNamespace();
     }
 
     @Override

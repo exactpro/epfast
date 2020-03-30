@@ -12,7 +12,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class GroupFieldXml extends InstructionsXml implements Group, InstructionXml, NsXmlParent {
+public class GroupFieldXml extends InstructionsXml implements Group, InstructionXml, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -30,6 +30,11 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     }
 
     @Override
+    public String getTemplateNs() {
+        return null;
+    }
+
+    @Override
     public String getNs() {
         return fieldId.getNamespace();
     }
@@ -39,10 +44,10 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
         this.fieldId.setName(name);
     }
 
-    @XmlAttribute(name = "ns")
-    public void setNs(String ns) {
-        this.fieldId.setNamespace(ns);
-    }
+//    @XmlAttribute(name = "ns")
+//    public void setNs(String ns) {
+//        this.fieldId.setNamespace(ns);
+//    }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {
@@ -84,7 +89,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NsXmlParent) {
+        if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;
         }
     }

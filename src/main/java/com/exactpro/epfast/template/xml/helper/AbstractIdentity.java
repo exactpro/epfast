@@ -6,8 +6,6 @@ public abstract class AbstractIdentity implements Identity {
 
     private String name;
 
-    protected String namespace;
-
     private String auxiliaryId;
 
     private final NamespaceProvider nsProvider;
@@ -22,10 +20,6 @@ public abstract class AbstractIdentity implements Identity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setNamespace(String namespace) {
-        this.namespace = namespace;
     }
 
     public void setAuxiliaryId(String auxiliaryId) {

@@ -28,10 +28,10 @@ public class FieldInstrContent extends FiledBaseXml implements FieldInstruction 
         this.fieldId.setName(name);
     }
 
-    @XmlAttribute(name = "ns")
-    public void setNs(String ns) {
-        this.fieldId.setNamespace(ns);
-    }
+//    @XmlAttribute(name = "ns")
+//    public void setNs(String ns) {
+//        this.fieldId.setNamespace(ns);
+//    }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {

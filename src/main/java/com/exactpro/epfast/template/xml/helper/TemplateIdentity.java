@@ -8,9 +8,9 @@ public class TemplateIdentity extends AbstractIdentity {
 
     @Override
     public String getNamespace() {
-        if (namespace != null) {
-            return namespace;
-        }
+//        if (namespace != null) {
+//            return namespace;
+//        }
         if (getNsProvider() != null) {
             return getNsProvider().getNs();
         }

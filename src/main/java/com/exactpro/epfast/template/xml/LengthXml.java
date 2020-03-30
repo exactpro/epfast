@@ -19,10 +19,10 @@ public class LengthXml extends FiledBaseXml implements LengthField {
         this.fieldId.setName(name);
     }
 
-    @XmlAttribute(name = "namespace")
-    public void setNamespace(String templateNs) {
-        this.fieldId.setNamespace(templateNs);
-    }
+//    @XmlAttribute(name = "namespace")
+//    public void setNamespace(String templateNs) {
+//        this.fieldId.setNamespace(templateNs);
+//    }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {

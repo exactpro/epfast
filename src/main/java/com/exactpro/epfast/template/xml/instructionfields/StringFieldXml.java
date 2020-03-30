@@ -32,10 +32,10 @@ public class StringFieldXml extends FieldInstrContent implements InstructionXml 
         this.lengthFieldId.setName(name);
     }
 
-    @XmlAttribute(name = "lengthNamespace")
-    public void setNamespace(String templateNs) {
-        this.lengthFieldId.setNamespace(templateNs);
-    }
+//    @XmlAttribute(name = "lengthNamespace")
+//    public void setNamespace(String templateNs) {
+//        this.lengthFieldId.setNamespace(templateNs);
+//    }
 
     @XmlAttribute(name = "lengthId")
     public void setId(String id) {

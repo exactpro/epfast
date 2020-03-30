@@ -11,7 +11,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class SequenceFieldXml extends InstructionsXml implements Sequence, InstructionXml, NsXmlParent {
+public class SequenceFieldXml extends InstructionsXml implements Sequence, InstructionXml, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -31,6 +31,11 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
     }
 
     @Override
+    public String getTemplateNs() {
+        return null;
+    }
+
+    @Override
     public String getNs() {
         return fieldId.getNamespace();
     }
@@ -40,10 +45,10 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         this.fieldId.setName(name);
     }
 
-    @XmlAttribute(name = "ns")
-    public void setNs(String ns) {
-        this.fieldId.setNamespace(ns);
-    }
+//    @XmlAttribute(name = "ns")
+//    public void setNs(String ns) {
+//        this.fieldId.setNamespace(ns);
+//    }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {
@@ -95,7 +100,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NsXmlParent) {
+        if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;
         }
     }
