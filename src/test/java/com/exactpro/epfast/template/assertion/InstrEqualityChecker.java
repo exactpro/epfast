@@ -4,75 +4,73 @@ import com.exactpro.epfast.template.*;
 
 import java.util.List;
 
-import static com.exactpro.epfast.template.assertion.OpEqualityChecker.areSameOperators;
-import static com.exactpro.epfast.template.assertion.TemplateAssert.areSameIdentities;
-import static com.exactpro.epfast.template.assertion.TemplateAssert.areSameReferences;
+import static com.exactpro.epfast.template.assertion.OpEqualityChecker.areEqualOperators;
+import static com.exactpro.epfast.template.assertion.TemplateAssert.areEqualIdentities;
+import static com.exactpro.epfast.template.assertion.TemplateAssert.areEqualReferences;
 
 public class InstrEqualityChecker {
 
-    static boolean areSameInstructions(List<? extends Instruction> actual, List<? extends Instruction> instr) {
-        if (actual == instr) {
+    static boolean areEqualInstructions(List<? extends Instruction> actual, List<? extends Instruction> expected) {
+        if (actual == expected) {
             return true;
         }
-        if (actual.size() != instr.size()) {
+        if (actual.size() != expected.size()) {
             return false;
         }
 
         for (int i = 0; i < actual.size(); i++) {
 
             Instruction actualItem = actual.get(i);
-            Instruction instrItem = instr.get(i);
-            if (actualItem != instrItem) {
-                if (!actualItem.getClass().equals(instrItem.getClass())) {
-                    return false;
-                }
+            Instruction expectedItem = expected.get(i);
+            if (actualItem != expectedItem) {
 
-                if (actualItem instanceof TemplateRef) {
-                    if (!areEqual((TemplateRef) actualItem, (TemplateRef) instrItem)) {
+                if ((actualItem instanceof TemplateRef) && (expectedItem instanceof TemplateRef)) {
+                    if (!areEqual((TemplateRef) actualItem, (TemplateRef) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof Int32Field) {
-                    if (!areEqual((Int32Field) actualItem, (Int32Field) instrItem)) {
+                } else if ((actualItem instanceof Int32Field) && (expectedItem instanceof Int32Field)) {
+                    if (!areEqual((Int32Field) actualItem, (Int32Field) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof Int64Field) {
-                    if (!areEqual((Int64Field) actualItem, (Int64Field) instrItem)) {
+                } else if ((actualItem instanceof Int64Field) && (expectedItem instanceof Int64Field)) {
+                    if (!areEqual((Int64Field) actualItem, (Int64Field) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof UInt32Field) {
-                    if (!areEqual((UInt32Field) actualItem, (UInt32Field) instrItem)) {
+                } else if ((actualItem instanceof UInt32Field) && (expectedItem instanceof UInt32Field)) {
+                    if (!areEqual((UInt32Field) actualItem, (UInt32Field) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof UInt64Field) {
-                    if (!areEqual((UInt64Field) actualItem, (UInt64Field) instrItem)) {
+                } else if ((actualItem instanceof UInt64Field) && (expectedItem instanceof UInt64Field)) {
+                    if (!areEqual((UInt64Field) actualItem, (UInt64Field) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof AsciiStringField) {
-                    if (!areEqual((AsciiStringField) actualItem, (AsciiStringField) instrItem)) {
+                } else if ((actualItem instanceof AsciiStringField) && (expectedItem instanceof AsciiStringField)) {
+                    if (!areEqual((AsciiStringField) actualItem, (AsciiStringField) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof UnicodeStringField) {
-                    if (!areEqual((UnicodeStringField) actualItem, (UnicodeStringField) instrItem)) {
+                } else if ((actualItem instanceof UnicodeStringField) && (expectedItem instanceof UnicodeStringField)) {
+                    if (!areEqual((UnicodeStringField) actualItem, (UnicodeStringField) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof ByteVectorField) {
-                    if (!areEqual((ByteVectorField) actualItem, (ByteVectorField) instrItem)) {
+                } else if ((actualItem instanceof ByteVectorField) && (expectedItem instanceof ByteVectorField)) {
+                    if (!areEqual((ByteVectorField) actualItem, (ByteVectorField) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof CompoundDecimalField) {
-                    if (!areEqual((CompoundDecimalField) actualItem, (CompoundDecimalField) instrItem)) {
+                } else if ((actualItem instanceof CompoundDecimalField) &&
+                    (expectedItem instanceof CompoundDecimalField)) {
+                    if (!areEqual((CompoundDecimalField) actualItem, (CompoundDecimalField) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof SimpleDecimalField) {
-                    if (!areEqual((SimpleDecimalField) actualItem, (SimpleDecimalField) instrItem)) {
+                } else if ((actualItem instanceof SimpleDecimalField) && (expectedItem instanceof SimpleDecimalField)) {
+                    if (!areEqual((SimpleDecimalField) actualItem, (SimpleDecimalField) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof Group) {
-                    if (!areEqual((Group) actualItem, (Group) instrItem)) {
+                } else if ((actualItem instanceof Group) && (expectedItem instanceof Group)) {
+                    if (!areEqual((Group) actualItem, (Group) expectedItem)) {
                         return false;
                     }
-                } else if (actualItem instanceof Sequence) {
-                    if (!areEqual((Sequence) actualItem, (Sequence) instrItem)) {
+                } else if ((actualItem instanceof Sequence) && (expectedItem instanceof Sequence)) {
+                    if (!areEqual((Sequence) actualItem, (Sequence) expectedItem)) {
                         return false;
                     }
                 } else {
@@ -83,64 +81,75 @@ public class InstrEqualityChecker {
         return true;
     }
 
-    private static boolean areEqual(TemplateRef actual, TemplateRef instr) {
-        return areSameReferences(actual.getTemplateRef(), instr.getTemplateRef());
+    private static boolean areEqual(TemplateRef actual, TemplateRef expected) {
+        return areEqualReferences(actual.getTemplateRef(), expected.getTemplateRef());
     }
 
-    private static boolean areEqual(Int32Field actual, Int32Field instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getOperator(), instr.getOperator());
+    private static boolean areEqual(Int32Field actual, Int32Field expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getOperator(), expected.getOperator());
     }
 
-    private static boolean areEqual(Int64Field actual, Int64Field instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getOperator(), instr.getOperator());
+    private static boolean areEqual(Int64Field actual, Int64Field expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getOperator(), expected.getOperator());
     }
 
-    private static boolean areEqual(UInt32Field actual, UInt32Field instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getOperator(), instr.getOperator());
+    private static boolean areEqual(UInt32Field actual, UInt32Field expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getOperator(), expected.getOperator());
     }
 
-    private static boolean areEqual(UInt64Field actual, UInt64Field instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getOperator(), instr.getOperator());
+    private static boolean areEqual(UInt64Field actual, UInt64Field expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getOperator(), expected.getOperator());
     }
 
-    private static boolean areEqual(AsciiStringField actual, AsciiStringField instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getOperator(), instr.getOperator());
+    private static boolean areEqual(AsciiStringField actual, AsciiStringField expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getOperator(), expected.getOperator());
     }
 
-    private static boolean areEqual(UnicodeStringField actual, UnicodeStringField instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getOperator(), instr.getOperator()) &&
-            areSameIdentities(actual.getLengthFieldId(), instr.getLengthFieldId());
+    private static boolean areEqual(UnicodeStringField actual, UnicodeStringField expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getOperator(), expected.getOperator()) &&
+            areEqualIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
     }
 
-    private static boolean areEqual(ByteVectorField actual, ByteVectorField instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getOperator(), instr.getOperator()) &&
-            areSameIdentities(actual.getLengthFieldId(), instr.getLengthFieldId());
+    private static boolean areEqual(ByteVectorField actual, ByteVectorField expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getOperator(), expected.getOperator()) &&
+            areEqualIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
     }
 
-    private static boolean areEqual(CompoundDecimalField actual, CompoundDecimalField instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getExponent(), instr.getExponent()) &&
-            areSameOperators(actual.getMantissa(), instr.getMantissa());
+    private static boolean areEqual(CompoundDecimalField actual, CompoundDecimalField expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getExponent(), expected.getExponent()) &&
+            areEqualOperators(actual.getMantissa(), expected.getMantissa());
     }
 
-    private static boolean areEqual(SimpleDecimalField actual, SimpleDecimalField instr) {
-        return areSameFieldInstructions(actual, instr) && areSameOperators(actual.getOperator(), instr.getOperator());
+    private static boolean areEqual(SimpleDecimalField actual, SimpleDecimalField expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualOperators(actual.getOperator(), expected.getOperator());
     }
 
-    private static boolean areEqual(Group actual, Group instr) {
-        return areSameFieldInstructions(actual, instr) && areSameReferences(actual.getTypeRef(), instr.getTypeRef()) &&
-            areSameInstructions(actual.getInstructions(), instr.getInstructions());
+    private static boolean areEqual(Group actual, Group expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualReferences(actual.getTypeRef(), expected.getTypeRef()) &&
+            areEqualInstructions(actual.getInstructions(), expected.getInstructions());
     }
 
-    private static boolean areEqual(Sequence actual, Sequence instr) {
-        return areSameFieldInstructions(actual, instr) && areSameReferences(actual.getTypeRef(), instr.getTypeRef()) &&
-            areSameInstructions(actual.getInstructions(), instr.getInstructions()) &&
-            (actual.getLength() == instr.getLength() ||
-                (areSameIdentities(actual.getLength().getFieldId(), instr.getLength().getFieldId()) &&
-                    areSameOperators(actual.getLength().getOperator(), instr.getLength().getOperator())));
+    private static boolean areEqual(Sequence actual, Sequence expected) {
+        return areEqualFieldInstructions(actual, expected) &&
+            areEqualReferences(actual.getTypeRef(), expected.getTypeRef()) &&
+            areEqualInstructions(actual.getInstructions(), expected.getInstructions()) &&
+            (actual.getLength() == expected.getLength() ||
+                (areEqualIdentities(actual.getLength().getFieldId(), expected.getLength().getFieldId()) &&
+                    areEqualOperators(actual.getLength().getOperator(), expected.getLength().getOperator())));
     }
 
-    private static boolean areSameFieldInstructions(FieldInstruction actual, FieldInstruction instr) {
-        return areSameIdentities(actual.getFieldId(), instr.getFieldId()) &&
-            actual.isOptional() == instr.isOptional();
+    private static boolean areEqualFieldInstructions(FieldInstruction actual, FieldInstruction expected) {
+        return areEqualIdentities(actual.getFieldId(), expected.getFieldId()) &&
+            actual.isOptional() == expected.isOptional();
     }
 }

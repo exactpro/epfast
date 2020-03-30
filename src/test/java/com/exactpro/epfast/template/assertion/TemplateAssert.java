@@ -5,7 +5,7 @@ import org.assertj.core.api.AbstractAssert;
 
 import java.util.Objects;
 
-import static com.exactpro.epfast.template.assertion.InstrEqualityChecker.areSameInstructions;
+import static com.exactpro.epfast.template.assertion.InstrEqualityChecker.areEqualInstructions;
 
 public class TemplateAssert extends AbstractAssert<TemplateAssert, Template> {
 
@@ -17,23 +17,23 @@ public class TemplateAssert extends AbstractAssert<TemplateAssert, Template> {
         return new TemplateAssert(actual);
     }
 
-    public TemplateAssert isSameTemplateAs(Template template) {
+    public TemplateAssert isEqualToTemplate(Template template) {
         isNotNull();
-        if (!areSameReferences(actual.getTypeRef(), template.getTypeRef()) ||
-            !areSameIdentities(actual.getTemplateId(), template.getTemplateId()) ||
-            !areSameInstructions(actual.getInstructions(), template.getInstructions())) {
+        if (!areEqualReferences(actual.getTypeRef(), template.getTypeRef()) ||
+            !areEqualIdentities(actual.getTemplateId(), template.getTemplateId()) ||
+            !areEqualInstructions(actual.getInstructions(), template.getInstructions())) {
             failWithMessage("Not The Same Template");
         }
         return this;
     }
 
-    static boolean areSameReferences(Reference actual, Reference ref) {
-        return actual == ref || (Objects.equals(actual.getName(), ref.getName()) &&
-            Objects.equals(actual.getNamespace(), ref.getNamespace()));
+    static boolean areEqualReferences(Reference actual, Reference expected) {
+        return actual == expected || (Objects.equals(actual.getName(), expected.getName()) &&
+            Objects.equals(actual.getNamespace(), expected.getNamespace()));
     }
 
-    static boolean areSameIdentities(Identity actual, Identity id) {
-        return actual == id || (areSameReferences(actual, id) &&
-            Objects.equals(actual.getAuxiliaryId(), id.getAuxiliaryId()));
+    static boolean areEqualIdentities(Identity actual, Identity expected) {
+        return areEqualReferences(actual, expected) &&
+            Objects.equals(actual.getAuxiliaryId(), expected.getAuxiliaryId());
     }
 }

@@ -35,8 +35,8 @@ class TemplateAssertTests {
 
     @Test
     void testTemplateAssert() {
-        TemplateAssert.assertThat(temp).isSameTemplateAs(temp);
-        assertThatThrownBy(() -> TemplateAssert.assertThat(temp).isSameTemplateAs(otherTemp))
+        TemplateAssert.assertThat(temp).isEqualToTemplate(temp);
+        assertThatThrownBy(() -> TemplateAssert.assertThat(temp).isEqualToTemplate(otherTemp))
             .isInstanceOf(AssertionError.class);
     }
 }
