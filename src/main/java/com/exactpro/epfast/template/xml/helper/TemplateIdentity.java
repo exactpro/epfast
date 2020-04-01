@@ -8,11 +8,8 @@ public class TemplateIdentity extends AbstractIdentity {
 
     @Override
     public String getNamespace() {
-//        if (namespace != null) {
-//            return namespace;
-//        }
-        if (getNsProvider() != null) {
-            return getNsProvider().getNs();
+        if (getNamespaceProvider() != null) {
+            return getNamespaceProvider().getTemplateNamespace();
         }
         return "";
     }

@@ -14,7 +14,7 @@ public abstract class AbstractIdentity implements Identity {
         this.nsProvider = nsProvider;
     }
 
-    public NamespaceProvider getNsProvider() {
+    protected NamespaceProvider getNamespaceProvider() {
         return nsProvider;
     }
 

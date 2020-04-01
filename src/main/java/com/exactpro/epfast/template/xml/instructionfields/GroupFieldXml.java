@@ -30,12 +30,12 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     }
 
     @Override
-    public String getTemplateNs() {
+    public String getTemplateNamespace() {
         return null;
     }
 
     @Override
-    public String getNs() {
+    public String getApplicationNamespace() {
         return fieldId.getNamespace();
     }
 
@@ -43,11 +43,6 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     public void setName(String name) {
         this.fieldId.setName(name);
     }
-
-//    @XmlAttribute(name = "ns")
-//    public void setNs(String ns) {
-//        this.fieldId.setNamespace(ns);
-//    }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {

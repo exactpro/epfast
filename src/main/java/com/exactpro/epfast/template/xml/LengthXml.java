@@ -20,23 +20,18 @@ public class LengthXml extends FiledBaseXml implements LengthField, NamespacePro
         this.fieldId.setName(name);
     }
 
-//    @XmlAttribute(name = "namespace")
-//    public void setNamespace(String templateNs) {
-//        this.fieldId.setNamespace(templateNs);
-//    }
-
     @XmlAttribute(name = "id")
     public void setId(String id) {
         this.fieldId.setAuxiliaryId(id);
     }
 
     @Override
-    public String getTemplateNs() {
+    public String getTemplateNamespace() {
         return null;
     }
 
     @Override
-    public String getNs() {
+    public String getApplicationNamespace() {
         return fieldId.getNamespace();
     }
 }

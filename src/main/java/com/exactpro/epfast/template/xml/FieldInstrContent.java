@@ -24,12 +24,12 @@ public class FieldInstrContent extends FiledBaseXml implements FieldInstruction,
     }
 
     @Override
-    public String getTemplateNs() {
+    public String getTemplateNamespace() {
         return null;
     }
 
     @Override
-    public String getNs() {
+    public String getApplicationNamespace() {
         return fieldId.getNamespace();
     }
 
@@ -37,11 +37,6 @@ public class FieldInstrContent extends FiledBaseXml implements FieldInstruction,
     public void setName(String name) {
         this.fieldId.setName(name);
     }
-
-//    @XmlAttribute(name = "ns")
-//    public void setNs(String ns) {
-//        this.fieldId.setNamespace(ns);
-//    }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {

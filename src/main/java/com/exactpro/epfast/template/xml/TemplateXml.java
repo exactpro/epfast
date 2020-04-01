@@ -33,23 +33,18 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         this.templateId.setName(name);
     }
 
-//    @XmlAttribute(name = "templateNs")
-//    public void setTemplateNs(String templateNs) {
-//        this.templateId.setNamespace(templateNs);
-//    }
-
     @XmlAttribute(name = "id")
     public void setId(String id) {
         this.templateId.setAuxiliaryId(id);
     }
 
     @Override
-    public String getTemplateNs() {
+    public String getTemplateNamespace() {
         return templateId.getNamespace();
     }
 
     @Override
-    public String getNs() {
+    public String getApplicationNamespace() {
         return applicationNs;
     }
 

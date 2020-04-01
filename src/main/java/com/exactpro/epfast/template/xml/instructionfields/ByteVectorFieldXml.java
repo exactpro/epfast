@@ -21,11 +21,6 @@ public class ByteVectorFieldXml extends FieldInstrContent implements ByteVectorF
         this.lengthFieldId.setName(name);
     }
 
-//    @XmlAttribute(name = "lengthNamespace")
-//    public void setNamespace(String templateNs) {
-//        this.lengthFieldId.setNamespace(templateNs);
-//    }
-
     @XmlAttribute(name = "lengthId")
     public void setId(String id) {
         this.lengthFieldId.setAuxiliaryId(id);

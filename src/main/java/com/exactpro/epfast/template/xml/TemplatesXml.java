@@ -23,7 +23,7 @@ public class TemplatesXml implements Templates, NamespaceProvider {
     private List<Template> templates;
 
     @Override
-    public String getNs() {
+    public String getApplicationNamespace() {
         return applicationNs;
     }
 
@@ -33,7 +33,7 @@ public class TemplatesXml implements Templates, NamespaceProvider {
     }
 
     @Override
-    public String getTemplateNs() {
+    public String getTemplateNamespace() {
         return templateNsXml;
     }
 
