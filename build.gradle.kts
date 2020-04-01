@@ -48,10 +48,10 @@ dependencies {
     // istack-commons-runtime should be auto-dependency of jaxb-impl, but isn't for unknown reason
     runtimeOnly("com.sun.istack:istack-commons-runtime:3.0.10")
 
+    testImplementation(kotlin("stdlib-jdk8"))
     // temporary. don't forget to remove
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.10.2")
     testImplementation("org.assertj:assertj-core:3.6.2")
-    testImplementation(kotlin("stdlib-jdk8"))
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
