@@ -10,7 +10,7 @@ import com.exactpro.epfast.template.xml.helper.PresenceXml;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldInstrContent extends FiledBaseXml implements FieldInstruction {
+public class FieldInstrContent extends FiledBaseXml implements FieldInstruction, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -21,6 +21,16 @@ public class FieldInstrContent extends FiledBaseXml implements FieldInstruction 
     @Override
     public Identity getFieldId() {
         return fieldId;
+    }
+
+    @Override
+    public String getTemplateNs() {
+        return null;
+    }
+
+    @Override
+    public String getNs() {
+        return fieldId.getNamespace();
     }
 
     @XmlAttribute(name = "name")
