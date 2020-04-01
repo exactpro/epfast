@@ -1,11 +1,10 @@
 package com.exactpro.epfast.template.assertion;
 
-import com.exactpro.epfast.template.*;
+import com.exactpro.epfast.template.Template;
 import org.assertj.core.api.AbstractAssert;
 
-import java.util.Objects;
-
-import static com.exactpro.epfast.template.assertion.InstrEqualityChecker.areEqualInstructionLists;
+import static com.exactpro.epfast.template.assertion.IdentitiesEquality.*;
+import static com.exactpro.epfast.template.assertion.InstructionsEquality.areEqualInstructionLists;
 
 public class TemplateAssert extends AbstractAssert<TemplateAssert, Template> {
 
@@ -25,15 +24,5 @@ public class TemplateAssert extends AbstractAssert<TemplateAssert, Template> {
             failWithMessage("FAST templates aren't equal.");
         }
         return this;
-    }
-
-    static boolean areEqualReferences(Reference actual, Reference expected) {
-        return actual == expected || (Objects.equals(actual.getName(), expected.getName()) &&
-            Objects.equals(actual.getNamespace(), expected.getNamespace()));
-    }
-
-    static boolean areEqualIdentities(Identity actual, Identity expected) {
-        return areEqualReferences(actual, expected) &&
-            Objects.equals(actual.getAuxiliaryId(), expected.getAuxiliaryId());
     }
 }

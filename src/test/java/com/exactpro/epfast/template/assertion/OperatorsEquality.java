@@ -4,9 +4,9 @@ import com.exactpro.epfast.template.*;
 
 import java.util.Objects;
 
-import static com.exactpro.epfast.template.assertion.TemplateAssert.areEqualReferences;
+import static com.exactpro.epfast.template.assertion.IdentitiesEquality.areEqualReferences;
 
-public class OpEqualityChecker {
+public class OperatorsEquality {
 
     static boolean areEqualOperators(FieldOperator actual, FieldOperator expected) {
         if (actual == expected) {

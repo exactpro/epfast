@@ -4,11 +4,10 @@ import com.exactpro.epfast.template.*;
 
 import java.util.List;
 
-import static com.exactpro.epfast.template.assertion.OpEqualityChecker.areEqualOperators;
-import static com.exactpro.epfast.template.assertion.TemplateAssert.areEqualIdentities;
-import static com.exactpro.epfast.template.assertion.TemplateAssert.areEqualReferences;
+import static com.exactpro.epfast.template.assertion.IdentitiesEquality.*;
+import static com.exactpro.epfast.template.assertion.OperatorsEquality.areEqualOperators;
 
-public class InstrEqualityChecker {
+public class InstructionsEquality {
 
     static boolean areEqualInstructionLists(List<? extends Instruction> actual, List<? extends Instruction> expected) {
         if (actual == expected) {
