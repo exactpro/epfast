@@ -6,7 +6,7 @@ public class Reference implements com.exactpro.epfast.template.Reference {
 
     private String name;
 
-    private String namespace;
+    private String namespace = DEFAULT_NAMESPACE;
 
     public Reference() {
     }
