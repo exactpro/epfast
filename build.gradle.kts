@@ -12,8 +12,8 @@ group = "com.exactpro"
 version = "0.1-SNAPSHOT"
 
 allprojects {
-    apply(plugin="java")
-    apply(plugin="checkstyle")
+    apply(plugin = "java")
+    apply(plugin = "checkstyle")
 
     repositories {
         mavenCentral()
@@ -51,7 +51,7 @@ dependencies {
     testImplementation(kotlin("stdlib-jdk8"))
     // temporary. don't forget to remove
     testImplementation("com.fasterxml.jackson.core:jackson-databind:2.10.2")
-    testImplementation("org.assertj:assertj-core:3.6.2")
+    testImplementation("org.assertj:assertj-core:$assertjVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
 
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
