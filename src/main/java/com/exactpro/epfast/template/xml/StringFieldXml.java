@@ -1,10 +1,6 @@
-package com.exactpro.epfast.template.xml.instructionfields;
+package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.*;
-import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
-import com.exactpro.epfast.template.xml.helper.InstructionXml;
-import com.exactpro.epfast.template.xml.helper.CharsetXml;
-import com.exactpro.epfast.template.xml.FieldInstrContent;
 
 import javax.xml.bind.annotation.XmlAttribute;
 

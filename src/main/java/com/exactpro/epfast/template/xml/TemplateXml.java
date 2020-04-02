@@ -3,19 +3,20 @@ package com.exactpro.epfast.template.xml;
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Identity;
 import com.exactpro.epfast.template.Template;
-import com.exactpro.epfast.template.xml.helper.*;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "template", namespace = Namespace.XML_NAMESPACE)
+@XmlRootElement(name = "template", namespace = NamespaceProvider.XML_NAMESPACE)
 public class TemplateXml extends InstructionsXml implements Template, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
     private TemplateIdentity templateId = new TemplateIdentity(parentNsProvider);
+
+    private String templateNs;
 
     private String applicationNs;
 
@@ -38,14 +39,28 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         this.templateId.setAuxiliaryId(id);
     }
 
+    @XmlAttribute(name = "templateNs")
+    public void setTemplateNs(String templateNs) {
+        this.templateNs = templateNs;
+    }
+
     @Override
     public String getTemplateNamespace() {
+        if (templateNs != null) {
+            return templateNs;
+        }
         return templateId.getNamespace();
     }
 
     @Override
     public String getApplicationNamespace() {
-        return applicationNs;
+        if (applicationNs != null) {
+            return applicationNs;
+        }
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return XML_NAMESPACE;
     }
 
     @XmlAttribute(name = "ns")
@@ -57,7 +72,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         return dictionary;
     }
 
-    @XmlElement(name = "dictionary", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "dictionary", namespace = XML_NAMESPACE)
     public void setDictionary(Dictionary dictionary) {
         this.dictionary = dictionary;
     }
@@ -67,7 +82,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
     public void setTypeRef(ReferenceImpl typeRef) {
         this.typeRef = typeRef;
     }

@@ -1,29 +1,27 @@
-package com.exactpro.epfast.template.xml.instructionfields;
+package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
+import com.exactpro.epfast.template.Group;
 import com.exactpro.epfast.template.Identity;
 import com.exactpro.epfast.template.Instruction;
-import com.exactpro.epfast.template.Sequence;
-import com.exactpro.epfast.template.xml.*;
-import com.exactpro.epfast.template.xml.helper.*;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class SequenceFieldXml extends InstructionsXml implements Sequence, InstructionXml, NamespaceProvider {
+public class GroupFieldXml extends InstructionsXml implements Group, InstructionXml, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
     private ApplicationIdentity fieldId = new ApplicationIdentity(parentNsProvider);
+
+    private String localNamespace;
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
     private Dictionary dictionary;
 
     private ReferenceImpl typeRef;
-
-    private LengthXml length;
 
     @Override
     public Identity getFieldId() {
@@ -37,7 +35,15 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     @Override
     public String getApplicationNamespace() {
+        if (localNamespace != null) {
+            return localNamespace;
+        }
         return fieldId.getNamespace();
+    }
+
+    @XmlAttribute(name = "namespace")
+    public void setNamespace(String namespace) {
+        this.localNamespace = namespace;
     }
 
     @XmlAttribute(name = "name")
@@ -59,7 +65,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         return dictionary;
     }
 
-    @XmlElement(name = "dictionary", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "dictionary", namespace = XML_NAMESPACE)
     public void setDictionary(Dictionary dictionary) {
         this.dictionary = dictionary;
     }
@@ -69,19 +75,9 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
     public void setTypeRef(ReferenceImpl typeRef) {
         this.typeRef = typeRef;
-    }
-
-    @Override
-    public LengthXml getLength() {
-        return length;
-    }
-
-    @XmlElement(name = "length", namespace = Namespace.XML_NAMESPACE)
-    public void setLength(LengthXml length) {
-        this.length = length;
     }
 
     @Override
@@ -100,4 +96,3 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         }
     }
 }
-

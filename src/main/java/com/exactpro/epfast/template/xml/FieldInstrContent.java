@@ -3,9 +3,6 @@ package com.exactpro.epfast.template.xml;
 import com.exactpro.epfast.template.FieldInstruction;
 import com.exactpro.epfast.template.Identity;
 import com.exactpro.epfast.template.Instruction;
-import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
-import com.exactpro.epfast.template.xml.helper.NamespaceProvider;
-import com.exactpro.epfast.template.xml.helper.PresenceXml;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -15,6 +12,8 @@ public class FieldInstrContent extends FiledBaseXml implements FieldInstruction,
     private NamespaceProvider parentNsProvider;
 
     private ApplicationIdentity fieldId = new ApplicationIdentity(parentNsProvider);
+
+    private String localNamespace;
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
@@ -30,7 +29,15 @@ public class FieldInstrContent extends FiledBaseXml implements FieldInstruction,
 
     @Override
     public String getApplicationNamespace() {
+        if (localNamespace != null) {
+            return localNamespace;
+        }
         return fieldId.getNamespace();
+    }
+
+    @XmlAttribute(name = "namespace")
+    public void setNamespace(String namespace) {
+        this.localNamespace = namespace;
     }
 
     @XmlAttribute(name = "name")

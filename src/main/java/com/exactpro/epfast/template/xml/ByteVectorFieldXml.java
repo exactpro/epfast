@@ -1,9 +1,6 @@
-package com.exactpro.epfast.template.xml.instructionfields;
+package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.ByteVectorField;
-import com.exactpro.epfast.template.xml.FieldInstrContent;
-import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
-import com.exactpro.epfast.template.xml.helper.InstructionXml;
 
 import javax.xml.bind.annotation.XmlAttribute;
 

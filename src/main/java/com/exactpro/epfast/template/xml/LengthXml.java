@@ -1,14 +1,14 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.LengthField;
-import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
-import com.exactpro.epfast.template.xml.helper.NamespaceProvider;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class LengthXml extends FiledBaseXml implements LengthField, NamespaceProvider {
 
     private ApplicationIdentity fieldId = new ApplicationIdentity(null);
+
+    private String localNamespace;
 
     @Override
     public ApplicationIdentity getFieldId() {
@@ -32,6 +32,14 @@ public class LengthXml extends FiledBaseXml implements LengthField, NamespacePro
 
     @Override
     public String getApplicationNamespace() {
+        if (localNamespace != null) {
+            return localNamespace;
+        }
         return fieldId.getNamespace();
+    }
+
+    @XmlAttribute(name = "namespace")
+    public void setNamespace(String namespace) {
+        this.localNamespace = namespace;
     }
 }

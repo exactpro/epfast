@@ -1,8 +1,6 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Reference;
-import com.exactpro.epfast.template.xml.helper.ApplicationIdentity;
-import com.exactpro.epfast.template.xml.helper.NamespaceProvider;
 
 import javax.xml.bind.Unmarshaller;
 
@@ -13,8 +11,6 @@ public class ReferenceImpl implements Reference {
     private final String applicationNs;
 
     private NamespaceProvider parentNsProvider;
-
-    private ApplicationIdentity fieldId = new ApplicationIdentity(parentNsProvider);
 
     public ReferenceImpl(String name, String ns) {
         this.name = name;
@@ -28,7 +24,10 @@ public class ReferenceImpl implements Reference {
 
     @Override
     public String getNamespace() {
-        return fieldId.getNamespace();
+        if (applicationNs != null) {
+            return applicationNs;
+        }
+        return parentNsProvider.getApplicationNamespace();
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {

@@ -3,20 +3,20 @@ package com.exactpro.epfast.template.xml;
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.Templates;
-import com.exactpro.epfast.template.xml.helper.Namespace;
-import com.exactpro.epfast.template.xml.helper.NamespaceProvider;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "templates", namespace = Namespace.XML_NAMESPACE)
+@XmlRootElement(name = "templates", namespace = NamespaceProvider.XML_NAMESPACE)
 public class TemplatesXml implements Templates, NamespaceProvider {
+
+    private NamespaceProvider parentNsProvider;
 
     private String applicationNs;
 
-    private String templateNsXml;
+    private String templateNs;
 
     private Dictionary dictionary;
 
@@ -24,7 +24,24 @@ public class TemplatesXml implements Templates, NamespaceProvider {
 
     @Override
     public String getApplicationNamespace() {
-        return applicationNs;
+        if (applicationNs != null) {
+            return applicationNs;
+        }
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return XML_NAMESPACE;
+    }
+
+    @Override
+    public String getTemplateNamespace() {
+        if (templateNs != null) {
+            return templateNs;
+        }
+        if (parentNsProvider != null) {
+            return parentNsProvider.getTemplateNamespace();
+        }
+        return XML_NAMESPACE;
     }
 
     @XmlAttribute(name = "ns")
@@ -32,21 +49,16 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         this.applicationNs = ns;
     }
 
-    @Override
-    public String getTemplateNamespace() {
-        return templateNsXml;
-    }
-
     @XmlAttribute(name = "templateNs")
-    public void setTemplateNsXml(String templateNs) {
-        this.templateNsXml = templateNs;
+    public void setTemplateNs(String templateNs) {
+        this.templateNs = templateNs;
     }
 
     public Dictionary getDictionary() {
         return dictionary;
     }
 
-    @XmlElement(name = "dictionary", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "dictionary", namespace = XML_NAMESPACE)
     public void setDictionary(Dictionary dictionary) {
         this.dictionary = dictionary;
     }
@@ -56,7 +68,7 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         return templates;
     }
 
-    @XmlElement(name = "template", type = TemplateXml.class, namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "template", type = TemplateXml.class, namespace = XML_NAMESPACE)
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
     }

@@ -1,4 +1,4 @@
-package com.exactpro.epfast.template.xml.helper;
+package com.exactpro.epfast.template.xml;
 
 public class TemplateIdentity extends AbstractIdentity {
 

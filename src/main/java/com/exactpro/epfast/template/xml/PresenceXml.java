@@ -1,4 +1,4 @@
-package com.exactpro.epfast.template.xml.helper;
+package com.exactpro.epfast.template.xml;
 
 import javax.xml.bind.annotation.XmlEnumValue;
 

@@ -1,8 +1,5 @@
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.xml.helper.Namespace;
-import com.exactpro.epfast.template.xml.operatorfields.*;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
@@ -15,12 +12,12 @@ public class FiledBaseXml {
     }
 
     @XmlElements({
-        @XmlElement(name = "constant", type = ConstantXml.class, namespace = Namespace.XML_NAMESPACE),
-        @XmlElement(name = "default", type = DefaultXml.class, namespace = Namespace.XML_NAMESPACE),
-        @XmlElement(name = "copy", type = CopyXml.class, namespace = Namespace.XML_NAMESPACE),
-        @XmlElement(name = "increment", type = IncrementXml.class, namespace = Namespace.XML_NAMESPACE),
-        @XmlElement(name = "delta", type = DeltaXml.class, namespace = Namespace.XML_NAMESPACE),
-        @XmlElement(name = "tail", type = TailXml.class, namespace = Namespace.XML_NAMESPACE)
+        @XmlElement(name = "constant", type = ConstantOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
+        @XmlElement(name = "default", type = DefaultOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
+        @XmlElement(name = "copy", type = CopyOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
+        @XmlElement(name = "increment", type = IncrementOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
+        @XmlElement(name = "delta", type = DeltaOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
+        @XmlElement(name = "tail", type = TailOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE)
     })
     public void setOperator(FieldOperatorXml operator) {
         this.operator = operator;

@@ -1,7 +1,6 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
-import com.exactpro.epfast.template.xml.helper.Namespace;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -15,7 +14,7 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
         return dictionary;
     }
 
-    @XmlElement(name = "dictionary", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "dictionary", namespace = NamespaceProvider.XML_NAMESPACE)
     public void setDictionary(Dictionary dictionary) {
         this.dictionary = dictionary;
     }
@@ -24,7 +23,7 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
         return dictionaryKey;
     }
 
-    @XmlElement(name = "nsKey", namespace = Namespace.XML_NAMESPACE)
+    @XmlElement(name = "nsKey", namespace = NamespaceProvider.XML_NAMESPACE)
     public void setDictionaryKey(ReferenceImpl dictionaryKey) {
         this.dictionaryKey = dictionaryKey;
     }
