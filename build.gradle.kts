@@ -4,6 +4,7 @@ val nettyVersion by extra { "4.1.45.Final" }
 
 plugins {
     kotlin("jvm") version "1.3.61"
+    id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
     `java-library`
     checkstyle
 }
@@ -14,6 +15,7 @@ version = "0.1-SNAPSHOT"
 allprojects {
     apply(plugin = "java")
     apply(plugin = "checkstyle")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     repositories {
         mavenCentral()

@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface Templates {
 
-    List<Template> getTemplates();
+    List<? extends Template> getTemplates();
 
 }
