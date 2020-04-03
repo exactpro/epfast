@@ -13,7 +13,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     private NamespaceProvider parentNsProvider;
 
-    private ApplicationIdentity fieldId = new ApplicationIdentity(parentNsProvider);
+    private ApplicationIdentity fieldId = new ApplicationIdentity(this);
 
     private String localNamespace;
 
@@ -40,7 +40,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         if (localNamespace != null) {
             return localNamespace;
         }
-        return fieldId.getNamespace();
+        return parentNsProvider.getApplicationNamespace();
     }
 
     @XmlAttribute(name = "namespace")

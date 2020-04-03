@@ -1,6 +1,7 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
+import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.Templates;
 
@@ -30,7 +31,7 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         if (parentNsProvider != null) {
             return parentNsProvider.getApplicationNamespace();
         }
-        return XML_NAMESPACE;
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
@@ -41,7 +42,7 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         if (parentNsProvider != null) {
             return parentNsProvider.getTemplateNamespace();
         }
-        return XML_NAMESPACE;
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @XmlAttribute(name = "ns")

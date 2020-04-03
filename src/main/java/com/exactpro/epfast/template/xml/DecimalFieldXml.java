@@ -6,25 +6,25 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class DecimalFieldXml extends FieldInstrContent implements InstructionXml {
 
-    private FiledBaseXml exponent;
+    private AbstractFieldXml exponent;
 
-    private FiledBaseXml mantissa;
+    private AbstractFieldXml mantissa;
 
-    public FiledBaseXml getExponent() {
+    public AbstractFieldXml getExponent() {
         return exponent;
     }
 
     @XmlElement(name = "exponent", namespace = XML_NAMESPACE)
-    public void setExponent(FiledBaseXml exponent) {
+    public void setExponent(AbstractFieldXml exponent) {
         this.exponent = exponent;
     }
 
-    public FiledBaseXml getMantissa() {
+    public AbstractFieldXml getMantissa() {
         return mantissa;
     }
 
     @XmlElement(name = "mantissa", namespace = XML_NAMESPACE)
-    public void setMantissa(FiledBaseXml mantissa) {
+    public void setMantissa(AbstractFieldXml mantissa) {
         this.mantissa = mantissa;
     }
 

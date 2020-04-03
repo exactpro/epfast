@@ -13,7 +13,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
 
     private NamespaceProvider parentNsProvider;
 
-    private ApplicationIdentity fieldId = new ApplicationIdentity(parentNsProvider);
+    private ApplicationIdentity fieldId = new ApplicationIdentity(this);
 
     private String localNamespace;
 
@@ -38,7 +38,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
         if (localNamespace != null) {
             return localNamespace;
         }
-        return fieldId.getNamespace();
+        return parentNsProvider.getApplicationNamespace();
     }
 
     @XmlAttribute(name = "namespace")

@@ -11,6 +11,6 @@ public class ApplicationIdentity extends AbstractIdentity {
         if (getNamespaceProvider() != null) {
             return getNamespaceProvider().getApplicationNamespace();
         }
-        return "";
+        return DEFAULT_NAMESPACE;
     }
 }

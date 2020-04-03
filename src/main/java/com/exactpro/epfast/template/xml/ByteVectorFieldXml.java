@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class ByteVectorFieldXml extends FieldInstrContent implements ByteVectorField, InstructionXml {
 
-    private ApplicationIdentity lengthFieldId = new ApplicationIdentity(null);
+    private ApplicationIdentity lengthFieldId = new ApplicationIdentity(this);
 
     @Override
     public ApplicationIdentity getLengthFieldId() {

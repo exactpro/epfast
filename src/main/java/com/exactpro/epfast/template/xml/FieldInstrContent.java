@@ -7,11 +7,11 @@ import com.exactpro.epfast.template.Instruction;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldInstrContent extends FiledBaseXml implements FieldInstruction, NamespaceProvider {
+public class FieldInstrContent extends AbstractFieldXml implements FieldInstruction, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
-    private ApplicationIdentity fieldId = new ApplicationIdentity(parentNsProvider);
+    private ApplicationIdentity fieldId = new ApplicationIdentity(this);
 
     private String localNamespace;
 
@@ -32,7 +32,7 @@ public class FieldInstrContent extends FiledBaseXml implements FieldInstruction,
         if (localNamespace != null) {
             return localNamespace;
         }
-        return fieldId.getNamespace();
+        return parentNsProvider.getApplicationNamespace();
     }
 
     @XmlAttribute(name = "namespace")

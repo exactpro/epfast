@@ -8,7 +8,7 @@ public class StringFieldXml extends FieldInstrContent implements InstructionXml 
 
     private CharsetXml charset = CharsetXml.ASCII;
 
-    private ApplicationIdentity lengthFieldId = new ApplicationIdentity(null);
+    private ApplicationIdentity lengthFieldId = new ApplicationIdentity(this);
 
     public CharsetXml getCharset() {
         return charset;

@@ -11,6 +11,6 @@ public class TemplateIdentity extends AbstractIdentity {
         if (getNamespaceProvider() != null) {
             return getNamespaceProvider().getTemplateNamespace();
         }
-        return "";
+        return DEFAULT_NAMESPACE;
     }
 }

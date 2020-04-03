@@ -2,6 +2,7 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Identity;
+import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
 
 import javax.xml.bind.Unmarshaller;
@@ -14,7 +15,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     private NamespaceProvider parentNsProvider;
 
-    private TemplateIdentity templateId = new TemplateIdentity(parentNsProvider);
+    private TemplateIdentity templateId = new TemplateIdentity(this);
 
     private String templateNs;
 
@@ -49,7 +50,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         if (templateNs != null) {
             return templateNs;
         }
-        return templateId.getNamespace();
+        return parentNsProvider.getTemplateNamespace();
     }
 
     @Override
@@ -60,7 +61,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         if (parentNsProvider != null) {
             return parentNsProvider.getApplicationNamespace();
         }
-        return XML_NAMESPACE;
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @XmlAttribute(name = "ns")
