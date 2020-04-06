@@ -33,6 +33,14 @@ page at http://checkstyle.sourceforge.net/config.html -->
        -->
     </module>
 
+
+    <module name="RegexpHeader">
+        <property
+                name="header"
+                value="^\W*\n^\W* Copyright (\d\d\d\d-\d\d\d\d)|(\d\d\d\d) Exactpro \(Exactpro Systems Limited\)\n^\W*^\W*\n Licensed under the Apache License, Version 2\.0 \(the &quot;License&quot;\);\n^\W* you may not use this file except in compliance with the License.\n^\W* You may obtain a copy of the License at\n^\W*\n^\W*     http://www.apache.org/licenses/LICENSE-2.0\n^\W*^\W*\nUnless required by applicable law or agreed to in writing, software\n^\W* distributed under the License is distributed on an &quot;AS IS&quot; BASIS,\n^\W* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n^\W* See the License for the specific language governing permissions and\n^\W* limitations under the License.\n^\W*"
+        />
+    </module>
+
     <!--
 
     LENGTH CHECKS FOR FILES
@@ -40,26 +48,28 @@ page at http://checkstyle.sourceforge.net/config.html -->
     -->
 
     <module name="FileLength">
-        <property name="max" value="3000" />
-        <property name="severity" value="warning" />
+        <property name="max" value="3000"/>
+        <property name="severity" value="warning"/>
     </module>
 
     <module name="NewlineAtEndOfFile">
-        <property name="lineSeparator" value="lf" />
+        <property name="lineSeparator" value="lf"/>
     </module>
 
     <module name="RegexpSingleline">
         <!-- Checks that FIXME is not used in comments.  TODO is preferred.
         -->
-        <property name="format" value="((//.*)|(\*.*))FIXME" />
-        <property name="message" value='TODO is preferred to FIXME.  e.g. "TODO: (ENG-123) -  Refactor when v2 is released."' />
+        <property name="format" value="((//.*)|(\*.*))FIXME"/>
+        <property name="message"
+                  value='TODO is preferred to FIXME.  e.g. "TODO: (ENG-123) -  Refactor when v2 is released."'/>
     </module>
 
     <module name="RegexpSingleline">
         <!-- Checks that TODOs are named with some basic formatting. Checks for the following pattern  TODO: (
         -->
-        <property name="format" value="((//.*)|(\*.*))TODO[^: (]" />
-        <property name="message" value='All TODOs should be named.  e.g. "TODO: (ENG-123) - Refactor when v2 is released."' />
+        <property name="format" value="((//.*)|(\*.*))TODO[^: (]"/>
+        <property name="message"
+                  value='All TODOs should be named.  e.g. "TODO: (ENG-123) - Refactor when v2 is released."'/>
     </module>
 
 
@@ -84,10 +94,10 @@ page at http://checkstyle.sourceforge.net/config.html -->
         </module>
 
         <module name="IllegalImport">
-            <property name="illegalPkgs" value="junit.framework" />
+            <property name="illegalPkgs" value="junit.framework"/>
         </module>
 
-        <module name="UnusedImports" />
+        <module name="UnusedImports"/>
 
         <!--
 
@@ -96,10 +106,10 @@ page at http://checkstyle.sourceforge.net/config.html -->
         -->
 
         <module name="MethodLength">
-            <property name="tokens" value="METHOD_DEF" />
-            <property name="max" value="300" />
-            <property name="countEmpty" value="false" />
-            <property name="severity" value="warning" />
+            <property name="tokens" value="METHOD_DEF"/>
+            <property name="max" value="300"/>
+            <property name="countEmpty" value="false"/>
+            <property name="severity" value="warning"/>
         </module>
 
         <!--
@@ -116,53 +126,53 @@ page at http://checkstyle.sourceforge.net/config.html -->
             <!-- Here the default checkstyle rule restricts package name parts to
               seven characters, this is not in line with common practice at Google.
             -->
-            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]{1,})*$" />
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]{1,})*$"/>
         </module>
 
         <module name="TypeNameCheck">
             <!-- Validates static, final fields against the
             expression "^[A-Z][a-zA-Z0-9]*$". -->
-            <metadata name="altname" value="TypeName" />
+            <metadata name="altname" value="TypeName"/>
         </module>
 
         <module name="ConstantNameCheck">
             <!-- Validates non-private, static, final fields against the supplied
             public/package final fields "^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$". -->
-            <metadata name="altname" value="ConstantName" />
-            <property name="applyToPublic" value="true" />
-            <property name="applyToProtected" value="true" />
-            <property name="applyToPackage" value="true" />
-            <property name="applyToPrivate" value="false" />
-            <property name="format" value="^([A-Z][A-Z0-9]*(_[A-Z0-9]+)*|FLAG_.*)$" />
+            <metadata name="altname" value="ConstantName"/>
+            <property name="applyToPublic" value="true"/>
+            <property name="applyToProtected" value="true"/>
+            <property name="applyToPackage" value="true"/>
+            <property name="applyToPrivate" value="false"/>
+            <property name="format" value="^([A-Z][A-Z0-9]*(_[A-Z0-9]+)*|FLAG_.*)$"/>
             <message key="name.invalidPattern"
-                     value="Variable ''{0}'' should be in ALL_CAPS (if it is a constant) or be private (otherwise)." />
+                     value="Variable ''{0}'' should be in ALL_CAPS (if it is a constant) or be private (otherwise)."/>
         </module>
 
         <module name="StaticVariableNameCheck">
             <!-- Validates static, non-final fields against the supplied
             expression "^[a-z][a-zA-Z0-9]*_?$". -->
-            <metadata name="altname" value="StaticVariableName" />
-            <property name="applyToPublic" value="true" />
-            <property name="applyToProtected" value="true" />
-            <property name="applyToPackage" value="true" />
-            <property name="applyToPrivate" value="true" />
-            <property name="format" value="^[a-z][a-zA-Z0-9]*_?$" />
+            <metadata name="altname" value="StaticVariableName"/>
+            <property name="applyToPublic" value="true"/>
+            <property name="applyToProtected" value="true"/>
+            <property name="applyToPackage" value="true"/>
+            <property name="applyToPrivate" value="true"/>
+            <property name="format" value="^[a-z][a-zA-Z0-9]*_?$"/>
         </module>
 
         <module name="MemberNameCheck">
             <!-- Validates non-static members against the supplied expression. -->
-            <metadata name="altname" value="MemberName" />
-            <property name="applyToPublic" value="true" />
-            <property name="applyToProtected" value="true" />
-            <property name="applyToPackage" value="true" />
-            <property name="applyToPrivate" value="true" />
-            <property name="format" value="^[a-z][a-zA-Z0-9]*$" />
+            <metadata name="altname" value="MemberName"/>
+            <property name="applyToPublic" value="true"/>
+            <property name="applyToProtected" value="true"/>
+            <property name="applyToPackage" value="true"/>
+            <property name="applyToPrivate" value="true"/>
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
         </module>
 
         <module name="MethodNameCheck">
             <!-- Validates identifiers for method names. -->
-            <metadata name="altname" value="MethodName" />
-            <property name="format" value="^[a-z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$" />
+            <metadata name="altname" value="MethodName"/>
+            <property name="format" value="^[a-z][a-zA-Z0-9]*(_[a-zA-Z0-9]+)*$"/>
         </module>
 
         <module name="ParameterName">
@@ -212,12 +222,12 @@ page at http://checkstyle.sourceforge.net/config.html -->
               else
             </pre>
             -->
-            <property name="option" value="same" />
+            <property name="option" value="same"/>
         </module>
 
         <module name="NeedBraces">
             <!-- Checks for braces around if and else blocks -->
-            <property name="tokens" value="LITERAL_IF, LITERAL_ELSE, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO" />
+            <property name="tokens" value="LITERAL_IF, LITERAL_ELSE, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO"/>
         </module>
 
         <module name="UpperEll">
@@ -231,7 +241,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
             some other variants which we don't publicized to promote consistency).
             -->
             <property name="reliefPattern"
-                      value="fall through|Fall through|fallthru|Fallthru|falls through|Falls through|fallthrough|Fallthrough|No break|NO break|no break|continue on" />
+                      value="fall through|Fall through|fallthru|Fallthru|falls through|Falls through|fallthrough|Fallthrough|No break|NO break|no break|continue on"/>
         </module>
 
 
@@ -255,7 +265,7 @@ page at http://checkstyle.sourceforge.net/config.html -->
 
         -->
 
-        <module name="GenericWhitespace" />
+        <module name="GenericWhitespace"/>
 
         <module name="WhitespaceAround">
             <!-- Checks that various tokens are surrounded by whitespace.
@@ -269,16 +279,16 @@ page at http://checkstyle.sourceforge.net/config.html -->
         LITERAL_FINALLY, LITERAL_FOR, LITERAL_IF, LITERAL_RETURN,
         LITERAL_SYNCHRONIZED, LITERAL_TRY, LITERAL_WHILE, LOR, LT, MINUS,
         MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS, PLUS_ASSIGN, QUESTION,
-        SL, SLIST, SL_ASSIGN, SR_ASSIGN, STAR, STAR_ASSIGN, LAMBDA" />
-            <property name="allowEmptyConstructors" value="true" />
-            <property name="allowEmptyMethods" value="true" />
+        SL, SLIST, SL_ASSIGN, SR_ASSIGN, STAR, STAR_ASSIGN, LAMBDA"/>
+            <property name="allowEmptyConstructors" value="true"/>
+            <property name="allowEmptyMethods" value="true"/>
         </module>
 
         <module name="WhitespaceAfter">
             <!-- Checks that commas, semicolons and typecasts are followed by
                  whitespace.
             -->
-            <property name="tokens" value="COMMA, SEMI, TYPECAST" />
+            <property name="tokens" value="COMMA, SEMI, TYPECAST"/>
         </module>
 
         <module name="NoWhitespaceAfter">
@@ -286,16 +296,16 @@ page at http://checkstyle.sourceforge.net/config.html -->
                  Linebreaks are allowed.
             -->
             <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS,
-        UNARY_PLUS" />
-            <property name="allowLineBreaks" value="true" />
+        UNARY_PLUS"/>
+            <property name="allowLineBreaks" value="true"/>
         </module>
 
         <module name="NoWhitespaceBefore">
             <!-- Checks that there is no whitespace before various unary operators.
                  Linebreaks are allowed.
             -->
-            <property name="tokens" value="SEMI, DOT, POST_DEC, POST_INC" />
-            <property name="allowLineBreaks" value="true" />
+            <property name="tokens" value="SEMI, DOT, POST_DEC, POST_INC"/>
+            <property name="allowLineBreaks" value="true"/>
         </module>
 
         <module name="ParenPad">
@@ -305,34 +315,34 @@ page at http://checkstyle.sourceforge.net/config.html -->
         </module>
 
 
-        <module name="EmptyLineSeparator" >
+        <module name="EmptyLineSeparator">
             <property name="allowMultipleEmptyLines" value="false"/>
         </module>
 
         <module name="Regexp">
             <!-- No System.out -->
-            <property name="format" value="System\.out\.println" />
-            <property name="illegalPattern" value="true" />
+            <property name="format" value="System\.out\.println"/>
+            <property name="illegalPattern" value="true"/>
         </module>
 
         <module name="Regexp">
             <!-- No System.err -->
             <!-- . matches any character, so we need to escape it and use \. to match dots. -->
-            <property name="format" value="System\.err\.println" />
-            <property name="illegalPattern" value="true" />
+            <property name="format" value="System\.err\.println"/>
+            <property name="illegalPattern" value="true"/>
         </module>
 
         <module name="Regexp">
             <!-- No printStackTrace -->
             <!-- . matches any character, so we need to escape it and use \. to match dots. -->
-            <property name="format" value="e\.printStackTrace\(\)" />
-            <property name="illegalPattern" value="true" />
+            <property name="format" value="e\.printStackTrace\(\)"/>
+            <property name="illegalPattern" value="true"/>
         </module>
 
-        <module name="SuppressWarningsHolder" />
+        <module name="SuppressWarningsHolder"/>
 
     </module>
 
-    <module name="SuppressWarningsFilter" />
+    <module name="SuppressWarningsFilter"/>
 
 </module>
