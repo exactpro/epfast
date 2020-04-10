@@ -16,13 +16,14 @@
 
 package com.exactpro.epfast.decoder.unicode;
 
-import org.junit.jupiter.api.Test;
+import com.exactpro.junit5.WithByteBuf;
+import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.junit5.ByteBufUtils.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestDecodeByteVector {
@@ -31,74 +32,59 @@ class TestDecodeByteVector {
 
     private DecodeMandatoryByteVector mandatoryByteVectorDecoder = new DecodeMandatoryByteVector();
 
-    @Test
-    void testNull() throws IOException {
-        withByteBuf("80", buffers -> {
+    @WithByteBuf("80")
+    void testNull(Collection<ByteBuf> buffers) throws IOException {
             decode(nullableByteVectorDecoder, buffers);
             assertTrue(nullableByteVectorDecoder.isReady());
             assertNull(nullableByteVectorDecoder.getValue());
-        });
     }
 
-    @Test
-    void testNullableZeroLen() throws IOException {
-        withByteBuf("81", buffers -> {
+    @WithByteBuf("81")
+    void testNullableZeroLen(Collection<ByteBuf> buffers) throws IOException {
             decode(nullableByteVectorDecoder, buffers);
             assertTrue(nullableByteVectorDecoder.isReady());
             assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        });
     }
 
-    @Test
-    void testMandatoryZeroLen() throws IOException {
-        withByteBuf("80", buffers -> {
+    @WithByteBuf("80")
+    void testMandatoryZeroLen(Collection<ByteBuf> buffers) throws IOException {
             decode(mandatoryByteVectorDecoder, buffers);
             assertTrue(mandatoryByteVectorDecoder.isReady());
             assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        });
     }
 
-    @Test
-    void testSimpleNullableVector() throws IOException {
-        withByteBuf("87 41 42 42 43 44 45", buffers -> {
+    @WithByteBuf("87 41 42 42 43 44 45")
+    void testSimpleNullableVector(Collection<ByteBuf> buffers) throws IOException {
             decode(nullableByteVectorDecoder, buffers);
             assertTrue(nullableByteVectorDecoder.isReady());
             assertEquals("ABBCDE", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        });
     }
 
-    @Test
-    void testSimpleMandatoryVector() throws IOException {
-        withByteBuf("86 41 42 42 43 44 45", buffers -> {
+    @WithByteBuf("86 41 42 42 43 44 45")
+    void testSimpleMandatoryVector(Collection<ByteBuf> buffers) throws IOException {
             decode(mandatoryByteVectorDecoder, buffers);
             assertTrue(mandatoryByteVectorDecoder.isReady());
             assertEquals("ABBCDE", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        });
     }
 
-    @Test
-    void testNullableZeroLenGetValueTwice() throws IOException {
-        withByteBuf("81", buffers -> {
+    @WithByteBuf("81")
+    void testNullableZeroLenGetValueTwice(Collection<ByteBuf> buffers) throws IOException {
             decode(nullableByteVectorDecoder, buffers);
             assertTrue(nullableByteVectorDecoder.isReady());
             assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
             assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        });
     }
 
-    @Test
-    void testMandatoryZeroLenGetValueTwice() throws IOException {
-        withByteBuf("80", buffers -> {
+    @WithByteBuf("80")
+    void testMandatoryZeroLenGetValueTwice(Collection<ByteBuf> buffers) throws IOException {
             decode(mandatoryByteVectorDecoder, buffers);
             assertTrue(mandatoryByteVectorDecoder.isReady());
             assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
             assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        });
     }
 
-    @Test
-    void testSimpleNullableVectorTwoValuesInRow() throws IOException {
-        withByteBuf("87 41 42 42 43 44 45 81", buffers -> {
+    @WithByteBuf("87 41 42 42 43 44 45 81")
+    void testSimpleNullableVectorTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
             decode(nullableByteVectorDecoder, buffers);
             assertTrue(nullableByteVectorDecoder.isReady());
             assertEquals("ABBCDE", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
@@ -106,12 +92,10 @@ class TestDecodeByteVector {
             decode(nullableByteVectorDecoder, buffers);
             assertTrue(nullableByteVectorDecoder.isReady());
             assertEquals("", new String(nullableByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        });
     }
 
-    @Test
-    void testSimpleMandatoryVectorTwoValuesInRow() throws IOException {
-        withByteBuf("86 41 42 42 43 44 45 80", buffers -> {
+    @WithByteBuf("86 41 42 42 43 44 45 80")
+    void testSimpleMandatoryVectorTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
             decode(mandatoryByteVectorDecoder, buffers);
             assertTrue(mandatoryByteVectorDecoder.isReady());
             assertEquals("ABBCDE", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
@@ -119,6 +103,5 @@ class TestDecodeByteVector {
             decode(mandatoryByteVectorDecoder, buffers);
             assertTrue(mandatoryByteVectorDecoder.isReady());
             assertEquals("", new String(mandatoryByteVectorDecoder.getValue(), StandardCharsets.UTF_8));
-        });
     }
 }
