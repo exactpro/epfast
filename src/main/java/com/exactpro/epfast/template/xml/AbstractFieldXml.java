@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlElements;
 
 public class AbstractFieldXml {
 
-    private FieldOperatorXml operator;
+    private FieldOperatorXml operator = new FieldOperatorXml();
 
     public FieldOperatorXml getOperator() {
         return operator;

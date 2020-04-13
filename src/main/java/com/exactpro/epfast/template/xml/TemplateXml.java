@@ -21,9 +21,9 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     private String applicationNs;
 
-    private Dictionary dictionary;
+    private Dictionary dictionary = Dictionary.getDictionary("global");
 
-    private ReferenceImpl typeRef;
+    private ReferenceImpl typeRef = new ReferenceImpl("", "");
 
     @Override
     public Identity getTemplateId() {
@@ -50,7 +50,10 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         if (templateNs != null) {
             return templateNs;
         }
-        return parentNsProvider.getTemplateNamespace();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getTemplateNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.exactpro.epfast.template.Templates;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "templates", namespace = NamespaceProvider.XML_NAMESPACE)
@@ -19,9 +20,9 @@ public class TemplatesXml implements Templates, NamespaceProvider {
 
     private String templateNs;
 
-    private Dictionary dictionary;
+    private Dictionary dictionary = Dictionary.getDictionary("global");
 
-    private List<Template> templates;
+    private List<Template> templates = new ArrayList<>();
 
     @Override
     public String getApplicationNamespace() {

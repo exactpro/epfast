@@ -19,9 +19,9 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private Dictionary dictionary;
+    private Dictionary dictionary = Dictionary.getDictionary("global");
 
-    private ReferenceImpl typeRef;
+    private ReferenceImpl typeRef = new ReferenceImpl("", "");
 
     @Override
     public Identity getFieldId() {

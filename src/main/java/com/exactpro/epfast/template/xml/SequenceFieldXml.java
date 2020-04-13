@@ -19,11 +19,11 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private Dictionary dictionary;
+    private Dictionary dictionary = Dictionary.getDictionary("global");
 
-    private ReferenceImpl typeRef;
+    private ReferenceImpl typeRef = new ReferenceImpl("", "");
 
-    private LengthXml length;
+    private LengthXml length = new LengthXml();
 
     @Override
     public Identity getFieldId() {

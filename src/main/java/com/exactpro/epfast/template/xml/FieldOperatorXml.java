@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class FieldOperatorXml implements FieldOperator {
 
-    private String value;
+    private String value = "";
 
     @Override
     public String getInitialValue() {

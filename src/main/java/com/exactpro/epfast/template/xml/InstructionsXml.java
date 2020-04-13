@@ -5,11 +5,12 @@ import com.exactpro.epfast.template.Instruction;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InstructionsXml {
 
-    private List<Instruction> instructions;
+    private List<Instruction> instructions = new ArrayList<>();
 
     public List<Instruction> getInstructions() {
         return instructions;
