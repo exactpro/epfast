@@ -18,12 +18,10 @@ package com.exactpro.epfast.decoder.integer;
 
 import com.exactpro.junit5.WithByteBuf;
 import io.netty.buffer.ByteBuf;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Collection;
 
-import static com.exactpro.junit5.ByteBufUtils.withByteBuf;
 import static org.junit.jupiter.api.Assertions.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
@@ -82,7 +80,7 @@ class TestUInt32 {
         assertThrows(IOException.class, () -> nullableUInt32Decoder.getValue());
     }
 
-    @WithByteBuf("10 00 00 00 00 80")
+    @WithByteBuf("10 00 00 00 80")
     void testMaxOverflowMandatory1(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers);
         assertTrue(mandatoryUInt32Decoder.isReady());
@@ -133,32 +131,26 @@ class TestUInt32 {
         assertEquals(942755, mandatoryUInt32Decoder.getValue());
     }
 
-    //TODO check why @WithByteBuf fails
-    @Test
-    void optionalSimpleNumbersTwoValuesInRow() throws IOException {
-        withByteBuf("39 45 a4 0f 7f 7f 7f ff", buffers -> {
-            decode(nullableUInt32Decoder, buffers);
-            assertTrue(nullableUInt32Decoder.isReady());
-            assertEquals(942755, nullableUInt32Decoder.getValue());
+    @WithByteBuf("39 45 a4 0f 7f 7f 7f ff")
+    void optionalSimpleNumbersTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableUInt32Decoder, buffers);
+        assertTrue(nullableUInt32Decoder.isReady());
+        assertEquals(942755, nullableUInt32Decoder.getValue());
 
-            decode(nullableUInt32Decoder, buffers);
-            assertTrue(nullableUInt32Decoder.isReady());
-            assertEquals(4294967294L, nullableUInt32Decoder.getValue());
-        });
+        decode(nullableUInt32Decoder, buffers);
+        assertTrue(nullableUInt32Decoder.isReady());
+        assertEquals(4294967294L, nullableUInt32Decoder.getValue());
     }
 
-    //TODO check why @WithByteBuf fails
-    @Test
-    void mandatorySimpleNumbersTwoValuesInRow() throws IOException {
-        withByteBuf("39 45 a3 39 45 a3", buffers -> {
-            decode(mandatoryUInt32Decoder, buffers);
-            assertTrue(mandatoryUInt32Decoder.isReady());
-            assertEquals(942755, mandatoryUInt32Decoder.getValue());
+    @WithByteBuf("39 45 a3 39 45 a3")
+    void mandatorySimpleNumbersTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryUInt32Decoder, buffers);
+        assertTrue(mandatoryUInt32Decoder.isReady());
+        assertEquals(942755, mandatoryUInt32Decoder.getValue());
 
-            decode(mandatoryUInt32Decoder, buffers);
-            assertTrue(mandatoryUInt32Decoder.isReady());
-            assertEquals(942755, mandatoryUInt32Decoder.getValue());
-        });
+        decode(mandatoryUInt32Decoder, buffers);
+        assertTrue(mandatoryUInt32Decoder.isReady());
+        assertEquals(942755, mandatoryUInt32Decoder.getValue());
     }
 
     @WithByteBuf("00 39 45 a4")

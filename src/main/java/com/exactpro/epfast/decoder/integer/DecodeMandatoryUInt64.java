@@ -61,6 +61,7 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
         do {
             accumulate(buf.getByte(readerIndex++));
         } while (!ready && readerIndex < readLimit);
+        buf.readerIndex(readerIndex);
     }
 
     public BigInteger getValue() throws OverflowException {

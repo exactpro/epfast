@@ -18,14 +18,12 @@ package com.exactpro.epfast.decoder.integer;
 
 import com.exactpro.junit5.WithByteBuf;
 import io.netty.buffer.ByteBuf;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.junit5.ByteBufUtils.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestUInt64 {
@@ -141,32 +139,26 @@ class TestUInt64 {
         assertEquals(new BigInteger("942755"), mandatoryUInt64Decoder.getValue());
     }
 
-    //TODO check why @WithByteBuf fails
-    @Test
-    void optionalSimpleNumbersTwoValuesInRow() throws IOException {
-        withByteBuf("39 45 a4 01 7f 7f 7f 7f 7f 7f 7f 7f ff", buffers -> {
-            decode(nullableUInt64Decoder, buffers);
-            assertTrue(nullableUInt64Decoder.isReady());
-            assertEquals(new BigInteger("942755"), nullableUInt64Decoder.getValue());
+    @WithByteBuf("39 45 a4 01 7f 7f 7f 7f 7f 7f 7f 7f ff")
+    void optionalSimpleNumbersTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableUInt64Decoder, buffers);
+        assertTrue(nullableUInt64Decoder.isReady());
+        assertEquals(new BigInteger("942755"), nullableUInt64Decoder.getValue());
 
-            decode(nullableUInt64Decoder, buffers);
-            assertTrue(nullableUInt64Decoder.isReady());
-            assertEquals(new BigInteger("18446744073709551614"), nullableUInt64Decoder.getValue());
-        });
+        decode(nullableUInt64Decoder, buffers);
+        assertTrue(nullableUInt64Decoder.isReady());
+        assertEquals(new BigInteger("18446744073709551614"), nullableUInt64Decoder.getValue());
     }
 
-    //TODO check why @WithByteBuf fails
-    @Test
-    void mandatorySimpleNumbersTwoValuesInRow() throws IOException {
-        withByteBuf("39 45 a3 01 10 78 20 76 62 2a 62 51 cf", buffers -> {
-            decode(mandatoryUInt64Decoder, buffers);
-            assertTrue(mandatoryUInt64Decoder.isReady());
-            assertEquals(new BigInteger("942755"), mandatoryUInt64Decoder.getValue());
+    @WithByteBuf("39 45 a3 01 10 78 20 76 62 2a 62 51 cf")
+    void mandatorySimpleNumbersTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryUInt64Decoder, buffers);
+        assertTrue(mandatoryUInt64Decoder.isReady());
+        assertEquals(new BigInteger("942755"), mandatoryUInt64Decoder.getValue());
 
-            decode(mandatoryUInt64Decoder, buffers);
-            assertTrue(mandatoryUInt64Decoder.isReady());
-            assertEquals(new BigInteger("10443992354206034127"), mandatoryUInt64Decoder.getValue());
-        });
+        decode(mandatoryUInt64Decoder, buffers);
+        assertTrue(mandatoryUInt64Decoder.isReady());
+        assertEquals(new BigInteger("10443992354206034127"), mandatoryUInt64Decoder.getValue());
     }
 
     @WithByteBuf("00 39 45 a4")

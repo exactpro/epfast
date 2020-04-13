@@ -156,8 +156,64 @@ class TestDecodeDecimal {
         assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
     }
 
+    @WithByteBuf("08 00 00 00 81 39 45 a3")
+    void testNullableExponentOverflow1(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("08 00 00 00 80 39 45 a3")
+    void testMandatoryExponentOverflow1(Collection<ByteBuf> buffers) {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> mandatoryDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("08 00 00 00 00 81 39 45 a3")
+    void testNullableExponentOverflow2(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("07 7f 00 7f 7f 7f ff 39 45 a3")
+    void testMandatoryExponentOverflow2(Collection<ByteBuf> buffers) {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> mandatoryDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("86 01 00 00 00 00 00 00 00 00 80")
+    void testNullableMantissaOverflow1(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("86 01 00 00 00 00 00 00 00 00 80")
+    void testMandatoryMantissaOverflow1(Collection<ByteBuf> buffers) {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> mandatoryDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("86 00 7f 00 7f 7f 7f 7f 7f 7f 7f ff")
+    void testNullableMantissaOverflow2(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("86 00 7f 00 7f 7f 7f 7f 7f 7f 7f ff")
+    void testMandatoryMantissaOverflow2(Collection<ByteBuf> buffers) {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> mandatoryDecimalDecoder.getValue());
+    }
+
     @WithByteBuf("00 83 39 45 a3")
-    void testNullableExponentOverflow(Collection<ByteBuf> buffers) throws IOException {
+    void testNullableExponentOverlong(Collection<ByteBuf> buffers) throws IOException {
         decode(nullableDecimalDecoder, buffers);
         assertTrue(nullableDecimalDecoder.isReady());
         assertTrue(nullableDecimalDecoder.isOverlong());
@@ -165,7 +221,7 @@ class TestDecodeDecimal {
     }
 
     @WithByteBuf("7f fe 46 3a dd")
-    void testNullableNegativeExponentOverflow(Collection<ByteBuf> buffers) throws IOException {
+    void testNullableNegativeExponentOverlong(Collection<ByteBuf> buffers) throws IOException {
         decode(nullableDecimalDecoder, buffers);
         assertTrue(nullableDecimalDecoder.isReady());
         assertTrue(nullableDecimalDecoder.isOverlong());
@@ -173,7 +229,7 @@ class TestDecodeDecimal {
     }
 
     @WithByteBuf("00 82 39 45 a3")
-    void testMandatoryExponentOverflow(Collection<ByteBuf> buffers) throws IOException {
+    void testMandatoryExponentOverlong(Collection<ByteBuf> buffers) throws IOException {
         decode(mandatoryDecimalDecoder, buffers);
         assertTrue(mandatoryDecimalDecoder.isReady());
         assertTrue(mandatoryDecimalDecoder.isOverlong());
@@ -181,7 +237,7 @@ class TestDecodeDecimal {
     }
 
     @WithByteBuf("7f fe 46 3a dd")
-    void testMandatoryNegativeExponentOverflow(Collection<ByteBuf> buffers) throws IOException {
+    void testMandatoryNegativeExponentOverlong(Collection<ByteBuf> buffers) throws IOException {
         decode(mandatoryDecimalDecoder, buffers);
         assertTrue(mandatoryDecimalDecoder.isReady());
         assertTrue(mandatoryDecimalDecoder.isOverlong());
@@ -189,7 +245,7 @@ class TestDecodeDecimal {
     }
 
     @WithByteBuf("fe 7f 46 3a dd")
-    void testNullableNegativeMantissaOverflow(Collection<ByteBuf> buffers) throws IOException {
+    void testNullableNegativeMantissaOverlong(Collection<ByteBuf> buffers) throws IOException {
         decode(nullableDecimalDecoder, buffers);
         assertTrue(nullableDecimalDecoder.isReady());
         assertTrue(nullableDecimalDecoder.isOverlong());
@@ -197,7 +253,7 @@ class TestDecodeDecimal {
     }
 
     @WithByteBuf("83 00 39 45 a3")
-    void testNullableMantissaOverflow(Collection<ByteBuf> buffers) throws IOException {
+    void testNullableMantissaOverlong(Collection<ByteBuf> buffers) throws IOException {
         decode(nullableDecimalDecoder, buffers);
         assertTrue(nullableDecimalDecoder.isReady());
         assertTrue(nullableDecimalDecoder.isOverlong());
@@ -205,7 +261,7 @@ class TestDecodeDecimal {
     }
 
     @WithByteBuf("82 00 39 45 a3")
-    void testMandatoryMantissaOverflow(Collection<ByteBuf> buffers) throws IOException {
+    void testMandatoryMantissaOverlong(Collection<ByteBuf> buffers) throws IOException {
         decode(mandatoryDecimalDecoder, buffers);
         assertTrue(mandatoryDecimalDecoder.isReady());
         assertTrue(mandatoryDecimalDecoder.isOverlong());
@@ -213,7 +269,7 @@ class TestDecodeDecimal {
     }
 
     @WithByteBuf("fe 7f 46 3a dd")
-    void testMandatoryNegativeMantissaOverflow(Collection<ByteBuf> buffers) throws IOException {
+    void testMandatoryNegativeMantissaOverlong(Collection<ByteBuf> buffers) throws IOException {
         decode(mandatoryDecimalDecoder, buffers);
         assertTrue(mandatoryDecimalDecoder.isReady());
         assertTrue(mandatoryDecimalDecoder.isOverlong());
