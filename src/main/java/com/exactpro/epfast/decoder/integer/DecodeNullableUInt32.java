@@ -30,6 +30,7 @@ public final class DecodeNullableUInt32 extends DecodeInteger {
     public void decode(ByteBuf buf) {
         reset();
         value = 0;
+        isUInt32Limit = false;
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         int oneByte = buf.getByte(readerIndex++);
@@ -59,6 +60,7 @@ public final class DecodeNullableUInt32 extends DecodeInteger {
         do {
             accumulate(buf.getByte(readerIndex++));
         } while (!ready && readerIndex < readLimit);
+        buf.readerIndex(readerIndex);
     }
 
     public Long getValue() throws OverflowException {

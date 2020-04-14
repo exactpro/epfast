@@ -36,7 +36,7 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
             } catch (OverflowException ex) {
                 overflow = true;
             }
-            if ((messageLength != null) && (messageLength > 0)) {
+            if (messageLength != null && messageLength > 0) {
                 int readerIndex = buf.readerIndex();
                 int readLimit = buf.writerIndex();
                 while ((readerIndex < readLimit) && !ready) {
@@ -91,6 +91,8 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
                         }
                     }
                     buf.readerIndex(readerIndex);
+                } else {
+                    ready = true;
                 }
             }
         }
@@ -98,7 +100,7 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
 
     public byte[] getValue() throws OverflowException {
         if (overflow) {
-            throw new OverflowException("exponent value range is int32");
+            throw new OverflowException("length value range is uint32");
         } else {
             byte[] finalVal = new byte[value.size()];
             for (int i = 0; i < value.size(); i++) {

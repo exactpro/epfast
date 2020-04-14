@@ -101,12 +101,12 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
     }
 
     public BigDecimal getValue() throws OverflowException {
-        if (exponent >= -63 && exponent <= 63) {
-            return new BigDecimal(mantissa).movePointRight(exponent);
-        } else if (exponentOverflow) {
+        if (exponentOverflow) {
             throw new OverflowException("exponent value range is int32");
         } else if (mantissaOverflow) {
             throw new OverflowException("mantissa value range is int64");
+        } else if (exponent >= -63 && exponent <= 63) {
+            return new BigDecimal(mantissa).movePointRight(exponent);
         } else {
             throw new OverflowException("exponent value allowed range is -63 ... 63");
         }
