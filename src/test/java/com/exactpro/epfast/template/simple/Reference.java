@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Reference implements com.exactpro.epfast.template.Reference {
 
-    private String name;
+    private String name = "";
 
     private String namespace = DEFAULT_NAMESPACE;
 

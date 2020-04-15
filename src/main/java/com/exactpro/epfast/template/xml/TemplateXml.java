@@ -23,7 +23,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     private Dictionary dictionary = Dictionary.getDictionary("global");
 
-    private ReferenceImpl typeRef = new ReferenceImpl("", "");
+    private ReferenceImpl typeRef = new ReferenceImpl("", Reference.DEFAULT_NAMESPACE);
 
     @Override
     public Identity getTemplateId() {

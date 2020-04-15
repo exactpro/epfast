@@ -9,7 +9,7 @@ public class Template implements com.exactpro.epfast.template.Template {
 
     private Identity templateId = new Identity();
 
-    private Reference typeRef;
+    private Reference typeRef = new Reference();
 
     private final List<Instruction> instructions = new ArrayList<>();
 

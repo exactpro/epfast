@@ -6,7 +6,7 @@ public abstract class FieldInstruction implements com.exactpro.epfast.template.F
     
     private Identity fieldId = new Identity();
 
-    private boolean optional;
+    private boolean optional = false;
 
     @Override
     public Identity getFieldId() {

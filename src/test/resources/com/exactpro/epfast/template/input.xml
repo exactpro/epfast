@@ -1,5 +1,5 @@
 <templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1" templateNs="tempNS">
-    <template ns="fieldNS" id="25">
+    <template name="template" id="25">
         <int64>
             <copy value="64"/>
         </int64>

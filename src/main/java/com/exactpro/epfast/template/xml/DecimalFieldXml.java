@@ -31,12 +31,12 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
     class CompoundDecimal implements CompoundDecimalField {
         @Override
         public FieldOperator getExponent() {
-            return (FieldOperator) DecimalFieldXml.this.getExponent();
+            return DecimalFieldXml.this.getExponent().getOperator();
         }
 
         @Override
         public FieldOperator getMantissa() {
-            return (FieldOperator) DecimalFieldXml.this.getMantissa();
+            return DecimalFieldXml.this.getMantissa().getOperator();
         }
 
         @Override

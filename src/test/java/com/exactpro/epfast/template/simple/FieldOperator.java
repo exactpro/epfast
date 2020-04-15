@@ -2,7 +2,7 @@ package com.exactpro.epfast.template.simple;
 
 public abstract class FieldOperator implements com.exactpro.epfast.template.FieldOperator {
 
-    private String initialValue;
+    private String initialValue = "";
 
     @Override
     public String getInitialValue() {

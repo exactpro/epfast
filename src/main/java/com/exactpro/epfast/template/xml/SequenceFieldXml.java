@@ -1,9 +1,6 @@
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
-import com.exactpro.epfast.template.Identity;
-import com.exactpro.epfast.template.Instruction;
-import com.exactpro.epfast.template.Sequence;
+import com.exactpro.epfast.template.*;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -21,7 +18,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     private Dictionary dictionary = Dictionary.getDictionary("global");
 
-    private ReferenceImpl typeRef = new ReferenceImpl("", "");
+    private ReferenceImpl typeRef = new ReferenceImpl("", Reference.DEFAULT_NAMESPACE);
 
     private LengthXml length = new LengthXml();
 

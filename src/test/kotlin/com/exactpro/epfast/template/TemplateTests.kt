@@ -10,24 +10,31 @@ class TemplateTests {
 
     @Test
     fun `my first template test`() {
-        val expected = listOf(template("") {
+        val expected = listOf(template("template", "tempNS") {
             auxiliaryId = "25"
             instructions {
                 int64("") {
-                    copy { initialValue = "64" }
+                    copy {
+                        initialValue = "64"
+                    }
                 }
                 int32("") {
-                    constant { initialValue = "32" }
+                    constant {
+                        initialValue = "32"
+                    }
                 }
                 compoundDecimal("") {
                     isOptional = false
-                    mantissa { delta { } }
+                    mantissa {
+                        delta { }
+                    }
                 }
                 byteVector("") {
                     isOptional = true
                     length("lengthNAME")
                 }
-                unicode("") { }
+                unicode("") {
+                }
             }
         })
 
