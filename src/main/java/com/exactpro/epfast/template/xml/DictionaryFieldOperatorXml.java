@@ -17,7 +17,7 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
     }
 
     @XmlAttribute(name = "dictionary")
-    public void setDictionary(String dictionary) {
+    public void setDictionaryName(String dictionary) {
         this.dictionary = Dictionary.getDictionary(dictionary);
     }
 
