@@ -16,6 +16,7 @@ class TemplateTests {
                 int64("") {
                     copy {
                         initialValue = "64"
+                        dictionary = "template"
                     }
                 }
                 int32("") {

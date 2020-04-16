@@ -3,6 +3,7 @@ package com.exactpro.epfast.template.xml;
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Reference;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 public class DictionaryFieldOperatorXml extends FieldOperatorXml {
@@ -15,9 +16,9 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
         return dictionary;
     }
 
-    @XmlElement(name = "dictionary", namespace = Reference.DEFAULT_NAMESPACE)
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
+    @XmlAttribute(name = "dictionary")
+    public void setDictionary(String dictionary) {
+        this.dictionary = Dictionary.getDictionary(dictionary);
     }
 
     public ReferenceImpl getDictionaryKey() {

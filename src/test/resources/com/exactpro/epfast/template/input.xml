@@ -1,7 +1,7 @@
 <templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1" templateNs="tempNS">
     <template name="template" id="25">
         <int64>
-            <copy value="64"/>
+            <copy value="64" dictionary="template"/>
         </int64>
         <int32>
             <constant value="32"/>
