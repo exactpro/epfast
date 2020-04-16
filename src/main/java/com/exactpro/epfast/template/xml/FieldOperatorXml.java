@@ -6,15 +6,15 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class FieldOperatorXml implements FieldOperator {
 
-    private String value = "";
+    private String initialValue = "";
 
     @Override
     public String getInitialValue() {
-        return value;
+        return initialValue;
     }
 
     @XmlAttribute(name = "value")
     public void setInitialValue(String value) {
-        this.value = value;
+        this.initialValue = value;
     }
 }
