@@ -6,9 +6,9 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class DecimalFieldXml extends FieldInstrContent implements InstructionXml {
 
-    private AbstractFieldXml exponent = new AbstractFieldXml();
+    private AbstractFieldXml exponent;
 
-    private AbstractFieldXml mantissa = new AbstractFieldXml();
+    private AbstractFieldXml mantissa;
 
     public AbstractFieldXml getExponent() {
         return exponent;
@@ -31,7 +31,7 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
     class CompoundDecimal implements CompoundDecimalField {
         @Override
         public FieldOperator getExponent() {
-            return DecimalFieldXml.this.getExponent().getOperator();
+            return DecimalFieldXml.this.getExponent() == null ? null : DecimalFieldXml.this.getExponent().getOperator();
         }
 
         @Override

@@ -48,4 +48,8 @@ class InstructionsBuilder internal constructor(private val instructions: Mutable
     fun sequence(name: String, namespace: String = DEFAULT_NAMESPACE, block: SequenceBuilder.() -> Unit) {
         instructions.add(build(name, namespace, block))
     }
+
+    fun templateRef(block: ReferenceBuilder.() -> Unit) {
+        instructions.add(build(block))
+    }
 }

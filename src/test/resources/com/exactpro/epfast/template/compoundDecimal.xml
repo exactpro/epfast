@@ -1,0 +1,10 @@
+<template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <decimal name="decimal" id="compound" namespace="namespace">
+        <exponent>
+            <tail dictionary="type"/>
+        </exponent>
+        <mantissa>
+            <tail dictionary="mantissa"/>
+        </mantissa>
+    </decimal>
+</template>

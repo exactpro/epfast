@@ -1,0 +1,5 @@
+<template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <decimal name="decimal" id="simple" namespace="namespace" presence="optional">
+        <delta value="value" dictionary="delta"/>
+    </decimal>
+</template>

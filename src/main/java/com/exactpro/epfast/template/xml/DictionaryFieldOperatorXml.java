@@ -30,4 +30,3 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
         this.dictionaryKey = dictionaryKey;
     }
 }
-

@@ -1,0 +1,5 @@
+<template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <uInt64 name="uInt" id="64" namespace="namespace">
+        <increment dictionary="template"/>
+    </uInt64>
+</template>

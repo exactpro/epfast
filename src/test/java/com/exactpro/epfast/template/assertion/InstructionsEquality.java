@@ -112,13 +112,13 @@ public class InstructionsEquality {
     private static boolean areEqual(UnicodeStringField actual, UnicodeStringField expected) {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualOperators(actual.getOperator(), expected.getOperator()) &&
-            areEqualIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
+            areEqualLengthIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
     }
 
     private static boolean areEqual(ByteVectorField actual, ByteVectorField expected) {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualOperators(actual.getOperator(), expected.getOperator()) &&
-            areEqualIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
+            areEqualLengthIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
     }
 
     private static boolean areEqual(CompoundDecimalField actual, CompoundDecimalField expected) {

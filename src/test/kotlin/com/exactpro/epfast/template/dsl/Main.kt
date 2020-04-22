@@ -13,6 +13,10 @@ fun main(args: Array<String>) {
             namespace = "namespace"
         }
         instructions {
+            templateRef {
+                name = "template ref"
+                namespace = "namespace"
+            }
             compoundDecimal("compound") {
                 namespace = "decimal"
                 exponent {
