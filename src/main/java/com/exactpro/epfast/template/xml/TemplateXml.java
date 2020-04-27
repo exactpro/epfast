@@ -76,9 +76,9 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         return dictionary;
     }
 
-    @XmlElement(name = "dictionary", namespace = XML_NAMESPACE)
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
+    @XmlAttribute(name = "dictionary")
+    public void setDictionaryName(String dictionary) {
+        this.dictionary = Dictionary.getDictionary(dictionary);
     }
 
     @Override
