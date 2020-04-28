@@ -17,5 +17,4 @@ public class TemplatesComparison {
         }
         return true;
     }
-
 }

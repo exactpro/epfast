@@ -1,5 +1,5 @@
 <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-    <string charset="unicode" name="string" id="unicode" namespace="namespace">
+    <string charset="unicode" name="string" id="unicode" namespace="namespace" lengthName="length" lengthId="id">
         <increment dictionary="type"/>
     </string>
 </template>

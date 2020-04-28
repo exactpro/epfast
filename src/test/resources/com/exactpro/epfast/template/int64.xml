@@ -1,5 +1,5 @@
 <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
     <int64 name="int" id="64" namespace="namespace">
-        <copy value="value" dictionary="copy"/>
+        <copy value="value" dictionary="copy" keyName="key" keyNs="keyNs"/>
     </int64>
 </template>

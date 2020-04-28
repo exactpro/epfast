@@ -1,0 +1,15 @@
+<template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <sequence name="sequence" id="id" namespace="namespace" typeRefName="typeRef" typeRefNs="ns">
+        <length name="length" id="id" namespace="ns">
+            <default value="value"/>
+        </length>
+        <int64 name="int">
+            <copy keyName="key" keyNs="keyNs"/>
+        </int64>
+        <decimal name="decimal" id="compound">
+            <mantissa>
+                <delta dictionary="mantissa"/>
+            </mantissa>
+        </decimal>
+    </sequence>
+</template>

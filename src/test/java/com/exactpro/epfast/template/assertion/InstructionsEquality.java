@@ -112,13 +112,13 @@ public class InstructionsEquality {
     private static boolean areEqual(UnicodeStringField actual, UnicodeStringField expected) {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualOperators(actual.getOperator(), expected.getOperator()) &&
-            areEqualLengthIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
+            areEqualIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
     }
 
     private static boolean areEqual(ByteVectorField actual, ByteVectorField expected) {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualOperators(actual.getOperator(), expected.getOperator()) &&
-            areEqualLengthIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
+            areEqualIdentities(actual.getLengthFieldId(), expected.getLengthFieldId());
     }
 
     private static boolean areEqual(CompoundDecimalField actual, CompoundDecimalField expected) {
@@ -142,6 +142,7 @@ public class InstructionsEquality {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualReferences(actual.getTypeRef(), expected.getTypeRef()) &&
             areEqualInstructionLists(actual.getInstructions(), expected.getInstructions()) &&
+            actual.getDictionary().equals(expected.getDictionary()) &&
             (actual.getLength() == expected.getLength() ||
                 (areEqualIdentities(actual.getLength().getFieldId(), expected.getLength().getFieldId()) &&
                     areEqualOperators(actual.getLength().getOperator(), expected.getLength().getOperator())));

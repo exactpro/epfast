@@ -18,14 +18,11 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     private Dictionary dictionary = Dictionary.getDictionary("global");
 
-    private ReferenceImpl typeRef = new ReferenceImpl("", Reference.DEFAULT_NAMESPACE);
+    private String typeRefName = "";
+
+    private String typeRefNs = Reference.DEFAULT_NAMESPACE;
 
     private LengthXml length = new LengthXml();
-
-    @Override
-    public Identity getFieldId() {
-        return fieldId;
-    }
 
     @Override
     public String getTemplateNamespace() {
@@ -38,6 +35,11 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
             return localNamespace;
         }
         return parentNsProvider.getApplicationNamespace();
+    }
+
+    @Override
+    public Identity getFieldId() {
+        return fieldId;
     }
 
     @XmlAttribute(name = "namespace")
@@ -60,6 +62,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         this.presence = presence;
     }
 
+    @Override
     public Dictionary getDictionary() {
         return dictionary;
     }
@@ -71,12 +74,17 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     @Override
     public ReferenceImpl getTypeRef() {
-        return typeRef;
+        return new ReferenceImpl(typeRefName, typeRefNs);
     }
 
-    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
-    public void setTypeRef(ReferenceImpl typeRef) {
-        this.typeRef = typeRef;
+    @XmlAttribute(name = "typeRefName")
+    public void setTypeRefName(String typeRefName) {
+        this.typeRefName = typeRefName;
+    }
+
+    @XmlAttribute(name = "typeRefNs")
+    public void setTypeRefNs(String typeRefNs) {
+        this.typeRefNs = typeRefNs;
     }
 
     @Override

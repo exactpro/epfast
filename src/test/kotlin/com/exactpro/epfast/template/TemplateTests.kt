@@ -64,10 +64,10 @@ class TemplateTests {
         val expected = listOf(template("template") {
             instructions {
                 int32("int", "namespace") {
+                    auxiliaryId = "32"
                     constant {
                         initialValue = "value"
                     }
-                    auxiliaryId = "32"
                 }
             }
         })
@@ -81,10 +81,10 @@ class TemplateTests {
         val expected = listOf(template("template") {
             instructions {
                 uint32("uInt", "namespace") {
+                    auxiliaryId = "32"
                     default {
                         initialValue = "value"
                     }
-                    auxiliaryId = "32"
                 }
             }
         })
@@ -98,11 +98,15 @@ class TemplateTests {
         val expected = listOf(template("template") {
             instructions {
                 int64("int", "namespace") {
+                    auxiliaryId = "64"
                     copy {
                         initialValue = "value"
                         dictionary = "copy"
+                        dictionaryKey {
+                            name = "key"
+                            namespace = "keyNs"
+                        }
                     }
-                    auxiliaryId = "64"
                 }
             }
         })
@@ -116,10 +120,14 @@ class TemplateTests {
         val expected = listOf(template("template") {
             instructions {
                 uint64("uInt", "namespace") {
+                    auxiliaryId = "64"
                     increment {
                         dictionary = "template"
+                        dictionaryKey {
+                            name = "key"
+                            namespace = "keyNs"
+                        }
                     }
-                    auxiliaryId = "64"
                 }
             }
         })
@@ -133,12 +141,16 @@ class TemplateTests {
         val expected = listOf(template("template") {
             instructions {
                 simpleDecimal("decimal", "namespace") {
+                    auxiliaryId = "simple"
+                    isOptional = true
                     delta {
                         initialValue = "value"
                         dictionary = "delta"
+                        dictionaryKey {
+                            name = "key"
+                            namespace = "keyNs"
+                        }
                     }
-                    auxiliaryId = "simple"
-                    isOptional = true
                 }
             }
         })
@@ -156,6 +168,10 @@ class TemplateTests {
                     exponent {
                         tail {
                             dictionary = "type"
+                            dictionaryKey {
+                                name = "key"
+                                namespace = "keyNs"
+                            }
                         }
                     }
                     mantissa {
@@ -199,11 +215,119 @@ class TemplateTests {
                     increment {
                         dictionary = "type"
                     }
+                    length("length") {
+                        auxiliaryId = "id"
+                        namespace = "namespace"
+                    }
                 }
             }
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("unicodeString.xml"))
+        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+    }
+
+    @Test
+    fun `test byte vector`() {
+        val expected = listOf(template("template") {
+            instructions {
+                byteVector("vector", "namespace") {
+                    auxiliaryId = "byte"
+                    isOptional = true
+                    constant {
+                        initialValue = "value"
+                    }
+                    length("length") {
+                        auxiliaryId = "id"
+                        namespace = "namespace"
+                    }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrap(getResourceInputStream("byteVector.xml"))
+        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+    }
+
+    @Test
+    fun `test sequence`() {
+        val expected = listOf(template("template") {
+            instructions {
+                sequence("sequence", "namespace") {
+                    auxiliaryId = "id"
+                    typeRef {
+                        name = "typeRef"
+                        namespace = "ns"
+                    }
+                    length {
+                        name = "length"
+                        namespace = "ns"
+                        auxiliaryId = "id"
+                        operator {
+                            default {
+                                initialValue = "value"
+                            }
+                        }
+                    }
+                    instructions {
+                        int64("int", "namespace") {
+                            copy {
+                                dictionaryKey {
+                                    name = "key"
+                                    namespace = "keyNs"
+                                }
+                            }
+                        }
+                        compoundDecimal("decimal", "namespace") {
+                            auxiliaryId = "compound"
+                            mantissa {
+                                delta {
+                                    dictionary = "mantissa"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrap(getResourceInputStream("sequence.xml"))
+        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+    }
+
+    @Test
+    fun `test group`() {
+        val expected = listOf(template("template") {
+            instructions {
+                group("group") {
+                    auxiliaryId = "id"
+                    isOptional = true
+                    typeRef {
+                        name = "typeRef"
+                        namespace = "ns"
+                    }
+                    instructions {
+                        byteVector("vector") {
+                            auxiliaryId = "byte"
+                            constant {
+                                initialValue = "value"
+                            }
+                            length("length") {
+                                auxiliaryId = "id"
+                            }
+                        }
+                        asciiString("string") {
+                            auxiliaryId = "ascii"
+                            copy {
+                                dictionary = "template"
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrap(getResourceInputStream("group.xml"))
         assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
     }
 

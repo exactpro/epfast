@@ -16,9 +16,4 @@ public class IdentitiesEquality {
         return areEqualReferences(actual, expected) &&
             Objects.equals(actual.getAuxiliaryId(), expected.getAuxiliaryId());
     }
-
-    static boolean areEqualLengthIdentities(Identity actual, Identity expected) {
-        return Objects.equals(actual.getName(), expected.getName()) &&
-            Objects.equals(actual.getAuxiliaryId(), expected.getAuxiliaryId());
-    }
 }

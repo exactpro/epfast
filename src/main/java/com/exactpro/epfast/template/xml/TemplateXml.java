@@ -7,7 +7,6 @@ import com.exactpro.epfast.template.Template;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "template", namespace = NamespaceProvider.XML_NAMESPACE)
@@ -23,7 +22,9 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     private Dictionary dictionary = Dictionary.getDictionary("global");
 
-    private ReferenceImpl typeRef = new ReferenceImpl("", Reference.DEFAULT_NAMESPACE);
+    private String typeRefName = "";
+
+    private String typeRefNs = Reference.DEFAULT_NAMESPACE;
 
     @Override
     public Identity getTemplateId() {
@@ -83,12 +84,17 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     @Override
     public ReferenceImpl getTypeRef() {
-        return typeRef;
+        return new ReferenceImpl(typeRefName, typeRefNs);
     }
 
-    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
-    public void setTypeRef(ReferenceImpl typeRef) {
-        this.typeRef = typeRef;
+    @XmlAttribute(name = "typeRefName")
+    public void setTypeRefName(String typeRefName) {
+        this.typeRefName = typeRefName;
+    }
+
+    @XmlAttribute(name = "typeRefNs")
+    public void setTypeRefNs(String typeRefNs) {
+        this.typeRefNs = typeRefNs;
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
