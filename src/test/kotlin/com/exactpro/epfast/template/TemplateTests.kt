@@ -4,7 +4,6 @@ import com.exactpro.epfast.template.assertion.TemplatesComparison
 import com.exactpro.epfast.template.dsl.template
 import com.exactpro.epfast.template.xml.WrapperXml
 import java.io.InputStream
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class TemplateTests {
@@ -26,13 +25,13 @@ class TemplateTests {
                     }
                 }
                 compoundDecimal("") {
-                    isOptional = false
+                    optional = false
                     mantissa {
                         delta { }
                     }
                 }
                 byteVector("") {
-                    isOptional = true
+                    optional = true
                     length("lengthNAME")
                 }
                 unicode("") {
@@ -41,7 +40,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("input.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -56,7 +55,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("templateRef.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -73,7 +72,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("int32.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -90,7 +89,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("uInt32.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -112,7 +111,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("int64.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -133,7 +132,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("uInt64.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -142,7 +141,7 @@ class TemplateTests {
             instructions {
                 simpleDecimal("decimal", "namespace") {
                     auxiliaryId = "simple"
-                    isOptional = true
+                    optional = true
                     delta {
                         initialValue = "value"
                         dictionary = "delta"
@@ -156,7 +155,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("simpleDecimal.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -184,7 +183,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("compoundDecimal.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -193,7 +192,7 @@ class TemplateTests {
             instructions {
                 asciiString("string", "namespace") {
                     auxiliaryId = "ascii"
-                    isOptional = true
+                    optional = true
                     copy {
                         dictionary = "template"
                         initialValue = "value"
@@ -203,7 +202,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("asciiString.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -224,7 +223,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("unicodeString.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -233,7 +232,7 @@ class TemplateTests {
             instructions {
                 byteVector("vector", "namespace") {
                     auxiliaryId = "byte"
-                    isOptional = true
+                    optional = true
                     constant {
                         initialValue = "value"
                     }
@@ -246,7 +245,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("byteVector.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -292,7 +291,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("sequence.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     @Test
@@ -301,7 +300,7 @@ class TemplateTests {
             instructions {
                 group("group") {
                     auxiliaryId = "id"
-                    isOptional = true
+                    optional = true
                     typeRef {
                         name = "typeRef"
                         namespace = "ns"
@@ -328,7 +327,7 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrap(getResourceInputStream("group.xml"))
-        assertThat(TemplatesComparison.areEqualTemplateLists(actual, expected)).isTrue()
+        TemplatesComparison.areEqualTemplateLists(actual, expected)
     }
 
     private fun getResourceInputStream(resourceName: String): InputStream? {

@@ -8,6 +8,8 @@ public interface Sequence extends FieldInstruction {
 
     LengthField getLength();
 
+    Dictionary getDictionary();
+
     List<? extends Instruction> getInstructions();
 
 }

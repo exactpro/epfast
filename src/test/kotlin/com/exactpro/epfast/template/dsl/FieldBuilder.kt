@@ -16,5 +16,5 @@ internal constructor(protected val field: T, name: String, namespace: String) {
 
     var auxiliaryId: String? by javaProperty(field.fieldId::getAuxiliaryId, field.fieldId::setAuxiliaryId)
 
-    var isOptional: Boolean by javaProperty(field::isOptional, field::setOptional)
+    var optional: Boolean by javaProperty(field::isOptional, field::setOptional)
 }
