@@ -1,5 +1,6 @@
 package com.exactpro.epfast.template.simple;
 
+import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Instruction;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ public class Template implements com.exactpro.epfast.template.Template {
 
     private Reference typeRef = new Reference();
 
+    private Dictionary dictionary = Dictionary.getDictionary("global");
+
     private final List<Instruction> instructions = new ArrayList<>();
 
     @Override
@@ -21,6 +24,11 @@ public class Template implements com.exactpro.epfast.template.Template {
     @Override
     public Reference getTypeRef() {
         return typeRef;
+    }
+
+    @Override
+    public Dictionary getDictionary() {
+        return dictionary;
     }
 
     @Override
@@ -36,4 +44,7 @@ public class Template implements com.exactpro.epfast.template.Template {
         this.typeRef = typeRef;
     }
 
+    public void setDictionary(Dictionary dictionary) {
+        this.dictionary = dictionary;
+    }
 }

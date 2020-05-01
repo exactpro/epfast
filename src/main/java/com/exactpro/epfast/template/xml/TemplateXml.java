@@ -73,6 +73,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         this.applicationNs = ns;
     }
 
+    @Override
     public Dictionary getDictionary() {
         return dictionary;
     }
