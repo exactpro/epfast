@@ -33,6 +33,10 @@ fun main(args: Array<String>) {
                     initialValue = "abc"
                 }
             }
+            templateRef {
+                name = "referenced template name"
+                namespace = "namespace"
+            }
             byteVector("byte vector") {
                 length("name in constructor") {
                     auxiliaryId = "123"
