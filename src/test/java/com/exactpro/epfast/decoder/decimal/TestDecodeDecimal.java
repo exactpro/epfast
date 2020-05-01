@@ -1,12 +1,29 @@
+/******************************************************************************
+ * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+
 package com.exactpro.epfast.decoder.decimal;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collection;
 
-import org.junit.jupiter.api.Test;
+import com.exactpro.junit5.WithByteBuf;
+import io.netty.buffer.ByteBuf;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.junit5.ByteBufUtils.*;
 import static com.exactpro.epfast.DecoderUtils.*;
 
 class TestDecodeDecimal {
@@ -15,235 +32,247 @@ class TestDecodeDecimal {
 
     private DecodeMandatoryDecimal mandatoryDecimalDecoder = new DecodeMandatoryDecimal();
 
-    @Test
-    void testNull() throws IOException {
-        withByteBuf("80", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertNull(nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("80")
+    void testNull(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertNull(nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullablePositive1() throws IOException {
-        withByteBuf("83 39 45 a3", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("83 39 45 a3")
+    void testNullablePositive1(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullablePositive() throws IOException {
-        withByteBuf("82 04 3f 34 de", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("82 04 3f 34 de")
+    void testNullablePositive(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryPositive() throws IOException {
-        withByteBuf("82 39 45 a3", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertFalse(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
-        });
+    @WithByteBuf("82 39 45 a3")
+    void testMandatoryPositive(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertFalse(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryPositive2() throws IOException {
-        withByteBuf("81 04 3f 34 de", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertFalse(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
-        });
+    @WithByteBuf("81 04 3f 34 de")
+    void testMandatoryPositive2(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertFalse(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryPositive3() throws IOException {
-        withByteBuf("fe 39 45 a3", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertFalse(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("9427.55"), mandatoryDecimalDecoder.getValue());
-        });
+    @WithByteBuf("fe 39 45 a3")
+    void testMandatoryPositive3(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertFalse(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("9427.55"), mandatoryDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullablePositive3() throws IOException {
-        withByteBuf("fe 39 45 a3", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("9427.55"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("fe 39 45 a3")
+    void testNullablePositive3(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("9427.55"), nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullableNegative() throws IOException {
-        withByteBuf("fe 46 3a dd", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("-9427.55"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("fe 46 3a dd")
+    void testNullableNegative(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("-9427.55"), nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullableNegativeSignExtension() throws IOException {
-        withByteBuf("fd 7f 3f ff", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("-8.193"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("fd 7f 3f ff")
+    void testNullableNegativeSignExtension(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("-8.193"), nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testExponentIOException() throws IOException {
-        withByteBuf("39 45 a4 7f 3f ff", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("39 45 a4 7f 3f ff")
+    void testExponentIOException(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullablePositiveGetValueTwice() throws IOException {
-        withByteBuf("82 04 3f 34 de", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
-            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("82 04 3f 34 de")
+    void testNullablePositiveGetValueTwice(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
+        assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryPositiveGetValueTwice() throws IOException {
-        withByteBuf("82 39 45 a3", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertFalse(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
-            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
-        });
+    @WithByteBuf("82 39 45 a3")
+    void testMandatoryPositiveGetValueTwice(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertFalse(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
+        assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullablePositiveTwoValuesInRow() throws IOException {
-        withByteBuf("83 39 45 a3 82 04 3f 34 de", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
+    @WithByteBuf("83 39 45 a3 82 04 3f 34 de")
+    void testNullablePositiveTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
 
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertFalse(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
-        });
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertFalse(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryPositiveTwoValuesInRow() throws IOException {
-        withByteBuf("82 39 45 a3 81 04 3f 34 de", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertFalse(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
+    @WithByteBuf("82 39 45 a3 81 04 3f 34 de")
+    void testMandatoryPositiveTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertFalse(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
 
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertFalse(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
-        });
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertFalse(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullableExponentOverflow() throws  IOException {
-        withByteBuf("00 83 39 45 a3", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertTrue(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("08 00 00 00 81 39 45 a3")
+    void testNullableExponentOverflow1(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullableNegativeExponentOverflow() throws  IOException {
-        withByteBuf("7f fe 46 3a dd", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertTrue(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("-9427.55"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("08 00 00 00 80 39 45 a3")
+    void testMandatoryExponentOverflow1(Collection<ByteBuf> buffers) {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> mandatoryDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryExponentOverflow() throws  IOException {
-        withByteBuf("00 82 39 45 a3", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertTrue(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
-        });
+    @WithByteBuf("08 00 00 00 00 81 39 45 a3")
+    void testNullableExponentOverflow2(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryNegativeExponentOverflow() throws  IOException {
-        withByteBuf("7f fe 46 3a dd", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertTrue(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("-9427.55"), mandatoryDecimalDecoder.getValue());
-        });
+    @WithByteBuf("07 7f 00 7f 7f 7f ff 39 45 a3")
+    void testMandatoryExponentOverflow2(Collection<ByteBuf> buffers) {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> mandatoryDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullableNegativeMantissaOverflow() throws  IOException {
-        withByteBuf("fe 7f 46 3a dd", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertTrue(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("-9427.55"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("86 01 00 00 00 00 00 00 00 00 80")
+    void testNullableMantissaOverflow1(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testNullableMantissaOverflow() throws  IOException {
-        withByteBuf("83 00 39 45 a3", buffers -> {
-            decode(nullableDecimalDecoder, buffers);
-            assertTrue(nullableDecimalDecoder.isReady());
-            assertTrue(nullableDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
-        });
+    @WithByteBuf("86 01 00 00 00 00 00 00 00 00 80")
+    void testMandatoryMantissaOverflow1(Collection<ByteBuf> buffers) {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> mandatoryDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryMantissaOverflow() throws  IOException {
-        withByteBuf("82 00 39 45 a3", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertTrue(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
-        });
+    @WithByteBuf("86 00 7f 00 7f 7f 7f 7f 7f 7f 7f ff")
+    void testNullableMantissaOverflow2(Collection<ByteBuf> buffers) {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> nullableDecimalDecoder.getValue());
     }
 
-    @Test
-    void testMandatoryNegativeMantissaOverflow() throws  IOException {
-        withByteBuf("fe 7f 46 3a dd", buffers -> {
-            decode(mandatoryDecimalDecoder, buffers);
-            assertTrue(mandatoryDecimalDecoder.isReady());
-            assertTrue(mandatoryDecimalDecoder.isOverlong());
-            assertEquals(new BigDecimal("-9427.55"), mandatoryDecimalDecoder.getValue());
-        });
+    @WithByteBuf("86 00 7f 00 7f 7f 7f 7f 7f 7f 7f ff")
+    void testMandatoryMantissaOverflow2(Collection<ByteBuf> buffers) {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertThrows(IOException.class, () -> mandatoryDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("00 83 39 45 a3")
+    void testNullableExponentOverlong(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertTrue(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("7f fe 46 3a dd")
+    void testNullableNegativeExponentOverlong(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertTrue(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("-9427.55"), nullableDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("00 82 39 45 a3")
+    void testMandatoryExponentOverlong(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertTrue(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("7f fe 46 3a dd")
+    void testMandatoryNegativeExponentOverlong(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertTrue(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("-9427.55"), mandatoryDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("fe 7f 46 3a dd")
+    void testNullableNegativeMantissaOverlong(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertTrue(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("-9427.55"), nullableDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("83 00 39 45 a3")
+    void testNullableMantissaOverlong(Collection<ByteBuf> buffers) throws IOException {
+        decode(nullableDecimalDecoder, buffers);
+        assertTrue(nullableDecimalDecoder.isReady());
+        assertTrue(nullableDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), nullableDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("82 00 39 45 a3")
+    void testMandatoryMantissaOverlong(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertTrue(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("94275500"), mandatoryDecimalDecoder.getValue());
+    }
+
+    @WithByteBuf("fe 7f 46 3a dd")
+    void testMandatoryNegativeMantissaOverlong(Collection<ByteBuf> buffers) throws IOException {
+        decode(mandatoryDecimalDecoder, buffers);
+        assertTrue(mandatoryDecimalDecoder.isReady());
+        assertTrue(mandatoryDecimalDecoder.isOverlong());
+        assertEquals(new BigDecimal("-9427.55"), mandatoryDecimalDecoder.getValue());
     }
 }
