@@ -26,7 +26,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "template", namespace = NamespaceProvider.XML_NAMESPACE)
-public class TemplateXml extends InstructionsXml implements Template, NamespaceProvider {
+public class TemplateXml extends InstructionsXml implements Template, NamespaceProvider, DictionaryProvider {
+
+    private DictionaryProvider parentDictionaryProvider;
 
     private NamespaceProvider parentNsProvider;
 
@@ -36,7 +38,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     private String applicationNs;
 
-    private Dictionary dictionary = Dictionary.getDictionary("global");
+    private Dictionary dictionary;
 
     private String typeRefName = "";
 
@@ -89,8 +91,15 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         this.applicationNs = ns;
     }
 
+    @Override
     public Dictionary getDictionary() {
-        return dictionary;
+        if (dictionary != null) {
+            return dictionary;
+        }
+        if (parentDictionaryProvider != null) {
+            return parentDictionaryProvider.getDictionary();
+        }
+        return Dictionary.getDictionary("global");
     }
 
     @XmlAttribute(name = "dictionary")
@@ -116,6 +125,9 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;
+        }
+        if (parent instanceof DictionaryProvider) {
+            parentDictionaryProvider = (DictionaryProvider) parent;
         }
     }
 }

@@ -309,6 +309,41 @@ class TemplateTests {
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
+    @Test
+    fun `test dictionary inheritance`() {
+        val expected = listOf(template("template") {
+            instructions {
+                group("group") {
+                    instructions {
+                        sequence("sequence") {
+                            length {
+                                name = "length"
+                                operator {
+                                    tail {
+                                        dictionary = "tail"
+                                    }
+                                }
+                            }
+                        }
+                        unicode("string") {
+                            copy {
+                                dictionary = "copy"
+                            }
+                        }
+                    }
+                }
+                int32("int32") {
+                    increment {
+                        dictionary = "increment"
+                    }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("dictionary.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
     private fun getResourceInputStream(resourceName: String): InputStream? {
         val thisClass: Class<*> = this.javaClass
         val path = thisClass.getPackage().name.replace(Regex.fromLiteral("."), "/")

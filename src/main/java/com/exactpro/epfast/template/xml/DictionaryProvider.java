@@ -14,30 +14,10 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.simple;
+package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Instruction;
+import com.exactpro.epfast.template.Dictionary;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Group extends FieldInstruction implements com.exactpro.epfast.template.Group {
-
-    private Reference typeRef = new Reference();
-
-    private final List<Instruction> instructions = new ArrayList<>();
-
-    @Override
-    public Reference getTypeRef() {
-        return typeRef;
-    }
-
-    @Override
-    public List<Instruction> getInstructions() {
-        return instructions;
-    }
-
-    public void setTypeRef(Reference typeRef) {
-        this.typeRef = typeRef;
-    }
+public interface DictionaryProvider {
+    Dictionary getDictionary();
 }

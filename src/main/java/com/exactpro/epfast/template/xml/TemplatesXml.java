@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "templates", namespace = NamespaceProvider.XML_NAMESPACE)
-public class TemplatesXml implements Templates, NamespaceProvider {
+public class TemplatesXml implements Templates, NamespaceProvider, DictionaryProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -36,7 +36,7 @@ public class TemplatesXml implements Templates, NamespaceProvider {
 
     private String templateNs;
 
-    private Dictionary dictionary = Dictionary.getDictionary("global");
+    private Dictionary dictionary;
 
     private List<Template> templates = new ArrayList<>();
 
@@ -72,8 +72,12 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         this.templateNs = templateNs;
     }
 
+    @Override
     public Dictionary getDictionary() {
-        return dictionary;
+        if (dictionary != null) {
+            return dictionary;
+        }
+        return Dictionary.getDictionary("global");
     }
 
     @XmlAttribute(name = "dictionary")

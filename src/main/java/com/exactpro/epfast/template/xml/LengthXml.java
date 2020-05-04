@@ -16,12 +16,15 @@
 
 package com.exactpro.epfast.template.xml;
 
+import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.LengthField;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class LengthXml extends AbstractFieldXml implements LengthField, NamespaceProvider {
+public class LengthXml extends AbstractFieldXml implements LengthField, NamespaceProvider, DictionaryProvider {
+
+    private DictionaryProvider parentDictionaryProvider;
 
     private NamespaceProvider parentNsProvider;
 
@@ -62,9 +65,17 @@ public class LengthXml extends AbstractFieldXml implements LengthField, Namespac
         this.localNamespace = namespace;
     }
 
+    @Override
+    public Dictionary getDictionary() {
+        return parentDictionaryProvider.getDictionary();
+    }
+
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;
+        }
+        if (parent instanceof DictionaryProvider) {
+            parentDictionaryProvider = (DictionaryProvider) parent;
         }
     }
 }

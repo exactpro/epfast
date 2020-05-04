@@ -19,18 +19,24 @@ package com.exactpro.epfast.template.xml;
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Reference;
 
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class DictionaryFieldOperatorXml extends FieldOperatorXml {
 
-    private Dictionary dictionary = Dictionary.getDictionary("global");
+    private DictionaryProvider parentDictionaryProvider;
+
+    private Dictionary dictionary;
 
     private String dictionaryKeyName = "";
 
     private String dictionaryKeyNs = Reference.DEFAULT_NAMESPACE;
 
     public Dictionary getDictionary() {
-        return dictionary;
+        if (dictionary != null) {
+            return dictionary;
+        }
+        return parentDictionaryProvider.getDictionary();
     }
 
     @XmlAttribute(name = "dictionary")
@@ -50,5 +56,11 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
     @XmlAttribute(name = "keyNs")
     public void setDictionaryKeyNs(String keyNs) {
         this.dictionaryKeyNs = keyNs;
+    }
+
+    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+        if (parent instanceof DictionaryProvider) {
+            parentDictionaryProvider = (DictionaryProvider) parent;
+        }
     }
 }
