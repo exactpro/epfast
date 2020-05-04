@@ -22,9 +22,7 @@ import com.exactpro.epfast.template.LengthField;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class LengthXml extends AbstractFieldXml implements LengthField, NamespaceProvider, DictionaryProvider {
-
-    private DictionaryProvider parentDictionaryProvider;
+public class LengthXml extends AbstractFieldXml implements LengthField, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -67,15 +65,12 @@ public class LengthXml extends AbstractFieldXml implements LengthField, Namespac
 
     @Override
     public Dictionary getDictionary() {
-        return parentDictionaryProvider.getDictionary();
+        return parentNsProvider.getDictionary();
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;
-        }
-        if (parent instanceof DictionaryProvider) {
-            parentDictionaryProvider = (DictionaryProvider) parent;
         }
     }
 }

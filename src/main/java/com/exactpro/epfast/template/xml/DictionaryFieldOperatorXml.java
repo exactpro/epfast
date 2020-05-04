@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class DictionaryFieldOperatorXml extends FieldOperatorXml {
 
-    private DictionaryProvider parentDictionaryProvider;
+    private NamespaceProvider parentNsProvider;
 
     private Dictionary dictionary;
 
@@ -36,7 +36,7 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
         if (dictionary != null) {
             return dictionary;
         }
-        return parentDictionaryProvider.getDictionary();
+        return parentNsProvider.getDictionary();
     }
 
     @XmlAttribute(name = "dictionary")
@@ -59,8 +59,8 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof DictionaryProvider) {
-            parentDictionaryProvider = (DictionaryProvider) parent;
+        if (parent instanceof NamespaceProvider) {
+            parentNsProvider = (NamespaceProvider) parent;
         }
     }
 }

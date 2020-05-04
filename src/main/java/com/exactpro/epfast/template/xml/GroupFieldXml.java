@@ -21,10 +21,7 @@ import com.exactpro.epfast.template.*;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class GroupFieldXml extends InstructionsXml
-    implements Group, InstructionXml, NamespaceProvider, DictionaryProvider {
-
-    private DictionaryProvider parentDictionaryProvider;
+public class GroupFieldXml extends InstructionsXml implements Group, InstructionXml, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -83,7 +80,7 @@ public class GroupFieldXml extends InstructionsXml
         if (dictionary != null) {
             return dictionary;
         }
-        return parentDictionaryProvider.getDictionary();
+        return parentNsProvider.getDictionary();
     }
 
     @XmlAttribute(name = "dictionary")
@@ -119,9 +116,6 @@ public class GroupFieldXml extends InstructionsXml
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;
-        }
-        if (parent instanceof DictionaryProvider) {
-            parentDictionaryProvider = (DictionaryProvider) parent;
         }
     }
 }

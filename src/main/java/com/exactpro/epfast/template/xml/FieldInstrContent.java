@@ -24,10 +24,7 @@ import com.exactpro.epfast.template.Instruction;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldInstrContent extends AbstractFieldXml
-    implements FieldInstruction, NamespaceProvider, DictionaryProvider {
-
-    private DictionaryProvider parentDictionaryProvider;
+public class FieldInstrContent extends AbstractFieldXml implements FieldInstruction, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -77,7 +74,7 @@ public class FieldInstrContent extends AbstractFieldXml
 
     @Override
     public Dictionary getDictionary() {
-        return parentDictionaryProvider.getDictionary();
+        return parentNsProvider.getDictionary();
     }
 
     @Override
@@ -92,9 +89,6 @@ public class FieldInstrContent extends AbstractFieldXml
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;
-        }
-        if (parent instanceof DictionaryProvider) {
-            parentDictionaryProvider = (DictionaryProvider) parent;
         }
     }
 }

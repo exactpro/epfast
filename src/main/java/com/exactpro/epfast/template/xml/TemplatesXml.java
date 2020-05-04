@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "templates", namespace = NamespaceProvider.XML_NAMESPACE)
-public class TemplatesXml implements Templates, NamespaceProvider, DictionaryProvider {
+public class TemplatesXml implements Templates, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 

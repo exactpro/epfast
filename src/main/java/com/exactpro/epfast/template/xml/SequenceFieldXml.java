@@ -22,10 +22,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
-public class SequenceFieldXml extends InstructionsXml
-    implements Sequence, InstructionXml, NamespaceProvider, DictionaryProvider {
-
-    private DictionaryProvider parentDictionaryProvider;
+public class SequenceFieldXml extends InstructionsXml implements Sequence, InstructionXml, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
@@ -86,7 +83,7 @@ public class SequenceFieldXml extends InstructionsXml
         if (dictionary != null) {
             return dictionary;
         }
-        return parentDictionaryProvider.getDictionary();
+        return parentNsProvider.getDictionary();
     }
 
     @XmlAttribute(name = "dictionary")
@@ -132,9 +129,6 @@ public class SequenceFieldXml extends InstructionsXml
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;
-        }
-        if (parent instanceof DictionaryProvider) {
-            parentDictionaryProvider = (DictionaryProvider) parent;
         }
     }
 }
