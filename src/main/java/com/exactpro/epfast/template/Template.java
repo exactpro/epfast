@@ -24,8 +24,6 @@ public interface Template {
 
     Reference getTypeRef();
 
-    Dictionary getDictionary();
-
     List<? extends Instruction> getInstructions();
 
 }

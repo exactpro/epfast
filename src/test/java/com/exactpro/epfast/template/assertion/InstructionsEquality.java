@@ -151,14 +151,12 @@ public class InstructionsEquality {
     private static boolean areEqual(Group actual, Group expected) {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualReferences(actual.getTypeRef(), expected.getTypeRef()) &&
-            actual.getDictionary().equals(expected.getDictionary()) &&
             areEqualInstructionLists(actual.getInstructions(), expected.getInstructions());
     }
 
     private static boolean areEqual(Sequence actual, Sequence expected) {
         return areEqualFieldInstructions(actual, expected) &&
             areEqualReferences(actual.getTypeRef(), expected.getTypeRef()) &&
-            actual.getDictionary().equals(expected.getDictionary()) &&
             areEqualInstructionLists(actual.getInstructions(), expected.getInstructions()) &&
             (actual.getLength() == expected.getLength() ||
                 (areEqualIdentities(actual.getLength().getFieldId(), expected.getLength().getFieldId()) &&

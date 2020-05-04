@@ -78,7 +78,6 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         this.presence = presence;
     }
 
-    @Override
     public Dictionary getDictionary() {
         return dictionary;
     }

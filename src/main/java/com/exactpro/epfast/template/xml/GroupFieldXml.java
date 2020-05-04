@@ -75,7 +75,6 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
         this.presence = presence;
     }
 
-    @Override
     public Dictionary getDictionary() {
         return dictionary;
     }

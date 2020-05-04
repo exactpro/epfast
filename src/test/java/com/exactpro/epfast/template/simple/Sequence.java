@@ -16,7 +16,6 @@
 
 package com.exactpro.epfast.template.simple;
 
-import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Instruction;
 
 import java.util.ArrayList;
@@ -27,8 +26,6 @@ public class Sequence extends FieldInstruction implements com.exactpro.epfast.te
     private Reference typeRef = new Reference();
 
     private LengthField length = new LengthField();
-
-    private Dictionary dictionary = Dictionary.getDictionary("global");
 
     private final List<Instruction> instructions = new ArrayList<>();
 
@@ -43,11 +40,6 @@ public class Sequence extends FieldInstruction implements com.exactpro.epfast.te
     }
 
     @Override
-    public Dictionary getDictionary() {
-        return dictionary;
-    }
-
-    @Override
     public List<Instruction> getInstructions() {
         return instructions;
     }
@@ -58,9 +50,5 @@ public class Sequence extends FieldInstruction implements com.exactpro.epfast.te
 
     public void setLength(LengthField length) {
         this.length = length;
-    }
-
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
     }
 }
