@@ -27,7 +27,7 @@ import java.util.List;
 
 public class WrapperXml {
 
-    public static List<? extends Template> wrap(InputStream xmlStream) throws JAXBException {
+    public static List<? extends Template> wrapXmlInFASTTemplateList(InputStream xmlStream) throws JAXBException {
         Object template = JAXBContext.newInstance(TemplatesXml.class, TemplateXml.class)
             .createUnmarshaller().unmarshal(xmlStream);
 

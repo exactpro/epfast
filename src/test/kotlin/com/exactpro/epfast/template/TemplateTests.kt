@@ -9,38 +9,17 @@ import org.junit.jupiter.api.Test
 class TemplateTests {
 
     @Test
-    fun `my first template test`() {
+    fun `test template without instructions`() {
         val expected = listOf(template("template", "tempNS") {
-            auxiliaryId = "25"
-            instructions {
-                int64("") {
-                    copy {
-                        initialValue = "64"
-                        dictionary = "template"
-                    }
-                }
-                int32("") {
-                    constant {
-                        initialValue = "32"
-                    }
-                }
-                compoundDecimal("") {
-                    optional = false
-                    mantissa {
-                        delta { }
-                    }
-                }
-                byteVector("") {
-                    optional = true
-                    length("lengthNAME")
-                }
-                unicode("") {
-                }
+            auxiliaryId = "id"
+            typeRef {
+                name = "typeRef"
+                namespace = "namespace"
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("input.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("template.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -54,8 +33,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("templateRef.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("templateRef.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -71,8 +50,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("int32.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("int32.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -88,8 +67,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("uInt32.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("uInt32.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -110,8 +89,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("int64.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("int64.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -131,8 +110,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("uInt64.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("uInt64.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -154,8 +133,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("simpleDecimal.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("simpleDecimal.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -182,8 +161,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("compoundDecimal.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("compoundDecimal.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -201,8 +180,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("asciiString.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("asciiString.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -222,8 +201,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("unicodeString.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("unicodeString.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -244,8 +223,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("byteVector.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("byteVector.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -290,8 +269,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("sequence.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("sequence.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -326,8 +305,8 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrap(getResourceInputStream("group.xml"))
-        TemplatesComparison.areEqualTemplateLists(actual, expected)
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("group.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     private fun getResourceInputStream(resourceName: String): InputStream? {
