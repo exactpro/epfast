@@ -18,7 +18,13 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("template.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1" templateNs="tempNS">
+                        <template name="template" id="id" typeRefName="typeRef" typeRefNs="namespace"/>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -33,7 +39,13 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("templateRef.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <templateRef name="templateRef" templateNs="namespace"/>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -50,7 +62,15 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("int32.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <int32 name="int" id="32" namespace="namespace">
+                            <constant value="value"/>
+                        </int32>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -67,7 +87,15 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("uInt32.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <uInt32 name="uInt" id="32" namespace="namespace">
+                            <default value="value"/>
+                        </uInt32>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -89,7 +117,15 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("int64.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <int64 name="int" id="64" namespace="namespace">
+                            <copy value="value" dictionary="copy" keyName="key" keyNs="keyNs"/>
+                        </int64>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -110,7 +146,15 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("uInt64.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <uInt64 name="uInt" id="64" namespace="namespace">
+                            <increment dictionary="template" keyName="key" keyNs="keyNs"/>
+                        </uInt64>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -133,7 +177,15 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("simpleDecimal.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <decimal name="decimal" id="simple" namespace="namespace" presence="optional">
+                            <delta value="value" dictionary="delta" keyName="key" keyNs="keyNs"/>
+                        </decimal>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -180,7 +232,15 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("asciiString.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <string name="string" id="ascii" namespace="namespace" presence="optional">
+                            <copy dictionary="template" value="value"/>
+                        </string>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -201,7 +261,15 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("unicodeString.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <string charset="unicode" name="string" id="unicode" namespace="namespace" lengthName="length" lengthId="id">
+                            <increment dictionary="type"/>
+                        </string>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -223,7 +291,15 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("byteVector.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <byteVector name="vector" id="byte" namespace="namespace" presence="optional" lengthName="length" lengthId="id">
+                            <constant value="value"/>
+                        </byteVector>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 

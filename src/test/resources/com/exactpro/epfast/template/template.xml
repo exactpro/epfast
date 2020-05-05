@@ -1,3 +1,0 @@
-<templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1" templateNs="tempNS">
-    <template name="template" id="id" typeRefName="typeRef" typeRefNs="namespace"/>
-</templates>

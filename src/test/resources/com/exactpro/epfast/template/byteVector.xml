@@ -1,5 +1,0 @@
-<template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-    <byteVector name="vector" id="byte" namespace="namespace" presence="optional" lengthName="length" lengthId="id">
-        <constant value="value"/>
-    </byteVector>
-</template>

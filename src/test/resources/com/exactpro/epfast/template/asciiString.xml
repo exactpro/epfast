@@ -1,5 +1,0 @@
-<template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-    <string name="string" id="ascii" namespace="namespace" presence="optional">
-        <copy dictionary="template" value="value"/>
-    </string>
-</template>

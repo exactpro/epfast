@@ -1,5 +1,0 @@
-<template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-    <int32 name="int" id="32" namespace="namespace">
-        <constant value="value"/>
-    </int32>
-</template>
