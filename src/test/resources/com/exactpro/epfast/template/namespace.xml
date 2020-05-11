@@ -1,0 +1,17 @@
+<templates templateNs="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <template name="template" ns="group">
+        <group name="group">
+            <sequence name="sequence" namespace="copy">
+                <length name="length" namespace="tail">
+                    <tail/>
+                </length>
+                <string charset="ascii" name="string">
+                    <copy/>
+                </string>
+            </sequence>
+        </group>
+        <int32 name="int32" namespace="increment">
+            <increment/>
+        </int32>
+    </template>
+</templates>

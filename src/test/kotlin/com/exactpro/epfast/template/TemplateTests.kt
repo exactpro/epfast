@@ -20,7 +20,7 @@ class TemplateTests {
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
-                    <templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1" templateNs="tempNS">
+                    <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template" id="id" typeRefName="typeRef" typeRefNs="namespace"/>
                     </templates>
                 """.trimIndent().byteInputStream()
@@ -417,6 +417,44 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("dictionary.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test namespace inheritance`() {
+        val expected = listOf(template("template", "template") {
+            instructions {
+                group("group", "group") {
+                    instructions {
+                        sequence("sequence", "copy") {
+                            length {
+                                name = "length"
+                                namespace = "tail"
+                                operator {
+                                    tail {
+                                        namespace = "tail"
+                                    }
+                                }
+                            }
+                            instructions {
+                                asciiString("string", "copy") {
+                                    copy {
+                                        namespace = "copy"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                int32("int32", "increment") {
+                    increment {
+                        namespace = "increment"
+                    }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("namespace.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
