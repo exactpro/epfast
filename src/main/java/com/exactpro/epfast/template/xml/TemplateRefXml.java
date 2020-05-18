@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class TemplateRefXml implements TemplateRef, InstructionXml {
 
-    private String name;
+    private String name = "";
 
-    private String templateNs;
+    private String templateNs = Reference.DEFAULT_NAMESPACE;
 
     @Override
     public Reference getTemplateRef() {

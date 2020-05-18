@@ -52,7 +52,10 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
         if (localNamespace != null) {
             return localNamespace;
         }
-        return parentNsProvider.getApplicationNamespace();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @XmlAttribute(name = "namespace")
@@ -80,7 +83,10 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
         if (dictionary != null) {
             return dictionary;
         }
-        return parentNsProvider.getDictionary();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getDictionary();
+        }
+        return Dictionary.getDictionary("global");
     }
 
     @XmlAttribute(name = "dictionary")

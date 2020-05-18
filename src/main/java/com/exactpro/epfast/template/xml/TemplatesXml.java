@@ -21,6 +21,7 @@ import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.Templates;
 
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -77,6 +78,9 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         if (dictionary != null) {
             return dictionary;
         }
+        if (parentNsProvider != null) {
+            return parentNsProvider.getDictionary();
+        }
         return Dictionary.getDictionary("global");
     }
 
@@ -93,6 +97,12 @@ public class TemplatesXml implements Templates, NamespaceProvider {
     @XmlElement(name = "template", type = TemplateXml.class, namespace = XML_NAMESPACE)
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
+    }
+
+    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+        if (parent instanceof NamespaceProvider) {
+            parentNsProvider = (NamespaceProvider) parent;
+        }
     }
 }
 

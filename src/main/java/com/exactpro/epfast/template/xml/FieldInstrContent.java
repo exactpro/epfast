@@ -16,10 +16,7 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
-import com.exactpro.epfast.template.FieldInstruction;
-import com.exactpro.epfast.template.Identity;
-import com.exactpro.epfast.template.Instruction;
+import com.exactpro.epfast.template.*;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -49,7 +46,10 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
         if (localNamespace != null) {
             return localNamespace;
         }
-        return parentNsProvider.getApplicationNamespace();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @XmlAttribute(name = "namespace")
@@ -74,7 +74,10 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
 
     @Override
     public Dictionary getDictionary() {
-        return parentNsProvider.getDictionary();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getDictionary();
+        }
+        return Dictionary.getDictionary("global");
     }
 
     @Override

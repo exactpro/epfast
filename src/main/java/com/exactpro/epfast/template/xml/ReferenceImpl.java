@@ -16,6 +16,7 @@
 
 package com.exactpro.epfast.template.xml;
 
+import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Reference;
 
 import javax.xml.bind.Unmarshaller;
@@ -43,7 +44,10 @@ public class ReferenceImpl implements Reference {
         if (applicationNs != null) {
             return applicationNs;
         }
-        return parentNsProvider.getApplicationNamespace();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {

@@ -18,6 +18,7 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.LengthField;
+import com.exactpro.epfast.template.Reference;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -55,7 +56,10 @@ public class LengthXml extends AbstractFieldXml implements LengthField, Namespac
         if (localNamespace != null) {
             return localNamespace;
         }
-        return parentNsProvider.getApplicationNamespace();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @XmlAttribute(name = "namespace")
