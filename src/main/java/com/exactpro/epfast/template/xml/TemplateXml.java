@@ -40,7 +40,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     private String typeRefName = "";
 
-    private String typeRefNs = Reference.DEFAULT_NAMESPACE;
+    private String typeRefNs;
 
     @Override
     public Identity getTemplateId() {
@@ -60,6 +60,11 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
         this.templateNs = templateNs;
+    }
+
+    @XmlAttribute(name = "ns")
+    public void setApplicationNs(String ns) {
+        this.applicationNs = ns;
     }
 
     @Override
@@ -84,11 +89,6 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         return Reference.DEFAULT_NAMESPACE;
     }
 
-    @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        this.applicationNs = ns;
-    }
-
     @Override
     public Dictionary getDictionary() {
         if (dictionary != null) {
@@ -107,7 +107,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     @Override
     public ReferenceImpl getTypeRef() {
-        return new ReferenceImpl(typeRefName, typeRefNs);
+        return new ReferenceImpl(typeRefName, getTypeRefNs());
     }
 
     @XmlAttribute(name = "typeRefName")
@@ -118,6 +118,13 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     @XmlAttribute(name = "typeRefNs")
     public void setTypeRefNs(String typeRefNs) {
         this.typeRefNs = typeRefNs;
+    }
+
+    public String getTypeRefNs() {
+        if (typeRefNs != null) {
+            return typeRefNs;
+        }
+        return getApplicationNamespace();
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {

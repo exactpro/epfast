@@ -46,9 +46,17 @@ public class LengthXml extends AbstractFieldXml implements LengthField, Namespac
         this.fieldId.setAuxiliaryId(id);
     }
 
+    @XmlAttribute(name = "ns")
+    public void setApplicationNs(String namespace) {
+        this.localNamespace = namespace;
+    }
+
     @Override
     public String getTemplateNamespace() {
-        return null;
+        if (parentNsProvider != null) {
+            return parentNsProvider.getTemplateNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
@@ -62,14 +70,12 @@ public class LengthXml extends AbstractFieldXml implements LengthField, Namespac
         return Reference.DEFAULT_NAMESPACE;
     }
 
-    @XmlAttribute(name = "namespace")
-    public void setNamespace(String namespace) {
-        this.localNamespace = namespace;
-    }
-
     @Override
     public Dictionary getDictionary() {
-        return parentNsProvider.getDictionary();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getDictionary();
+        }
+        return Dictionary.getDictionary("global");
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {

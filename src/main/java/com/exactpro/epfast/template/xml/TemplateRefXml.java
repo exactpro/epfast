@@ -16,21 +16,25 @@
 
 package com.exactpro.epfast.template.xml;
 
+import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.TemplateRef;
 
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class TemplateRefXml implements TemplateRef, InstructionXml {
 
+    private NamespaceProvider parentNsProvider;
+
     private String name = "";
 
-    private String templateNs = Reference.DEFAULT_NAMESPACE;
+    private String templateNs;
 
     @Override
     public Reference getTemplateRef() {
-        return new ReferenceImpl(name, templateNs);
+        return new ReferenceImpl(name, getTemplateNamespace());
     }
 
     @XmlAttribute(name = "name")
@@ -38,13 +42,43 @@ public class TemplateRefXml implements TemplateRef, InstructionXml {
         this.name = name;
     }
 
+    public String getTemplateNamespace() {
+        if (templateNs != null) {
+            return templateNs;
+        }
+        if (parentNsProvider != null) {
+            return parentNsProvider.getTemplateNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
+    }
+
+    public String getApplicationNamespace() {
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
+    }
+
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
         this.templateNs = templateNs;
     }
 
+    public Dictionary getDictionary() {
+        if (parentNsProvider != null) {
+            return parentNsProvider.getDictionary();
+        }
+        return Dictionary.getDictionary("global");
+    }
+
     @Override
     public Instruction toInstruction() {
         return this;
+    }
+
+    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+        if (parent instanceof NamespaceProvider) {
+            parentNsProvider = (NamespaceProvider) parent;
+        }
     }
 }

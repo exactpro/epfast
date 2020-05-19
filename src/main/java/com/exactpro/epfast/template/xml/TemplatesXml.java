@@ -33,24 +33,13 @@ public class TemplatesXml implements Templates, NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
-    private String applicationNs;
-
     private String templateNs;
+
+    private String applicationNs;
 
     private Dictionary dictionary;
 
     private List<Template> templates = new ArrayList<>();
-
-    @Override
-    public String getApplicationNamespace() {
-        if (applicationNs != null) {
-            return applicationNs;
-        }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
-    }
 
     @Override
     public String getTemplateNamespace() {
@@ -63,14 +52,25 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         return Reference.DEFAULT_NAMESPACE;
     }
 
-    @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        this.applicationNs = ns;
+    @Override
+    public String getApplicationNamespace() {
+        if (applicationNs != null) {
+            return applicationNs;
+        }
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
         this.templateNs = templateNs;
+    }
+
+    @XmlAttribute(name = "ns")
+    public void setApplicationNs(String ns) {
+        this.applicationNs = ns;
     }
 
     @Override

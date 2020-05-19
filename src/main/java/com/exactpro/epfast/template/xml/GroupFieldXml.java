@@ -35,7 +35,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
 
     private String typeRefName = "";
 
-    private String typeRefNs = Reference.DEFAULT_NAMESPACE;
+    private String typeRefNs;
 
     @Override
     public Identity getFieldId() {
@@ -44,7 +44,10 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
 
     @Override
     public String getTemplateNamespace() {
-        return null;
+        if (parentNsProvider != null) {
+            return parentNsProvider.getTemplateNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
@@ -58,8 +61,8 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
         return Reference.DEFAULT_NAMESPACE;
     }
 
-    @XmlAttribute(name = "namespace")
-    public void setNamespace(String namespace) {
+    @XmlAttribute(name = "ns")
+    public void setApplicationNs(String namespace) {
         this.localNamespace = namespace;
     }
 
@@ -96,7 +99,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
 
     @Override
     public ReferenceImpl getTypeRef() {
-        return new ReferenceImpl(typeRefName, typeRefNs);
+        return new ReferenceImpl(typeRefName, getTypeRefNs());
     }
 
     @XmlAttribute(name = "typeRefName")
@@ -107,6 +110,13 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     @XmlAttribute(name = "typeRefNs")
     public void setTypeRefNs(String typeRefNs) {
         this.typeRefNs = typeRefNs;
+    }
+
+    public String getTypeRefNs() {
+        if (typeRefNs != null) {
+            return typeRefNs;
+        }
+        return getApplicationNamespace();
     }
 
     @Override

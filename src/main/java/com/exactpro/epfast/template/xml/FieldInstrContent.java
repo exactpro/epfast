@@ -38,7 +38,10 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
 
     @Override
     public String getTemplateNamespace() {
-        return null;
+        if (parentNsProvider != null) {
+            return parentNsProvider.getTemplateNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
@@ -52,8 +55,8 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
         return Reference.DEFAULT_NAMESPACE;
     }
 
-    @XmlAttribute(name = "namespace")
-    public void setNamespace(String namespace) {
+    @XmlAttribute(name = "ns")
+    public void setApplicationNs(String namespace) {
         this.localNamespace = namespace;
     }
 

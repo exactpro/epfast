@@ -1,0 +1,37 @@
+<templates templateNs="TNS" ns="ANS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <template name="template1" ns="ns" id="tempId" templateNs="templateNs1" typeRefName="type" typeRefNs="ref">
+        <sequence name="sequence" ns="namespace" id="id" presence="optional" typeRefName="type" typeRefNs="ref">
+            <length name="length" ns="ns" id="lengthId">
+                <constant value="value"/>
+            </length>
+            <int32 name="int32" ns="ns">
+                <delta/>
+            </int32>
+            <string charset="unicode" name="string" ns="ns" lengthName="length"/>
+        </sequence>
+        <group name="group" ns="namespace" id="groupId" presence="mandatory" typeRefName="type" typeRefNs="ref">
+            <sequence name="name" ns="namespace">
+                <decimal name="decimal" ns="ns">
+                    <mantissa/>
+                </decimal>
+                <templateRef name="tempRef" templateNs="ns"/>
+            </sequence>
+            <byteVector name="vector" presence="optional" ns="ns" lengthId="id"/>
+        </group>
+    </template>
+
+    <template name="template2" ns="ns" id="tempId" templateNs="templateNs2" typeRefName="type" typeRefNs="ref">
+        <int32 name="int" ns="intNs" id="32" presence="mandatory">
+            <increment value="value" dictionary="template" keyName="intKey" keyNs="ns"/>
+        </int32>
+        <int64 name="int" ns="intNs" id="64" presence="mandatory">
+            <increment value="value" dictionary="global" keyName="intKey" keyNs="ns"/>
+        </int64>
+        <uInt32 name="uInt" ns="uIntNs" id="32" presence="optional">
+            <increment value="value" dictionary="template" keyName="intKey" keyNs="ns"/>
+        </uInt32>
+        <uInt64 name="uInt" ns="uIntNs" id="64" presence="optional">
+            <increment value="value" dictionary="global" keyName="intKey" keyNs="ns"/>
+        </uInt64>
+    </template>
+</templates>

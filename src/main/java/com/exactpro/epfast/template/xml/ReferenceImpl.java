@@ -16,7 +16,6 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Reference;
 
 import javax.xml.bind.Unmarshaller;
