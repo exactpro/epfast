@@ -49,9 +49,7 @@ class TemplateTests {
                     }
                     instructions {
                         sequence("name", "namespace") {
-                            typeRef {
-                                namespace = "namespace"
-                            }
+                            typeRef { namespace = "namespace" }
                             instructions {
                                 compoundDecimal("decimal", "ns") { mantissa {} }
                                 templateRef {
@@ -433,9 +431,7 @@ class TemplateTests {
             typeRef { namespace = "ns" }
             instructions {
                 unicode("string", "ns") {
-                    length("") {
-                        namespace = "ns"
-                    }
+                    length("") { namespace = "ns" }
                 }
             }
         })
@@ -458,9 +454,7 @@ class TemplateTests {
             typeRef { namespace = "NS" }
             instructions {
                 byteVector("vector", "NS") {
-                    length("length") {
-                        namespace = "NS"
-                    }
+                    length("length") { namespace = "NS" }
                 }
             }
         })
@@ -508,10 +502,7 @@ class TemplateTests {
                             instructions {
                                 sequence("", "namespace") {
                                     typeRef { namespace = "namespace" }
-
-                                    instructions {
-                                        uint64("uInt", "namespace") {}
-                                    }
+                                    instructions { uint64("uInt", "namespace") {} }
                                 }
                             }
                         }
@@ -537,14 +528,10 @@ class TemplateTests {
                             typeRef { namespace = "groupNS" }
 
                             instructions {
-                                unicode("string", "groupNS") {
-                                    length { namespace = "groupNS" }
-                                }
+                                unicode("string", "groupNS") { length { namespace = "groupNS" } }
                             }
                         }
-                        byteVector("vector", "ns") {
-                            length { namespace = "ns" }
-                        }
+                        byteVector("vector", "ns") { length { namespace = "ns" } }
                     }
                 }
                 group("", "namespace") {
@@ -558,10 +545,7 @@ class TemplateTests {
                             instructions {
                                 group("", "namespace") {
                                     typeRef { namespace = "namespace" }
-
-                                    instructions {
-                                        uint32("uInt", "namespace") {}
-                                    }
+                                    instructions { uint32("uInt", "namespace") {} }
                                 }
                             }
                         }
@@ -575,37 +559,280 @@ class TemplateTests {
     }
 
     @Test
-    fun `test dictionary inheritance`() {
+    fun `test dictionary inheritance with int32`() {
         val expected = listOf(template("template") {
             instructions {
-                group("group") {
+                int32("int") { copy { dictionary = "copy" } }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template">
+                            <int32 name="int">
+                                <copy/>
+                            </int32>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with uInt32`() {
+        val expected = listOf(template("template") {
+            instructions {
+                uint32("uInt") { increment { dictionary = "increment" } }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <uInt32 name="uInt">
+                            <increment/>
+                        </uInt32>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with int64`() {
+        val expected = listOf(template("template") {
+            instructions {
+                int64("int") { delta { dictionary = "delta" } }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template" dictionary="delta">
+                            <int64 name="int">
+                                <delta/>
+                            </int64>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with uInt64`() {
+        val expected = listOf(template("template") {
+            instructions {
+                uint64("uInt") { tail { dictionary = "tail" } }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template">
+                            <uInt64 name="uInt">
+                                <tail/>
+                            </uInt64>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with simple decimal`() {
+        val expected = listOf(template("template") {
+            instructions {
+                simpleDecimal("decimal") { copy { dictionary = "copy" } }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <decimal name="decimal">
+                            <copy/>
+                        </decimal>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with compound decimal`() {
+        val expected = listOf(template("template") {
+            instructions {
+                compoundDecimal("decimal") {
+                    exponent { delta { dictionary = "delta" } }
+                    mantissa { tail { dictionary = "tail" } }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <decimal name="decimal">
+                            <mantissa>
+                                <tail dictionary="tail"/>
+                            </mantissa>
+                            <exponent>
+                                <delta/>
+                            </exponent>
+                        </decimal>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with ascii string`() {
+        val expected = listOf(template("template") {
+            instructions {
+                asciiString("string") { copy { dictionary = "copy" } }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <string name="string">
+                            <copy/>
+                        </string>
+                    </template>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with unicode string`() {
+        val expected = listOf(template("template") {
+            instructions {
+                unicode("string") { increment { dictionary = "increment" } }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template">
+                            <string charset="unicode" name="string">
+                                <increment/>
+                            </string>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with byte vector`() {
+        val expected = listOf(template("template") {
+            instructions {
+                byteVector("vector") { delta { dictionary = "delta" } }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates dictionary="dictionary" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template" dictionary="delta">
+                            <byteVector name="vector">
+                                <delta/>
+                            </byteVector>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with sequence`() {
+        val expected = listOf(template("template") {
+            instructions {
+                sequence("") {
+                    length { operator { tail { dictionary = "sequence" } } }
+
                     instructions {
-                        sequence("sequence") {
-                            length {
-                                name = "length"
-                                operator {
-                                    tail {
-                                        dictionary = "tail"
+                        compoundDecimal("decimal") {
+                            mantissa { copy { dictionary = "sequence" } }
+                        }
+                        sequence("") {
+                            length { operator { increment { dictionary = "length" } } }
+                        }
+                    }
+                }
+                sequence("") {
+                    instructions {
+                        int32("int") { tail { dictionary = "template" } }
+                        sequence("") {
+                            length { operator { delta { dictionary = "template" } } }
+
+                            instructions {
+                                sequence("") {
+
+                                    instructions {
+                                        uint64("uInt") { copy { dictionary = "uInt" } }
                                     }
                                 }
                             }
                         }
-                        unicode("string") {
-                            copy {
-                                dictionary = "copy"
-                            }
-                        }
-                    }
-                }
-                int32("int32") {
-                    increment {
-                        dictionary = "increment"
                     }
                 }
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("dictionary.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("dictInheritanceWithSequence.xml"))
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test dictionary inheritance with group`() {
+        val expected = listOf(template("template") {
+            instructions {
+                group("") {
+
+                    instructions {
+                        group("") {
+
+                            instructions {
+                                unicode("string") { delta { dictionary = "unicode" } }
+                            }
+                        }
+                        byteVector("vector") { copy { dictionary = "group" } }
+                    }
+                }
+                group("") {
+
+                    instructions {
+                        int64("int") { increment { dictionary = "int" } }
+                        group("") {
+
+                            instructions {
+                                group("") {
+
+                                    instructions {
+                                        uint32("uInt") { tail { dictionary = "tail" } }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("dictInheritanceWithGroup.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 

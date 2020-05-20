@@ -1,0 +1,34 @@
+<templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <template name="template" dictionary="template">
+        <sequence dictionary="sequence">
+            <length>
+                <tail/>
+            </length>
+            <decimal name="decimal">
+                <mantissa>
+                    <copy/>
+                </mantissa>
+            </decimal>
+            <sequence dictionary="length">
+                <length>
+                    <increment/>
+                </length>
+            </sequence>
+        </sequence>
+        <sequence>
+            <int32 name="int">
+                <tail/>
+            </int32>
+            <sequence>
+                <length>
+                    <delta/>
+                </length>
+                <sequence dictionary="uInt">
+                    <uInt64 name="uInt">
+                        <copy/>
+                    </uInt64>
+                </sequence>
+            </sequence>
+        </sequence>
+    </template>
+</templates>
