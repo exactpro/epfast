@@ -18,7 +18,6 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.LengthField;
-import com.exactpro.epfast.template.Reference;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -53,10 +52,7 @@ public class LengthXml extends AbstractFieldXml implements LengthField, Namespac
 
     @Override
     public String getTemplateNamespace() {
-        if (parentNsProvider != null) {
-            return parentNsProvider.getTemplateNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return parentNsProvider.getTemplateNamespace();
     }
 
     @Override
@@ -64,18 +60,12 @@ public class LengthXml extends AbstractFieldXml implements LengthField, Namespac
         if (localNamespace != null) {
             return localNamespace;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return parentNsProvider.getApplicationNamespace();
     }
 
     @Override
     public Dictionary getDictionary() {
-        if (parentNsProvider != null) {
-            return parentNsProvider.getDictionary();
-        }
-        return Dictionary.getDictionary("global");
+        return parentNsProvider.getDictionary();
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {

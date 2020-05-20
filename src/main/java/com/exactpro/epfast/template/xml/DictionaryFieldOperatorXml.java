@@ -36,10 +36,7 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
         if (dictionary != null) {
             return dictionary;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getDictionary();
-        }
-        return Dictionary.getDictionary("global");
+        return parentNsProvider.getDictionary();
     }
 
     @XmlAttribute(name = "dictionary")

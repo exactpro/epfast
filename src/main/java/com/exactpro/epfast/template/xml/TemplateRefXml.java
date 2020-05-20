@@ -46,17 +46,11 @@ public class TemplateRefXml implements TemplateRef, InstructionXml {
         if (templateNs != null) {
             return templateNs;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getTemplateNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return parentNsProvider.getTemplateNamespace();
     }
 
     public String getApplicationNamespace() {
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return parentNsProvider.getApplicationNamespace();
     }
 
     @XmlAttribute(name = "templateNs")
@@ -65,10 +59,7 @@ public class TemplateRefXml implements TemplateRef, InstructionXml {
     }
 
     public Dictionary getDictionary() {
-        if (parentNsProvider != null) {
-            return parentNsProvider.getDictionary();
-        }
-        return Dictionary.getDictionary("global");
+        return parentNsProvider.getDictionary();
     }
 
     @Override

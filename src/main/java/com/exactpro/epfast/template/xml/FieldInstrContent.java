@@ -38,10 +38,7 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
 
     @Override
     public String getTemplateNamespace() {
-        if (parentNsProvider != null) {
-            return parentNsProvider.getTemplateNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return parentNsProvider.getTemplateNamespace();
     }
 
     @Override
@@ -49,10 +46,7 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
         if (localNamespace != null) {
             return localNamespace;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return parentNsProvider.getApplicationNamespace();
     }
 
     @XmlAttribute(name = "ns")
@@ -77,10 +71,7 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
 
     @Override
     public Dictionary getDictionary() {
-        if (parentNsProvider != null) {
-            return parentNsProvider.getDictionary();
-        }
-        return Dictionary.getDictionary("global");
+        return parentNsProvider.getDictionary();
     }
 
     @Override

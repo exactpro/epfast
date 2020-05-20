@@ -22,7 +22,7 @@ public abstract class OperatorWithDictionary extends FieldOperator {
 
     private Reference dictionaryKey = new Reference();
 
-    private Dictionary dictionary = Dictionary.getDictionary("global");
+    private Dictionary dictionary = Dictionary.GLOBAL;
 
     public Dictionary getDictionary() {
         return dictionary;

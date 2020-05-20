@@ -21,7 +21,6 @@ import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.Templates;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -30,8 +29,6 @@ import java.util.List;
 
 @XmlRootElement(name = "templates", namespace = NamespaceProvider.XML_NAMESPACE)
 public class TemplatesXml implements Templates, NamespaceProvider {
-
-    private NamespaceProvider parentNsProvider;
 
     private String templateNs;
 
@@ -46,9 +43,6 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         if (templateNs != null) {
             return templateNs;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getTemplateNamespace();
-        }
         return Reference.DEFAULT_NAMESPACE;
     }
 
@@ -56,9 +50,6 @@ public class TemplatesXml implements Templates, NamespaceProvider {
     public String getApplicationNamespace() {
         if (applicationNs != null) {
             return applicationNs;
-        }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
         }
         return Reference.DEFAULT_NAMESPACE;
     }
@@ -78,10 +69,7 @@ public class TemplatesXml implements Templates, NamespaceProvider {
         if (dictionary != null) {
             return dictionary;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getDictionary();
-        }
-        return Dictionary.getDictionary("global");
+        return Dictionary.GLOBAL;
     }
 
     @XmlAttribute(name = "dictionary")
@@ -97,12 +85,6 @@ public class TemplatesXml implements Templates, NamespaceProvider {
     @XmlElement(name = "template", type = TemplateXml.class, namespace = XML_NAMESPACE)
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
     }
 }
 

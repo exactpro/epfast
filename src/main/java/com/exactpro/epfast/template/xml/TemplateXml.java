@@ -97,7 +97,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         if (parentNsProvider != null) {
             return parentNsProvider.getDictionary();
         }
-        return Dictionary.getDictionary("global");
+        return Dictionary.GLOBAL;
     }
 
     @XmlAttribute(name = "dictionary")

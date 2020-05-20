@@ -240,21 +240,21 @@ class TemplateTests {
         val expected = listOf(template("template1", "tempNS") {
             typeRef {
                 name = "typeRef"
-                namespace = "ns"
+                namespace = "NS"
             }
         },
-                template("template2", "tempNS") {
+                template("template2", "namespace") {
                     typeRef {
                         name = "typeRef"
-                        namespace = "namespace"
+                        namespace = "ns"
                     }
                 })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
-                    <templates templateNs="tempNS" ns="ns" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template1" typeRefName="typeRef"/>
-                        <template name="template2" ns="namespace" typeRefName="typeRef"/>
+                        <template name="template2" ns="ns" templateNs="namespace" typeRefName="typeRef"/>
                     </templates>
                 """.trimIndent().byteInputStream()
         )
@@ -262,20 +262,62 @@ class TemplateTests {
     }
 
     @Test
-    fun `test templateRef`() {
-        val expected = listOf(template("template") {
+    fun `test namespace inheritance with templateRef`() {
+        val expected = listOf(template("template", "tempNS") {
             instructions {
                 templateRef {
                     name = "templateRef"
-                    namespace = "namespace"
+                    namespace = "tempNS"
                 }
             }
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <templateRef name="templateRef" templateNs="namespace"/>
+                    <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template">
+                            <templateRef name="templateRef"/>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test namespace inheritance with int32`() {
+        val expected = listOf(template("template", "tempNS") {
+            typeRef { namespace = "NS" }
+            instructions {
+                int32("int", "NS") {}
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template">
+                            <int32 name="int"/>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test namespace inheritance with uInt32`() {
+        val expected = listOf(template("template", "NS") {
+            typeRef { namespace = "ns" }
+            instructions {
+                uint32("uInt", "ns") {}
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <uInt32 name="uInt"/>
                     </template>
                 """.trimIndent().byteInputStream()
         )
@@ -283,138 +325,82 @@ class TemplateTests {
     }
 
     @Test
-    fun `test int32`() {
+    fun `test namespace inheritance with int64`() {
         val expected = listOf(template("template") {
+            typeRef { namespace = "ns" }
             instructions {
-                int32("int", "namespace") {
-                    auxiliaryId = "32"
-                    constant {
-                        initialValue = "value"
-                    }
-                }
+                int64("int", "ns") {}
             }
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <int32 name="int" id="32" ns="namespace">
-                            <constant value="value"/>
-                        </int32>
-                    </template>
+                    <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template" ns="ns">
+                            <int64 name="int"/>
+                        </template>
+                    </templates>
                 """.trimIndent().byteInputStream()
         )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test uInt32`() {
-        val expected = listOf(template("template") {
+    fun `test namespace inheritance with uInt64`() {
+        val expected = listOf(template("template", "ns") {
+            typeRef { namespace = "NS" }
             instructions {
-                uint32("uInt", "namespace") {
-                    auxiliaryId = "32"
-                    default {
-                        initialValue = "value"
-                    }
-                }
+                uint64("uInt", "NS") {}
             }
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <uInt32 name="uInt" id="32" ns="namespace">
-                            <default value="value"/>
-                        </uInt32>
-                    </template>
+                    <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template" templateNs="ns">
+                            <uInt64 name="uInt"/>
+                        </template>
+                    </templates>
                 """.trimIndent().byteInputStream()
         )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test int64`() {
+    fun `test namespace inheritance with simple decimal`() {
         val expected = listOf(template("template") {
+            typeRef { namespace = "NS" }
             instructions {
-                int64("int", "namespace") {
-                    auxiliaryId = "64"
-                    copy {
-                        initialValue = "value"
-                        dictionary = "copy"
-                        dictionaryKey {
-                            name = "key"
-                            namespace = "keyNs"
-                        }
-                    }
-                }
+                simpleDecimal("decimal", "NS") {}
             }
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <int64 name="int" id="64" ns="namespace">
-                            <copy value="value" dictionary="copy" keyName="key" keyNs="keyNs"/>
-                        </int64>
-                    </template>
+                    <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template">
+                            <decimal name="decimal"/>
+                        </template>
+                    </templates>
                 """.trimIndent().byteInputStream()
         )
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test uInt64`() {
-        val expected = listOf(template("template") {
+    fun `test namespace inheritance with compound decimal`() {
+        val expected = listOf(template("template", "NS") {
+            typeRef { namespace = "ns" }
             instructions {
-                uint64("uInt", "namespace") {
-                    auxiliaryId = "64"
-                    increment {
-                        dictionary = "template"
-                        dictionaryKey {
-                            name = "key"
-                            namespace = "keyNs"
-                        }
-                    }
-                }
+                compoundDecimal("decimal", "ns") {}
             }
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <uInt64 name="uInt" id="64" ns="namespace">
-                            <increment dictionary="template" keyName="key" keyNs="keyNs"/>
-                        </uInt64>
-                    </template>
-                """.trimIndent().byteInputStream()
-        )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
-    }
-
-    @Test
-    fun `test simple decimal`() {
-        val expected = listOf(template("template") {
-            instructions {
-                simpleDecimal("decimal", "namespace") {
-                    auxiliaryId = "simple"
-                    optional = true
-                    delta {
-                        initialValue = "value"
-                        dictionary = "delta"
-                        dictionaryKey {
-                            name = "key"
-                            namespace = "keyNs"
-                        }
-                    }
-                }
-            }
-        })
-
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
-                """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <decimal name="decimal" id="simple" ns="namespace" presence="optional">
-                            <delta value="value" dictionary="delta" keyName="key" keyNs="keyNs"/>
+                    <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <decimal name="decimal">
+                            <mantissa/>
                         </decimal>
                     </template>
                 """.trimIndent().byteInputStream()
@@ -423,54 +409,18 @@ class TemplateTests {
     }
 
     @Test
-    fun `test compound decimal`() {
+    fun `test namespace inheritance with ascii string`() {
         val expected = listOf(template("template") {
+            typeRef { namespace = "ns" }
             instructions {
-                compoundDecimal("decimal", "namespace") {
-                    auxiliaryId = "compound"
-                    exponent {
-                        tail {
-                            dictionary = "type"
-                            dictionaryKey {
-                                name = "key"
-                                namespace = "keyNs"
-                            }
-                        }
-                    }
-                    mantissa {
-                        tail {
-                            dictionary = "mantissa"
-                        }
-                    }
-                }
-            }
-        })
-
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("compoundDecimal.xml"))
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
-    }
-
-    @Test
-    fun `test ascii string`() {
-        val expected = listOf(template("template") {
-            instructions {
-                asciiString("string", "namespace") {
-                    auxiliaryId = "ascii"
-                    optional = true
-                    copy {
-                        dictionary = "template"
-                        initialValue = "value"
-                    }
-                }
+                asciiString("string", "ns") {}
             }
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <string name="string" id="ascii" ns="namespace" presence="optional">
-                            <copy dictionary="template" value="value"/>
-                        </string>
+                    <template name="template" ns="ns" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <string name="string"/>
                     </template>
                 """.trimIndent().byteInputStream()
         )
@@ -478,98 +428,90 @@ class TemplateTests {
     }
 
     @Test
-    fun `test unicode string`() {
+    fun `test namespace inheritance with unicode string`() {
         val expected = listOf(template("template") {
+            typeRef { namespace = "ns" }
             instructions {
-                unicode("string", "namespace") {
-                    auxiliaryId = "unicode"
-                    increment {
-                        dictionary = "type"
-                    }
-                    length("length") {
-                        auxiliaryId = "id"
-                        namespace = "namespace"
-                    }
-                }
-            }
-        })
-
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
-                """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <string charset="unicode" name="string" id="unicode" ns="namespace" lengthName="length" lengthId="id">
-                            <increment dictionary="type"/>
-                        </string>
-                    </template>
-                """.trimIndent().byteInputStream()
-        )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
-    }
-
-    @Test
-    fun `test byte vector`() {
-        val expected = listOf(template("template") {
-            instructions {
-                byteVector("vector", "namespace") {
-                    auxiliaryId = "byte"
-                    optional = true
-                    constant {
-                        initialValue = "value"
-                    }
-                    length("length") {
-                        auxiliaryId = "id"
-                        namespace = "namespace"
-                    }
-                }
-            }
-        })
-
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
-                """
-                    <template name="template" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <byteVector name="vector" id="byte" ns="namespace" presence="optional" lengthName="length" lengthId="id">
-                            <constant value="value"/>
-                        </byteVector>
-                    </template>
-                """.trimIndent().byteInputStream()
-        )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
-    }
-
-    @Test
-    fun `test sequence`() {
-        val expected = listOf(template("template") {
-            instructions {
-                sequence("sequence", "namespace") {
-                    auxiliaryId = "id"
-                    typeRef {
-                        name = "typeRef"
+                unicode("string", "ns") {
+                    length("") {
                         namespace = "ns"
                     }
-                    length {
-                        name = "length"
-                        namespace = "ns"
-                        auxiliaryId = "id"
-                        operator {
-                            default {
-                                initialValue = "value"
-                            }
-                        }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template" ns="ns">
+                            <string charset="unicode" name="string"/>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test namespace inheritance with byte vector`() {
+        val expected = listOf(template("template") {
+            typeRef { namespace = "NS" }
+            instructions {
+                byteVector("vector", "NS") {
+                    length("length") {
+                        namespace = "NS"
                     }
+                }
+            }
+        })
+
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+                """
+                    <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                        <template name="template">
+                            <byteVector name="vector" lengthName="length"/>
+                        </template>
+                    </templates>
+                """.trimIndent().byteInputStream()
+        )
+        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+    }
+
+    @Test
+    fun `test namespace inheritance with sequence`() {
+        val expected = listOf(template("template") {
+            typeRef { namespace = "ns" }
+            instructions {
+                sequence("", "ns") {
+                    typeRef { namespace = "ns" }
+                    length { namespace = "ns" }
+
                     instructions {
-                        int64("int", "namespace") {
-                            copy {
-                                dictionaryKey {
-                                    name = "key"
-                                    namespace = "keyNs"
-                                }
+                        simpleDecimal("decimal", "ns") {}
+                        sequence("", "sequenceNS") {
+                            typeRef { namespace = "sequenceNS" }
+
+                            instructions {
+                                asciiString("string", "sequenceNS") {}
                             }
                         }
-                        compoundDecimal("decimal", "namespace") {
-                            auxiliaryId = "compound"
-                            mantissa {
-                                delta {
-                                    dictionary = "mantissa"
+                    }
+                }
+                sequence("", "namespace") {
+                    typeRef { namespace = "namespace" }
+
+                    instructions {
+                        int32("int", "namespace") {}
+                        sequence("", "namespace") {
+                            typeRef { namespace = "namespace" }
+
+                            instructions {
+                                sequence("", "namespace") {
+                                    typeRef { namespace = "namespace" }
+
+                                    instructions {
+                                        uint64("uInt", "namespace") {}
+                                    }
                                 }
                             }
                         }
@@ -578,35 +520,49 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("sequence.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("nsInheritanceWithSequence.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test group`() {
+    fun `test namespace inheritance with group`() {
         val expected = listOf(template("template") {
+            typeRef { namespace = "ns" }
             instructions {
-                group("group") {
-                    auxiliaryId = "id"
-                    optional = true
-                    typeRef {
-                        name = "typeRef"
-                        namespace = "ns"
-                    }
+                group("", "ns") {
+                    typeRef { namespace = "ns" }
+
                     instructions {
-                        byteVector("vector") {
-                            auxiliaryId = "byte"
-                            constant {
-                                initialValue = "value"
-                            }
-                            length("length") {
-                                auxiliaryId = "id"
+                        group("", "groupNS") {
+                            typeRef { namespace = "groupNS" }
+
+                            instructions {
+                                unicode("string", "groupNS") {
+                                    length { namespace = "groupNS" }
+                                }
                             }
                         }
-                        asciiString("string") {
-                            auxiliaryId = "ascii"
-                            copy {
-                                dictionary = "template"
+                        byteVector("vector", "ns") {
+                            length { namespace = "ns" }
+                        }
+                    }
+                }
+                group("", "namespace") {
+                    typeRef { namespace = "namespace" }
+
+                    instructions {
+                        int64("int", "namespace") {}
+                        group("", "namespace") {
+                            typeRef { namespace = "namespace" }
+
+                            instructions {
+                                group("", "namespace") {
+                                    typeRef { namespace = "namespace" }
+
+                                    instructions {
+                                        uint32("uInt", "namespace") {}
+                                    }
+                                }
                             }
                         }
                     }
@@ -614,7 +570,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("group.xml"))
+        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("nsInheritanceWithGroup.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -650,53 +606,6 @@ class TemplateTests {
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("dictionary.xml"))
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
-    }
-
-    @Test
-    fun `test namespace inheritance`() {
-        val expected = listOf(template("template", "template") {
-            typeRef {
-                namespace = "group"
-            }
-            instructions {
-                group("group", "group") {
-                    typeRef {
-                        namespace = "group"
-                    }
-                    instructions {
-                        sequence("sequence", "copy") {
-                            typeRef {
-                                namespace = "copy"
-                            }
-                            length {
-                                name = "length"
-                                namespace = "tail"
-                                operator {
-                                    tail {
-                                        namespace = "tail"
-                                    }
-                                }
-                            }
-                            instructions {
-                                asciiString("string", "copy") {
-                                    copy {
-                                        namespace = "copy"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                int32("int32", "increment") {
-                    increment {
-                        namespace = "increment"
-                    }
-                }
-            }
-        })
-
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("namespace.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 

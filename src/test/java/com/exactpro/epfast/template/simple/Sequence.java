@@ -25,7 +25,7 @@ public class Sequence extends FieldInstruction implements com.exactpro.epfast.te
 
     private Reference typeRef = new Reference();
 
-    private LengthField length = new LengthField();
+    private LengthField length;
 
     private final List<Instruction> instructions = new ArrayList<>();
 

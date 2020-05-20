@@ -38,14 +38,11 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     private String typeRefNs;
 
-    private LengthXml length = new LengthXml();
+    private LengthXml length;
 
     @Override
     public String getTemplateNamespace() {
-        if (parentNsProvider != null) {
-            return parentNsProvider.getTemplateNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return parentNsProvider.getTemplateNamespace();
     }
 
     @Override
@@ -53,10 +50,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         if (localNamespace != null) {
             return localNamespace;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return parentNsProvider.getApplicationNamespace();
     }
 
     @Override
@@ -89,10 +83,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         if (dictionary != null) {
             return dictionary;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getDictionary();
-        }
-        return Dictionary.getDictionary("global");
+        return parentNsProvider.getDictionary();
     }
 
     @XmlAttribute(name = "dictionary")
