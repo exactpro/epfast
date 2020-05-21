@@ -121,7 +121,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         nsProvider.afterUnmarshal(unmarshaller, parent);
         typeRef = new ReferenceImpl(typeRefName, typeRefNs);
-        typeRef.afterUnmarshal(unmarshaller, this);
+        typeRef.setParentNsProvider(this);
     }
 }
 

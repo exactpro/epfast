@@ -108,6 +108,6 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         nsProvider.afterUnmarshal(unmarshaller, parent);
         typeRef = new ReferenceImpl(typeRefName, typeRefNs);
-        typeRef.afterUnmarshal(unmarshaller, this);
+        typeRef.setParentNsProvider(this);
     }
 }

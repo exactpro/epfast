@@ -18,7 +18,6 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Identity;
-import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
 
 import javax.xml.bind.Unmarshaller;
@@ -55,29 +54,17 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     @Override
     public String getTemplateNamespace() {
-        try {
-            return nsProvider.getTemplateNamespace();
-        } catch (NullPointerException exception) {
-            return Reference.DEFAULT_NAMESPACE;
-        }
+        return nsProvider.getTemplateNamespace();
     }
 
     @Override
     public String getApplicationNamespace() {
-        try {
-            return nsProvider.getApplicationNamespace();
-        } catch (NullPointerException exception) {
-            return Reference.DEFAULT_NAMESPACE;
-        }
+        return nsProvider.getApplicationNamespace();
     }
 
     @Override
     public Dictionary getDictionary() {
-        try {
-            return nsProvider.getDictionary();
-        } catch (NullPointerException exception) {
-            return Dictionary.GLOBAL;
-        }
+        return nsProvider.getDictionary();
     }
 
     @XmlAttribute(name = "templateNs")
@@ -113,6 +100,6 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         nsProvider.afterUnmarshal(unmarshaller, parent);
         typeRef = new ReferenceImpl(typeRefName, typeRefNs);
-        typeRef.afterUnmarshal(unmarshaller, this);
+        typeRef.setParentNsProvider(this);
     }
 }

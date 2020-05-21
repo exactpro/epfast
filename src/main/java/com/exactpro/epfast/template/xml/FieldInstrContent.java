@@ -38,12 +38,12 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
 
     @XmlAttribute(name = "name")
     public void setName(String name) {
-        fieldId.setName(name);
+        this.fieldId.setName(name);
     }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {
-        fieldId.setAuxiliaryId(id);
+        this.fieldId.setAuxiliaryId(id);
     }
 
     @XmlAttribute(name = "presence")

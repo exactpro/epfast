@@ -18,8 +18,6 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Reference;
 
-import javax.xml.bind.Unmarshaller;
-
 public class ReferenceImpl implements Reference {
 
     private final String name;
@@ -46,9 +44,7 @@ public class ReferenceImpl implements Reference {
         return parentNsProvider.getApplicationNamespace();
     }
 
-    protected void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
+    protected void setParentNsProvider(NamespaceProvider parentNsProvider) {
+        this.parentNsProvider = parentNsProvider;
     }
 }

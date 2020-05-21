@@ -50,6 +50,6 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
     protected void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         super.afterUnmarshal(unmarshaller, parent);
         dictionaryKey = new ReferenceImpl(dictionaryKeyName, dictionaryKeyNs);
-        dictionaryKey.afterUnmarshal(unmarshaller, this);
+        dictionaryKey.setParentNsProvider(this);
     }
 }

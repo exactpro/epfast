@@ -17,6 +17,7 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
+import com.exactpro.epfast.template.Reference;
 
 import javax.xml.bind.Unmarshaller;
 
@@ -35,7 +36,10 @@ public class AbstractNamespaceProvider implements NamespaceProvider {
         if (templateNs != null) {
             return templateNs;
         }
-        return parentNsProvider.getTemplateNamespace();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getTemplateNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
@@ -43,7 +47,10 @@ public class AbstractNamespaceProvider implements NamespaceProvider {
         if (applicationNs != null) {
             return applicationNs;
         }
-        return parentNsProvider.getApplicationNamespace();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getApplicationNamespace();
+        }
+        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
@@ -51,7 +58,10 @@ public class AbstractNamespaceProvider implements NamespaceProvider {
         if (dictionary != null) {
             return dictionary;
         }
-        return parentNsProvider.getDictionary();
+        if (parentNsProvider != null) {
+            return parentNsProvider.getDictionary();
+        }
+        return Dictionary.GLOBAL;
     }
 
     protected void setTemplateNs(String templateNs) {

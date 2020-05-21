@@ -17,7 +17,6 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
-import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.Templates;
 
@@ -34,29 +33,17 @@ public class TemplatesXml extends AbstractNamespaceProvider implements Templates
 
     @Override
     public String getTemplateNamespace() {
-        try {
-            return super.getTemplateNamespace();
-        } catch (NullPointerException exception) {
-            return Reference.DEFAULT_NAMESPACE;
-        }
+        return super.getTemplateNamespace();
     }
 
     @Override
     public String getApplicationNamespace() {
-        try {
-            return super.getApplicationNamespace();
-        } catch (NullPointerException exception) {
-            return Reference.DEFAULT_NAMESPACE;
-        }
+        return super.getApplicationNamespace();
     }
 
     @Override
     public Dictionary getDictionary() {
-        try {
-            return super.getDictionary();
-        } catch (NullPointerException exception) {
-            return Dictionary.GLOBAL;
-        }
+        return super.getDictionary();
     }
 
     @XmlAttribute(name = "templateNs")
