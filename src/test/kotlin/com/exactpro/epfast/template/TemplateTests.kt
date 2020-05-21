@@ -31,7 +31,9 @@ class TemplateTests {
                         operator { constant { initialValue = "value" } }
                     }
                     instructions {
-                        int32("int32", "ns") { delta {} }
+                        int32("int32", "ns") {
+                            delta { dictionaryKey { namespace = "ns" } }
+                        }
                         unicode("string", "ns") {
                             length {
                                 name = "length"
@@ -287,7 +289,9 @@ class TemplateTests {
         val expected = listOf(template("template", "tempNS") {
             typeRef { namespace = "NS" }
             instructions {
-                int32("int", "NS") {}
+                int32("int", "NS") {
+                    copy { dictionaryKey { namespace = "NS" } }
+                }
             }
         })
 
@@ -295,7 +299,9 @@ class TemplateTests {
                 """
                     <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template">
-                            <int32 name="int"/>
+                            <int32 name="int">
+                                <copy/>
+                            </int32>
                         </template>
                     </templates>
                 """.trimIndent().byteInputStream()
@@ -308,14 +314,18 @@ class TemplateTests {
         val expected = listOf(template("template", "NS") {
             typeRef { namespace = "ns" }
             instructions {
-                uint32("uInt", "ns") {}
+                uint32("uInt", "ns") {
+                    increment { dictionaryKey { namespace = "ns" } }
+                }
             }
         })
 
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
                     <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <uInt32 name="uInt"/>
+                        <uInt32 name="uInt">
+                            <increment/>
+                        </uInt32>
                     </template>
                 """.trimIndent().byteInputStream()
         )
@@ -327,7 +337,9 @@ class TemplateTests {
         val expected = listOf(template("template") {
             typeRef { namespace = "ns" }
             instructions {
-                int64("int", "ns") {}
+                int64("int", "ns") {
+                    delta { dictionaryKey { namespace = "ns" } }
+                }
             }
         })
 
@@ -335,7 +347,9 @@ class TemplateTests {
                 """
                     <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template" ns="ns">
-                            <int64 name="int"/>
+                            <int64 name="int">
+                                <delta/>
+                            </int64>
                         </template>
                     </templates>
                 """.trimIndent().byteInputStream()
@@ -348,7 +362,9 @@ class TemplateTests {
         val expected = listOf(template("template", "ns") {
             typeRef { namespace = "NS" }
             instructions {
-                uint64("uInt", "NS") {}
+                uint64("uInt", "NS") {
+                    tail { dictionaryKey { namespace = "NS" } }
+                }
             }
         })
 
@@ -356,7 +372,9 @@ class TemplateTests {
                 """
                     <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template" templateNs="ns">
-                            <uInt64 name="uInt"/>
+                            <uInt64 name="uInt">
+                                <tail/>
+                            </uInt64>
                         </template>
                     </templates>
                 """.trimIndent().byteInputStream()
@@ -390,7 +408,10 @@ class TemplateTests {
         val expected = listOf(template("template", "NS") {
             typeRef { namespace = "ns" }
             instructions {
-                compoundDecimal("decimal", "ns") {}
+                compoundDecimal("decimal", "ns") {
+                    exponent { tail { dictionaryKey { namespace = "ns" } } }
+                    mantissa { delta { dictionaryKey { namespace = "ns" } } }
+                }
             }
         })
 
@@ -398,7 +419,12 @@ class TemplateTests {
                 """
                     <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <decimal name="decimal">
-                            <mantissa/>
+                            <mantissa>
+                                <delta/>
+                            </mantissa>
+                            <exponent>
+                                <tail/>
+                            </exponent>
                         </decimal>
                     </template>
                 """.trimIndent().byteInputStream()
@@ -481,12 +507,16 @@ class TemplateTests {
                     length { namespace = "ns" }
 
                     instructions {
-                        simpleDecimal("decimal", "ns") {}
+                        compoundDecimal("decimal", "ns") {
+                            mantissa { tail { dictionaryKey { namespace = "ns" } } }
+                        }
                         sequence("", "sequenceNS") {
                             typeRef { namespace = "sequenceNS" }
 
                             instructions {
-                                asciiString("string", "sequenceNS") {}
+                                asciiString("string", "sequenceNS") {
+                                    copy { dictionaryKey { namespace = "sequenceNS" } }
+                                }
                             }
                         }
                     }
@@ -502,7 +532,11 @@ class TemplateTests {
                             instructions {
                                 sequence("", "namespace") {
                                     typeRef { namespace = "namespace" }
-                                    instructions { uint64("uInt", "namespace") {} }
+                                    instructions {
+                                        uint64("uInt", "namespace") {
+                                            increment { dictionaryKey { namespace = "namespace" } }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -531,7 +565,10 @@ class TemplateTests {
                                 unicode("string", "groupNS") { length { namespace = "groupNS" } }
                             }
                         }
-                        byteVector("vector", "ns") { length { namespace = "ns" } }
+                        byteVector("vector", "ns") {
+                            length { namespace = "ns" }
+                            tail { dictionaryKey { namespace = "ns" } }
+                        }
                     }
                 }
                 group("", "namespace") {
@@ -543,9 +580,17 @@ class TemplateTests {
                             typeRef { namespace = "namespace" }
 
                             instructions {
+                                compoundDecimal("", "decimal") {
+                                    exponent { increment { dictionaryKey { namespace = "decimal" } } }
+                                    mantissa { copy { dictionaryKey { namespace = "decimal" } } }
+                                }
                                 group("", "namespace") {
                                     typeRef { namespace = "namespace" }
-                                    instructions { uint32("uInt", "namespace") {} }
+                                    instructions {
+                                        uint32("uInt", "namespace") {
+                                            delta { dictionaryKey { namespace = "namespace" } }
+                                        }
+                                    }
                                 }
                             }
                         }

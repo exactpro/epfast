@@ -16,15 +16,10 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
-
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 
-public class AbstractFieldXml implements NamespaceProvider {
-
-    private NamespaceProvider parentNsProvider;
+public class AbstractFieldXml extends AbstractNamespaceProvider {
 
     private FieldOperatorXml operator;
 
@@ -42,26 +37,5 @@ public class AbstractFieldXml implements NamespaceProvider {
     })
     public void setOperator(FieldOperatorXml operator) {
         this.operator = operator;
-    }
-
-    @Override
-    public String getTemplateNamespace() {
-        return parentNsProvider.getTemplateNamespace();
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        return parentNsProvider.getApplicationNamespace();
-    }
-
-    @Override
-    public Dictionary getDictionary() {
-        return parentNsProvider.getDictionary();
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
     }
 }

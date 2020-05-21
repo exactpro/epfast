@@ -18,16 +18,11 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.*;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldInstrContent extends AbstractFieldXml implements FieldInstruction, NamespaceProvider {
-
-    private NamespaceProvider parentNsProvider;
+public class FieldInstrContent extends AbstractFieldXml implements FieldInstruction {
 
     private ApplicationIdentity fieldId = new ApplicationIdentity(this);
-
-    private String localNamespace;
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
@@ -36,42 +31,24 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
         return fieldId;
     }
 
-    @Override
-    public String getTemplateNamespace() {
-        return parentNsProvider.getTemplateNamespace();
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        if (localNamespace != null) {
-            return localNamespace;
-        }
-        return parentNsProvider.getApplicationNamespace();
-    }
-
     @XmlAttribute(name = "ns")
     public void setApplicationNs(String namespace) {
-        this.localNamespace = namespace;
+        super.setApplicationNs(namespace);
     }
 
     @XmlAttribute(name = "name")
     public void setName(String name) {
-        this.fieldId.setName(name);
+        fieldId.setName(name);
     }
 
     @XmlAttribute(name = "id")
     public void setId(String id) {
-        this.fieldId.setAuxiliaryId(id);
+        fieldId.setAuxiliaryId(id);
     }
 
     @XmlAttribute(name = "presence")
     public void setPresence(PresenceXml presence) {
         this.presence = presence;
-    }
-
-    @Override
-    public Dictionary getDictionary() {
-        return parentNsProvider.getDictionary();
     }
 
     @Override
@@ -81,11 +58,5 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
 
     public Instruction toInstruction() {
         return this;
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
     }
 }

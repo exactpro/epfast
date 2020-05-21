@@ -16,19 +16,13 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.LengthField;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class LengthXml extends AbstractFieldXml implements LengthField, NamespaceProvider {
-
-    private NamespaceProvider parentNsProvider;
+public class LengthXml extends AbstractFieldXml implements LengthField {
 
     private ApplicationIdentity fieldId = new ApplicationIdentity(this);
-
-    private String localNamespace;
 
     @Override
     public ApplicationIdentity getFieldId() {
@@ -47,30 +41,6 @@ public class LengthXml extends AbstractFieldXml implements LengthField, Namespac
 
     @XmlAttribute(name = "ns")
     public void setApplicationNs(String namespace) {
-        this.localNamespace = namespace;
-    }
-
-    @Override
-    public String getTemplateNamespace() {
-        return parentNsProvider.getTemplateNamespace();
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        if (localNamespace != null) {
-            return localNamespace;
-        }
-        return parentNsProvider.getApplicationNamespace();
-    }
-
-    @Override
-    public Dictionary getDictionary() {
-        return parentNsProvider.getDictionary();
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
+        super.setApplicationNs(namespace);
     }
 }

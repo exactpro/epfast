@@ -28,15 +28,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "template", namespace = NamespaceProvider.XML_NAMESPACE)
 public class TemplateXml extends InstructionsXml implements Template, NamespaceProvider {
 
-    private NamespaceProvider parentNsProvider;
+    private AbstractNamespaceProvider nsProvider = new AbstractNamespaceProvider();
 
     private TemplateIdentity templateId = new TemplateIdentity(this);
 
-    private String templateNs;
-
-    private String applicationNs;
-
-    private Dictionary dictionary;
+    private ReferenceImpl typeRef;
 
     private String typeRefName = "";
 
@@ -57,57 +53,51 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         this.templateId.setAuxiliaryId(id);
     }
 
-    @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        this.templateNs = templateNs;
-    }
-
-    @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        this.applicationNs = ns;
-    }
-
     @Override
     public String getTemplateNamespace() {
-        if (templateNs != null) {
-            return templateNs;
+        try {
+            return nsProvider.getTemplateNamespace();
+        } catch (NullPointerException exception) {
+            return Reference.DEFAULT_NAMESPACE;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getTemplateNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
     public String getApplicationNamespace() {
-        if (applicationNs != null) {
-            return applicationNs;
+        try {
+            return nsProvider.getApplicationNamespace();
+        } catch (NullPointerException exception) {
+            return Reference.DEFAULT_NAMESPACE;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
     public Dictionary getDictionary() {
-        if (dictionary != null) {
-            return dictionary;
+        try {
+            return nsProvider.getDictionary();
+        } catch (NullPointerException exception) {
+            return Dictionary.GLOBAL;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getDictionary();
-        }
-        return Dictionary.GLOBAL;
+    }
+
+    @XmlAttribute(name = "templateNs")
+    public void setTemplateNs(String templateNs) {
+        nsProvider.setTemplateNs(templateNs);
+    }
+
+    @XmlAttribute(name = "ns")
+    public void setApplicationNs(String ns) {
+        nsProvider.setApplicationNs(ns);
     }
 
     @XmlAttribute(name = "dictionary")
     public void setDictionaryName(String dictionary) {
-        this.dictionary = Dictionary.getDictionary(dictionary);
+        nsProvider.setDictionaryName(dictionary);
     }
 
     @Override
     public ReferenceImpl getTypeRef() {
-        return new ReferenceImpl(typeRefName, getTypeRefNs());
+        return typeRef;
     }
 
     @XmlAttribute(name = "typeRefName")
@@ -120,16 +110,9 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         this.typeRefNs = typeRefNs;
     }
 
-    public String getTypeRefNs() {
-        if (typeRefNs != null) {
-            return typeRefNs;
-        }
-        return getApplicationNamespace();
-    }
-
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
+        nsProvider.afterUnmarshal(unmarshaller, parent);
+        typeRef = new ReferenceImpl(typeRefName, typeRefNs);
+        typeRef.afterUnmarshal(unmarshaller, this);
     }
 }

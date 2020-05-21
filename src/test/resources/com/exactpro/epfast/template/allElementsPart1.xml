@@ -5,7 +5,7 @@
                 <constant value="value"/>
             </length>
             <int32 name="int32" ns="ns">
-                <delta/>
+                <delta keyNs="ns"/>
             </int32>
             <string charset="unicode" name="string" ns="ns" lengthName="length"/>
         </sequence>

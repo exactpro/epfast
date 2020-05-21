@@ -4,13 +4,25 @@
             <group ns="groupNS">
                 <string charset="unicode" name="string"/>
             </group>
-            <byteVector name="vector"/>
+            <byteVector name="vector">
+                <tail/>
+            </byteVector>
         </group>
         <group ns="namespace">
             <int64 name="int"/>
             <group>
+                <decimal ns="decimal">
+                    <exponent>
+                        <increment/>
+                    </exponent>
+                    <mantissa>
+                        <copy/>
+                    </mantissa>
+                </decimal>
                 <group>
-                    <uInt32 name="uInt"/>
+                    <uInt32 name="uInt">
+                        <delta/>
+                    </uInt32>
                 </group>
             </group>
         </group>

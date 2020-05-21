@@ -20,7 +20,7 @@ import com.exactpro.epfast.template.FieldOperator;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldOperatorXml implements FieldOperator {
+public class FieldOperatorXml extends AbstractNamespaceProvider implements FieldOperator {
 
     private String initialValue = "";
 

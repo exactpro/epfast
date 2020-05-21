@@ -16,34 +16,54 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.template.Dictionary;
 
 import javax.xml.bind.Unmarshaller;
 
-public class ReferenceImpl implements Reference {
-
-    private final String name;
-
-    private final String applicationNs;
+public class AbstractNamespaceProvider implements NamespaceProvider {
 
     private NamespaceProvider parentNsProvider;
 
-    public ReferenceImpl(String name, String ns) {
-        this.name = name;
-        this.applicationNs = ns;
+    private String templateNs;
+
+    private String applicationNs;
+
+    private Dictionary dictionary;
+
+    @Override
+    public String getTemplateNamespace() {
+        if (templateNs != null) {
+            return templateNs;
+        }
+        return parentNsProvider.getTemplateNamespace();
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String getNamespace() {
+    public String getApplicationNamespace() {
         if (applicationNs != null) {
             return applicationNs;
         }
         return parentNsProvider.getApplicationNamespace();
+    }
+
+    @Override
+    public Dictionary getDictionary() {
+        if (dictionary != null) {
+            return dictionary;
+        }
+        return parentNsProvider.getDictionary();
+    }
+
+    protected void setTemplateNs(String templateNs) {
+        this.templateNs = templateNs;
+    }
+
+    protected void setApplicationNs(String ns) {
+        this.applicationNs = ns;
+    }
+
+    protected void setDictionaryName(String dictionary) {
+        this.dictionary = Dictionary.getDictionary(dictionary);
     }
 
     protected void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {

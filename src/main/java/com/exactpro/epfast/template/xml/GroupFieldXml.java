@@ -23,41 +23,46 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class GroupFieldXml extends InstructionsXml implements Group, InstructionXml, NamespaceProvider {
 
-    private NamespaceProvider parentNsProvider;
+    private AbstractNamespaceProvider nsProvider = new AbstractNamespaceProvider();
 
     private ApplicationIdentity fieldId = new ApplicationIdentity(this);
 
-    private String localNamespace;
-
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private Dictionary dictionary;
+    private ReferenceImpl typeRef;
 
     private String typeRefName = "";
 
     private String typeRefNs;
 
     @Override
-    public Identity getFieldId() {
-        return fieldId;
-    }
-
-    @Override
     public String getTemplateNamespace() {
-        return parentNsProvider.getTemplateNamespace();
+        return nsProvider.getTemplateNamespace();
     }
 
     @Override
     public String getApplicationNamespace() {
-        if (localNamespace != null) {
-            return localNamespace;
-        }
-        return parentNsProvider.getApplicationNamespace();
+        return nsProvider.getApplicationNamespace();
+    }
+
+    @Override
+    public Dictionary getDictionary() {
+        return nsProvider.getDictionary();
     }
 
     @XmlAttribute(name = "ns")
-    public void setApplicationNs(String namespace) {
-        this.localNamespace = namespace;
+    public void setApplicationNs(String ns) {
+        nsProvider.setApplicationNs(ns);
+    }
+
+    @XmlAttribute(name = "dictionary")
+    public void setDictionaryName(String dictionary) {
+        nsProvider.setDictionaryName(dictionary);
+    }
+
+    @Override
+    public Identity getFieldId() {
+        return fieldId;
     }
 
     @XmlAttribute(name = "name")
@@ -76,21 +81,8 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     }
 
     @Override
-    public Dictionary getDictionary() {
-        if (dictionary != null) {
-            return dictionary;
-        }
-        return parentNsProvider.getDictionary();
-    }
-
-    @XmlAttribute(name = "dictionary")
-    public void setDictionaryName(String dictionary) {
-        this.dictionary = Dictionary.getDictionary(dictionary);
-    }
-
-    @Override
     public ReferenceImpl getTypeRef() {
-        return new ReferenceImpl(typeRefName, getTypeRefNs());
+        return typeRef;
     }
 
     @XmlAttribute(name = "typeRefName")
@@ -101,13 +93,6 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     @XmlAttribute(name = "typeRefNs")
     public void setTypeRefNs(String typeRefNs) {
         this.typeRefNs = typeRefNs;
-    }
-
-    public String getTypeRefNs() {
-        if (typeRefNs != null) {
-            return typeRefNs;
-        }
-        return getApplicationNamespace();
     }
 
     @Override
@@ -121,8 +106,8 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     }
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
+        nsProvider.afterUnmarshal(unmarshaller, parent);
+        typeRef = new ReferenceImpl(typeRefName, typeRefNs);
+        typeRef.afterUnmarshal(unmarshaller, this);
     }
 }

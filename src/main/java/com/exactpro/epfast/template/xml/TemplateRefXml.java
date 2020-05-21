@@ -16,21 +16,15 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.TemplateRef;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class TemplateRefXml implements TemplateRef, InstructionXml {
-
-    private NamespaceProvider parentNsProvider;
+public class TemplateRefXml extends AbstractNamespaceProvider implements TemplateRef, InstructionXml {
 
     private String name = "";
-
-    private String templateNs;
 
     @Override
     public Reference getTemplateRef() {
@@ -42,34 +36,13 @@ public class TemplateRefXml implements TemplateRef, InstructionXml {
         this.name = name;
     }
 
-    public String getTemplateNamespace() {
-        if (templateNs != null) {
-            return templateNs;
-        }
-        return parentNsProvider.getTemplateNamespace();
-    }
-
-    public String getApplicationNamespace() {
-        return parentNsProvider.getApplicationNamespace();
-    }
-
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
-        this.templateNs = templateNs;
-    }
-
-    public Dictionary getDictionary() {
-        return parentNsProvider.getDictionary();
+        super.setTemplateNs(templateNs);
     }
 
     @Override
     public Instruction toInstruction() {
         return this;
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
     }
 }

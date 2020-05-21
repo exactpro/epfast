@@ -2,16 +2,24 @@
     <template name="template" ns="ns">
         <sequence>
             <length ns="ns"/>
-            <decimal name="decimal"/>
+            <decimal name="decimal">
+                <mantissa>
+                    <tail/>
+                </mantissa>
+            </decimal>
             <sequence ns="sequenceNS">
-                <string name="string"/>
+                <string name="string">
+                    <copy/>
+                </string>
             </sequence>
         </sequence>
         <sequence ns="namespace">
             <int32 name="int"/>
             <sequence>
                 <sequence>
-                    <uInt64 name="uInt"/>
+                    <uInt64 name="uInt">
+                        <increment/>
+                    </uInt64>
                 </sequence>
             </sequence>
         </sequence>

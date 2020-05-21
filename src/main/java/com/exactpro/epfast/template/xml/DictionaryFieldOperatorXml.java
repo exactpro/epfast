@@ -16,36 +16,24 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
-import com.exactpro.epfast.template.Reference;
-
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class DictionaryFieldOperatorXml extends FieldOperatorXml {
 
-    private NamespaceProvider parentNsProvider;
-
-    private Dictionary dictionary;
+    private ReferenceImpl dictionaryKey;
 
     private String dictionaryKeyName = "";
 
-    private String dictionaryKeyNs = Reference.DEFAULT_NAMESPACE;
-
-    public Dictionary getDictionary() {
-        if (dictionary != null) {
-            return dictionary;
-        }
-        return parentNsProvider.getDictionary();
-    }
+    private String dictionaryKeyNs;
 
     @XmlAttribute(name = "dictionary")
     public void setDictionaryName(String dictionary) {
-        this.dictionary = Dictionary.getDictionary(dictionary);
+        super.setDictionaryName(dictionary);
     }
 
     public ReferenceImpl getDictionaryKey() {
-        return new ReferenceImpl(dictionaryKeyName, dictionaryKeyNs);
+        return dictionaryKey;
     }
 
     @XmlAttribute(name = "keyName")
@@ -58,9 +46,10 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
         this.dictionaryKeyNs = keyNs;
     }
 
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
+    @Override
+    protected void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+        super.afterUnmarshal(unmarshaller, parent);
+        dictionaryKey = new ReferenceImpl(dictionaryKeyName, dictionaryKeyNs);
+        dictionaryKey.afterUnmarshal(unmarshaller, this);
     }
 }

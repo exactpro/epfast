@@ -28,53 +28,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement(name = "templates", namespace = NamespaceProvider.XML_NAMESPACE)
-public class TemplatesXml implements Templates, NamespaceProvider {
-
-    private String templateNs;
-
-    private String applicationNs;
-
-    private Dictionary dictionary;
+public class TemplatesXml extends AbstractNamespaceProvider implements Templates {
 
     private List<Template> templates = new ArrayList<>();
 
     @Override
     public String getTemplateNamespace() {
-        if (templateNs != null) {
-            return templateNs;
+        try {
+            return super.getTemplateNamespace();
+        } catch (NullPointerException exception) {
+            return Reference.DEFAULT_NAMESPACE;
         }
-        return Reference.DEFAULT_NAMESPACE;
     }
 
     @Override
     public String getApplicationNamespace() {
-        if (applicationNs != null) {
-            return applicationNs;
+        try {
+            return super.getApplicationNamespace();
+        } catch (NullPointerException exception) {
+            return Reference.DEFAULT_NAMESPACE;
         }
-        return Reference.DEFAULT_NAMESPACE;
-    }
-
-    @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        this.templateNs = templateNs;
-    }
-
-    @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        this.applicationNs = ns;
     }
 
     @Override
     public Dictionary getDictionary() {
-        if (dictionary != null) {
-            return dictionary;
+        try {
+            return super.getDictionary();
+        } catch (NullPointerException exception) {
+            return Dictionary.GLOBAL;
         }
-        return Dictionary.GLOBAL;
+    }
+
+    @XmlAttribute(name = "templateNs")
+    public void setTemplateNs(String templateNs) {
+        super.setTemplateNs(templateNs);
+    }
+
+    @XmlAttribute(name = "ns")
+    public void setApplicationNs(String ns) {
+        super.setApplicationNs(ns);
     }
 
     @XmlAttribute(name = "dictionary")
     public void setDictionaryName(String dictionary) {
-        this.dictionary = Dictionary.getDictionary(dictionary);
+        super.setDictionaryName(dictionary);
     }
 
     @Override
