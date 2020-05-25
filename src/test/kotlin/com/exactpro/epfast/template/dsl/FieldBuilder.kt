@@ -19,7 +19,7 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.simple.FieldInstruction
 
 abstract class FieldBuilder<T : FieldInstruction>
-internal constructor(protected val field: T, name: String, namespace: String) {
+internal constructor(protected val field: T, name: String?, namespace: String) {
 
     init {
         field.fieldId.name = name

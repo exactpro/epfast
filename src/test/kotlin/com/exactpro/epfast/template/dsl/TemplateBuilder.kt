@@ -21,7 +21,7 @@ import com.exactpro.epfast.template.simple.Template
 
 class TemplateBuilder internal constructor(val template: Template) {
 
-    internal constructor(name: String, namespace: String, template: Template) : this(template) {
+    internal constructor(name: String?, namespace: String, template: Template) : this(template) {
         template.templateId.name = name
         template.templateId.namespace = namespace
     }
@@ -41,5 +41,5 @@ class TemplateBuilder internal constructor(val template: Template) {
     }
 }
 
-fun template(name: String, namespace: String = DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit): Template =
+fun template(name: String?, namespace: String = DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit): Template =
         TemplateBuilder(name, namespace, Template()).apply(block).template

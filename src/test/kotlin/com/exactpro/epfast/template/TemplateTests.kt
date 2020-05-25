@@ -457,7 +457,7 @@ class TemplateTests {
             typeRef { namespace = "ns" }
             instructions {
                 unicode("string", "ns") {
-                    length("") { namespace = "ns" }
+                    length(null) { namespace = "ns" }
                 }
             }
         })
@@ -502,7 +502,7 @@ class TemplateTests {
         val expected = listOf(template("template") {
             typeRef { namespace = "ns" }
             instructions {
-                sequence("", "ns") {
+                sequence(null, "ns") {
                     typeRef { namespace = "ns" }
                     length { namespace = "ns" }
 
@@ -510,7 +510,7 @@ class TemplateTests {
                         compoundDecimal("decimal", "ns") {
                             mantissa { tail { dictionaryKey { namespace = "ns" } } }
                         }
-                        sequence("", "sequenceNS") {
+                        sequence(null, "sequenceNS") {
                             typeRef { namespace = "sequenceNS" }
 
                             instructions {
@@ -521,16 +521,16 @@ class TemplateTests {
                         }
                     }
                 }
-                sequence("", "namespace") {
+                sequence(null, "namespace") {
                     typeRef { namespace = "namespace" }
 
                     instructions {
                         int32("int", "namespace") {}
-                        sequence("", "namespace") {
+                        sequence(null, "namespace") {
                             typeRef { namespace = "namespace" }
 
                             instructions {
-                                sequence("", "namespace") {
+                                sequence(null, "namespace") {
                                     typeRef { namespace = "namespace" }
                                     instructions {
                                         uint64("uInt", "namespace") {
@@ -554,11 +554,11 @@ class TemplateTests {
         val expected = listOf(template("template") {
             typeRef { namespace = "ns" }
             instructions {
-                group("", "ns") {
+                group(null, "ns") {
                     typeRef { namespace = "ns" }
 
                     instructions {
-                        group("", "groupNS") {
+                        group(null, "groupNS") {
                             typeRef { namespace = "groupNS" }
 
                             instructions {
@@ -571,20 +571,20 @@ class TemplateTests {
                         }
                     }
                 }
-                group("", "namespace") {
+                group(null, "namespace") {
                     typeRef { namespace = "namespace" }
 
                     instructions {
                         int64("int", "namespace") {}
-                        group("", "namespace") {
+                        group(null, "namespace") {
                             typeRef { namespace = "namespace" }
 
                             instructions {
-                                compoundDecimal("", "decimal") {
+                                compoundDecimal(null, "decimal") {
                                     exponent { increment { dictionaryKey { namespace = "decimal" } } }
                                     mantissa { copy { dictionaryKey { namespace = "decimal" } } }
                                 }
-                                group("", "namespace") {
+                                group(null, "namespace") {
                                     typeRef { namespace = "namespace" }
                                     instructions {
                                         uint32("uInt", "namespace") {
@@ -805,26 +805,26 @@ class TemplateTests {
     fun `test dictionary inheritance with sequence`() {
         val expected = listOf(template("template") {
             instructions {
-                sequence("") {
+                sequence(null) {
                     length { operator { tail { dictionary = "sequence" } } }
 
                     instructions {
                         compoundDecimal("decimal") {
                             mantissa { copy { dictionary = "sequence" } }
                         }
-                        sequence("") {
+                        sequence(null) {
                             length { operator { increment { dictionary = "length" } } }
                         }
                     }
                 }
-                sequence("") {
+                sequence(null) {
                     instructions {
                         int32("int") { tail { dictionary = "template" } }
-                        sequence("") {
+                        sequence(null) {
                             length { operator { delta { dictionary = "template" } } }
 
                             instructions {
-                                sequence("") {
+                                sequence(null) {
 
                                     instructions {
                                         uint64("uInt") { copy { dictionary = "uInt" } }
@@ -845,10 +845,10 @@ class TemplateTests {
     fun `test dictionary inheritance with group`() {
         val expected = listOf(template("template") {
             instructions {
-                group("") {
+                group(null) {
 
                     instructions {
-                        group("") {
+                        group(null) {
 
                             instructions {
                                 unicode("string") { delta { dictionary = "unicode" } }
@@ -857,14 +857,14 @@ class TemplateTests {
                         byteVector("vector") { copy { dictionary = "group" } }
                     }
                 }
-                group("") {
+                group(null) {
 
                     instructions {
                         int64("int") { increment { dictionary = "int" } }
-                        group("") {
+                        group(null) {
 
                             instructions {
-                                group("") {
+                                group(null) {
 
                                     instructions {
                                         uint32("uInt") { tail { dictionary = "tail" } }

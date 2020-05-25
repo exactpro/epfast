@@ -24,21 +24,21 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class TemplateRefXml extends AbstractNamespaceProvider implements TemplateRef, InstructionXml {
 
-    private String name = "";
+    private ReferenceImpl templateRef = new ReferenceImpl(this);
 
     @Override
     public Reference getTemplateRef() {
-        return new ReferenceImpl(name, getTemplateNamespace());
+        return templateRef;
     }
 
     @XmlAttribute(name = "name")
     public void setName(String name) {
-        this.name = name;
+        templateRef.setName(name);
     }
 
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
-        super.setTemplateNs(templateNs);
+        templateRef.setNamespace(templateNs);
     }
 
     @Override

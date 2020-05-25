@@ -16,16 +16,11 @@
 
 package com.exactpro.epfast.template.xml;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class DictionaryFieldOperatorXml extends FieldOperatorXml {
 
-    private ReferenceImpl dictionaryKey;
-
-    private String dictionaryKeyName = "";
-
-    private String dictionaryKeyNs;
+    private ReferenceImpl dictionaryKey = new ReferenceImpl(this);
 
     @XmlAttribute(name = "dictionary")
     public void setDictionaryName(String dictionary) {
@@ -38,18 +33,11 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
 
     @XmlAttribute(name = "keyName")
     public void setDictionaryKeyName(String keyName) {
-        this.dictionaryKeyName = keyName;
+        dictionaryKey.setName(keyName);
     }
 
     @XmlAttribute(name = "keyNs")
     public void setDictionaryKeyNs(String keyNs) {
-        this.dictionaryKeyNs = keyNs;
-    }
-
-    @Override
-    protected void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        super.afterUnmarshal(unmarshaller, parent);
-        dictionaryKey = new ReferenceImpl(dictionaryKeyName, dictionaryKeyNs);
-        dictionaryKey.setParentNsProvider(this);
+        dictionaryKey.setNamespace(keyNs);
     }
 }

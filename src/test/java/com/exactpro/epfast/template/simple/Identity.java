@@ -18,7 +18,7 @@ package com.exactpro.epfast.template.simple;
 
 public class Identity extends Reference implements com.exactpro.epfast.template.Identity {
 
-    private String auxiliaryId = "";
+    private String auxiliaryId;
 
     public Identity() {
     }

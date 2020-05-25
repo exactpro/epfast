@@ -18,7 +18,7 @@ package com.exactpro.epfast.template.dsl
 
 import com.exactpro.epfast.template.simple.Group
 
-class GroupBuilder internal constructor(name: String, namespace: String) :
+class GroupBuilder internal constructor(name: String?, namespace: String) :
     FieldBuilder<Group>(Group(), name, namespace) {
 
     internal fun build(block: GroupBuilder.() -> Unit) = apply(block).field
@@ -32,5 +32,5 @@ class GroupBuilder internal constructor(name: String, namespace: String) :
     }
 }
 
-internal fun build(name: String, namespace: String, block: GroupBuilder.() -> Unit): Group =
+internal fun build(name: String?, namespace: String, block: GroupBuilder.() -> Unit): Group =
         GroupBuilder(name, namespace).build(block)

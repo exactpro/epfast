@@ -19,7 +19,7 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.simple.ByteVectorField
 import com.exactpro.epfast.template.simple.Identity
 
-class ByteVectorFieldBuilder internal constructor(name: String, namespace: String) :
+class ByteVectorFieldBuilder internal constructor(name: String?, namespace: String) :
     FieldWithOperatorBuilder<ByteVectorField>(ByteVectorField(), name, namespace) {
 
     internal fun build(block: ByteVectorFieldBuilder.() -> Unit) = apply(block).field
@@ -39,5 +39,5 @@ class ByteVectorFieldBuilder internal constructor(name: String, namespace: Strin
     }
 }
 
-internal fun build(name: String, namespace: String, block: ByteVectorFieldBuilder.() -> Unit): ByteVectorField =
+internal fun build(name: String?, namespace: String, block: ByteVectorFieldBuilder.() -> Unit): ByteVectorField =
         ByteVectorFieldBuilder(name, namespace).build(block)

@@ -20,9 +20,9 @@ import com.exactpro.epfast.template.Identity;
 
 public abstract class AbstractIdentity implements Identity {
 
-    private String name = "";
+    private String name;
 
-    private String auxiliaryId = "";
+    private String auxiliaryId;
 
     private final NamespaceProvider nsProvider;
 

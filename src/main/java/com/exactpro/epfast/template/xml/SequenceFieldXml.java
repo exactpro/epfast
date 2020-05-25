@@ -30,11 +30,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private ReferenceImpl typeRef;
-
-    private String typeRefName = "";
-
-    private String typeRefNs;
+    private ReferenceImpl typeRef = new ReferenceImpl(this);
 
     private LengthXml length;
 
@@ -89,13 +85,13 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
     }
 
     @XmlAttribute(name = "typeRefName")
-    public void setTypeRefName(String typeRefName) {
-        this.typeRefName = typeRefName;
+    public void setTypeRefName(String name) {
+        typeRef.setName(name);
     }
 
     @XmlAttribute(name = "typeRefNs")
-    public void setTypeRefNs(String typeRefNs) {
-        this.typeRefNs = typeRefNs;
+    public void setTypeRefNs(String ns) {
+        typeRef.setNamespace(ns);
     }
 
     @Override
@@ -120,8 +116,6 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         nsProvider.afterUnmarshal(unmarshaller, parent);
-        typeRef = new ReferenceImpl(typeRefName, typeRefNs);
-        typeRef.setParentNsProvider(this);
     }
 }
 

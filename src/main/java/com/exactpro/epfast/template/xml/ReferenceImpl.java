@@ -17,18 +17,18 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.template.TemplateRef;
 
 public class ReferenceImpl implements Reference {
 
-    private final String name;
+    private String name;
 
-    private final String applicationNs;
+    private String namespace;
 
-    private NamespaceProvider parentNsProvider;
+    private NamespaceProvider nsProvider;
 
-    public ReferenceImpl(String name, String ns) {
-        this.name = name;
-        this.applicationNs = ns;
+    public ReferenceImpl(NamespaceProvider nsProvider) {
+        this.nsProvider = nsProvider;
     }
 
     @Override
@@ -38,13 +38,20 @@ public class ReferenceImpl implements Reference {
 
     @Override
     public String getNamespace() {
-        if (applicationNs != null) {
-            return applicationNs;
+        if (namespace != null) {
+            return namespace;
         }
-        return parentNsProvider.getApplicationNamespace();
+        if (nsProvider instanceof TemplateRef){
+            return nsProvider.getTemplateNamespace();
+        }
+        return nsProvider.getApplicationNamespace();
     }
 
-    protected void setParentNsProvider(NamespaceProvider parentNsProvider) {
-        this.parentNsProvider = parentNsProvider;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setNamespace(String ns) {
+        this.namespace = ns;
     }
 }

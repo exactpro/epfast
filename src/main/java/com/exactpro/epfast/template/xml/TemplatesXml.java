@@ -16,7 +16,6 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Template;
 import com.exactpro.epfast.template.Templates;
 
@@ -30,21 +29,6 @@ import java.util.List;
 public class TemplatesXml extends AbstractNamespaceProvider implements Templates {
 
     private List<Template> templates = new ArrayList<>();
-
-    @Override
-    public String getTemplateNamespace() {
-        return super.getTemplateNamespace();
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        return super.getApplicationNamespace();
-    }
-
-    @Override
-    public Dictionary getDictionary() {
-        return super.getDictionary();
-    }
 
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
