@@ -17,13 +17,8 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
-import com.exactpro.epfast.template.Reference;
 
-import javax.xml.bind.Unmarshaller;
-
-public class AbstractNamespaceProvider implements NamespaceProvider {
-
-    private NamespaceProvider parentNsProvider;
+public class AbstractNamespaceProvider extends DelegatingNamespaceProvider {
 
     private String templateNs;
 
@@ -36,10 +31,7 @@ public class AbstractNamespaceProvider implements NamespaceProvider {
         if (templateNs != null) {
             return templateNs;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getTemplateNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return super.getTemplateNamespace();
     }
 
     @Override
@@ -47,10 +39,7 @@ public class AbstractNamespaceProvider implements NamespaceProvider {
         if (applicationNs != null) {
             return applicationNs;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+        return super.getApplicationNamespace();
     }
 
     @Override
@@ -58,10 +47,7 @@ public class AbstractNamespaceProvider implements NamespaceProvider {
         if (dictionary != null) {
             return dictionary;
         }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getDictionary();
-        }
-        return Dictionary.GLOBAL;
+        return super.getDictionary();
     }
 
     protected void setTemplateNs(String templateNs) {
@@ -74,11 +60,5 @@ public class AbstractNamespaceProvider implements NamespaceProvider {
 
     protected void setDictionaryName(String dictionary) {
         this.dictionary = Dictionary.getDictionary(dictionary);
-    }
-
-    protected void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
     }
 }

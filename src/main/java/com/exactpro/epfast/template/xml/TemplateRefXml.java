@@ -22,7 +22,7 @@ import com.exactpro.epfast.template.TemplateRef;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class TemplateRefXml extends AbstractNamespaceProvider implements TemplateRef, InstructionXml {
+public class TemplateRefXml extends DelegatingNamespaceProvider implements TemplateRef, InstructionXml {
 
     private ReferenceImpl templateRef = new ReferenceImpl(this);
 
