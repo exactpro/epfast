@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name = "templates", namespace = NamespaceProvider.XML_NAMESPACE)
+@XmlRootElement(name = "templates")
 public class TemplatesXml extends AbstractNamespaceProvider implements Templates {
 
     private List<Template> templates = new ArrayList<>();

@@ -41,7 +41,7 @@ public class ReferenceImpl implements Reference {
         if (namespace != null) {
             return namespace;
         }
-        if (nsProvider instanceof TemplateRef){
+        if (nsProvider instanceof TemplateRef) {
             return nsProvider.getTemplateNamespace();
         }
         return nsProvider.getApplicationNamespace();

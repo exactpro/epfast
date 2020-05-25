@@ -24,7 +24,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "template", namespace = NamespaceProvider.XML_NAMESPACE)
+@XmlRootElement(name = "template")
 public class TemplateXml extends InstructionsXml implements Template, NamespaceProvider {
 
     private AbstractNamespaceProvider nsProvider = new AbstractNamespaceProvider();
