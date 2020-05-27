@@ -20,14 +20,14 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class DictionaryFieldOperatorXml extends FieldOperatorXml {
 
-    private ReferenceImpl dictionaryKey = new ReferenceImpl(this);
+    private ApplicationIdReferenceImpl dictionaryKey = new ApplicationIdReferenceImpl(this);
 
     @XmlAttribute(name = "dictionary")
     public void setDictionaryName(String dictionary) {
         super.setDictionaryName(dictionary);
     }
 
-    public ReferenceImpl getDictionaryKey() {
+    public ApplicationIdReferenceImpl getDictionaryKey() {
         return dictionaryKey;
     }
 

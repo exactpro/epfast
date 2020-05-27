@@ -16,33 +16,38 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Instruction;
 import com.exactpro.epfast.template.Reference;
-import com.exactpro.epfast.template.TemplateRef;
 
-import javax.xml.bind.annotation.XmlAttribute;
+public class ApplicationIdReferenceImpl implements Reference {
 
-public class TemplateRefXml extends DelegatingNamespaceProvider implements TemplateRef, InstructionXml {
+    private String name;
 
-    private TemplateIdReferenceImpl templateRef = new TemplateIdReferenceImpl(this);
+    private String namespace;
 
-    @Override
-    public Reference getTemplateRef() {
-        return templateRef;
+    private NamespaceProvider nsProvider;
+
+    public ApplicationIdReferenceImpl(NamespaceProvider nsProvider) {
+        this.nsProvider = nsProvider;
     }
 
-    @XmlAttribute(name = "name")
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getNamespace() {
+        if (namespace != null) {
+            return namespace;
+        }
+        return nsProvider.getApplicationNamespace();
+    }
+
     public void setName(String name) {
-        templateRef.setName(name);
+        this.name = name;
     }
 
-    @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        templateRef.setNamespace(templateNs);
-    }
-
-    @Override
-    public Instruction toInstruction() {
-        return this;
+    public void setNamespace(String ns) {
+        this.namespace = ns;
     }
 }

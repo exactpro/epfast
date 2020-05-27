@@ -16,22 +16,18 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Identity;
 import com.exactpro.epfast.template.Template;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "template")
 public class TemplateXml extends InstructionsXml implements Template, NamespaceProvider {
 
-    private AbstractNamespaceProvider nsProvider = new AbstractNamespaceProvider();
-
     private TemplateIdentity templateId = new TemplateIdentity(this);
 
-    private ReferenceImpl typeRef = new ReferenceImpl(this);
+    private ApplicationIdReferenceImpl typeRef = new ApplicationIdReferenceImpl(this);
 
     @Override
     public Identity getTemplateId() {
@@ -48,38 +44,23 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         this.templateId.setAuxiliaryId(id);
     }
 
-    @Override
-    public String getTemplateNamespace() {
-        return nsProvider.getTemplateNamespace();
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        return nsProvider.getApplicationNamespace();
-    }
-
-    @Override
-    public Dictionary getDictionary() {
-        return nsProvider.getDictionary();
-    }
-
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
-        nsProvider.setTemplateNs(templateNs);
+        super.setTemplateNs(templateNs);
     }
 
     @XmlAttribute(name = "ns")
     public void setApplicationNs(String ns) {
-        nsProvider.setApplicationNs(ns);
+        super.setApplicationNs(ns);
     }
 
     @XmlAttribute(name = "dictionary")
     public void setDictionaryName(String dictionary) {
-        nsProvider.setDictionaryName(dictionary);
+        super.setDictionaryName(dictionary);
     }
 
     @Override
-    public ReferenceImpl getTypeRef() {
+    public ApplicationIdReferenceImpl getTypeRef() {
         return typeRef;
     }
 
@@ -91,9 +72,5 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     @XmlAttribute(name = "typeRefNs")
     public void setTypeRefNs(String ns) {
         typeRef.setNamespace(ns);
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        nsProvider.afterUnmarshal(unmarshaller, parent);
     }
 }

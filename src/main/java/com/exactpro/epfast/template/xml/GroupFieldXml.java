@@ -18,42 +18,24 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.*;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class GroupFieldXml extends InstructionsXml implements Group, InstructionXml, NamespaceProvider {
-
-    private AbstractNamespaceProvider nsProvider = new AbstractNamespaceProvider();
 
     private ApplicationIdentity fieldId = new ApplicationIdentity(this);
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private ReferenceImpl typeRef = new ReferenceImpl(this);
-
-    @Override
-    public String getTemplateNamespace() {
-        return nsProvider.getTemplateNamespace();
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        return nsProvider.getApplicationNamespace();
-    }
-
-    @Override
-    public Dictionary getDictionary() {
-        return nsProvider.getDictionary();
-    }
+    private ApplicationIdReferenceImpl typeRef = new ApplicationIdReferenceImpl(this);
 
     @XmlAttribute(name = "ns")
     public void setApplicationNs(String ns) {
-        nsProvider.setApplicationNs(ns);
+        super.setApplicationNs(ns);
     }
 
     @XmlAttribute(name = "dictionary")
     public void setDictionaryName(String dictionary) {
-        nsProvider.setDictionaryName(dictionary);
+        super.setDictionaryName(dictionary);
     }
 
     @Override
@@ -77,7 +59,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     }
 
     @Override
-    public ReferenceImpl getTypeRef() {
+    public ApplicationIdReferenceImpl getTypeRef() {
         return typeRef;
     }
 
@@ -99,9 +81,5 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     @Override
     public Instruction toInstruction() {
         return this;
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        nsProvider.afterUnmarshal(unmarshaller, parent);
     }
 }

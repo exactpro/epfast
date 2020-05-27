@@ -18,7 +18,7 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Dictionary;
 
-public class AbstractNamespaceProvider extends DelegatingNamespaceProvider {
+public abstract class AbstractNamespaceProvider extends DelegatingNamespaceProvider {
 
     private String templateNs;
 

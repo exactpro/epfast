@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InstructionsXml {
+public class InstructionsXml extends AbstractNamespaceProvider {
 
     private List<Instruction> instructions = new ArrayList<>();
 

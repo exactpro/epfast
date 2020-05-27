@@ -17,9 +17,8 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Reference;
-import com.exactpro.epfast.template.TemplateRef;
 
-public class ReferenceImpl implements Reference {
+public class TemplateIdReferenceImpl implements Reference {
 
     private String name;
 
@@ -27,7 +26,7 @@ public class ReferenceImpl implements Reference {
 
     private NamespaceProvider nsProvider;
 
-    public ReferenceImpl(NamespaceProvider nsProvider) {
+    public TemplateIdReferenceImpl(NamespaceProvider nsProvider) {
         this.nsProvider = nsProvider;
     }
 
@@ -41,10 +40,7 @@ public class ReferenceImpl implements Reference {
         if (namespace != null) {
             return namespace;
         }
-        if (nsProvider instanceof TemplateRef) {
-            return nsProvider.getTemplateNamespace();
-        }
-        return nsProvider.getApplicationNamespace();
+        return nsProvider.getTemplateNamespace();
     }
 
     public void setName(String name) {
