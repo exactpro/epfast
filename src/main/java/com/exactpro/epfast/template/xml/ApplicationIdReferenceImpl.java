@@ -16,38 +16,17 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Reference;
-
-public class ApplicationIdReferenceImpl implements Reference {
-
-    private String name;
-
-    private String namespace;
-
-    private NamespaceProvider nsProvider;
+public class ApplicationIdReferenceImpl extends AbstractReferenceImpl {
 
     public ApplicationIdReferenceImpl(NamespaceProvider nsProvider) {
-        this.nsProvider = nsProvider;
-    }
-
-    @Override
-    public String getName() {
-        return name;
+        super(nsProvider);
     }
 
     @Override
     public String getNamespace() {
-        if (namespace != null) {
-            return namespace;
+        if (super.getNamespace() != null) {
+            return super.getNamespace();
         }
-        return nsProvider.getApplicationNamespace();
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setNamespace(String ns) {
-        this.namespace = ns;
+        return getNsProvider().getApplicationNamespace();
     }
 }
