@@ -31,13 +31,13 @@ public class TemplatesXml extends AbstractNamespaceProvider implements Templates
     private List<Template> templates = new ArrayList<>();
 
     @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        super.setTemplateNs(templateNs);
+    public void setTemplateNamespace(String templateNs) {
+        super.setTemplateNamespace(templateNs);
     }
 
     @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        super.setApplicationNs(ns);
+    public void setApplicationNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 
     @XmlAttribute(name = "dictionary")
@@ -55,4 +55,3 @@ public class TemplatesXml extends AbstractNamespaceProvider implements Templates
         this.templates = templates;
     }
 }
-

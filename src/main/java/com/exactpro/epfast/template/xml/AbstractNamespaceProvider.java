@@ -50,11 +50,11 @@ public abstract class AbstractNamespaceProvider extends DelegatingNamespaceProvi
         return super.getDictionary();
     }
 
-    protected void setTemplateNs(String templateNs) {
+    protected void setTemplateNamespace(String templateNs) {
         this.templateNs = templateNs;
     }
 
-    protected void setApplicationNs(String ns) {
+    protected void setApplicationNamespace(String ns) {
         this.applicationNs = ns;
     }
 

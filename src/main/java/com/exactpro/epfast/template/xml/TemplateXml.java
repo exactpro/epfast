@@ -27,7 +27,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     private TemplateIdentity templateId = new TemplateIdentity(this);
 
-    private ApplicationIdReferenceImpl typeRef = new ApplicationIdReferenceImpl(this);
+    private ApplicationIdReference typeRef = new ApplicationIdReference(this);
 
     @Override
     public Identity getTemplateId() {
@@ -45,13 +45,13 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     }
 
     @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        super.setTemplateNs(templateNs);
+    public void setTemplateNamespace(String templateNs) {
+        super.setTemplateNamespace(templateNs);
     }
 
     @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        super.setApplicationNs(ns);
+    public void setApplicationNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 
     @XmlAttribute(name = "dictionary")
@@ -60,7 +60,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     }
 
     @Override
-    public ApplicationIdReferenceImpl getTypeRef() {
+    public ApplicationIdReference getTypeRef() {
         return typeRef;
     }
 

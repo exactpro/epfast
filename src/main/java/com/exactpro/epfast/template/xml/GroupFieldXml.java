@@ -26,11 +26,11 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private ApplicationIdReferenceImpl typeRef = new ApplicationIdReferenceImpl(this);
+    private ApplicationIdReference typeRef = new ApplicationIdReference(this);
 
     @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        super.setApplicationNs(ns);
+    public void setApplicationNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 
     @XmlAttribute(name = "dictionary")
@@ -59,7 +59,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     }
 
     @Override
-    public ApplicationIdReferenceImpl getTypeRef() {
+    public ApplicationIdReference getTypeRef() {
         return typeRef;
     }
 

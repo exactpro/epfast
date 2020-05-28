@@ -1,11 +1,11 @@
 <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
     <template name="template" ns="ns">
         <sequence>
-            <length ns="ns"/>
+            <length/>
             <decimal name="decimal">
-                <mantissa>
+                <exponent>
                     <tail/>
-                </mantissa>
+                </exponent>
             </decimal>
             <sequence ns="sequenceNS">
                 <string name="string">

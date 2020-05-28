@@ -40,7 +40,7 @@ public class LengthXml extends AbstractFieldXml implements LengthField {
     }
 
     @XmlAttribute(name = "ns")
-    public void setApplicationNs(String namespace) {
-        super.setApplicationNs(namespace);
+    public void setApplicationNamespace(String namespace) {
+        super.setApplicationNamespace(namespace);
     }
 }

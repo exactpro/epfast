@@ -32,8 +32,8 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
     }
 
     @XmlAttribute(name = "ns")
-    public void setApplicationNs(String namespace) {
-        super.setApplicationNs(namespace);
+    public void setApplicationNamespace(String namespace) {
+        super.setApplicationNamespace(namespace);
     }
 
     @XmlAttribute(name = "name")

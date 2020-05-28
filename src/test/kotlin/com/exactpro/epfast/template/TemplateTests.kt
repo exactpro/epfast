@@ -508,7 +508,7 @@ class TemplateTests {
 
                     instructions {
                         compoundDecimal("decimal", "ns") {
-                            mantissa { tail { dictionaryKey { namespace = "ns" } } }
+                            exponent { tail { dictionaryKey { namespace = "ns" } } }
                         }
                         sequence(null, "sequenceNS") {
                             typeRef { namespace = "sequenceNS" }

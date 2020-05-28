@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 public class TemplateRefXml extends DelegatingNamespaceProvider implements TemplateRef, InstructionXml {
 
-    private TemplateIdReferenceImpl templateRef = new TemplateIdReferenceImpl(this);
+    private TemplateIdReference templateRef = new TemplateIdReference(this);
 
     @Override
     public Reference getTemplateRef() {

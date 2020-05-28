@@ -44,15 +44,17 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
         this.mantissa = mantissa;
     }
 
-    class CompoundDecimal implements CompoundDecimalField {
+    private class CompoundDecimal implements CompoundDecimalField {
         @Override
         public FieldOperator getExponent() {
-            return DecimalFieldXml.this.getExponent() == null ? null : DecimalFieldXml.this.getExponent().getOperator();
+            AbstractFieldXml exponent = DecimalFieldXml.this.getExponent();
+            return exponent == null ? null : exponent.getOperator();
         }
 
         @Override
         public FieldOperator getMantissa() {
-            return DecimalFieldXml.this.getMantissa().getOperator();
+            AbstractFieldXml mantissa = DecimalFieldXml.this.getMantissa();
+            return mantissa == null ? null : mantissa.getOperator();
         }
 
         @Override
@@ -66,7 +68,7 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
         }
     }
 
-    class SimpleDecimal implements SimpleDecimalField {
+    private class SimpleDecimal implements SimpleDecimalField {
         @Override
         public FieldOperator getOperator() {
             return DecimalFieldXml.this.getOperator();
@@ -85,7 +87,7 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
 
     @Override
     public Instruction toInstruction() {
-        if (mantissa == null) {
+        if (mantissa == null && exponent == null) {
             return new SimpleDecimal();
         }
         return new CompoundDecimal();
