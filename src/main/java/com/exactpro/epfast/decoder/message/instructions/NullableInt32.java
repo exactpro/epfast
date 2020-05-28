@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,21 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.dsl
+package com.exactpro.epfast.decoder.message.instructions;
 
-import com.exactpro.epfast.template.Reference
-import com.exactpro.epfast.template.simple.Template
-import com.exactpro.epfast.template.simple.Templates
+import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
+import com.exactpro.epfast.decoder.IMessage;
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+import com.exactpro.epfast.template.Reference;
 
-class TemplatesBuilder internal constructor(val templates: Templates) {
+public class NullableInt32 extends PrimitiveInstruction<DecodeNullableInt32> {
 
-    fun template(name: String, namespace: String = Reference.DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit) {
-        templates.templates.add(TemplateBuilder(name, namespace, Template()).apply(block).template)
+    public NullableInt32(Reference fieldName) {
+        super(fieldName, new DecodeNullableInt32());
+    }
+
+    public void setMessageValue(IMessage message) throws OverflowException {
+        message.setField(fieldName.getName(), fieldDecoder.getValue());
     }
 }
-
-fun templates(block: TemplatesBuilder.() -> Unit): Templates =
-        TemplatesBuilder(Templates()).apply(block).templates

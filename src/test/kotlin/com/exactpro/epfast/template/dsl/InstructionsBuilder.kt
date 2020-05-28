@@ -61,7 +61,7 @@ class InstructionsBuilder internal constructor(private val instructions: Mutable
         instructions.add(build(name, namespace, block))
     }
 
-    fun sequence(name: String, namespace: String = DEFAULT_NAMESPACE, block: SequenceBuilder.() -> Unit) {
+    fun sequence(name: String, namespace: String = DEFAULT_NAMESPACE, block: FastSequenceBuilder.() -> Unit) {
         instructions.add(build(name, namespace, block))
     }
 

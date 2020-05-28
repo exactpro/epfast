@@ -14,18 +14,17 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.dsl
+package com.exactpro.epfast.decoder.message.instructions;
 
-import com.exactpro.epfast.template.Reference
-import com.exactpro.epfast.template.simple.Template
-import com.exactpro.epfast.template.simple.Templates
+import com.exactpro.epfast.decoder.message.ExecutionContext;
+import com.exactpro.epfast.decoder.message.NormalInstruction;
 
-class TemplatesBuilder internal constructor(val templates: Templates) {
+public class PushContext implements NormalInstruction {
 
-    fun template(name: String, namespace: String = Reference.DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit) {
-        templates.templates.add(TemplateBuilder(name, namespace, Template()).apply(block).template)
+    @Override
+    public boolean execute(ExecutionContext ec) {
+        ec.instructionIndex++;
+        ec.stack.push(new ExecutionContext.SavedContext(ec));
+        return true;
     }
 }
-
-fun templates(block: TemplatesBuilder.() -> Unit): Templates =
-        TemplatesBuilder(Templates()).apply(block).templates

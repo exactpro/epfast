@@ -14,18 +14,24 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.dsl
+package com.exactpro.epfast.decoder.message.instructions;
 
-import com.exactpro.epfast.template.Reference
-import com.exactpro.epfast.template.simple.Template
-import com.exactpro.epfast.template.simple.Templates
+import com.exactpro.epfast.decoder.message.ExecutionContext;
+import com.exactpro.epfast.decoder.message.FastMessage;
+import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.template.Reference;
 
-class TemplatesBuilder internal constructor(val templates: Templates) {
+public class SetApplicationType implements NormalInstruction {
+    private Reference typeRef;
 
-    fun template(name: String, namespace: String = Reference.DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit) {
-        templates.templates.add(TemplateBuilder(name, namespace, Template()).apply(block).template)
+    public SetApplicationType(Reference typeRef) {
+        this.typeRef = typeRef;
+    }
+
+    @Override
+    public boolean execute(ExecutionContext ec) {
+        ec.applicationMessage = new FastMessage(typeRef);
+        ec.instructionIndex++;
+        return true;
     }
 }
-
-fun templates(block: TemplatesBuilder.() -> Unit): Templates =
-        TemplatesBuilder(Templates()).apply(block).templates

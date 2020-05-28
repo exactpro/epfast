@@ -20,11 +20,11 @@ import com.exactpro.epfast.decoder.OverflowException;
 
 public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
 
-    DecodeMandatoryAsciiString() {
+   public DecodeMandatoryAsciiString() {
         this(false);
     }
 
-    DecodeMandatoryAsciiString(boolean checkOverlong) {
+   public DecodeMandatoryAsciiString(boolean checkOverlong) {
         super(checkOverlong);
     }
 

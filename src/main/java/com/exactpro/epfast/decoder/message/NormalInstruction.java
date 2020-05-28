@@ -14,18 +14,11 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.dsl
+package com.exactpro.epfast.decoder.message;
 
-import com.exactpro.epfast.template.Reference
-import com.exactpro.epfast.template.simple.Template
-import com.exactpro.epfast.template.simple.Templates
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.TemplateNotFoundException;
 
-class TemplatesBuilder internal constructor(val templates: Templates) {
-
-    fun template(name: String, namespace: String = Reference.DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit) {
-        templates.templates.add(TemplateBuilder(name, namespace, Template()).apply(block).template)
-    }
+public interface NormalInstruction {
+    boolean execute(ExecutionContext ec) throws OverflowException, TemplateNotFoundException;
 }
-
-fun templates(block: TemplatesBuilder.() -> Unit): Templates =
-        TemplatesBuilder(Templates()).apply(block).templates
