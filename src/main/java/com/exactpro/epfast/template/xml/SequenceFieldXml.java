@@ -81,7 +81,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         return length;
     }
 
-    @XmlElement(name = "length", namespace = XML_NAMESPACE)
+    @XmlElement(name = "length", type = LengthXml.class, namespace = XML_NAMESPACE)
     public void setLength(LengthXml length) {
         this.length = length;
     }

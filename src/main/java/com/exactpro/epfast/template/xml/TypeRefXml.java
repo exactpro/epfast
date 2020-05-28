@@ -16,39 +16,32 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Reference;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
 
-public abstract class AbstractReferenceImpl implements Reference {
-
-    private String name;
-
-    private String namespace;
-
-    private NamespaceProvider parentNsProvider;
-
-    @Override
-    public String getName() {
-        return name;
-    }
+public class TypeRefXml extends AbstractReferenceImpl {
 
     @Override
     public String getNamespace() {
-        return namespace;
+        if (super.getNamespace() != null) {
+            return super.getNamespace();
+        }
+        return getNamespaceProvider().getApplicationNamespace();
     }
 
-    protected NamespaceProvider getNamespaceProvider() {
-        return parentNsProvider;
-    }
-
+    @XmlAttribute(name = "name")
     public void setName(String name) {
-        this.name = name;
+        super.setName(name);
     }
 
+    @XmlAttribute(name = "ns")
     public void setNamespace(String ns) {
-        this.namespace = ns;
+        super.setNamespace(ns);
     }
 
-    public void setNamespaceProvider(NamespaceProvider parentNsProvider) {
-        this.parentNsProvider = parentNsProvider;
+    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+        if (parent instanceof NamespaceProvider) {
+            setNamespaceProvider((NamespaceProvider) parent);
+        }
     }
 }

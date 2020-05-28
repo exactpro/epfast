@@ -18,8 +18,8 @@ package com.exactpro.epfast.template.xml;
 
 public class TemplateIdReferenceImpl extends AbstractReferenceImpl {
 
-    public TemplateIdReferenceImpl(NamespaceProvider nsProvider) {
-        super(nsProvider);
+    public TemplateIdReferenceImpl(NamespaceProvider parentNsProvider) {
+        setNamespaceProvider(parentNsProvider);
     }
 
     @Override
@@ -27,6 +27,6 @@ public class TemplateIdReferenceImpl extends AbstractReferenceImpl {
         if (super.getNamespace() != null) {
             return super.getNamespace();
         }
-        return getNsProvider().getTemplateNamespace();
+        return getNamespaceProvider().getTemplateNamespace();
     }
 }

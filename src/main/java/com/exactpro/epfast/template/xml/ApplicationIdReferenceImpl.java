@@ -18,8 +18,8 @@ package com.exactpro.epfast.template.xml;
 
 public class ApplicationIdReferenceImpl extends AbstractReferenceImpl {
 
-    public ApplicationIdReferenceImpl(NamespaceProvider nsProvider) {
-        super(nsProvider);
+    public ApplicationIdReferenceImpl(NamespaceProvider parentNsProvider) {
+        setNamespaceProvider(parentNsProvider);
     }
 
     @Override
@@ -27,6 +27,6 @@ public class ApplicationIdReferenceImpl extends AbstractReferenceImpl {
         if (super.getNamespace() != null) {
             return super.getNamespace();
         }
-        return getNsProvider().getApplicationNamespace();
+        return getNamespaceProvider().getApplicationNamespace();
     }
 }
