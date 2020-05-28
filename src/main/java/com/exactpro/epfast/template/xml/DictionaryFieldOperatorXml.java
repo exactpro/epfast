@@ -31,13 +31,14 @@ public class DictionaryFieldOperatorXml extends FieldOperatorXml {
         return dictionaryKey;
     }
 
-    @XmlAttribute(name = "keyName")
-    public void setDictionaryKeyName(String keyName) {
-        dictionaryKey.setName(keyName);
+    @XmlAttribute(name = "key")
+    public void setDictionaryKeyName(String key) {
+        dictionaryKey.setName(key);
     }
 
-    @XmlAttribute(name = "keyNs")
-    public void setDictionaryKeyNs(String keyNs) {
-        dictionaryKey.setNamespace(keyNs);
+    @Override
+    @XmlAttribute(name = "ns")
+    public void setApplicationNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 }

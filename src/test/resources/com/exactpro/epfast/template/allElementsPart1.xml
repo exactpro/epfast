@@ -5,7 +5,7 @@
                 <constant value="value"/>
             </length>
             <int32 name="int32" ns="ns">
-                <delta keyNs="ns"/>
+                <delta ns="ns"/>
             </int32>
             <string charset="unicode" name="string" ns="ns" lengthName="length"/>
         </sequence>
@@ -22,16 +22,16 @@
 
     <template name="template2" ns="ns" id="tempId" templateNs="templateNs2" typeRefName="type" typeRefNs="ref">
         <int32 name="int" ns="intNs" id="32" presence="mandatory">
-            <increment value="value" dictionary="template" keyName="intKey" keyNs="ns"/>
+            <increment value="value" dictionary="template" key="intKey" ns="ns"/>
         </int32>
         <int64 name="int" ns="intNs" id="64" presence="mandatory">
-            <increment value="value" dictionary="global" keyName="intKey" keyNs="ns"/>
+            <increment value="value" dictionary="global" key="intKey" ns="ns"/>
         </int64>
         <uInt32 name="uInt" ns="uIntNs" id="32" presence="optional">
-            <increment value="value" dictionary="template" keyName="intKey" keyNs="ns"/>
+            <increment value="value" dictionary="template" key="intKey" ns="ns"/>
         </uInt32>
         <uInt64 name="uInt" ns="uIntNs" id="64" presence="optional">
-            <increment value="value" dictionary="global" keyName="intKey" keyNs="ns"/>
+            <increment value="value" dictionary="global" key="intKey" ns="ns"/>
         </uInt64>
     </template>
 </templates>

@@ -5,25 +5,25 @@
         </string>
         <string charset="unicode" name="unicode" ns="stringNs" id="string" presence="mandatory"
                 lengthName="length" lengthId="lengthId">
-            <copy value="value" dictionary="copy" keyName="key" keyNs="ns"/>
+            <copy value="value" dictionary="copy" key="key" ns="ns"/>
         </string>
         <decimal name="simple" ns="decimalNs" id="decimal" presence="mandatory">
-            <delta value="value" dictionary="delta" keyName="key" keyNs="ns"/>
+            <delta value="value" dictionary="delta" key="key" ns="ns"/>
         </decimal>
     </template>
 
     <template name="template2" ns="ns" id="tempId" templateNs="templateNs2" typeRefName="type" typeRefNs="ref">
         <decimal name="compound" ns="decimalNs" id="decimal" presence="optional">
             <mantissa>
-                <increment value="value" dictionary="increment" keyName="key" keyNs="ns"/>
+                <increment value="value" dictionary="increment" key="key" ns="ns"/>
             </mantissa>
             <exponent>
-                <tail value="value" dictionary="tail" keyName="key" keyNs="ns"/>
+                <tail value="value" dictionary="tail" key="key" ns="ns"/>
             </exponent>
         </decimal>
         <byteVector name="byte" ns="vectorNs" id="vector" presence="optional"
                     lengthName="length" lengthId="lengthId">
-            <copy value="value" dictionary="type" keyName="key" keyNs="ns"/>
+            <copy value="value" dictionary="type" key="key" ns="ns"/>
         </byteVector>
         <templateRef name="templateRef" templateNs="ns"/>
     </template>
