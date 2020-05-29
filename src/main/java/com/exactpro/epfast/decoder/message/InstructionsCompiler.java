@@ -53,14 +53,16 @@ public class InstructionsCompiler {
         return normalInstructions;
     }
 
-    private ArrayList<NormalInstruction> readSequenceInstructions(com.exactpro.epfast.template.Sequence sequence) {
+    private ArrayList<NormalInstruction> readSequenceInstructions(Sequence sequence) {
         ArrayList<NormalInstruction> normalInstructions = new ArrayList<>();
-        normalInstructions.add(new CheckLoop(sequence.getInstructions().size() + 4));
+        CheckLoop checkLoop = new CheckLoop();
+        normalInstructions.add(checkLoop);
         normalInstructions.add(new SetApplicationType(sequence.getTypeRef()));
         readInstructions(sequence.getInstructions(), normalInstructions);
         normalInstructions.add(new AddToSequence());
         normalInstructions.add(new LoopInstruction());
         normalInstructions.add(new ReadySequence(sequence.getFieldId()));
+        checkLoop.setJumpIndex(normalInstructions.size() - 1);
         return normalInstructions;
     }
 
@@ -71,18 +73,20 @@ public class InstructionsCompiler {
                 Group group = (Group) instruction;
                 normalInstructions.add(new PushContext());
                 normalInstructions.add(new SetInstructions(readGroupInstructions(group)));
-            } else if (instruction instanceof com.exactpro.epfast.template.Sequence) {
-                com.exactpro.epfast.template.Sequence sequence = (com.exactpro.epfast.template.Sequence) instruction;
+            } else if (instruction instanceof Sequence) {
+                Sequence sequence = (Sequence) instruction;
                 if (sequence.isOptional()) {
-                    normalInstructions.add(new SetNullableLengthField(sequence.getLength().getFieldId()));
+                    normalInstructions.add(new ReadNullableInt32(sequence.getLength().getFieldId()));
+                    normalInstructions.add(new SetNullableLengthField());
                 } else {
-                    normalInstructions.add(new SetMandatoryLengthField(sequence.getLength().getFieldId()));
+                    normalInstructions.add(new ReadMandatoryInt32(sequence.getLength().getFieldId()));
+                    normalInstructions.add(new SetMandatoryLengthField());
                 }
                 normalInstructions.add(new SetSequence());
                 normalInstructions.add(new PushContext());
                 normalInstructions.add(new SetInstructions(readSequenceInstructions(sequence)));
             } else if (instruction instanceof FieldInstruction) {
-                normalInstructions.add(toPrimitiveInstruction((FieldInstruction) instruction));
+                toPrimitiveInstruction((FieldInstruction) instruction, normalInstructions);
             } else if (instruction instanceof TemplateRef) {
                 TemplateRef templateRef = (TemplateRef) instruction;
                 normalInstructions.add(new PushContext());
@@ -91,21 +95,23 @@ public class InstructionsCompiler {
         }
     }
 
-    private NormalInstruction toPrimitiveInstruction(FieldInstruction instruction) {
+    private void toPrimitiveInstruction(FieldInstruction instruction, ArrayList<NormalInstruction> normalInstructions) {
         if (instruction instanceof Int32Field) {
             if (instruction.isOptional()) {
-                return new NullableInt32(instruction.getFieldId());
+                normalInstructions.add(new ReadNullableInt32(instruction.getFieldId()));
+                normalInstructions.add(new SetNullableInt32());
             } else {
-                return new MandatoryInt32(instruction.getFieldId());
+                normalInstructions.add(new ReadMandatoryInt32(instruction.getFieldId()));
+                normalInstructions.add(new SetMandatoryInt32());
             }
         } else if (instruction instanceof AsciiStringField) {
             if (instruction.isOptional()) {
-                return new NullableAsciiString(instruction.getFieldId());
+                normalInstructions.add(new ReadNullableAsciiString(instruction.getFieldId()));
             } else {
-                return new MandatoryAsciiString(instruction.getFieldId());
+                normalInstructions.add(new ReadMandatoryAsciiString(instruction.getFieldId()));
             }
+            normalInstructions.add(new SetString());
         }
-        return null;
     }
 
     public Map<Reference, ArrayList<NormalInstruction>> getInstructionsSet() {

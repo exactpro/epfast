@@ -19,10 +19,11 @@ package com.exactpro.epfast.decoder.message.instructions;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
 
-public class SetNullableLengthField implements NormalInstruction {
+public class SetNullableInt32 implements NormalInstruction {
+
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.lengthField = ec.registers.nullableIntReg;
+        ec.applicationMessage.setField(ec.fieldName, ec.registers.nullableIntReg);
         ec.instructionIndex++;
         return true;
     }

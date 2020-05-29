@@ -22,7 +22,7 @@ import com.exactpro.epfast.decoder.message.NormalInstruction;
 public class CheckLoop implements NormalInstruction {
     private int jumpIndex;
 
-    public CheckLoop(int jumpIndex) {
+    public void setJumpIndex(int jumpIndex) {
         this.jumpIndex = jumpIndex;
     }
 

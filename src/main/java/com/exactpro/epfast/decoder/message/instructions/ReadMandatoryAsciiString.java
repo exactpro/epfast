@@ -16,19 +16,20 @@
 
 package com.exactpro.epfast.decoder.message.instructions;
 
-import com.exactpro.epfast.decoder.IMessage;
 import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.ascii.DecodeMandatoryAsciiString;
+import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 import com.exactpro.epfast.template.Reference;
 
-public class MandatoryAsciiString extends PrimitiveInstruction<DecodeMandatoryAsciiString> {
+public class ReadMandatoryAsciiString extends PrimitiveInstruction<DecodeMandatoryAsciiString> {
 
-    public MandatoryAsciiString(Reference fieldName) {
+    public ReadMandatoryAsciiString(Reference fieldName) {
         super(fieldName, new DecodeMandatoryAsciiString());
     }
 
-    public void setMessageValue(IMessage message) throws OverflowException {
-        message.setField(fieldName.getName(), fieldDecoder.getValue());
+    public void setRegisterValue(ExecutionContext ec) throws OverflowException {
+        ec.fieldName = fieldName.getName();
+        ec.registers.stringReg = fieldDecoder.getValue();
     }
 }

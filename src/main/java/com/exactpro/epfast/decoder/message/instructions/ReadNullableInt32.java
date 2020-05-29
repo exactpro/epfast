@@ -16,20 +16,20 @@
 
 package com.exactpro.epfast.decoder.message.instructions;
 
-import com.exactpro.epfast.decoder.IMessage;
+import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
+import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 import com.exactpro.epfast.template.Reference;
 
-public class MandatoryInt32 extends PrimitiveInstruction<DecodeMandatoryInt32> {
+public class ReadNullableInt32 extends PrimitiveInstruction<DecodeNullableInt32> {
 
-    public MandatoryInt32(Reference fieldName) {
-        super(fieldName, new DecodeMandatoryInt32());
+    public ReadNullableInt32(Reference fieldName) {
+        super(fieldName, new DecodeNullableInt32());
     }
 
-    @Override
-    public void setMessageValue(IMessage message) throws OverflowException {
-        message.setField(fieldName.getName(), fieldDecoder.getValue());
+    public void setRegisterValue(ExecutionContext ec) throws OverflowException {
+        ec.fieldName = fieldName.getName();
+        ec.registers.nullableIntReg = fieldDecoder.getValue();
     }
 }

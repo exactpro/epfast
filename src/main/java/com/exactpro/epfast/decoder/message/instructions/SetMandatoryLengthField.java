@@ -16,30 +16,14 @@
 
 package com.exactpro.epfast.decoder.message.instructions;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.InstructionWithDecoder;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.message.NormalInstruction;
 
-public class SetMandatoryLengthField extends InstructionWithDecoder<DecodeMandatoryInt32> {
-
-    public SetMandatoryLengthField(Reference fieldName) {
-        super(fieldName, new DecodeMandatoryInt32());
-    }
-
-    protected void decode(ExecutionContext ec) throws OverflowException {
-        decoderStarted = true;
-        fieldDecoder.decode(ec.buffer);
-        if (isReady()) {
-            ec.lengthField = fieldDecoder.getValue();
-        }
-    }
-
-    protected void continueDecode(ExecutionContext ec) throws OverflowException {
-        fieldDecoder.continueDecode(ec.buffer);
-        if (isReady()) {
-            ec.lengthField = fieldDecoder.getValue();
-        }
+public class SetMandatoryLengthField implements NormalInstruction {
+    @Override
+    public boolean execute(ExecutionContext ec) {
+        ec.lengthField = ec.registers.intReg;
+        ec.instructionIndex++;
+        return true;
     }
 }

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,21 @@
 
 package com.exactpro.epfast.decoder.message.instructions;
 
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+import com.exactpro.epfast.template.Reference;
 
-public class SetNullableLengthField implements NormalInstruction {
+public class ReadMandatoryInt32 extends PrimitiveInstruction<DecodeMandatoryInt32> {
+
+    public ReadMandatoryInt32(Reference fieldName) {
+        super(fieldName, new DecodeMandatoryInt32());
+    }
+
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.lengthField = ec.registers.nullableIntReg;
-        ec.instructionIndex++;
-        return true;
+    public void setRegisterValue(ExecutionContext ec) throws OverflowException {
+        ec.fieldName = fieldName.getName();
+        ec.registers.intReg = fieldDecoder.getValue();
     }
 }

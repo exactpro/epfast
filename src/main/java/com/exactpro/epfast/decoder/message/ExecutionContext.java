@@ -22,6 +22,8 @@ import com.exactpro.epfast.decoder.TemplateNotFoundException;
 import com.exactpro.epfast.template.*;
 import io.netty.buffer.ByteBuf;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 public class ExecutionContext {
@@ -48,6 +50,10 @@ public class ExecutionContext {
 
     public Integer lengthField;
 
+    public Registers registers = new Registers();
+
+    public String fieldName;
+
     public ExecutionContext(Map<Reference, ArrayList<NormalInstruction>> instructionsSet) {
         this.instructionsSet = instructionsSet;
     }
@@ -60,6 +66,26 @@ public class ExecutionContext {
         Collection<IMessage> results = this.readyMessages;
         this.readyMessages = new ArrayList<>();
         return results;
+    }
+
+    public static class Registers {
+
+        public int intReg;
+
+        public Integer nullableIntReg;
+
+        public String stringReg;
+
+        public long longReg;
+
+        public Long nullableLongReg;
+
+        public BigInteger bigIntReg;
+
+        public BigDecimal bigDecimalReg;
+
+        public byte[] unicodeReg;
+
     }
 
     public static class SavedContext {
