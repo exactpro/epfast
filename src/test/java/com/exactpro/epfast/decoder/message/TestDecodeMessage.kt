@@ -19,8 +19,6 @@ package com.exactpro.epfast.decoder.message
 import com.exactpro.epfast.decoder.IMessage
 import com.exactpro.epfast.template.dsl.templates
 import com.exactpro.epfast.template.simple.Reference
-import com.exactpro.epfast.template.simple.Template
-import com.exactpro.epfast.template.simple.Templates
 import com.exactpro.junit5.WithByteBuf
 import io.netty.buffer.ByteBuf
 import java.io.IOException
@@ -354,9 +352,7 @@ class TestDecodeMessage {
     @WithByteBuf(bytesString)
     @Throws(IOException::class)
     fun testTemplateRef(buffers: Collection<ByteBuf>) {
-        val templatesMap: Map<Reference, Template> = mapTemplates(templates)
-
-        val handler = ByteBufHandler(templatesMap, Reference("first template", ""))
+        val handler = FastDecoder(templates.templates, Reference("first template", ""))
 
         var messages: List<Any> = listOf()
         for (buffer in buffers) {
@@ -382,9 +378,7 @@ class TestDecodeMessage {
     @WithByteBuf(bytesString)
     @Throws(IOException::class)
     fun testGroup(buffers: Collection<ByteBuf>) {
-        val templatesMap: Map<Reference, Template> = mapTemplates(templatesWithGroup)
-
-        val handler = ByteBufHandler(templatesMap, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithGroup.templates, Reference("first template", ""))
 
         var messages: List<Any> = listOf()
         for (buffer in buffers) {
@@ -412,9 +406,7 @@ class TestDecodeMessage {
     @WithByteBuf(nestedGroupBytesString)
     @Throws(IOException::class)
     fun testNestedGroup(buffers: Collection<ByteBuf>) {
-        val templatesMap: Map<Reference, Template> = mapTemplates(templatesWithNestedGroup)
-
-        val handler = ByteBufHandler(templatesMap, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithNestedGroup.templates, Reference("first template", ""))
 
         var messages: List<Any> = listOf()
         for (buffer in buffers) {
@@ -448,9 +440,7 @@ class TestDecodeMessage {
     @WithByteBuf(optionalSequenceBytesString)
     @Throws(IOException::class)
     fun testOptionalSequence(buffers: Collection<ByteBuf>) {
-        val templatesMap: Map<Reference, Template> = mapTemplates(templatesWithOptionalSequence)
-
-        val handler = ByteBufHandler(templatesMap, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithOptionalSequence.templates, Reference("first template", ""))
 
         var messages: List<Any> = listOf()
         for (buffer in buffers) {
@@ -483,9 +473,7 @@ class TestDecodeMessage {
     @WithByteBuf(mandatorySequenceBytesString)
     @Throws(IOException::class)
     fun testMandatorySequence(buffers: Collection<ByteBuf>) {
-        val templatesMap: Map<Reference, Template> = mapTemplates(templatesWithMandatorySequence)
-
-        val handler = ByteBufHandler(templatesMap, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithMandatorySequence.templates, Reference("first template", ""))
 
         var messages: List<Any> = listOf()
         for (buffer in buffers) {
@@ -528,11 +516,5 @@ class TestDecodeMessage {
         const val optionalSequenceBytesString = firstT_part1 + secondT_part1 + optionalSequenceLength + thirdT + thirdT + thirdT + secondT_part2 + firstT_part2
         const val mandatorySequenceBytesString = firstT_part1 + secondT_part1 + mandatorySequenceLength + thirdT + thirdT + thirdT + secondT_part2 + firstT_part2
         const val nestedGroupBytesString = firstT_part1 + secondT_part1 + firstT_part1 + thirdT + firstT_part2 + secondT_part2 + firstT_part2
-    }
-
-    private fun mapTemplates(templates: Templates): Map<Reference, Template> {
-        return templates.templates.map {
-            Reference(it.templateId.name, it.templateId.namespace) to it
-        }.toMap()
     }
 }

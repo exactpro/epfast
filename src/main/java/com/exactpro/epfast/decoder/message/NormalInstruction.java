@@ -17,8 +17,7 @@
 package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.TemplateNotFoundException;
 
 public interface NormalInstruction {
-    boolean execute(ExecutionContext ec) throws OverflowException, TemplateNotFoundException;
+    boolean execute(ExecutionContext ec) throws OverflowException;
 }

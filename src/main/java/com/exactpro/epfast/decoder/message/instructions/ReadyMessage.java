@@ -25,7 +25,7 @@ public class ReadyMessage implements NormalInstruction {
     public boolean execute(ExecutionContext ec) {
         ec.readyMessages.add(ec.applicationMessage);
         ec.applicationMessage = null;
-        ec.instructionIndex = 0;
+        ec.nextInstructionIndex = 0;
         return true;
     }
 }

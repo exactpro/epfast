@@ -20,17 +20,15 @@ import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
-import com.exactpro.epfast.template.Reference;
 
 public class ReadMandatoryInt32 extends PrimitiveInstruction<DecodeMandatoryInt32> {
 
-    public ReadMandatoryInt32(Reference fieldName) {
-        super(fieldName, new DecodeMandatoryInt32());
+    public ReadMandatoryInt32() {
+        super(new DecodeMandatoryInt32());
     }
 
     @Override
     public void setRegisterValue(ExecutionContext ec) throws OverflowException {
-        ec.fieldName = fieldName.getName();
-        ec.registers.intReg = fieldDecoder.getValue();
+        ec.registers.mandatoryInt32Value = fieldDecoder.getValue();
     }
 }

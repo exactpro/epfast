@@ -19,13 +19,11 @@ package com.exactpro.epfast.decoder.message.instructions;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
 
-public class PopContext implements NormalInstruction {
+public class Call implements NormalInstruction {
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.stack.pop().restoreTo(ec);
-        ec.instructionIndex++;
+        ec.call();
         return true;
     }
-
 }

@@ -22,8 +22,8 @@ import com.exactpro.epfast.decoder.message.NormalInstruction;
 public class SetMandatoryLengthField implements NormalInstruction {
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.lengthField = ec.registers.intReg;
-        ec.instructionIndex++;
+        ec.loopLimit = ec.registers.mandatoryInt32Value;
+        ec.nextInstructionIndex++;
         return true;
     }
 }

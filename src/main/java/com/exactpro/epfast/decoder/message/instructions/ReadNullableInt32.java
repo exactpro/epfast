@@ -20,16 +20,14 @@ import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
 import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
-import com.exactpro.epfast.template.Reference;
 
 public class ReadNullableInt32 extends PrimitiveInstruction<DecodeNullableInt32> {
 
-    public ReadNullableInt32(Reference fieldName) {
-        super(fieldName, new DecodeNullableInt32());
+    public ReadNullableInt32() {
+        super(new DecodeNullableInt32());
     }
 
     public void setRegisterValue(ExecutionContext ec) throws OverflowException {
-        ec.fieldName = fieldName.getName();
-        ec.registers.nullableIntReg = fieldDecoder.getValue();
+        ec.registers.optionalInt32Value = fieldDecoder.getValue();
     }
 }

@@ -18,13 +18,20 @@ package com.exactpro.epfast.decoder.message.instructions;
 
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.template.Reference;
 
 public class SetString implements NormalInstruction {
 
+    private Reference fieldName;
+
+    public SetString(Reference fieldName) {
+        this.fieldName = fieldName;
+    }
+
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.applicationMessage.setField(ec.fieldName, ec.registers.stringReg);
-        ec.instructionIndex++;
+        ec.applicationMessage.setField(fieldName.getName(), ec.registers.stringValue);
+        ec.nextInstructionIndex++;
         return true;
     }
 }

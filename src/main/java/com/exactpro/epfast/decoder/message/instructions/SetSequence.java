@@ -24,9 +24,9 @@ public class SetSequence implements NormalInstruction {
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.sequence = new IMessage[ec.lengthField];
-        ec.sequenceIndex = 0;
-        ec.instructionIndex++;
+        ec.sequence = new IMessage[ec.loopLimit];
+        ec.loopIndex = 0;
+        ec.nextInstructionIndex++;
         return true;
     }
 }

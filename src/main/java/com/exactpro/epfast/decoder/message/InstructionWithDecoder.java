@@ -18,22 +18,17 @@ package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.template.Reference;
+
+import java.util.Objects;
 
 public abstract class InstructionWithDecoder<T extends IDecodeContext> implements NormalInstruction {
-
-    protected Reference fieldName;
 
     protected T fieldDecoder;
 
     protected boolean decoderStarted;
 
-    protected InstructionWithDecoder(Reference fieldName, T fieldDecoder) {
-        assert fieldName != null; // TODO check that assertions are turned on during test;
-        assert fieldDecoder != null; // XXX consider using lombok @NonNull to reduce boilerplate code
-
-        this.fieldName = fieldName;
-        this.fieldDecoder = fieldDecoder;
+    protected InstructionWithDecoder(T fieldDecoder) {
+        this.fieldDecoder = Objects.requireNonNull(fieldDecoder);
     }
 
     protected abstract void decode(ExecutionContext ec) throws OverflowException;
@@ -55,7 +50,7 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
             continueDecode(ec);
         }
         if (isReady()) {
-            ec.instructionIndex++;
+            ec.nextInstructionIndex++;
             return true;
         }
         return false;

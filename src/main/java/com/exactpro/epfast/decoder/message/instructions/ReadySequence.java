@@ -30,8 +30,8 @@ public class ReadySequence implements NormalInstruction {
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.stack.pop().restoreWithSequence(ec, name);
-        ec.instructionIndex++;
+        ec.callStack.pop().restoreWithSequence(ec, name);
+        ec.nextInstructionIndex++;
         return true;
     }
 }

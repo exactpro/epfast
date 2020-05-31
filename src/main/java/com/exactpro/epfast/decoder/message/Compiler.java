@@ -22,26 +22,21 @@ import com.exactpro.epfast.template.*;
 
 import java.util.*;
 
-public class InstructionsCompiler {
+public class Compiler {
 
     Map<Reference, ArrayList<NormalInstruction>> instructionsSet = new HashMap<>();
 
-    private Map<? extends Reference, ? extends Template> templates;
-
-    public InstructionsCompiler(Map<? extends Reference, ? extends Template> templates) {
-        this.templates = templates;
-    }
-
-    public void compile() {
-        for (Map.Entry<? extends Reference, ? extends Template> entry : this.templates.entrySet()) {
-            readTemplateInstructions(entry.getValue());
+    public Map<Reference, ArrayList<NormalInstruction>> compile(Collection<? extends Template> templates) {
+        for (Template template : templates) {
+            readTemplateInstructions(template);
         }
+        return instructionsSet;
     }
 
     public void readTemplateInstructions(Template template) {
         ArrayList<NormalInstruction> normalInstructions = new ArrayList<>();
         readInstructions(template.getInstructions(), normalInstructions);
-        normalInstructions.add(new PopContext());
+        normalInstructions.add(new Ret());
         instructionsSet.put(template.getTemplateId(), normalInstructions);
     }
 
@@ -55,14 +50,14 @@ public class InstructionsCompiler {
 
     private ArrayList<NormalInstruction> readSequenceInstructions(Sequence sequence) {
         ArrayList<NormalInstruction> normalInstructions = new ArrayList<>();
-        CheckLoop checkLoop = new CheckLoop();
-        normalInstructions.add(checkLoop);
+        Loop loop = new Loop();
+        normalInstructions.add(loop);
         normalInstructions.add(new SetApplicationType(sequence.getTypeRef()));
         readInstructions(sequence.getInstructions(), normalInstructions);
         normalInstructions.add(new AddToSequence());
-        normalInstructions.add(new LoopInstruction());
+        normalInstructions.add(new Jump(0));
         normalInstructions.add(new ReadySequence(sequence.getFieldId()));
-        checkLoop.setJumpIndex(normalInstructions.size() - 1);
+        loop.setJumpIndex(normalInstructions.size() - 1);
         return normalInstructions;
     }
 
@@ -71,25 +66,25 @@ public class InstructionsCompiler {
         for (Instruction instruction : instructions) {
             if (instruction instanceof Group) {
                 Group group = (Group) instruction;
-                normalInstructions.add(new PushContext());
+                normalInstructions.add(new Call());
                 normalInstructions.add(new SetInstructions(readGroupInstructions(group)));
             } else if (instruction instanceof Sequence) {
                 Sequence sequence = (Sequence) instruction;
                 if (sequence.isOptional()) {
-                    normalInstructions.add(new ReadNullableInt32(sequence.getLength().getFieldId()));
+                    normalInstructions.add(new ReadNullableInt32());
                     normalInstructions.add(new SetNullableLengthField());
                 } else {
-                    normalInstructions.add(new ReadMandatoryInt32(sequence.getLength().getFieldId()));
+                    normalInstructions.add(new ReadMandatoryInt32());
                     normalInstructions.add(new SetMandatoryLengthField());
                 }
                 normalInstructions.add(new SetSequence());
-                normalInstructions.add(new PushContext());
+                normalInstructions.add(new Call());
                 normalInstructions.add(new SetInstructions(readSequenceInstructions(sequence)));
             } else if (instruction instanceof FieldInstruction) {
                 toPrimitiveInstruction((FieldInstruction) instruction, normalInstructions);
             } else if (instruction instanceof TemplateRef) {
                 TemplateRef templateRef = (TemplateRef) instruction;
-                normalInstructions.add(new PushContext());
+                normalInstructions.add(new Call());
                 normalInstructions.add(new SetInstructionsWithReference(templateRef.getTemplateRef()));
             }
         }
@@ -98,23 +93,19 @@ public class InstructionsCompiler {
     private void toPrimitiveInstruction(FieldInstruction instruction, ArrayList<NormalInstruction> normalInstructions) {
         if (instruction instanceof Int32Field) {
             if (instruction.isOptional()) {
-                normalInstructions.add(new ReadNullableInt32(instruction.getFieldId()));
-                normalInstructions.add(new SetNullableInt32());
+                normalInstructions.add(new ReadNullableInt32());
+                normalInstructions.add(new SetNullableInt32(instruction.getFieldId()));
             } else {
-                normalInstructions.add(new ReadMandatoryInt32(instruction.getFieldId()));
-                normalInstructions.add(new SetMandatoryInt32());
+                normalInstructions.add(new ReadMandatoryInt32());
+                normalInstructions.add(new SetMandatoryInt32(instruction.getFieldId()));
             }
         } else if (instruction instanceof AsciiStringField) {
             if (instruction.isOptional()) {
-                normalInstructions.add(new ReadNullableAsciiString(instruction.getFieldId()));
+                normalInstructions.add(new ReadNullableAsciiString());
             } else {
-                normalInstructions.add(new ReadMandatoryAsciiString(instruction.getFieldId()));
+                normalInstructions.add(new ReadMandatoryAsciiString());
             }
-            normalInstructions.add(new SetString());
+            normalInstructions.add(new SetString(instruction.getFieldId()));
         }
-    }
-
-    public Map<Reference, ArrayList<NormalInstruction>> getInstructionsSet() {
-        return instructionsSet;
     }
 }

@@ -17,8 +17,7 @@
 package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.TemplateNotFoundException;
-import com.exactpro.epfast.decoder.message.instructions.PushContext;
+import com.exactpro.epfast.decoder.message.instructions.Call;
 import com.exactpro.epfast.decoder.message.instructions.ReadyMessage;
 import com.exactpro.epfast.decoder.message.instructions.SetInstructionsWithReference;
 import com.exactpro.epfast.decoder.message.instructions.SetApplicationType;
@@ -28,21 +27,21 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.*;
 
-public class ByteBufHandler {
+public class FastDecoder {
 
     private ExecutionContext executionContext;
 
-    public ByteBufHandler(Map<? extends Reference, ? extends Template> templates, Reference templateRef) {
-        InstructionsCompiler instructionsCompiler = new InstructionsCompiler(templates);
-        instructionsCompiler.compile();
-        this.executionContext = new ExecutionContext(instructionsCompiler.getInstructionsSet());
-        executionContext.instructions.add(new SetApplicationType(templates.get(templateRef).getTypeRef()));
-        executionContext.instructions.add(new PushContext());
+    public FastDecoder(Collection<? extends Template> templates, Reference templateRef) {
+        //TODO send bootstrapCode
+        this.executionContext = new ExecutionContext(new Compiler().compile(templates), null);
+        //TODO change templateRef with appropriate type reference
+        executionContext.instructions.add(new SetApplicationType(templateRef));
+        executionContext.instructions.add(new Call());
         executionContext.instructions.add(new SetInstructionsWithReference(templateRef));
         executionContext.instructions.add(new ReadyMessage());
     }
 
-    public Collection<? extends Object> handle(ByteBuf buffer) throws OverflowException, TemplateNotFoundException {
+    public Collection<? extends Object> handle(ByteBuf buffer) throws OverflowException {
         executionContext.buffer = buffer;
         while (executionContext.nextStep()) {
         }

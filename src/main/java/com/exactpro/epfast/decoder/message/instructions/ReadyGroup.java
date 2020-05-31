@@ -30,8 +30,8 @@ public class ReadyGroup implements NormalInstruction {
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.stack.pop().restoreWithGroup(ec, name);
-        ec.instructionIndex++;
+        ec.callStack.pop().restoreWithGroup(ec, name);
+        ec.nextInstructionIndex++;
         return true;
     }
 }

@@ -18,13 +18,20 @@ package com.exactpro.epfast.decoder.message.instructions;
 
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.template.Reference;
 
 public class SetNullableInt32 implements NormalInstruction {
 
+    private Reference fieldName;
+
+    public SetNullableInt32(Reference fieldName) {
+        this.fieldName = fieldName;
+    }
+
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.applicationMessage.setField(ec.fieldName, ec.registers.nullableIntReg);
-        ec.instructionIndex++;
+        ec.applicationMessage.setField(fieldName.getName(), ec.registers.optionalInt32Value);
+        ec.nextInstructionIndex++;
         return true;
     }
 }

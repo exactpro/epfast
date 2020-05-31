@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder;
 
-public class TemplateNotFoundException extends Exception {
+public class TemplateNotFoundException extends RuntimeException {
     public TemplateNotFoundException(String errorMessage) {
         super(errorMessage);
     }

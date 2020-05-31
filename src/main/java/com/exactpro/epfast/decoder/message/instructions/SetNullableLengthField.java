@@ -20,10 +20,16 @@ import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
 
 public class SetNullableLengthField implements NormalInstruction {
+
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.lengthField = ec.registers.nullableIntReg;
-        ec.instructionIndex++;
+        Integer lengthValue = ec.registers.optionalInt32Value;
+        if (lengthValue != null) {
+            ec.loopLimit = lengthValue;
+        } else {
+            //TODO null case
+        }
+        ec.nextInstructionIndex++;
         return true;
     }
 }

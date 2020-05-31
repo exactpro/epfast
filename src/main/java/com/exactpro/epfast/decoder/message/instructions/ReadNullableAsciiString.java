@@ -20,16 +20,14 @@ import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.ascii.DecodeNullableAsciiString;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
-import com.exactpro.epfast.template.Reference;
 
 public class ReadNullableAsciiString extends PrimitiveInstruction<DecodeNullableAsciiString> {
 
-    public ReadNullableAsciiString(Reference fieldName) {
-        super(fieldName, new DecodeNullableAsciiString());
+    public ReadNullableAsciiString() {
+        super(new DecodeNullableAsciiString());
     }
 
     public void setRegisterValue(ExecutionContext ec) throws OverflowException {
-        ec.fieldName = fieldName.getName();
-        ec.registers.stringReg = fieldDecoder.getValue();
+        ec.registers.stringValue = fieldDecoder.getValue();
     }
 }

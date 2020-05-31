@@ -21,7 +21,7 @@ import com.exactpro.epfast.template.Reference;
 
 import java.util.HashMap;
 
-public class FastMessage implements IMessage, Cloneable {
+public class FastMessage implements IMessage {
 
     private Reference type;
 

@@ -19,11 +19,17 @@ package com.exactpro.epfast.decoder.message.instructions;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
 
-public class LoopInstruction implements NormalInstruction {
+public class Jump implements NormalInstruction {
+
+    private int jumpIndex;
+
+    public Jump(int jumpIndex) {
+        this.jumpIndex = jumpIndex;
+    }
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.instructionIndex = 0;
+        ec.nextInstructionIndex = jumpIndex;
         return true;
     }
 }

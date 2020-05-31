@@ -19,20 +19,12 @@ package com.exactpro.epfast.decoder.message.instructions;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
 
-public class CheckLoop implements NormalInstruction {
-    private int jumpIndex;
-
-    public void setJumpIndex(int jumpIndex) {
-        this.jumpIndex = jumpIndex;
-    }
+public class Ret implements NormalInstruction {
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        if (ec.sequenceIndex < ec.lengthField) {
-            ec.instructionIndex++;
-        } else {
-            ec.instructionIndex = jumpIndex;
-        }
+        ec.ret();
         return true;
     }
+
 }

@@ -19,12 +19,21 @@ package com.exactpro.epfast.decoder.message.instructions;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
 
-public class PushContext implements NormalInstruction {
+public class Loop implements NormalInstruction {
+
+    private int jumpIndex;
+
+    public void setJumpIndex(int jumpIndex) {
+        this.jumpIndex = jumpIndex;
+    }
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.instructionIndex++;
-        ec.stack.push(new ExecutionContext.SavedContext(ec));
+        if (ec.loopIndex < ec.loopLimit) {
+            ec.nextInstructionIndex++;
+        } else {
+            ec.nextInstructionIndex = jumpIndex;
+        }
         return true;
     }
 }

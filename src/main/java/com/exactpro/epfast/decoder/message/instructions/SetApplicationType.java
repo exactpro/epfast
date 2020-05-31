@@ -31,7 +31,7 @@ public class SetApplicationType implements NormalInstruction {
     @Override
     public boolean execute(ExecutionContext ec) {
         ec.applicationMessage = new FastMessage(typeRef);
-        ec.instructionIndex++;
+        ec.nextInstructionIndex++;
         return true;
     }
 }

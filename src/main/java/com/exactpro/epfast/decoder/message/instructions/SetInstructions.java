@@ -31,7 +31,7 @@ public class SetInstructions implements NormalInstruction {
     @Override
     public boolean execute(ExecutionContext ec) {
         ec.instructions = this.instructions;
-        ec.instructionIndex = 0;
+        ec.nextInstructionIndex = 0;
         return true;
     }
 }

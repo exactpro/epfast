@@ -18,7 +18,6 @@ package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.IMessage;
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.TemplateNotFoundException;
 import com.exactpro.epfast.template.*;
 import io.netty.buffer.ByteBuf;
 
@@ -30,13 +29,13 @@ public class ExecutionContext {
 
     // private PresenceMap presenceMap;
 
-    public Map<Reference, ArrayList<NormalInstruction>> instructionsSet;
+    public Map<Reference, ArrayList<NormalInstruction>> compiledTemplates;
 
-    public Stack<SavedContext> stack = new Stack<>();
+    public Stack<SavedContext> callStack = new Stack<>();
 
     public ArrayList<NormalInstruction> instructions = new ArrayList<>();
 
-    public int instructionIndex = 0;
+    public int nextInstructionIndex = 0;
 
     public ByteBuf buffer;
 
@@ -46,20 +45,29 @@ public class ExecutionContext {
 
     public IMessage[] sequence;
 
-    public int sequenceIndex;
+    public int loopIndex;
 
-    public Integer lengthField;
+    public int loopLimit;
 
     public Registers registers = new Registers();
 
-    public String fieldName;
-
-    public ExecutionContext(Map<Reference, ArrayList<NormalInstruction>> instructionsSet) {
-        this.instructionsSet = instructionsSet;
+    public ExecutionContext(Map<Reference, ArrayList<NormalInstruction>> compiledTemplates,
+                            ArrayList<NormalInstruction> bootstrapCode) {
+        this.compiledTemplates = compiledTemplates;
     }
 
-    public boolean nextStep() throws OverflowException, TemplateNotFoundException {
-        return instructions.get(instructionIndex).execute(this);
+    public boolean nextStep() throws OverflowException {
+        return instructions.get(nextInstructionIndex).execute(this);
+    }
+
+    public void call() {
+        nextInstructionIndex++;
+        callStack.push(new ExecutionContext.SavedContext(this));
+    }
+
+    public void ret() {
+        callStack.pop().restoreTo(this);
+        nextInstructionIndex++;
     }
 
     public Collection<IMessage> fetchResults() {
@@ -70,22 +78,19 @@ public class ExecutionContext {
 
     public static class Registers {
 
-        public int intReg;
+        public int mandatoryInt32Value;
 
-        public Integer nullableIntReg;
+        public Integer optionalInt32Value;
 
-        public String stringReg;
+        public String stringValue;
 
-        public long longReg;
+        public long mandatoryInt64Value;
 
-        public Long nullableLongReg;
+        public Long optionalInt64Value;
 
-        public BigInteger bigIntReg;
+        public BigInteger unsignedInt64Value;
 
-        public BigDecimal bigDecimalReg;
-
-        public byte[] unicodeReg;
-
+        public BigDecimal decimalValue;
     }
 
     public static class SavedContext {
@@ -96,31 +101,43 @@ public class ExecutionContext {
 
         private final int instructionIndex;
 
+        private final int loopLimit;
+
+        private final int loopIndex;
+
         private final IMessage applicationMessage;
 
         public SavedContext(ExecutionContext ec) {
             this.instructions = ec.instructions;
-            this.instructionIndex = ec.instructionIndex;
+            this.instructionIndex = ec.nextInstructionIndex;
+            this.loopLimit = ec.loopLimit;
+            this.loopIndex = ec.loopIndex;
             this.applicationMessage = ec.applicationMessage;
         }
 
         public void restoreTo(ExecutionContext ec) {
             ec.instructions = instructions;
-            ec.instructionIndex = instructionIndex;
+            ec.loopLimit = loopLimit;
+            ec.loopIndex = loopIndex;
+            ec.nextInstructionIndex = instructionIndex;
         }
 
         public void restoreWithGroup(ExecutionContext ec, Reference name) {
             applicationMessage.setField(name.getName(), ec.applicationMessage);
             ec.applicationMessage = applicationMessage;
             ec.instructions = instructions;
-            ec.instructionIndex = instructionIndex;
+            ec.loopLimit = loopLimit;
+            ec.loopIndex = loopIndex;
+            ec.nextInstructionIndex = instructionIndex;
         }
 
         public void restoreWithSequence(ExecutionContext ec, Reference name) {
             applicationMessage.setField(name.getName(), ec.sequence);
             ec.applicationMessage = applicationMessage;
             ec.instructions = instructions;
-            ec.instructionIndex = instructionIndex;
+            ec.loopLimit = loopLimit;
+            ec.loopIndex = loopIndex;
+            ec.nextInstructionIndex = instructionIndex;
         }
     }
 }

@@ -23,9 +23,9 @@ public class AddToSequence implements NormalInstruction {
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.sequence[ec.sequenceIndex] = ec.applicationMessage;
-        ec.sequenceIndex++;
-        ec.instructionIndex++;
+        ec.sequence[ec.loopIndex] = ec.applicationMessage;
+        ec.loopIndex++;
+        ec.nextInstructionIndex++;
         return true;
     }
 }

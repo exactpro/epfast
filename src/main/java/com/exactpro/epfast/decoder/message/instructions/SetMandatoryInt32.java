@@ -18,13 +18,20 @@ package com.exactpro.epfast.decoder.message.instructions;
 
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.template.Reference;
 
 public class SetMandatoryInt32 implements NormalInstruction {
 
+    private Reference fieldName;
+
+    public SetMandatoryInt32(Reference fieldName) {
+        this.fieldName = fieldName;
+    }
+
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.applicationMessage.setField(ec.fieldName, ec.registers.intReg);
-        ec.instructionIndex++;
+        ec.applicationMessage.setField(fieldName.getName(), ec.registers.mandatoryInt32Value);
+        ec.nextInstructionIndex++;
         return true;
     }
 }

@@ -17,14 +17,12 @@
 package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
-import com.exactpro.epfast.decoder.IMessage;
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.template.Reference;
 
 public abstract class PrimitiveInstruction<T extends IDecodeContext> extends InstructionWithDecoder<T> {
 
-    protected PrimitiveInstruction(Reference fieldName, T fieldDecoder) {
-        super(fieldName, fieldDecoder);
+    protected PrimitiveInstruction(T fieldDecoder) {
+        super(fieldDecoder);
     }
 
     protected void decode(ExecutionContext ec) throws OverflowException {
@@ -45,8 +43,4 @@ public abstract class PrimitiveInstruction<T extends IDecodeContext> extends Ins
     }
 
     public abstract void setRegisterValue(ExecutionContext ec) throws OverflowException;
-
-    public void setNull(IMessage message) {
-        message.setField(fieldName.getName(), null);
-    }
 }
