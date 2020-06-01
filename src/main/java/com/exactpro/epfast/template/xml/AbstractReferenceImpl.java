@@ -51,4 +51,9 @@ public abstract class AbstractReferenceImpl implements Reference {
     public void setNamespaceProvider(NamespaceProvider parentNsProvider) {
         this.parentNsProvider = parentNsProvider;
     }
+
+    @Override
+    public String toString() {
+        return "{name:'" + name + "', namespace:'" + getNamespace() + "'}";
+    }
 }
