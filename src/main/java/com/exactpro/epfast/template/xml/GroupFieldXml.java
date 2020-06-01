@@ -64,7 +64,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", type = TypeRefXml.class, namespace = Reference.DEFAULT_NAMESPACE)
+    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
     public void setTypeRef(TypeRefXml typeRef) {
         this.typeRef = typeRef;
     }

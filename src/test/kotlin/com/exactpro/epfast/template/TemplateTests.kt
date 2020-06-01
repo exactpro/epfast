@@ -9,68 +9,69 @@ import org.junit.jupiter.api.Test
 class TemplateTests {
 
     @Test
-    fun `test all elements part 1`() {
-        val expected = listOf(template("template1", "templateNs1") {
-            auxiliaryId = "tempId"
-            typeRef {
-                name = "type"
-                namespace = "ref"
-            }
-            instructions {
-                sequence("sequence", "namespace") {
-                    auxiliaryId = "id"
-                    optional = true
+    fun `Can read all elements (Part 1)`() {
+        val expected = listOf(
+                template("template1", "templateNs1") {
+                    auxiliaryId = "tempId"
                     typeRef {
                         name = "type"
                         namespace = "ref"
                     }
-                    length {
-                        name = "length"
-                        namespace = "ns"
-                        auxiliaryId = "lengthId"
-                        operator { constant { initialValue = "value" } }
-                    }
                     instructions {
-                        int32("int32", "ns") {
-                            delta { dictionaryKey { namespace = "ns" } }
-                        }
-                        unicode("string", "ns") {
+                        sequence("sequence", "namespace") {
+                            auxiliaryId = "id"
+                            optional = true
+                            typeRef {
+                                name = "type"
+                                namespace = "ref"
+                            }
                             length {
                                 name = "length"
                                 namespace = "ns"
+                                auxiliaryId = "lengthId"
+                                operator { constant { initialValue = "value" } }
                             }
-                        }
-                    }
-                }
-                group("group", "namespace") {
-                    auxiliaryId = "groupId"
-                    optional = false
-                    typeRef {
-                        name = "type"
-                        namespace = "ref"
-                    }
-                    instructions {
-                        sequence("name", "namespace") {
-                            typeRef { namespace = "namespace" }
                             instructions {
-                                compoundDecimal("decimal", "ns") { mantissa {} }
-                                templateRef {
-                                    name = "tempRef"
-                                    namespace = "ns"
+                                int32("int32", "ns") {
+                                    delta { dictionaryKey { namespace = "ns" } }
+                                }
+                                unicode("string", "ns") {
+                                    length {
+                                        name = "length"
+                                        namespace = "ns"
+                                    }
                                 }
                             }
                         }
-                        byteVector("vector", "ns") {
-                            optional = true
-                            length {
-                                auxiliaryId = "id"
-                                namespace = "ns"
+                        group("group", "namespace") {
+                            auxiliaryId = "groupId"
+                            optional = false
+                            typeRef {
+                                name = "type"
+                                namespace = "ref"
+                            }
+                            instructions {
+                                sequence("name", "namespace") {
+                                    typeRef { namespace = "namespace" }
+                                    instructions {
+                                        compoundDecimal("decimal", "ns") { mantissa {} }
+                                        templateRef {
+                                            name = "tempRef"
+                                            namespace = "ns"
+                                        }
+                                    }
+                                }
+                                byteVector("vector", "ns") {
+                                    optional = true
+                                    length {
+                                        auxiliaryId = "id"
+                                        namespace = "ns"
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
-        },
+                },
                 template("template2", "templateNs2") {
                     auxiliaryId = "tempId"
                     typeRef {
