@@ -25,7 +25,7 @@ public class Template implements com.exactpro.epfast.template.Template {
 
     private Identity templateId = new Identity();
 
-    private Reference typeRef = new Reference();
+    private Reference typeRef;
 
     private final List<Instruction> instructions = new ArrayList<>();
 

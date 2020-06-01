@@ -27,7 +27,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private ApplicationIdReference typeRef = new ApplicationIdReference(this);
+    private TypeRefXml typeRef;
 
     private LengthXml length;
 
@@ -62,18 +62,13 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
     }
 
     @Override
-    public ApplicationIdReference getTypeRef() {
+    public TypeRefXml getTypeRef() {
         return typeRef;
     }
 
-    @XmlAttribute(name = "typeRefName")
-    public void setTypeRefName(String name) {
-        typeRef.setName(name);
-    }
-
-    @XmlAttribute(name = "typeRefNs")
-    public void setTypeRefNs(String ns) {
-        typeRef.setNamespace(ns);
+    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
+    public void setTypeRef(TypeRefXml typeRef) {
+        this.typeRef = typeRef;
     }
 
     @Override
@@ -81,7 +76,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         return length;
     }
 
-    @XmlElement(name = "length", type = LengthXml.class, namespace = XML_NAMESPACE)
+    @XmlElement(name = "length", namespace = XML_NAMESPACE)
     public void setLength(LengthXml length) {
         this.length = length;
     }

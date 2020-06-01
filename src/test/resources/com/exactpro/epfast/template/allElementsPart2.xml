@@ -1,5 +1,6 @@
 <templates templateNs="TNS" ns="ANS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-    <template name="template1" ns="ns" id="tempId" templateNs="templateNs1" typeRefName="type" typeRefNs="ref">
+    <template name="template1" ns="ns" id="tempId" templateNs="templateNs1">
+        <typeRef name="type" ns="ref"/>
         <string charset="ascii" name="ascii" ns="stringNs" id="string" presence="optional">
             <default value="value"/>
         </string>
@@ -12,7 +13,8 @@
         </decimal>
     </template>
 
-    <template name="template2" ns="ns" id="tempId" templateNs="templateNs2" typeRefName="type" typeRefNs="ref">
+    <template name="template2" ns="ns" id="tempId" templateNs="templateNs2">
+        <typeRef name="type" ns="ref"/>
         <decimal name="compound" ns="decimalNs" id="decimal" presence="optional">
             <mantissa>
                 <increment value="value" dictionary="increment" key="key" ns="ns"/>

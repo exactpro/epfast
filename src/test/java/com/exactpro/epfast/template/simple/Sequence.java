@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Sequence extends FieldInstruction implements com.exactpro.epfast.template.Sequence {
 
-    private Reference typeRef = new Reference();
+    private Reference typeRef;
 
     private LengthField length;
 

@@ -1,6 +1,8 @@
 <templates templateNs="TNS" ns="ANS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-    <template name="template1" ns="ns" id="tempId" templateNs="templateNs1" typeRefName="type" typeRefNs="ref">
-        <sequence name="sequence" ns="namespace" id="id" presence="optional" typeRefName="type" typeRefNs="ref">
+    <template name="template1" ns="ns" id="tempId" templateNs="templateNs1">
+        <typeRef name="type" ns="ref"/>
+        <sequence name="sequence" ns="namespace" id="id" presence="optional">
+            <typeRef name="type" ns="ref"/>
             <length name="length" ns="ns" id="lengthId">
                 <constant value="value"/>
             </length>
@@ -21,7 +23,8 @@
         </group>
     </template>
 
-    <template name="template2" ns="ns" id="tempId" templateNs="templateNs2" typeRefName="type" typeRefNs="ref">
+    <template name="template2" ns="ns" id="tempId" templateNs="templateNs2">
+        <typeRef name="type" ns="ref"/>
         <int32 name="int" ns="intNs" id="32" presence="mandatory">
             <increment value="value" dictionary="template" key="intKey" ns="ns"/>
         </int32>

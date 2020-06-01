@@ -1,6 +1,8 @@
 <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
     <template name="template" ns="ns">
+        <typeRef/>
         <sequence>
+            <typeRef/>
             <length/>
             <decimal name="decimal">
                 <exponent>
@@ -8,6 +10,7 @@
                 </exponent>
             </decimal>
             <sequence ns="sequenceNS">
+                <typeRef/>
                 <string name="string">
                     <copy/>
                 </string>
@@ -17,6 +20,7 @@
             <int32 name="int"/>
             <sequence>
                 <sequence>
+                    <typeRef/>
                     <uInt64 name="uInt">
                         <increment/>
                     </uInt64>

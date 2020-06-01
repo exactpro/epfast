@@ -20,6 +20,7 @@ import com.exactpro.epfast.template.Identity;
 import com.exactpro.epfast.template.Template;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "template")
@@ -27,7 +28,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
 
     private TemplateIdentity templateId = new TemplateIdentity(this);
 
-    private ApplicationIdReference typeRef = new ApplicationIdReference(this);
+    private TypeRefXml typeRef;
 
     @Override
     public Identity getTemplateId() {
@@ -60,17 +61,12 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     }
 
     @Override
-    public ApplicationIdReference getTypeRef() {
+    public TypeRefXml getTypeRef() {
         return typeRef;
     }
 
-    @XmlAttribute(name = "typeRefName")
-    public void setTypeRefName(String name) {
-        typeRef.setName(name);
-    }
-
-    @XmlAttribute(name = "typeRefNs")
-    public void setTypeRefNs(String ns) {
-        typeRef.setNamespace(ns);
+    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
+    public void setTypeRef(TypeRefXml typeRef) {
+        this.typeRef = typeRef;
     }
 }

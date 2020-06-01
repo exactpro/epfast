@@ -52,7 +52,6 @@ class TemplateTests {
                             }
                             instructions {
                                 sequence("name", "namespace") {
-                                    typeRef { namespace = "namespace" }
                                     instructions {
                                         compoundDecimal("decimal", "ns") { mantissa {} }
                                         templateRef {
@@ -135,7 +134,7 @@ class TemplateTests {
     }
 
     @Test
-    fun `test all elements part 2`() {
+    fun `Can read all elements (Part 2)`() {
         val expected = listOf(template("template1", "templateNs1") {
             auxiliaryId = "tempId"
             typeRef {
@@ -254,8 +253,12 @@ class TemplateTests {
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
                     <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template1" typeRefName="typeRef"/>
-                        <template name="template2" ns="ns" templateNs="namespace" typeRefName="typeRef"/>
+                        <template name="template1">
+                            <typeRef name="typeRef"/>
+                        </template>
+                        <template name="template2" ns="ns" templateNs="namespace">
+                            <typeRef name="typeRef"/>
+                        </template>
                     </templates>
                 """.trimIndent().byteInputStream()
         )
@@ -276,7 +279,7 @@ class TemplateTests {
         val actual = WrapperXml.wrapXmlInFASTTemplateList(
                 """
                     <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template">
+                        <template name="template" ns="ns">
                             <templateRef name="templateRef"/>
                         </template>
                     </templates>
@@ -288,7 +291,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with int32`() {
         val expected = listOf(template("template", "tempNS") {
-            typeRef { namespace = "NS" }
             instructions {
                 int32("int", "NS") {
                     copy { dictionaryKey { namespace = "NS" } }
@@ -313,7 +315,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with uInt32`() {
         val expected = listOf(template("template", "NS") {
-            typeRef { namespace = "ns" }
             instructions {
                 uint32("uInt", "ns") {
                     increment { dictionaryKey { namespace = "ns" } }
@@ -336,7 +337,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with int64`() {
         val expected = listOf(template("template") {
-            typeRef { namespace = "ns" }
             instructions {
                 int64("int", "ns") {
                     delta { dictionaryKey { namespace = "ns" } }
@@ -361,7 +361,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with uInt64`() {
         val expected = listOf(template("template", "ns") {
-            typeRef { namespace = "NS" }
             instructions {
                 uint64("uInt", "NS") {
                     tail { dictionaryKey { namespace = "NS" } }
@@ -386,7 +385,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with simple decimal`() {
         val expected = listOf(template("template") {
-            typeRef { namespace = "NS" }
             instructions {
                 simpleDecimal("decimal", "NS") {}
             }
@@ -407,7 +405,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with compound decimal`() {
         val expected = listOf(template("template", "NS") {
-            typeRef { namespace = "ns" }
             instructions {
                 compoundDecimal("decimal", "ns") {
                     exponent { tail { dictionaryKey { namespace = "ns" } } }
@@ -436,7 +433,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with ascii string`() {
         val expected = listOf(template("template") {
-            typeRef { namespace = "ns" }
             instructions {
                 asciiString("string", "ns") {}
             }
@@ -455,7 +451,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with unicode string`() {
         val expected = listOf(template("template") {
-            typeRef { namespace = "ns" }
             instructions {
                 unicode("string", "ns") {
                     length(null) { namespace = "ns" }
@@ -478,7 +473,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with byte vector`() {
         val expected = listOf(template("template") {
-            typeRef { namespace = "NS" }
             instructions {
                 byteVector("vector", "NS") {
                     length("length") { namespace = "NS" }
@@ -523,16 +517,15 @@ class TemplateTests {
                     }
                 }
                 sequence(null, "namespace") {
-                    typeRef { namespace = "namespace" }
 
                     instructions {
                         int32("int", "namespace") {}
                         sequence(null, "namespace") {
-                            typeRef { namespace = "namespace" }
 
                             instructions {
                                 sequence(null, "namespace") {
                                     typeRef { namespace = "namespace" }
+
                                     instructions {
                                         uint64("uInt", "namespace") {
                                             increment { dictionaryKey { namespace = "namespace" } }
@@ -553,7 +546,6 @@ class TemplateTests {
     @Test
     fun `test namespace inheritance with group`() {
         val expected = listOf(template("template") {
-            typeRef { namespace = "ns" }
             instructions {
                 group(null, "ns") {
                     typeRef { namespace = "ns" }
