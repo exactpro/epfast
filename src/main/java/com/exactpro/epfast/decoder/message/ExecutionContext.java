@@ -67,7 +67,6 @@ public class ExecutionContext {
 
     public void ret() {
         callStack.pop().restoreTo(this);
-        nextInstructionIndex++;
     }
 
     public Collection<IMessage> fetchResults() {
@@ -91,6 +90,8 @@ public class ExecutionContext {
         public BigInteger unsignedInt64Value;
 
         public BigDecimal decimalValue;
+
+        public IMessage group;
     }
 
     public static class SavedContext {
@@ -120,24 +121,7 @@ public class ExecutionContext {
             ec.loopLimit = loopLimit;
             ec.loopIndex = loopIndex;
             ec.nextInstructionIndex = instructionIndex;
-        }
-
-        public void restoreWithGroup(ExecutionContext ec, Reference name) {
-            applicationMessage.setField(name.getName(), ec.applicationMessage);
             ec.applicationMessage = applicationMessage;
-            ec.instructions = instructions;
-            ec.loopLimit = loopLimit;
-            ec.loopIndex = loopIndex;
-            ec.nextInstructionIndex = instructionIndex;
-        }
-
-        public void restoreWithSequence(ExecutionContext ec, Reference name) {
-            applicationMessage.setField(name.getName(), ec.sequence);
-            ec.applicationMessage = applicationMessage;
-            ec.instructions = instructions;
-            ec.loopLimit = loopLimit;
-            ec.loopIndex = loopIndex;
-            ec.nextInstructionIndex = instructionIndex;
         }
     }
 }

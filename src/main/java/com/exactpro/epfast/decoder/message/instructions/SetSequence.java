@@ -16,17 +16,22 @@
 
 package com.exactpro.epfast.decoder.message.instructions;
 
-import com.exactpro.epfast.decoder.IMessage;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.template.Reference;
 
 public class SetSequence implements NormalInstruction {
 
+    private Reference name;
+
+    public SetSequence(Reference name) {
+        this.name = name;
+    }
+
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.sequence = new IMessage[ec.loopLimit];
-        ec.loopIndex = 0;
-        ec.nextInstructionIndex++;
+        ec.ret();
+        ec.applicationMessage.setField(name.getName(), ec.sequence);
         return true;
     }
 }

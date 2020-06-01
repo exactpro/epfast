@@ -55,6 +55,14 @@ public class Reference implements com.exactpro.epfast.template.Reference {
     }
 
     @Override
+    public String toString() {
+        return "Reference{" +
+            "name='" + name + '\'' +
+            ", namespace='" + namespace + '\'' +
+            '}';
+    }
+
+    @Override
     public String getName() {
         return name;
     }

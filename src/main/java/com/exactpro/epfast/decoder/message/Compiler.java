@@ -17,7 +17,7 @@
 package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.message.instructions.*;
-import com.exactpro.epfast.decoder.message.instructions.SetSequence;
+import com.exactpro.epfast.decoder.message.instructions.StartSequence;
 import com.exactpro.epfast.template.*;
 
 import java.util.*;
@@ -44,7 +44,8 @@ public class Compiler {
         ArrayList<NormalInstruction> normalInstructions = new ArrayList<>();
         normalInstructions.add(new SetApplicationType(group.getTypeRef()));
         readInstructions(group.getInstructions(), normalInstructions);
-        normalInstructions.add(new ReadyGroup(group.getFieldId()));
+        normalInstructions.add(new ReadGroup());
+        normalInstructions.add(new SetGroup(group.getFieldId()));
         return normalInstructions;
     }
 
@@ -56,7 +57,7 @@ public class Compiler {
         readInstructions(sequence.getInstructions(), normalInstructions);
         normalInstructions.add(new AddToSequence());
         normalInstructions.add(new Jump(0));
-        normalInstructions.add(new ReadySequence(sequence.getFieldId()));
+        normalInstructions.add(new SetSequence(sequence.getFieldId()));
         loop.setJumpIndex(normalInstructions.size() - 1);
         return normalInstructions;
     }
@@ -66,8 +67,7 @@ public class Compiler {
         for (Instruction instruction : instructions) {
             if (instruction instanceof Group) {
                 Group group = (Group) instruction;
-                normalInstructions.add(new Call());
-                normalInstructions.add(new SetInstructions(readGroupInstructions(group)));
+                normalInstructions.add(new CallWithInstructions(readGroupInstructions(group)));
             } else if (instruction instanceof Sequence) {
                 Sequence sequence = (Sequence) instruction;
                 if (sequence.isOptional()) {
@@ -77,15 +77,13 @@ public class Compiler {
                     normalInstructions.add(new ReadMandatoryInt32());
                     normalInstructions.add(new SetMandatoryLengthField());
                 }
-                normalInstructions.add(new SetSequence());
-                normalInstructions.add(new Call());
-                normalInstructions.add(new SetInstructions(readSequenceInstructions(sequence)));
+                normalInstructions.add(new StartSequence());
+                normalInstructions.add(new CallWithInstructions(readSequenceInstructions(sequence)));
             } else if (instruction instanceof FieldInstruction) {
                 toPrimitiveInstruction((FieldInstruction) instruction, normalInstructions);
             } else if (instruction instanceof TemplateRef) {
                 TemplateRef templateRef = (TemplateRef) instruction;
-                normalInstructions.add(new Call());
-                normalInstructions.add(new SetInstructionsWithReference(templateRef.getTemplateRef()));
+                normalInstructions.add(new CallWithReference(templateRef.getTemplateRef()));
             }
         }
     }

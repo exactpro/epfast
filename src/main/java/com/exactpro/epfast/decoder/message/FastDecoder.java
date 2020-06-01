@@ -17,9 +17,8 @@
 package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.message.instructions.Call;
 import com.exactpro.epfast.decoder.message.instructions.ReadyMessage;
-import com.exactpro.epfast.decoder.message.instructions.SetInstructionsWithReference;
+import com.exactpro.epfast.decoder.message.instructions.CallWithReference;
 import com.exactpro.epfast.decoder.message.instructions.SetApplicationType;
 import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
@@ -36,8 +35,7 @@ public class FastDecoder {
         this.executionContext = new ExecutionContext(new Compiler().compile(templates), null);
         //TODO change templateRef with appropriate type reference
         executionContext.instructions.add(new SetApplicationType(templateRef));
-        executionContext.instructions.add(new Call());
-        executionContext.instructions.add(new SetInstructionsWithReference(templateRef));
+        executionContext.instructions.add(new CallWithReference(templateRef));
         executionContext.instructions.add(new ReadyMessage());
     }
 

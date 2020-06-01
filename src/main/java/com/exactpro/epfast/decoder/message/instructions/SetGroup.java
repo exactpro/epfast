@@ -20,18 +20,18 @@ import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
 import com.exactpro.epfast.template.Reference;
 
-public class ReadyGroup implements NormalInstruction {
+public class SetGroup implements NormalInstruction {
 
-    private Reference name;
+    private Reference fieldName;
 
-    public ReadyGroup(Reference name) {
-        this.name = name;
+    public SetGroup(Reference fieldName) {
+        this.fieldName = fieldName;
     }
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.callStack.pop().restoreWithGroup(ec, name);
-        ec.nextInstructionIndex++;
+        ec.ret();
+        ec.applicationMessage.setField(fieldName.getName(), ec.registers.group);
         return true;
     }
 }

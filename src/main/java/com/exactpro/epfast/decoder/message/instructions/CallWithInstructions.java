@@ -18,20 +18,21 @@ package com.exactpro.epfast.decoder.message.instructions;
 
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
-import com.exactpro.epfast.template.Reference;
 
-public class ReadySequence implements NormalInstruction {
+import java.util.ArrayList;
 
-    private Reference name;
+public class CallWithInstructions implements NormalInstruction {
+    private ArrayList<NormalInstruction> instructions;
 
-    public ReadySequence(Reference name) {
-        this.name = name;
+    public CallWithInstructions(ArrayList<NormalInstruction> instructions) {
+        this.instructions = instructions;
     }
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.callStack.pop().restoreWithSequence(ec, name);
-        ec.nextInstructionIndex++;
+        ec.call();
+        ec.instructions = this.instructions;
+        ec.nextInstructionIndex = 0;
         return true;
     }
 }

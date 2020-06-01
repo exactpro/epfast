@@ -19,11 +19,12 @@ package com.exactpro.epfast.decoder.message.instructions;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
 
-public class Call implements NormalInstruction {
+public class ReadGroup implements NormalInstruction {
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ec.call();
+        ec.registers.group = ec.applicationMessage;
+        ec.nextInstructionIndex++;
         return true;
     }
 }

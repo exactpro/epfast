@@ -16,30 +16,17 @@
 
 package com.exactpro.epfast.decoder.message.instructions;
 
-import com.exactpro.epfast.decoder.TemplateNotFoundException;
+import com.exactpro.epfast.decoder.IMessage;
 import com.exactpro.epfast.decoder.message.ExecutionContext;
 import com.exactpro.epfast.decoder.message.NormalInstruction;
-import com.exactpro.epfast.template.Reference;
 
-import java.util.ArrayList;
-
-public class SetInstructionsWithReference implements NormalInstruction {
-
-    private Reference instructionsPointer;
-
-    public SetInstructionsWithReference(Reference instructionsPointer) {
-        this.instructionsPointer = instructionsPointer;
-    }
+public class StartSequence implements NormalInstruction {
 
     @Override
     public boolean execute(ExecutionContext ec) {
-        ArrayList<NormalInstruction> instructions = ec.compiledTemplates.get(instructionsPointer);
-        if (instructions != null) {
-            ec.instructions = instructions;
-        } else {
-            throw new TemplateNotFoundException("Reference not found");
-        }
-        ec.nextInstructionIndex = 0;
+        ec.sequence = new IMessage[ec.loopLimit];
+        ec.loopIndex = 0;
+        ec.nextInstructionIndex++;
         return true;
     }
 }
