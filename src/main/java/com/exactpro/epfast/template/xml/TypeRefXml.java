@@ -29,11 +29,13 @@ public class TypeRefXml extends AbstractReferenceImpl {
         return getNamespaceProvider().getApplicationNamespace();
     }
 
+    @Override
     @XmlAttribute(name = "name")
     public void setName(String name) {
         super.setName(name);
     }
 
+    @Override
     @XmlAttribute(name = "ns")
     public void setNamespace(String ns) {
         super.setNamespace(ns);

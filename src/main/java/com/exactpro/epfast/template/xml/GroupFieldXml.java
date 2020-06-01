@@ -19,6 +19,7 @@ package com.exactpro.epfast.template.xml;
 import com.exactpro.epfast.template.*;
 
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 public class GroupFieldXml extends InstructionsXml implements Group, InstructionXml, NamespaceProvider {
 
@@ -26,7 +27,7 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private ApplicationIdReference typeRef = new ApplicationIdReference(this);
+    private TypeRefXml typeRef;
 
     @XmlAttribute(name = "ns")
     public void setApplicationNamespace(String ns) {
@@ -59,18 +60,13 @@ public class GroupFieldXml extends InstructionsXml implements Group, Instruction
     }
 
     @Override
-    public ApplicationIdReference getTypeRef() {
+    public TypeRefXml getTypeRef() {
         return typeRef;
     }
 
-    @XmlAttribute(name = "typeRefName")
-    public void setTypeRefName(String name) {
-        typeRef.setName(name);
-    }
-
-    @XmlAttribute(name = "typeRefNs")
-    public void setTypeRefNs(String ns) {
-        typeRef.setNamespace(ns);
+    @XmlElement(name = "typeRef", type = TypeRefXml.class, namespace = Reference.DEFAULT_NAMESPACE)
+    public void setTypeRef(TypeRefXml typeRef) {
+        this.typeRef = typeRef;
     }
 
     @Override

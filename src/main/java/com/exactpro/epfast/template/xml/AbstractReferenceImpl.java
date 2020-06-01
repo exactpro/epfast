@@ -54,6 +54,9 @@ public abstract class AbstractReferenceImpl implements Reference {
 
     @Override
     public String toString() {
-        return "{name:'" + name + "', namespace:'" + getNamespace() + "'}";
+        return "Reference{" +
+            "name='" + name + '\'' +
+            ", namespace='" + getNamespace() + '\'' +
+            '}';
     }
 }

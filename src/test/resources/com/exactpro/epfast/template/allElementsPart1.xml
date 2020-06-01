@@ -9,7 +9,8 @@
             </int32>
             <string charset="unicode" name="string" ns="ns" lengthName="length"/>
         </sequence>
-        <group name="group" ns="namespace" id="groupId" presence="mandatory" typeRefName="type" typeRefNs="ref">
+        <group name="group" ns="namespace" id="groupId" presence="mandatory">
+            <typeRef name="type" ns="ref"/>
             <sequence name="name" ns="namespace">
                 <decimal name="decimal" ns="ns">
                     <mantissa/>

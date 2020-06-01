@@ -23,7 +23,7 @@ import java.util.List;
 
 public class Group extends FieldInstruction implements com.exactpro.epfast.template.Group {
 
-    private Reference typeRef = new Reference();
+    private Reference typeRef;
 
     private final List<Instruction> instructions = new ArrayList<>();
 

@@ -1,6 +1,7 @@
 <templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
     <template name="template" ns="ns">
         <group>
+            <typeRef/>
             <group ns="groupNS">
                 <string charset="unicode" name="string"/>
             </group>
@@ -11,6 +12,7 @@
         <group ns="namespace">
             <int64 name="int"/>
             <group>
+                <typeRef/>
                 <decimal ns="decimal">
                     <exponent>
                         <increment/>

@@ -559,7 +559,6 @@ class TemplateTests {
 
                     instructions {
                         group(null, "groupNS") {
-                            typeRef { namespace = "groupNS" }
 
                             instructions {
                                 unicode("string", "groupNS") { length { namespace = "groupNS" } }
@@ -572,7 +571,6 @@ class TemplateTests {
                     }
                 }
                 group(null, "namespace") {
-                    typeRef { namespace = "namespace" }
 
                     instructions {
                         int64("int", "namespace") {}
@@ -585,7 +583,6 @@ class TemplateTests {
                                     mantissa { copy { dictionaryKey { namespace = "decimal" } } }
                                 }
                                 group(null, "namespace") {
-                                    typeRef { namespace = "namespace" }
                                     instructions {
                                         uint32("uInt", "namespace") {
                                             delta { dictionaryKey { namespace = "namespace" } }
