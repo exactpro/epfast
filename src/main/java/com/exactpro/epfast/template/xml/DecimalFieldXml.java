@@ -30,7 +30,7 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
         return exponent;
     }
 
-    @XmlElement(name = "exponent", namespace = XML_NAMESPACE)
+    @XmlElement(name = "exponent")
     public void setExponent(AbstractFieldXml exponent) {
         this.exponent = exponent;
     }
@@ -39,7 +39,7 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
         return mantissa;
     }
 
-    @XmlElement(name = "mantissa", namespace = XML_NAMESPACE)
+    @XmlElement(name = "mantissa")
     public void setMantissa(AbstractFieldXml mantissa) {
         this.mantissa = mantissa;
     }

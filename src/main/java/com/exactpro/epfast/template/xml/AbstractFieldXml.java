@@ -28,12 +28,12 @@ public class AbstractFieldXml extends AbstractNamespaceProvider {
     }
 
     @XmlElements({
-        @XmlElement(name = "constant", type = ConstantOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
-        @XmlElement(name = "default", type = DefaultOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
-        @XmlElement(name = "copy", type = CopyOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
-        @XmlElement(name = "increment", type = IncrementOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
-        @XmlElement(name = "delta", type = DeltaOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE),
-        @XmlElement(name = "tail", type = TailOperatorXml.class, namespace = NamespaceProvider.XML_NAMESPACE)
+        @XmlElement(name = "constant", type = ConstantOperatorXml.class),
+        @XmlElement(name = "default", type = DefaultOperatorXml.class),
+        @XmlElement(name = "copy", type = CopyOperatorXml.class),
+        @XmlElement(name = "increment", type = IncrementOperatorXml.class),
+        @XmlElement(name = "delta", type = DeltaOperatorXml.class),
+        @XmlElement(name = "tail", type = TailOperatorXml.class)
     })
     public void setOperator(FieldOperatorXml operator) {
         this.operator = operator;

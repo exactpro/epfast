@@ -14,7 +14,8 @@
  * limitations under the License.
  ******************************************************************************/
 
-@XmlSchema(namespace = NamespaceProvider.XML_NAMESPACE)
+@XmlSchema(namespace = NamespaceProvider.XML_NAMESPACE, elementFormDefault = XmlNsForm.QUALIFIED)
 package com.exactpro.epfast.template.xml;
 
+import javax.xml.bind.annotation.XmlNsForm;
 import javax.xml.bind.annotation.XmlSchema;

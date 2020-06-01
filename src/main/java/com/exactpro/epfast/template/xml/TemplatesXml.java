@@ -50,7 +50,7 @@ public class TemplatesXml extends AbstractNamespaceProvider implements Templates
         return templates;
     }
 
-    @XmlElement(name = "template", type = TemplateXml.class, namespace = XML_NAMESPACE)
+    @XmlElement(name = "template", type = TemplateXml.class)
     public void setTemplates(List<Template> templates) {
         this.templates = templates;
     }
