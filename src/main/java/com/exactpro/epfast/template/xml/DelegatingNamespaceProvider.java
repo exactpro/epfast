@@ -49,6 +49,10 @@ public abstract class DelegatingNamespaceProvider implements NamespaceProvider {
         return Dictionary.GLOBAL;
     }
 
+    protected void setNamespaceProvider(NamespaceProvider parentNsProvider) {
+        this.parentNsProvider = parentNsProvider;
+    }
+
     protected void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
         if (parent instanceof NamespaceProvider) {
             parentNsProvider = (NamespaceProvider) parent;

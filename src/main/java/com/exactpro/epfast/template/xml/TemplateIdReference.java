@@ -19,14 +19,15 @@ package com.exactpro.epfast.template.xml;
 public class TemplateIdReference extends AbstractReferenceImpl {
 
     public TemplateIdReference(NamespaceProvider parentNsProvider) {
-        setNamespaceProvider(parentNsProvider);
+        super.setNamespaceProvider(parentNsProvider);
     }
 
     @Override
     public String getNamespace() {
-        if (super.getNamespace() != null) {
-            return super.getNamespace();
-        }
-        return getNamespaceProvider().getTemplateNamespace();
+        return super.getTemplateNamespace();
+    }
+
+    public void setNamespace(String ns) {
+        super.setTemplateNamespace(ns);
     }
 }

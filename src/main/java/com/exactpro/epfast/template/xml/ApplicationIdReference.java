@@ -19,14 +19,15 @@ package com.exactpro.epfast.template.xml;
 public class ApplicationIdReference extends AbstractReferenceImpl {
 
     public ApplicationIdReference(NamespaceProvider parentNsProvider) {
-        setNamespaceProvider(parentNsProvider);
+        super.setNamespaceProvider(parentNsProvider);
     }
 
     @Override
     public String getNamespace() {
-        if (super.getNamespace() != null) {
-            return super.getNamespace();
-        }
-        return getNamespaceProvider().getApplicationNamespace();
+        return super.getApplicationNamespace();
+    }
+
+    public void setNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 }

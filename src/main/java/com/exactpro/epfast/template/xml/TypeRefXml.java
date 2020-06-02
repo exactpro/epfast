@@ -16,34 +16,22 @@
 
 package com.exactpro.epfast.template.xml;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
 public class TypeRefXml extends AbstractReferenceImpl {
 
     @Override
     public String getNamespace() {
-        if (super.getNamespace() != null) {
-            return super.getNamespace();
-        }
-        return getNamespaceProvider().getApplicationNamespace();
+        return super.getApplicationNamespace();
     }
 
-    @Override
     @XmlAttribute(name = "name")
     public void setName(String name) {
         super.setName(name);
     }
 
-    @Override
     @XmlAttribute(name = "ns")
     public void setNamespace(String ns) {
-        super.setNamespace(ns);
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            setNamespaceProvider((NamespaceProvider) parent);
-        }
+        super.setApplicationNamespace(ns);
     }
 }

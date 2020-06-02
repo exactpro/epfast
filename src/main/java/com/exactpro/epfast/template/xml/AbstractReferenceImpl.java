@@ -18,38 +18,17 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Reference;
 
-public abstract class AbstractReferenceImpl implements Reference {
+public abstract class AbstractReferenceImpl extends AbstractNamespaceProvider implements Reference {
 
     private String name;
-
-    private String namespace;
-
-    private NamespaceProvider parentNsProvider;
 
     @Override
     public String getName() {
         return name;
     }
 
-    @Override
-    public String getNamespace() {
-        return namespace;
-    }
-
-    protected NamespaceProvider getNamespaceProvider() {
-        return parentNsProvider;
-    }
-
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
-    }
-
-    public void setNamespace(String ns) {
-        this.namespace = ns;
-    }
-
-    public void setNamespaceProvider(NamespaceProvider parentNsProvider) {
-        this.parentNsProvider = parentNsProvider;
     }
 
     @Override

@@ -66,7 +66,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
+    @XmlElement(name = "typeRef")
     public void setTypeRef(TypeRefXml typeRef) {
         this.typeRef = typeRef;
     }

@@ -65,7 +65,7 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
+    @XmlElement(name = "typeRef")
     public void setTypeRef(TypeRefXml typeRef) {
         this.typeRef = typeRef;
     }
