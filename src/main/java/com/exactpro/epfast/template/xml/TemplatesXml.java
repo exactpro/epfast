@@ -23,12 +23,11 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
-import java.util.List;
 
 @XmlRootElement(name = "templates")
 public class TemplatesXml extends AbstractNamespaceProvider implements Templates {
 
-    private List<Template> templates = new ArrayList<>();
+    private ArrayList<Template> templates = new ArrayList<>();
 
     @XmlAttribute(name = "templateNs")
     public void setTemplateNamespace(String templateNs) {
@@ -46,12 +45,12 @@ public class TemplatesXml extends AbstractNamespaceProvider implements Templates
     }
 
     @Override
-    public List<Template> getTemplates() {
+    public ArrayList<Template> getTemplates() {
         return templates;
     }
 
     @XmlElement(name = "template", type = TemplateXml.class)
-    public void setTemplates(List<Template> templates) {
+    public void setTemplates(ArrayList<Template> templates) {
         this.templates = templates;
     }
 }

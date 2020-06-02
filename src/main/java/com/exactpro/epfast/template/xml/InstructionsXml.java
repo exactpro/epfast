@@ -22,13 +22,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class InstructionsXml extends AbstractNamespaceProvider {
 
-    private List<Instruction> instructions = new ArrayList<>();
+    private ArrayList<Instruction> instructions = new ArrayList<>();
 
-    public List<Instruction> getInstructions() {
+    public ArrayList<Instruction> getInstructions() {
         return instructions;
     }
 
@@ -45,7 +44,7 @@ public class InstructionsXml extends AbstractNamespaceProvider {
         @XmlElement(name = "sequence", type = SequenceFieldXml.class),
         @XmlElement(name = "group", type = GroupFieldXml.class)
     })
-    public void setInstructions(List<Instruction> instructions) {
+    public void setInstructions(ArrayList<Instruction> instructions) {
         this.instructions = instructions;
     }
 }
