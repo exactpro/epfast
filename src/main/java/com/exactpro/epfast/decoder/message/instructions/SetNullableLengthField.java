@@ -26,10 +26,10 @@ public class SetNullableLengthField implements NormalInstruction {
         Integer lengthValue = ec.registers.optionalInt32Value;
         if (lengthValue != null) {
             ec.loopLimit = lengthValue;
+            ec.nextInstructionIndex++;
         } else {
-            //TODO null case
+            ec.nextInstructionIndex += 3;
         }
-        ec.nextInstructionIndex++;
         return true;
     }
 }

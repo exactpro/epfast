@@ -349,6 +349,55 @@ class TestDecodeMessage {
         }
     }
 
+    private val templatesWithNullSequence = templates {
+        template("first template") {
+            typeRef {
+                name = "fooBar"
+            }
+            auxiliaryId = "id_1"
+            instructions {
+                int32("int32_1") {
+                    isOptional = false
+                }
+                int32("int32_null_1") {
+                    isOptional = true
+                }
+                templateRef {
+                    name = "second template"
+                }
+                asciiString("ascii_1") {
+                    isOptional = false
+                }
+                asciiString("ascii_null_1") {
+                    isOptional = true
+                }
+            }
+        }
+        template("second template") {
+            auxiliaryId = "id_2"
+            instructions {
+                int32("int32_2") {
+                    isOptional = false
+                }
+                int32("int32_null_2") {
+                    isOptional = true
+                }
+                asciiString("ascii_2") {
+                    isOptional = false
+                }
+                sequence("sequence") {
+                    isOptional = true
+                    length {
+                        name = "length"
+                    }
+                }
+                asciiString("ascii_null_2") {
+                    isOptional = true
+                }
+            }
+        }
+    }
+
     @WithByteBuf(bytesString)
     @Throws(IOException::class)
     fun testTemplateRef(buffers: Collection<ByteBuf>) {
@@ -503,6 +552,28 @@ class TestDecodeMessage {
         }
     }
 
+    @WithByteBuf(nullSequenceBytesString)
+    @Throws(IOException::class)
+    fun testNullSequence(buffers: Collection<ByteBuf>) {
+        val handler = FastDecoder(templatesWithNullSequence.templates, Reference("first template", ""))
+
+        var messages: List<Any> = listOf()
+        for (buffer in buffers) {
+            messages += handler.handle(buffer)
+        }
+
+        val message: FastMessage = messages[0] as FastMessage
+
+        assertThat(message.getField("int32_1")).isEqualTo(942755)
+        assertThat(message.getField("int32_null_1")).isEqualTo(0)
+        assertThat(message.getField("int32_2")).isEqualTo(942755)
+        assertThat(message.getField("int32_null_2")).isEqualTo(0)
+        assertThat(message.getField("ascii_2")).isEqualTo("\u0000\u0000")
+        assertThat(message.getField("ascii_null_2")).isEqualTo("ABC")
+        assertThat(message.getField("ascii_1")).isEqualTo("\u0000\u0000")
+        assertThat(message.getField("ascii_null_1")).isEqualTo("ABC")
+    }
+
     companion object {
         private const val firstT_part1 = "39 45 a3 81 " // 942755, 0
         private const val secondT_part1 = "39 45 a3 81 00 00 80 " // 942755, 0, "\u0000\u0000"
@@ -511,10 +582,12 @@ class TestDecodeMessage {
         private const val firstT_part2 = "00 00 80 41 42 c3 " // "\u0000\u0000", ABC
         private const val optionalSequenceLength = "84 "
         private const val mandatorySequenceLength = "83 "
+        private const val nullLength = "80 "
 
         const val bytesString = firstT_part1 + secondT_part1 + thirdT + secondT_part2 + firstT_part2
         const val optionalSequenceBytesString = firstT_part1 + secondT_part1 + optionalSequenceLength + thirdT + thirdT + thirdT + secondT_part2 + firstT_part2
         const val mandatorySequenceBytesString = firstT_part1 + secondT_part1 + mandatorySequenceLength + thirdT + thirdT + thirdT + secondT_part2 + firstT_part2
         const val nestedGroupBytesString = firstT_part1 + secondT_part1 + firstT_part1 + thirdT + firstT_part2 + secondT_part2 + firstT_part2
+        const val nullSequenceBytesString = firstT_part1 + secondT_part1 + nullLength + secondT_part2 + firstT_part2
     }
 }
