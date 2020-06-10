@@ -14,17 +14,24 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.simple;
+package com.exactpro.epfast.template.xml;
 
-import java.util.ArrayList;
+import com.exactpro.epfast.template.Template;
+
+import javax.xml.bind.JAXBException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 
-public class Templates implements com.exactpro.epfast.template.Templates {
+public final class XmlTemplates {
+    public static List<? extends Template> readFrom(InputStream inputStream) throws JAXBException {
+        return new XmlTemplateUnmarshaller().unmarshall(inputStream);
+    }
 
-    private final List<Template> templates = new ArrayList<>();
+    public static List<? extends Template> readFrom(Reader reader) throws JAXBException {
+        return new XmlTemplateUnmarshaller().unmarshall(reader);
+    }
 
-    @Override
-    public List<Template> getTemplates() {
-        return templates;
+    private XmlTemplates() {
     }
 }

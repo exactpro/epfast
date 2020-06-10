@@ -17,7 +17,6 @@
 package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Template;
-import com.exactpro.epfast.template.Templates;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -25,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 
 @XmlRootElement(name = "templates")
-public class TemplatesXml extends AbstractNamespaceProvider implements Templates {
+public class TemplatesXml extends AbstractNamespaceProvider {
 
     private ArrayList<Template> templates = new ArrayList<>();
 
@@ -44,7 +43,6 @@ public class TemplatesXml extends AbstractNamespaceProvider implements Templates
         super.setDictionaryName(dictionary);
     }
 
-    @Override
     public ArrayList<Template> getTemplates() {
         return templates;
     }

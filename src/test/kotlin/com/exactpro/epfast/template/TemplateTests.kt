@@ -1,8 +1,10 @@
 package com.exactpro.epfast.template
 
 import com.exactpro.epfast.template.assertion.TemplatesComparison
+import com.exactpro.epfast.template.assertion.TemplatesComparison.assertTemplateListsAreEqual
 import com.exactpro.epfast.template.dsl.template
-import com.exactpro.epfast.template.xml.WrapperXml
+import com.exactpro.epfast.template.xml.XmlTemplates
+import java.io.IOException
 import java.io.InputStream
 import org.junit.jupiter.api.Test
 
@@ -129,7 +131,7 @@ class TemplateTests {
                     }
                 })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("allElementsPart1.xml"))
+        val actual = XmlTemplates.readFrom(resourceInputStream("allElementsPart1.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -231,7 +233,7 @@ class TemplateTests {
                     }
                 })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("allElementsPart2.xml"))
+        val actual = XmlTemplates.readFrom(resourceInputStream("allElementsPart2.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -250,7 +252,7 @@ class TemplateTests {
                     }
                 })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template1">
@@ -276,7 +278,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template" ns="ns">
@@ -298,7 +300,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template">
@@ -322,7 +324,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <uInt32 name="uInt">
@@ -344,7 +346,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template" ns="ns">
@@ -368,7 +370,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template" templateNs="ns">
@@ -390,7 +392,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template">
@@ -413,7 +415,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <decimal name="decimal">
@@ -438,7 +440,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <template name="template" ns="ns" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <string name="string"/>
@@ -458,7 +460,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template" ns="ns">
@@ -480,7 +482,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template">
@@ -539,7 +541,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("nsInheritanceWithSequence.xml"))
+        val actual = XmlTemplates.readFrom(resourceInputStream("nsInheritanceWithSequence.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -589,7 +591,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("nsInheritanceWithGroup.xml"))
+        val actual = XmlTemplates.readFrom(resourceInputStream("nsInheritanceWithGroup.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
@@ -601,7 +603,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template">
@@ -623,7 +625,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <uInt32 name="uInt">
@@ -643,7 +645,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template" dictionary="delta">
@@ -665,7 +667,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template">
@@ -687,7 +689,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <decimal name="decimal">
@@ -710,7 +712,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <decimal name="decimal">
@@ -735,7 +737,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <string name="string">
@@ -755,7 +757,7 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
+        val actual = XmlTemplates.readFrom(
                 """
                     <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                         <template name="template">
@@ -770,25 +772,26 @@ class TemplateTests {
     }
 
     @Test
-    fun `test dictionary inheritance with byte vector`() {
-        val expected = listOf(template("template") {
-            instructions {
-                byteVector("vector") { delta { dictionary = "delta" } }
+    fun `ensure byteVector inherits dictionary`() {
+        val expected = listOf(
+            template("template") {
+                instructions {
+                    byteVector("vector") { delta { dictionary = "delta" } }
+                }
             }
-        })
-
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(
-                """
-                    <templates dictionary="dictionary" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template" dictionary="delta">
-                            <byteVector name="vector">
-                                <delta/>
-                            </byteVector>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        val actual = readTemplatesFromString(
+            """
+            <templates dictionary="dictionary" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template" dictionary="delta">
+                    <byteVector name="vector">
+                        <delta/>
+                    </byteVector>
+                </template>
+            </templates>
+            """
+        )
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -827,37 +830,34 @@ class TemplateTests {
             }
         })
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("dictInheritanceWithSequence.xml"))
+        val actual = XmlTemplates.readFrom(resourceInputStream("dictInheritanceWithSequence.xml"))
         TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with group`() {
-        val expected = listOf(template("template") {
-            instructions {
-                group(null) {
-
-                    instructions {
-                        group(null) {
-
-                            instructions {
-                                unicode("string") { delta { dictionary = "unicode" } }
+    fun `ensure dictionary is inherited within group`() {
+        val expected = listOf(
+            template("template") {
+                instructions {
+                    group(null) {
+                        instructions {
+                            group(null) {
+                                instructions {
+                                    unicode("string") { delta { dictionary = "unicode" } }
+                                }
                             }
+                            byteVector("vector") { copy { dictionary = "group" } }
                         }
-                        byteVector("vector") { copy { dictionary = "group" } }
                     }
-                }
-                group(null) {
-
-                    instructions {
-                        int64("int") { increment { dictionary = "int" } }
-                        group(null) {
-
-                            instructions {
-                                group(null) {
-
-                                    instructions {
-                                        uint32("uInt") { tail { dictionary = "tail" } }
+                    group(null) {
+                        instructions {
+                            int64("int") { increment { dictionary = "int" } }
+                            group(null) {
+                                instructions {
+                                    group(null) {
+                                        instructions {
+                                            uint32("uInt") { tail { dictionary = "tail" } }
+                                        }
                                     }
                                 }
                             }
@@ -865,15 +865,25 @@ class TemplateTests {
                     }
                 }
             }
-        })
+        )
+        val actual = readTemplatesFromResource("dictInheritanceWithGroup.xml")
 
-        val actual = WrapperXml.wrapXmlInFASTTemplateList(getResourceInputStream("dictInheritanceWithGroup.xml"))
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
-    private fun getResourceInputStream(resourceName: String): InputStream? {
-        val thisClass: Class<*> = this.javaClass
-        val path = thisClass.getPackage().name.replace(Regex.fromLiteral("."), "/")
-        return thisClass.classLoader.getResourceAsStream("$path/$resourceName")
+    companion object {
+        private fun readTemplatesFromResource(resourceName: String) =
+                resourceInputStream(resourceName).use(XmlTemplates::readFrom)
+
+        private fun readTemplatesFromString(xmlString: String) =
+            xmlString.reader().use(XmlTemplates::readFrom)
+
+        private fun resourceInputStream(resourceName: String): InputStream {
+            val theClass = TemplateTests::class.java
+            val packageName = theClass.getPackage().name
+            val path = packageName.replace(Regex.fromLiteral("."), "/")
+            return theClass.classLoader.getResourceAsStream("$path/$resourceName")
+                    ?: throw IOException("Resource $resourceName can not be found in package $packageName")
+        }
     }
 }

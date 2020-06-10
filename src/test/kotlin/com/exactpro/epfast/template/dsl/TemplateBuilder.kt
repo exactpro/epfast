@@ -19,21 +19,24 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.Reference.DEFAULT_NAMESPACE
 import com.exactpro.epfast.template.simple.Template
 
-class TemplateBuilder internal constructor(val template: Template) {
-
-    internal constructor(name: String?, namespace: String, template: Template) : this(template) {
+class TemplateBuilder internal constructor(
+    internal val template: Template,
+    name: String?,
+    namespace: String
+) {
+    init {
         template.templateId.name = name
         template.templateId.namespace = namespace
     }
 
-    var name: String? by javaProperty(template.templateId::getName, template.templateId::setName)
+    var name: String by javaProperty(template.templateId::getName, template.templateId::setName)
 
     var namespace: String by javaProperty(template.templateId::getNamespace, template.templateId::setNamespace)
 
-    var auxiliaryId: String? by javaProperty(template.templateId::getAuxiliaryId, template.templateId::setAuxiliaryId)
+    var auxiliaryId: String by javaProperty(template.templateId::getAuxiliaryId, template.templateId::setAuxiliaryId)
 
     fun typeRef(block: ReferenceBuilder.() -> Unit) {
-        template.typeRef = ReferenceBuilder().apply(block).reference
+        template.typeRef = ReferenceBuilder().apply(block).value
     }
 
     fun instructions(block: InstructionsBuilder.() -> Unit) {
@@ -41,5 +44,5 @@ class TemplateBuilder internal constructor(val template: Template) {
     }
 }
 
-fun template(name: String?, namespace: String = DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit): Template =
-        TemplateBuilder(name, namespace, Template()).apply(block).template
+fun template(name: String?, namespace: String = DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit) =
+    TemplateBuilder(Template(), name, namespace).apply(block).template
