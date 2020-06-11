@@ -34,11 +34,11 @@ public abstract class AbstractIdentity implements Identity {
         return nsProvider;
     }
 
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 
-    public void setAuxiliaryId(String auxiliaryId) {
+    protected void setAuxiliaryId(String auxiliaryId) {
         this.auxiliaryId = auxiliaryId;
     }
 

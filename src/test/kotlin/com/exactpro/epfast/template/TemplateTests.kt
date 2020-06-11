@@ -1,6 +1,5 @@
 package com.exactpro.epfast.template
 
-import com.exactpro.epfast.template.assertion.TemplatesComparison
 import com.exactpro.epfast.template.assertion.TemplatesComparison.assertTemplateListsAreEqual
 import com.exactpro.epfast.template.dsl.template
 import com.exactpro.epfast.template.xml.XmlTemplates
@@ -132,7 +131,7 @@ class TemplateTests {
                 })
 
         val actual = XmlTemplates.readFrom(resourceInputStream("allElementsPart1.xml"))
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
@@ -234,11 +233,11 @@ class TemplateTests {
                 })
 
         val actual = XmlTemplates.readFrom(resourceInputStream("allElementsPart2.xml"))
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance without instructions`() {
+    fun `ensure namespace is inherited within template`() {
         val expected = listOf(template("template1", "tempNS") {
             typeRef {
                 name = "typeRef"
@@ -264,11 +263,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with templateRef`() {
+    fun `ensure namespace is inherited within templateRef`() {
         val expected = listOf(template("template", "tempNS") {
             instructions {
                 templateRef {
@@ -287,11 +286,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with int32`() {
+    fun `ensure namespace is inherited within int32`() {
         val expected = listOf(template("template", "tempNS") {
             instructions {
                 int32("int", "NS") {
@@ -311,11 +310,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with uInt32`() {
+    fun `ensure namespace is inherited within uInt32`() {
         val expected = listOf(template("template", "NS") {
             instructions {
                 uint32("uInt", "ns") {
@@ -333,11 +332,11 @@ class TemplateTests {
                     </template>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with int64`() {
+    fun `ensure namespace is inherited within int64`() {
         val expected = listOf(template("template") {
             instructions {
                 int64("int", "ns") {
@@ -357,11 +356,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with uInt64`() {
+    fun `ensure namespace is inherited within uInt64`() {
         val expected = listOf(template("template", "ns") {
             instructions {
                 uint64("uInt", "NS") {
@@ -381,11 +380,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with simple decimal`() {
+    fun `ensure namespace is inherited within simpleDecimal`() {
         val expected = listOf(template("template") {
             instructions {
                 simpleDecimal("decimal", "NS") {}
@@ -401,11 +400,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with compound decimal`() {
+    fun `ensure namespace is inherited within compoundDecimal`() {
         val expected = listOf(template("template", "NS") {
             instructions {
                 compoundDecimal("decimal", "ns") {
@@ -429,11 +428,11 @@ class TemplateTests {
                     </template>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with ascii string`() {
+    fun `ensure namespace is inherited within asciiString`() {
         val expected = listOf(template("template") {
             instructions {
                 asciiString("string", "ns") {}
@@ -447,11 +446,11 @@ class TemplateTests {
                     </template>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with unicode string`() {
+    fun `ensure namespace is inherited within unicodeString`() {
         val expected = listOf(template("template") {
             instructions {
                 unicode("string", "ns") {
@@ -469,11 +468,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with byte vector`() {
+    fun `ensure namespace is inherited within byteVector`() {
         val expected = listOf(template("template") {
             instructions {
                 byteVector("vector", "NS") {
@@ -491,11 +490,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with sequence`() {
+    fun `ensure namespace is inherited within sequence`() {
         val expected = listOf(template("template") {
             typeRef { namespace = "ns" }
             instructions {
@@ -542,11 +541,11 @@ class TemplateTests {
         })
 
         val actual = XmlTemplates.readFrom(resourceInputStream("nsInheritanceWithSequence.xml"))
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test namespace inheritance with group`() {
+    fun `ensure namespace is inherited within group`() {
         val expected = listOf(template("template") {
             instructions {
                 group(null, "ns") {
@@ -592,11 +591,11 @@ class TemplateTests {
         })
 
         val actual = XmlTemplates.readFrom(resourceInputStream("nsInheritanceWithGroup.xml"))
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with int32`() {
+    fun `ensure dictionary is inherited within int32`() {
         val expected = listOf(template("template") {
             instructions {
                 int32("int") { copy { dictionary = "copy" } }
@@ -614,11 +613,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with uInt32`() {
+    fun `ensure dictionary is inherited within uInt32`() {
         val expected = listOf(template("template") {
             instructions {
                 uint32("uInt") { increment { dictionary = "increment" } }
@@ -634,11 +633,11 @@ class TemplateTests {
                     </template>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with int64`() {
+    fun `ensure dictionary is inherited within int64`() {
         val expected = listOf(template("template") {
             instructions {
                 int64("int") { delta { dictionary = "delta" } }
@@ -656,11 +655,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with uInt64`() {
+    fun `ensure dictionary is inherited within uInt64`() {
         val expected = listOf(template("template") {
             instructions {
                 uint64("uInt") { tail { dictionary = "tail" } }
@@ -678,11 +677,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with simple decimal`() {
+    fun `ensure dictionary is inherited within simpleDecimal`() {
         val expected = listOf(template("template") {
             instructions {
                 simpleDecimal("decimal") { copy { dictionary = "copy" } }
@@ -698,11 +697,11 @@ class TemplateTests {
                     </template>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with compound decimal`() {
+    fun `ensure dictionary is inherited within compoundDecimal`() {
         val expected = listOf(template("template") {
             instructions {
                 compoundDecimal("decimal") {
@@ -726,11 +725,11 @@ class TemplateTests {
                     </template>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with ascii string`() {
+    fun `ensure dictionary is inherited within asciiString`() {
         val expected = listOf(template("template") {
             instructions {
                 asciiString("string") { copy { dictionary = "copy" } }
@@ -746,11 +745,11 @@ class TemplateTests {
                     </template>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `test dictionary inheritance with unicode string`() {
+    fun `ensure dictionary is inherited within unicodeString`() {
         val expected = listOf(template("template") {
             instructions {
                 unicode("string") { increment { dictionary = "increment" } }
@@ -768,11 +767,11 @@ class TemplateTests {
                     </templates>
                 """.trimIndent().byteInputStream()
         )
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
-    fun `ensure byteVector inherits dictionary`() {
+    fun `ensure dictionary is inherited within byteVector`() {
         val expected = listOf(
             template("template") {
                 instructions {
@@ -795,7 +794,7 @@ class TemplateTests {
     }
 
     @Test
-    fun `test dictionary inheritance with sequence`() {
+    fun `ensure dictionary is inherited within sequence`() {
         val expected = listOf(template("template") {
             instructions {
                 sequence(null) {
@@ -831,7 +830,7 @@ class TemplateTests {
         })
 
         val actual = XmlTemplates.readFrom(resourceInputStream("dictInheritanceWithSequence.xml"))
-        TemplatesComparison.assertTemplateListsAreEqual(actual, expected)
+        assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
