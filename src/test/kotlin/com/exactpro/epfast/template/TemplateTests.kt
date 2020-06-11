@@ -128,7 +128,8 @@ class TemplateTests {
                             }
                         }
                     }
-                })
+                }
+        )
 
         val actual = XmlTemplates.readFrom(resourceInputStream("allElementsPart1.xml"))
         assertTemplateListsAreEqual(actual, expected)
@@ -136,48 +137,49 @@ class TemplateTests {
 
     @Test
     fun `Can read all elements (Part 2)`() {
-        val expected = listOf(template("template1", "templateNs1") {
-            auxiliaryId = "tempId"
-            typeRef {
-                name = "type"
-                namespace = "ref"
-            }
-            instructions {
-                asciiString("ascii", "stringNs") {
-                    auxiliaryId = "string"
-                    optional = true
-                    default { initialValue = "value" }
-                }
-                unicode("unicode", "stringNs") {
-                    auxiliaryId = "string"
-                    optional = false
-                    length("length") {
-                        namespace = "stringNs"
-                        auxiliaryId = "lengthId"
+        val expected = listOf(
+                template("template1", "templateNs1") {
+                    auxiliaryId = "tempId"
+                    typeRef {
+                        name = "type"
+                        namespace = "ref"
                     }
-                    copy {
-                        initialValue = "value"
-                        dictionary = "copy"
-                        dictionaryKey {
-                            name = "key"
-                            namespace = "ns"
+                    instructions {
+                        asciiString("ascii", "stringNs") {
+                            auxiliaryId = "string"
+                            optional = true
+                            default { initialValue = "value" }
+                        }
+                        unicode("unicode", "stringNs") {
+                            auxiliaryId = "string"
+                            optional = false
+                            length("length") {
+                                namespace = "stringNs"
+                                auxiliaryId = "lengthId"
+                            }
+                            copy {
+                                initialValue = "value"
+                                dictionary = "copy"
+                                dictionaryKey {
+                                    name = "key"
+                                    namespace = "ns"
+                                }
+                            }
+                        }
+                        simpleDecimal("simple", "decimalNs") {
+                            auxiliaryId = "decimal"
+                            optional = false
+                            delta {
+                                initialValue = "value"
+                                dictionary = "delta"
+                                dictionaryKey {
+                                    name = "key"
+                                    namespace = "ns"
+                                }
+                            }
                         }
                     }
-                }
-                simpleDecimal("simple", "decimalNs") {
-                    auxiliaryId = "decimal"
-                    optional = false
-                    delta {
-                        initialValue = "value"
-                        dictionary = "delta"
-                        dictionaryKey {
-                            name = "key"
-                            namespace = "ns"
-                        }
-                    }
-                }
-            }
-        },
+                },
                 template("template2", "templateNs2") {
                     auxiliaryId = "tempId"
                     typeRef {
@@ -230,7 +232,8 @@ class TemplateTests {
                             namespace = "ns"
                         }
                     }
-                })
+                }
+        )
 
         val actual = XmlTemplates.readFrom(resourceInputStream("allElementsPart2.xml"))
         assertTemplateListsAreEqual(actual, expected)
@@ -238,298 +241,318 @@ class TemplateTests {
 
     @Test
     fun `ensure namespace is inherited within template`() {
-        val expected = listOf(template("template1", "tempNS") {
-            typeRef {
-                name = "typeRef"
-                namespace = "NS"
-            }
-        },
+        val expected = listOf(
+                template("template1", "tempNS") {
+                    typeRef {
+                        name = "typeRef"
+                        namespace = "NS"
+                    }
+                },
                 template("template2", "namespace") {
                     typeRef {
                         name = "typeRef"
                         namespace = "ns"
                     }
-                })
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template1">
-                            <typeRef name="typeRef"/>
-                        </template>
-                        <template name="template2" ns="ns" templateNs="namespace">
-                            <typeRef name="typeRef"/>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template1">
+                    <typeRef name="typeRef"/>
+                </template>
+                <template name="template2" ns="ns" templateNs="namespace">
+                    <typeRef name="typeRef"/>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within templateRef`() {
-        val expected = listOf(template("template", "tempNS") {
-            instructions {
-                templateRef {
-                    name = "templateRef"
-                    namespace = "tempNS"
+        val expected = listOf(
+                template("template", "tempNS") {
+                    instructions {
+                        templateRef {
+                            name = "templateRef"
+                            namespace = "tempNS"
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template" ns="ns">
-                            <templateRef name="templateRef"/>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template" ns="ns">
+                    <templateRef name="templateRef"/>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within int32`() {
-        val expected = listOf(template("template", "tempNS") {
-            instructions {
-                int32("int", "NS") {
-                    copy { dictionaryKey { namespace = "NS" } }
+        val expected = listOf(
+                template("template", "tempNS") {
+                    instructions {
+                        int32("int", "NS") {
+                            copy { dictionaryKey { namespace = "NS" } }
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template">
-                            <int32 name="int">
-                                <copy/>
-                            </int32>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <int32 name="int">
+                        <copy/>
+                    </int32>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within uInt32`() {
-        val expected = listOf(template("template", "NS") {
-            instructions {
-                uint32("uInt", "ns") {
-                    increment { dictionaryKey { namespace = "ns" } }
+        val expected = listOf(
+                template("template", "NS") {
+                    instructions {
+                        uint32("uInt", "ns") {
+                            increment { dictionaryKey { namespace = "ns" } }
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <uInt32 name="uInt">
-                            <increment/>
-                        </uInt32>
-                    </template>
-                """.trimIndent().byteInputStream()
+            <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <uInt32 name="uInt">
+                    <increment/>
+                </uInt32>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within int64`() {
-        val expected = listOf(template("template") {
-            instructions {
-                int64("int", "ns") {
-                    delta { dictionaryKey { namespace = "ns" } }
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        int64("int", "ns") {
+                            delta { dictionaryKey { namespace = "ns" } }
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template" ns="ns">
-                            <int64 name="int">
-                                <delta/>
-                            </int64>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template" ns="ns">
+                    <int64 name="int">
+                        <delta/>
+                    </int64>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within uInt64`() {
-        val expected = listOf(template("template", "ns") {
-            instructions {
-                uint64("uInt", "NS") {
-                    tail { dictionaryKey { namespace = "NS" } }
+        val expected = listOf(
+                template("template", "ns") {
+                    instructions {
+                        uint64("uInt", "NS") {
+                            tail { dictionaryKey { namespace = "NS" } }
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template" templateNs="ns">
-                            <uInt64 name="uInt">
-                                <tail/>
-                            </uInt64>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template" templateNs="ns">
+                    <uInt64 name="uInt">
+                        <tail/>
+                    </uInt64>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within simpleDecimal`() {
-        val expected = listOf(template("template") {
-            instructions {
-                simpleDecimal("decimal", "NS") {}
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        simpleDecimal("decimal", "NS") {}
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template">
-                            <decimal name="decimal"/>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <decimal name="decimal"/>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within compoundDecimal`() {
-        val expected = listOf(template("template", "NS") {
-            instructions {
-                compoundDecimal("decimal", "ns") {
-                    exponent { tail { dictionaryKey { namespace = "ns" } } }
-                    mantissa { delta { dictionaryKey { namespace = "ns" } } }
+        val expected = listOf(
+                template("template", "NS") {
+                    instructions {
+                        compoundDecimal("decimal", "ns") {
+                            exponent { tail { dictionaryKey { namespace = "ns" } } }
+                            mantissa { delta { dictionaryKey { namespace = "ns" } } }
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <decimal name="decimal">
-                            <mantissa>
-                                <delta/>
-                            </mantissa>
-                            <exponent>
-                                <tail/>
-                            </exponent>
-                        </decimal>
-                    </template>
-                """.trimIndent().byteInputStream()
+            <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <decimal name="decimal">
+                    <mantissa>
+                        <delta/>
+                    </mantissa>
+                    <exponent>
+                        <tail/>
+                    </exponent>
+                </decimal>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within asciiString`() {
-        val expected = listOf(template("template") {
-            instructions {
-                asciiString("string", "ns") {}
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        asciiString("string", "ns") {}
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <template name="template" ns="ns" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <string name="string"/>
-                    </template>
-                """.trimIndent().byteInputStream()
+            <template name="template" ns="ns" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <string name="string"/>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within unicodeString`() {
-        val expected = listOf(template("template") {
-            instructions {
-                unicode("string", "ns") {
-                    length(null) { namespace = "ns" }
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        unicode("string", "ns") {
+                            length(null) { namespace = "ns" }
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template" ns="ns">
-                            <string charset="unicode" name="string"/>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template" ns="ns">
+                    <string charset="unicode" name="string"/>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within byteVector`() {
-        val expected = listOf(template("template") {
-            instructions {
-                byteVector("vector", "NS") {
-                    length("length") { namespace = "NS" }
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        byteVector("vector", "NS") {
+                            length("length") { namespace = "NS" }
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template">
-                            <byteVector name="vector" lengthName="length"/>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <byteVector name="vector" lengthName="length"/>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure namespace is inherited within sequence`() {
-        val expected = listOf(template("template") {
-            typeRef { namespace = "ns" }
-            instructions {
-                sequence(null, "ns") {
+        val expected = listOf(
+                template("template") {
                     typeRef { namespace = "ns" }
-                    length { namespace = "ns" }
-
                     instructions {
-                        compoundDecimal("decimal", "ns") {
-                            exponent { tail { dictionaryKey { namespace = "ns" } } }
-                        }
-                        sequence(null, "sequenceNS") {
-                            typeRef { namespace = "sequenceNS" }
-
+                        sequence(null, "ns") {
+                            typeRef { namespace = "ns" }
+                            length { namespace = "ns" }
                             instructions {
-                                asciiString("string", "sequenceNS") {
-                                    copy { dictionaryKey { namespace = "sequenceNS" } }
+                                compoundDecimal("decimal", "ns") {
+                                    exponent { tail { dictionaryKey { namespace = "ns" } } }
+                                }
+                                sequence(null, "sequenceNS") {
+                                    typeRef { namespace = "sequenceNS" }
+                                    instructions {
+                                        asciiString("string", "sequenceNS") {
+                                            copy { dictionaryKey { namespace = "sequenceNS" } }
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-                }
-                sequence(null, "namespace") {
-
-                    instructions {
-                        int32("int", "namespace") {}
                         sequence(null, "namespace") {
-
                             instructions {
+                                int32("int", "namespace") {}
                                 sequence(null, "namespace") {
-                                    typeRef { namespace = "namespace" }
-
                                     instructions {
-                                        uint64("uInt", "namespace") {
-                                            increment { dictionaryKey { namespace = "namespace" } }
+                                        sequence(null, "namespace") {
+                                            typeRef { namespace = "namespace" }
+                                            instructions {
+                                                uint64("uInt", "namespace") {
+                                                    increment { dictionaryKey { namespace = "namespace" } }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -537,8 +560,7 @@ class TemplateTests {
                         }
                     }
                 }
-            }
-        })
+        )
 
         val actual = XmlTemplates.readFrom(resourceInputStream("nsInheritanceWithSequence.xml"))
         assertTemplateListsAreEqual(actual, expected)
@@ -546,40 +568,41 @@ class TemplateTests {
 
     @Test
     fun `ensure namespace is inherited within group`() {
-        val expected = listOf(template("template") {
-            instructions {
-                group(null, "ns") {
-                    typeRef { namespace = "ns" }
-
+        val expected = listOf(
+                template("template") {
                     instructions {
-                        group(null, "groupNS") {
-
+                        group(null, "ns") {
+                            typeRef { namespace = "ns" }
                             instructions {
-                                unicode("string", "groupNS") { length { namespace = "groupNS" } }
+                                group(null, "groupNS") {
+                                    instructions {
+                                        unicode("string", "groupNS") {
+                                            length { namespace = "groupNS" }
+                                        }
+                                    }
+                                }
+                                byteVector("vector", "ns") {
+                                    length { namespace = "ns" }
+                                    tail { dictionaryKey { namespace = "ns" } }
+                                }
                             }
                         }
-                        byteVector("vector", "ns") {
-                            length { namespace = "ns" }
-                            tail { dictionaryKey { namespace = "ns" } }
-                        }
-                    }
-                }
-                group(null, "namespace") {
-
-                    instructions {
-                        int64("int", "namespace") {}
                         group(null, "namespace") {
-                            typeRef { namespace = "namespace" }
-
                             instructions {
-                                compoundDecimal(null, "decimal") {
-                                    exponent { increment { dictionaryKey { namespace = "decimal" } } }
-                                    mantissa { copy { dictionaryKey { namespace = "decimal" } } }
-                                }
+                                int64("int", "namespace") {}
                                 group(null, "namespace") {
+                                    typeRef { namespace = "namespace" }
                                     instructions {
-                                        uint32("uInt", "namespace") {
-                                            delta { dictionaryKey { namespace = "namespace" } }
+                                        compoundDecimal(null, "decimal") {
+                                            exponent { increment { dictionaryKey { namespace = "decimal" } } }
+                                            mantissa { copy { dictionaryKey { namespace = "decimal" } } }
+                                        }
+                                        group(null, "namespace") {
+                                            instructions {
+                                                uint32("uInt", "namespace") {
+                                                    delta { dictionaryKey { namespace = "namespace" } }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -587,8 +610,7 @@ class TemplateTests {
                         }
                     }
                 }
-            }
-        })
+        )
 
         val actual = XmlTemplates.readFrom(resourceInputStream("nsInheritanceWithGroup.xml"))
         assertTemplateListsAreEqual(actual, expected)
@@ -596,176 +618,192 @@ class TemplateTests {
 
     @Test
     fun `ensure dictionary is inherited within int32`() {
-        val expected = listOf(template("template") {
-            instructions {
-                int32("int") { copy { dictionary = "copy" } }
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        int32("int") { copy { dictionary = "copy" } }
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template">
-                            <int32 name="int">
-                                <copy/>
-                            </int32>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <int32 name="int">
+                        <copy/>
+                    </int32>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure dictionary is inherited within uInt32`() {
-        val expected = listOf(template("template") {
-            instructions {
-                uint32("uInt") { increment { dictionary = "increment" } }
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        uint32("uInt") { increment { dictionary = "increment" } }
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <uInt32 name="uInt">
-                            <increment/>
-                        </uInt32>
-                    </template>
-                """.trimIndent().byteInputStream()
+            <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <uInt32 name="uInt">
+                    <increment/>
+                </uInt32>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure dictionary is inherited within int64`() {
-        val expected = listOf(template("template") {
-            instructions {
-                int64("int") { delta { dictionary = "delta" } }
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        int64("int") { delta { dictionary = "delta" } }
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template" dictionary="delta">
-                            <int64 name="int">
-                                <delta/>
-                            </int64>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template" dictionary="delta">
+                    <int64 name="int">
+                        <delta/>
+                    </int64>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure dictionary is inherited within uInt64`() {
-        val expected = listOf(template("template") {
-            instructions {
-                uint64("uInt") { tail { dictionary = "tail" } }
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        uint64("uInt") { tail { dictionary = "tail" } }
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template">
-                            <uInt64 name="uInt">
-                                <tail/>
-                            </uInt64>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <uInt64 name="uInt">
+                        <tail/>
+                    </uInt64>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure dictionary is inherited within simpleDecimal`() {
-        val expected = listOf(template("template") {
-            instructions {
-                simpleDecimal("decimal") { copy { dictionary = "copy" } }
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        simpleDecimal("decimal") { copy { dictionary = "copy" } }
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <decimal name="decimal">
-                            <copy/>
-                        </decimal>
-                    </template>
-                """.trimIndent().byteInputStream()
+            <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <decimal name="decimal">
+                    <copy/>
+                </decimal>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure dictionary is inherited within compoundDecimal`() {
-        val expected = listOf(template("template") {
-            instructions {
-                compoundDecimal("decimal") {
-                    exponent { delta { dictionary = "delta" } }
-                    mantissa { tail { dictionary = "tail" } }
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        compoundDecimal("decimal") {
+                            exponent { delta { dictionary = "delta" } }
+                            mantissa { tail { dictionary = "tail" } }
+                        }
+                    }
                 }
-            }
-        })
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <decimal name="decimal">
-                            <mantissa>
-                                <tail dictionary="tail"/>
-                            </mantissa>
-                            <exponent>
-                                <delta/>
-                            </exponent>
-                        </decimal>
-                    </template>
-                """.trimIndent().byteInputStream()
+            <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <decimal name="decimal">
+                    <mantissa>
+                        <tail dictionary="tail"/>
+                    </mantissa>
+                    <exponent>
+                        <delta/>
+                    </exponent>
+                </decimal>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure dictionary is inherited within asciiString`() {
-        val expected = listOf(template("template") {
-            instructions {
-                asciiString("string") { copy { dictionary = "copy" } }
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        asciiString("string") { copy { dictionary = "copy" } }
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <string name="string">
-                            <copy/>
-                        </string>
-                    </template>
-                """.trimIndent().byteInputStream()
+            <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <string name="string">
+                    <copy/>
+                </string>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
 
     @Test
     fun `ensure dictionary is inherited within unicodeString`() {
-        val expected = listOf(template("template") {
-            instructions {
-                unicode("string") { increment { dictionary = "increment" } }
-            }
-        })
+        val expected = listOf(
+                template("template") {
+                    instructions {
+                        unicode("string") { increment { dictionary = "increment" } }
+                    }
+                }
+        )
 
-        val actual = XmlTemplates.readFrom(
+        val actual = readTemplatesFromString(
                 """
-                    <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                        <template name="template">
-                            <string charset="unicode" name="string">
-                                <increment/>
-                            </string>
-                        </template>
-                    </templates>
-                """.trimIndent().byteInputStream()
+            <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <string charset="unicode" name="string">
+                        <increment/>
+                    </string>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -773,14 +811,14 @@ class TemplateTests {
     @Test
     fun `ensure dictionary is inherited within byteVector`() {
         val expected = listOf(
-            template("template") {
-                instructions {
-                    byteVector("vector") { delta { dictionary = "delta" } }
+                template("template") {
+                    instructions {
+                        byteVector("vector") { delta { dictionary = "delta" } }
+                    }
                 }
-            }
         )
         val actual = readTemplatesFromString(
-            """
+                """
             <templates dictionary="dictionary" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
                 <template name="template" dictionary="delta">
                     <byteVector name="vector">
@@ -795,39 +833,38 @@ class TemplateTests {
 
     @Test
     fun `ensure dictionary is inherited within sequence`() {
-        val expected = listOf(template("template") {
-            instructions {
-                sequence(null) {
-                    length { operator { tail { dictionary = "sequence" } } }
-
+        val expected = listOf(
+                template("template") {
                     instructions {
-                        compoundDecimal("decimal") {
-                            mantissa { copy { dictionary = "sequence" } }
-                        }
                         sequence(null) {
-                            length { operator { increment { dictionary = "length" } } }
-                        }
-                    }
-                }
-                sequence(null) {
-                    instructions {
-                        int32("int") { tail { dictionary = "template" } }
-                        sequence(null) {
-                            length { operator { delta { dictionary = "template" } } }
-
+                            length { operator { tail { dictionary = "sequence" } } }
                             instructions {
+                                compoundDecimal("decimal") {
+                                    mantissa { copy { dictionary = "sequence" } }
+                                }
                                 sequence(null) {
-
+                                    length { operator { increment { dictionary = "length" } } }
+                                }
+                            }
+                        }
+                        sequence(null) {
+                            instructions {
+                                int32("int") { tail { dictionary = "template" } }
+                                sequence(null) {
+                                    length { operator { delta { dictionary = "template" } } }
                                     instructions {
-                                        uint64("uInt") { copy { dictionary = "uInt" } }
+                                        sequence(null) {
+                                            instructions {
+                                                uint64("uInt") { copy { dictionary = "uInt" } }
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-        })
+        )
 
         val actual = XmlTemplates.readFrom(resourceInputStream("dictInheritanceWithSequence.xml"))
         assertTemplateListsAreEqual(actual, expected)
@@ -836,26 +873,27 @@ class TemplateTests {
     @Test
     fun `ensure dictionary is inherited within group`() {
         val expected = listOf(
-            template("template") {
-                instructions {
-                    group(null) {
-                        instructions {
-                            group(null) {
-                                instructions {
-                                    unicode("string") { delta { dictionary = "unicode" } }
+                template("template") {
+                    instructions {
+                        group(null) {
+                            instructions {
+                                group(null) {
+                                    instructions {
+                                        unicode("string") { delta { dictionary = "unicode" } }
+                                    }
                                 }
+                                byteVector("vector") { copy { dictionary = "group" } }
                             }
-                            byteVector("vector") { copy { dictionary = "group" } }
                         }
-                    }
-                    group(null) {
-                        instructions {
-                            int64("int") { increment { dictionary = "int" } }
-                            group(null) {
-                                instructions {
-                                    group(null) {
-                                        instructions {
-                                            uint32("uInt") { tail { dictionary = "tail" } }
+                        group(null) {
+                            instructions {
+                                int64("int") { increment { dictionary = "int" } }
+                                group(null) {
+                                    instructions {
+                                        group(null) {
+                                            instructions {
+                                                uint32("uInt") { tail { dictionary = "tail" } }
+                                            }
                                         }
                                     }
                                 }
@@ -863,7 +901,6 @@ class TemplateTests {
                         }
                     }
                 }
-            }
         )
         val actual = readTemplatesFromResource("dictInheritanceWithGroup.xml")
 
@@ -875,7 +912,7 @@ class TemplateTests {
                 resourceInputStream(resourceName).use(XmlTemplates::readFrom)
 
         private fun readTemplatesFromString(xmlString: String) =
-            xmlString.reader().use(XmlTemplates::readFrom)
+                xmlString.reader().use(XmlTemplates::readFrom)
 
         private fun resourceInputStream(resourceName: String): InputStream {
             val theClass = TemplateTests::class.java
