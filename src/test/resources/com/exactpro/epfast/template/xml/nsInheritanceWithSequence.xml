@@ -1,8 +1,6 @@
 <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
     <template name="template" ns="ns">
-        <typeRef/>
         <sequence>
-            <typeRef/>
             <length/>
             <decimal name="decimal">
                 <exponent>
