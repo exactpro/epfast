@@ -22,6 +22,7 @@ import com.exactpro.epfast.decoder.message.DecoderCommand;
 import java.util.List;
 
 public class StaticCall implements DecoderCommand {
+
     private final List<DecoderCommand> commandSet;
 
     public StaticCall(List<DecoderCommand> commandSet) {

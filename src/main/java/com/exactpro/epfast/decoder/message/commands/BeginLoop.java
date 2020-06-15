@@ -28,11 +28,11 @@ public class BeginLoop implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState ec) {
-        if (ec.loopIndex < ec.loopLimit) {
-            ec.nextCommandIndex++;
+    public void executeOn(DecoderState decoderState) {
+        if (decoderState.loopIndex < decoderState.loopLimit) {
+            decoderState.nextCommandIndex++;
         } else {
-            ec.nextCommandIndex = jumpIndex;
+            decoderState.nextCommandIndex = jumpIndex;
         }
     }
 }

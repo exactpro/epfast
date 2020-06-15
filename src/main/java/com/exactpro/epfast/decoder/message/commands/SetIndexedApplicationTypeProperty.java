@@ -32,7 +32,7 @@ public class SetIndexedApplicationTypeProperty implements DecoderCommand {
 
     @Override
     public void executeOn(DecoderState decoderState) {
-        Object array = decoderState.activeMessage.getField(propertyId.getName());
+        Object array = decoderState.activeMessage.getField(propertyId);
         Array.set(array, decoderState.loopIndex, decoderState.register.applicationValue);
         decoderState.nextCommandIndex++;
     }

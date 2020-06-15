@@ -27,7 +27,7 @@ public class ReadNullableAsciiString extends PrimitiveInstruction<DecodeNullable
         super(new DecodeNullableAsciiString());
     }
 
-    public void setRegisterValue(DecoderState ec) throws OverflowException {
-        ec.register.stringValue = fieldDecoder.getValue();
+    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
+        decoderState.register.stringValue = fieldDecoder.getValue();
     }
 }

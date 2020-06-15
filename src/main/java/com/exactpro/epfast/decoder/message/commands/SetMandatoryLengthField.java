@@ -21,8 +21,8 @@ import com.exactpro.epfast.decoder.message.DecoderCommand;
 
 public class SetMandatoryLengthField implements DecoderCommand {
     @Override
-    public void executeOn(DecoderState ec) {
-        ec.loopLimit = ec.register.mandatoryInt32Value;
-        ec.nextCommandIndex++;
+    public void executeOn(DecoderState decoderState) {
+        decoderState.loopLimit = decoderState.register.mandatoryInt32Value;
+        decoderState.nextCommandIndex++;
     }
 }

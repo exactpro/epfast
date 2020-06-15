@@ -22,15 +22,15 @@ import com.exactpro.epfast.template.Reference;
 
 public class SetString implements DecoderCommand {
 
-    private Reference fieldName;
+    private Reference propertyId;
 
-    public SetString(Reference fieldName) {
-        this.fieldName = fieldName;
+    public SetString(Reference propertyId) {
+        this.propertyId = propertyId;
     }
 
     @Override
-    public void executeOn(DecoderState ec) {
-        ec.activeMessage.setField(fieldName.getName(), ec.register.stringValue);
-        ec.nextCommandIndex++;
+    public void executeOn(DecoderState decoderState) {
+        decoderState.activeMessage.setField(propertyId, decoderState.register.stringValue);
+        decoderState.nextCommandIndex++;
     }
 }

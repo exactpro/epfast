@@ -30,7 +30,7 @@ public class SetApplicationTypeProperty implements DecoderCommand {
 
     @Override
     public void executeOn(DecoderState decoderState) {
-        decoderState.activeMessage.setField(propertyId.getName(), decoderState.register.applicationValue);
+        decoderState.activeMessage.setField(propertyId, decoderState.register.applicationValue);
         decoderState.nextCommandIndex++;
     }
 }

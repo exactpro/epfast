@@ -30,10 +30,10 @@ public class InitIndexedProperty implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState ec) {
-        IMessage[] array = (ec.loopLimit < 0) ? null : new IMessage[ec.loopLimit];
-        ec.activeMessage.setField(propertyId.getName(), array);
-        ec.loopIndex = 0;
-        ec.nextCommandIndex++;
+    public void executeOn(DecoderState decoderState) {
+        IMessage[] array = (decoderState.loopLimit < 0) ? null : new IMessage[decoderState.loopLimit];
+        decoderState.activeMessage.setField(propertyId, array);
+        decoderState.loopIndex = 0;
+        decoderState.nextCommandIndex++;
     }
 }

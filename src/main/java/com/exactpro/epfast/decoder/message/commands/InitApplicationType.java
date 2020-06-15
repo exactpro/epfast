@@ -29,8 +29,8 @@ public class InitApplicationType implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState ec) {
-        ec.activeMessage = new FastMessage(typeRef);
-        ec.nextCommandIndex++;
+    public void executeOn(DecoderState decoderState) {
+        decoderState.activeMessage = new FastMessage(typeRef);
+        decoderState.nextCommandIndex++;
     }
 }

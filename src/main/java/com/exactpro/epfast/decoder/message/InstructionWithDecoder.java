@@ -31,29 +31,29 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
         this.fieldDecoder = Objects.requireNonNull(fieldDecoder);
     }
 
-    protected abstract void decode(DecoderState ec) throws OverflowException;
+    protected abstract void decode(DecoderState decoderState) throws OverflowException;
 
-    protected abstract void continueDecode(DecoderState ec) throws OverflowException;
+    protected abstract void continueDecode(DecoderState decoderState) throws OverflowException;
 
     public boolean isReady() {
         return fieldDecoder.isReady();
     }
 
     @Override
-    public void executeOn(DecoderState ec) throws OverflowException {
-        if (!ec.inputBuffer.isReadable()) {
-            ec.canProceed = false;
+    public void executeOn(DecoderState decoderState) throws OverflowException {
+        if (!decoderState.inputBuffer.isReadable()) {
+            decoderState.canProceed = false;
             return;
         }
         if (!decoderStarted) {
-            decode(ec);
+            decode(decoderState);
         } else {
-            continueDecode(ec);
+            continueDecode(decoderState);
         }
         if (isReady()) {
-            ec.nextCommandIndex++;
+            decoderState.nextCommandIndex++;
         } else {
-            ec.canProceed = false;
+            decoderState.canProceed = false;
         }
     }
 }

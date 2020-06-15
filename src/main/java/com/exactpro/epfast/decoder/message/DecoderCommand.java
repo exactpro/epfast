@@ -19,5 +19,5 @@ package com.exactpro.epfast.decoder.message;
 import com.exactpro.epfast.decoder.OverflowException;
 
 public interface DecoderCommand {
-    void executeOn(DecoderState ec) throws OverflowException;
+    void executeOn(DecoderState decoderState) throws OverflowException;
 }

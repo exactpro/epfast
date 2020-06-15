@@ -16,8 +16,10 @@
 
 package com.exactpro.epfast.decoder;
 
-public interface IMessage {
-    Object getField(String name);
+import com.exactpro.epfast.template.Reference;
 
-    void setField(String name, Object val);
+public interface IMessage {
+    Object getField(Reference propertyId);
+
+    void setField(Reference propertyId, Object val);
 }

@@ -22,15 +22,15 @@ import com.exactpro.epfast.template.Reference;
 
 public class SetNullableInt32 implements DecoderCommand {
 
-    private Reference fieldName;
+    private Reference propertyId;
 
-    public SetNullableInt32(Reference fieldName) {
-        this.fieldName = fieldName;
+    public SetNullableInt32(Reference propertyId) {
+        this.propertyId = propertyId;
     }
 
     @Override
-    public void executeOn(DecoderState ec) {
-        ec.activeMessage.setField(fieldName.getName(), ec.register.optionalInt32Value);
-        ec.nextCommandIndex++;
+    public void executeOn(DecoderState decoderState) {
+        decoderState.activeMessage.setField(propertyId, decoderState.register.optionalInt32Value);
+        decoderState.nextCommandIndex++;
     }
 }

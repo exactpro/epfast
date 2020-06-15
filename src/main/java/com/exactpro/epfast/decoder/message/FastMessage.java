@@ -25,20 +25,19 @@ public class FastMessage implements IMessage {
 
     private Reference type;
 
-    // TODO change to HashMap<Reference, Object>
-    private HashMap<String, Object> fields = new HashMap<>();
+    private HashMap<Reference, Object> fields = new HashMap<>();
 
     public FastMessage(Reference type) {
         this.type = type;
     }
 
     @Override
-    public void setField(String name, Object val) {
-        fields.put(name, val);
+    public void setField(Reference propertyId, Object val) {
+        fields.put(propertyId, val);
     }
 
     @Override
-    public Object getField(String name) {
-        return fields.get(name);
+    public Object getField(Reference propertyId) {
+        return fields.get(propertyId);
     }
 }

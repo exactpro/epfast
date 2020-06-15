@@ -32,7 +32,6 @@ public class FastDecoder {
     public FastDecoder(Collection<? extends Template> templates, Reference templateRef) {
         List<DecoderCommand> bootstrapCommands = Arrays.asList(
             new CallByReference(templateRef),
-            // TODO change templateRef with appropriate type reference
             new ReadyMessage());
         this.decoderState = new DecoderState(FastCompiler.compile(templates), bootstrapCommands);
     }

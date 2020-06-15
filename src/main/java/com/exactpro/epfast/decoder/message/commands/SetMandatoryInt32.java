@@ -22,15 +22,16 @@ import com.exactpro.epfast.template.Reference;
 
 public class SetMandatoryInt32 implements DecoderCommand {
 
-    private Reference fieldName;
+    private Reference propertyId;
 
-    public SetMandatoryInt32(Reference fieldName) {
-        this.fieldName = fieldName;
+    public SetMandatoryInt32(Reference propertyId) {
+        this.propertyId = propertyId;
     }
 
     @Override
-    public void executeOn(DecoderState ec) {
-        ec.activeMessage.setField(fieldName.getName(), ec.register.mandatoryInt32Value);
-        ec.nextCommandIndex++;
+    public void executeOn(DecoderState decoderState) {
+        decoderState.activeMessage.setField(propertyId, decoderState.register.mandatoryInt32Value);
+        decoderState.nextCommandIndex++;
     }
 }
+

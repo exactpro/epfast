@@ -28,7 +28,7 @@ public class ReadMandatoryInt32 extends PrimitiveInstruction<DecodeMandatoryInt3
     }
 
     @Override
-    public void setRegisterValue(DecoderState ec) throws OverflowException {
-        ec.register.mandatoryInt32Value = fieldDecoder.getValue();
+    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
+        decoderState.register.mandatoryInt32Value = fieldDecoder.getValue();
     }
 }

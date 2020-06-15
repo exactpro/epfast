@@ -27,7 +27,7 @@ public class ReadNullableInt32 extends PrimitiveInstruction<DecodeNullableInt32>
         super(new DecodeNullableInt32());
     }
 
-    public void setRegisterValue(DecoderState ec) throws OverflowException {
-        ec.register.optionalInt32Value = fieldDecoder.getValue();
+    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
+        decoderState.register.optionalInt32Value = fieldDecoder.getValue();
     }
 }
