@@ -14,18 +14,15 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 
-public class AddToSequence implements NormalInstruction {
-
+public class SetMandatoryLengthField implements DecoderCommand {
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.sequence[ec.loopIndex] = ec.applicationMessage;
-        ec.loopIndex++;
-        ec.nextInstructionIndex++;
-        return true;
+    public void executeOn(DecoderState ec) {
+        ec.loopLimit = ec.register.mandatoryInt32Value;
+        ec.nextCommandIndex++;
     }
 }

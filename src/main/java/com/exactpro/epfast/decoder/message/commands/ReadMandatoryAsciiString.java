@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,20 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.ascii.DecodeMandatoryAsciiString;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
-public class SetGroup implements NormalInstruction {
+public class ReadMandatoryAsciiString extends PrimitiveInstruction<DecodeMandatoryAsciiString> {
 
-    private Reference fieldName;
-
-    public SetGroup(Reference fieldName) {
-        this.fieldName = fieldName;
+    public ReadMandatoryAsciiString() {
+        super(new DecodeMandatoryAsciiString());
     }
 
-    @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.ret();
-        ec.applicationMessage.setField(fieldName.getName(), ec.registers.group);
-        return true;
+    public void setRegisterValue(DecoderState ec) throws OverflowException {
+        ec.register.stringValue = fieldDecoder.getValue();
     }
 }

@@ -21,7 +21,7 @@ import com.exactpro.epfast.decoder.OverflowException;
 
 import java.util.Objects;
 
-public abstract class InstructionWithDecoder<T extends IDecodeContext> implements NormalInstruction {
+public abstract class InstructionWithDecoder<T extends IDecodeContext> implements DecoderCommand {
 
     protected T fieldDecoder;
 
@@ -31,18 +31,19 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
         this.fieldDecoder = Objects.requireNonNull(fieldDecoder);
     }
 
-    protected abstract void decode(ExecutionContext ec) throws OverflowException;
+    protected abstract void decode(DecoderState ec) throws OverflowException;
 
-    protected abstract void continueDecode(ExecutionContext ec) throws OverflowException;
+    protected abstract void continueDecode(DecoderState ec) throws OverflowException;
 
     public boolean isReady() {
         return fieldDecoder.isReady();
     }
 
     @Override
-    public boolean execute(ExecutionContext ec) throws OverflowException {
-        if (!ec.buffer.isReadable()) {
-            return false;
+    public void executeOn(DecoderState ec) throws OverflowException {
+        if (!ec.inputBuffer.isReadable()) {
+            ec.canProceed = false;
+            return;
         }
         if (!decoderStarted) {
             decode(ec);
@@ -50,9 +51,9 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
             continueDecode(ec);
         }
         if (isReady()) {
-            ec.nextInstructionIndex++;
-            return true;
+            ec.nextCommandIndex++;
+        } else {
+            ec.canProceed = false;
         }
-        return false;
     }
 }

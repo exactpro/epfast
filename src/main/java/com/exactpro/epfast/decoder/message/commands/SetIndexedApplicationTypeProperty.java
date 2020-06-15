@@ -14,16 +14,26 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.template.Reference;
 
-public class SetMandatoryLengthField implements NormalInstruction {
+import java.lang.reflect.Array;
+
+public class SetIndexedApplicationTypeProperty implements DecoderCommand {
+
+    private final Reference propertyId;
+
+    public SetIndexedApplicationTypeProperty(Reference propertyId) {
+        this.propertyId = propertyId;
+    }
+
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.loopLimit = ec.registers.mandatoryInt32Value;
-        ec.nextInstructionIndex++;
-        return true;
+    public void executeOn(DecoderState decoderState) {
+        Object array = decoderState.activeMessage.getField(propertyId.getName());
+        Array.set(array, decoderState.loopIndex, decoderState.register.applicationValue);
+        decoderState.nextCommandIndex++;
     }
 }

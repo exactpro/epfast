@@ -14,24 +14,26 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.FastMessage;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.IMessage;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.template.Reference;
 
-public class SetApplicationType implements NormalInstruction {
-    private Reference typeRef;
+public class InitIndexedProperty implements DecoderCommand {
 
-    public SetApplicationType(Reference typeRef) {
-        this.typeRef = typeRef;
+    private final Reference propertyId;
+
+    public InitIndexedProperty(Reference propertyId) {
+        this.propertyId = propertyId;
     }
 
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.applicationMessage = new FastMessage(typeRef);
-        ec.nextInstructionIndex++;
-        return true;
+    public void executeOn(DecoderState ec) {
+        IMessage[] array = (ec.loopLimit < 0) ? null : new IMessage[ec.loopLimit];
+        ec.activeMessage.setField(propertyId.getName(), array);
+        ec.loopIndex = 0;
+        ec.nextCommandIndex++;
     }
 }

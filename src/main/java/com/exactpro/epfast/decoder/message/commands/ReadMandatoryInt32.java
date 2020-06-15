@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,21 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
-public class SetMandatoryInt32 implements NormalInstruction {
+public class ReadMandatoryInt32 extends PrimitiveInstruction<DecodeMandatoryInt32> {
 
-    private Reference fieldName;
-
-    public SetMandatoryInt32(Reference fieldName) {
-        this.fieldName = fieldName;
+    public ReadMandatoryInt32() {
+        super(new DecodeMandatoryInt32());
     }
 
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.applicationMessage.setField(fieldName.getName(), ec.registers.mandatoryInt32Value);
-        ec.nextInstructionIndex++;
-        return true;
+    public void setRegisterValue(DecoderState ec) throws OverflowException {
+        ec.register.mandatoryInt32Value = fieldDecoder.getValue();
     }
 }

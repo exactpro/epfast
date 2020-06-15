@@ -14,10 +14,23 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder;
+package com.exactpro.epfast.decoder.message.commands;
 
-public class TemplateNotFoundException extends RuntimeException {
-    public TemplateNotFoundException(String errorMessage) {
-        super(errorMessage);
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.template.Reference;
+
+public class SetNullableInt32 implements DecoderCommand {
+
+    private Reference fieldName;
+
+    public SetNullableInt32(Reference fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    @Override
+    public void executeOn(DecoderState ec) {
+        ec.activeMessage.setField(fieldName.getName(), ec.register.optionalInt32Value);
+        ec.nextCommandIndex++;
     }
 }

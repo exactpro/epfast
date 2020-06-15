@@ -14,24 +14,17 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 
-public class SetNullableInt32 implements NormalInstruction {
-
-    private Reference fieldName;
-
-    public SetNullableInt32(Reference fieldName) {
-        this.fieldName = fieldName;
-    }
+public class RetApplicationType implements DecoderCommand {
 
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.applicationMessage.setField(fieldName.getName(), ec.registers.optionalInt32Value);
-        ec.nextInstructionIndex++;
-        return true;
+    public void executeOn(DecoderState decoderState) {
+        decoderState.register.applicationValue = decoderState.activeMessage;
+        decoderState.ret();
     }
+
 }

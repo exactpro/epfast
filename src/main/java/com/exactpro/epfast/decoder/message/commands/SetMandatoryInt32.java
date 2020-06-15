@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,23 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.ascii.DecodeNullableAsciiString;
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.template.Reference;
 
-public class ReadNullableAsciiString extends PrimitiveInstruction<DecodeNullableAsciiString> {
+public class SetMandatoryInt32 implements DecoderCommand {
 
-    public ReadNullableAsciiString() {
-        super(new DecodeNullableAsciiString());
+    private Reference fieldName;
+
+    public SetMandatoryInt32(Reference fieldName) {
+        this.fieldName = fieldName;
     }
 
-    public void setRegisterValue(ExecutionContext ec) throws OverflowException {
-        ec.registers.stringValue = fieldDecoder.getValue();
+    @Override
+    public void executeOn(DecoderState ec) {
+        ec.activeMessage.setField(fieldName.getName(), ec.register.mandatoryInt32Value);
+        ec.nextCommandIndex++;
     }
 }

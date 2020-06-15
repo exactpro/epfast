@@ -14,17 +14,22 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 
-public class ReadGroup implements NormalInstruction {
+import java.util.List;
+
+public class StaticCall implements DecoderCommand {
+    private final List<DecoderCommand> commandSet;
+
+    public StaticCall(List<DecoderCommand> commandSet) {
+        this.commandSet = commandSet;
+    }
 
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.registers.group = ec.applicationMessage;
-        ec.nextInstructionIndex++;
-        return true;
+    public void executeOn(DecoderState decoderState) {
+        decoderState.call(this.commandSet);
     }
 }

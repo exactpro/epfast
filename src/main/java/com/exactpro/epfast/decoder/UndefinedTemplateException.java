@@ -14,18 +14,10 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
-
-public class ReadyMessage implements NormalInstruction {
-
-    @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.readyMessages.add(ec.applicationMessage);
-        ec.applicationMessage = null;
-        ec.nextInstructionIndex = 0;
-        return true;
+public class UndefinedTemplateException extends RuntimeException {
+    public UndefinedTemplateException(String errorMessage) {
+        super(errorMessage);
     }
 }

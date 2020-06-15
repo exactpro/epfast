@@ -17,9 +17,8 @@
 package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.message.instructions.ReadyMessage;
-import com.exactpro.epfast.decoder.message.instructions.CallWithReference;
-import com.exactpro.epfast.decoder.message.instructions.SetApplicationType;
+import com.exactpro.epfast.decoder.message.commands.ReadyMessage;
+import com.exactpro.epfast.decoder.message.commands.CallByReference;
 import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
 import io.netty.buffer.ByteBuf;
@@ -28,21 +27,23 @@ import java.util.*;
 
 public class FastDecoder {
 
-    private ExecutionContext executionContext;
+    private DecoderState decoderState;
 
     public FastDecoder(Collection<? extends Template> templates, Reference templateRef) {
-        //TODO send bootstrapCode
-        this.executionContext = new ExecutionContext(new Compiler().compile(templates), null);
-        //TODO change templateRef with appropriate type reference
-        executionContext.instructions.add(new SetApplicationType(templateRef));
-        executionContext.instructions.add(new CallWithReference(templateRef));
-        executionContext.instructions.add(new ReadyMessage());
+        List<DecoderCommand> bootstrapCommands = Arrays.asList(
+            new CallByReference(templateRef),
+            // TODO change templateRef with appropriate type reference
+            new ReadyMessage());
+        this.decoderState = new DecoderState(FastCompiler.compile(templates), bootstrapCommands);
     }
 
-    public Collection<? extends Object> handle(ByteBuf buffer) throws OverflowException {
-        executionContext.buffer = buffer;
-        while (executionContext.nextStep()) {
-        }
-        return executionContext.fetchResults();
+    public Collection<?> process(ByteBuf buffer) throws OverflowException {
+        decoderState.inputBuffer = Objects.requireNonNull(buffer, "buffer cannot be null");
+        decoderState.canProceed = true;
+        do {
+            decoderState.nextCommand().executeOn(decoderState);
+        } while (decoderState.canProceed);
+        return decoderState.readMessages();
     }
+
 }

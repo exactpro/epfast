@@ -25,6 +25,7 @@ public class FastMessage implements IMessage {
 
     private Reference type;
 
+    // TODO change to HashMap<Reference, Object>
     private HashMap<String, Object> fields = new HashMap<>();
 
     public FastMessage(Reference type) {
@@ -36,7 +37,8 @@ public class FastMessage implements IMessage {
         fields.put(name, val);
     }
 
-    public Object getField(String key) {
-        return fields.get(key);
+    @Override
+    public Object getField(String name) {
+        return fields.get(name);
     }
 }

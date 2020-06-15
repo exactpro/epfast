@@ -14,19 +14,23 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.IMessage;
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.template.Reference;
 
-public class StartSequence implements NormalInstruction {
+public class SetString implements DecoderCommand {
+
+    private Reference fieldName;
+
+    public SetString(Reference fieldName) {
+        this.fieldName = fieldName;
+    }
 
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.sequence = new IMessage[ec.loopLimit];
-        ec.loopIndex = 0;
-        ec.nextInstructionIndex++;
-        return true;
+    public void executeOn(DecoderState ec) {
+        ec.activeMessage.setField(fieldName.getName(), ec.register.stringValue);
+        ec.nextCommandIndex++;
     }
 }

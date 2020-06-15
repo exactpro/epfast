@@ -14,24 +14,25 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 
-public class SetSequence implements NormalInstruction {
+public class BeginLoop implements DecoderCommand {
 
-    private Reference name;
+    private int jumpIndex;
 
-    public SetSequence(Reference name) {
-        this.name = name;
+    public void setJumpIndex(int jumpIndex) {
+        this.jumpIndex = jumpIndex;
     }
 
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.ret();
-        ec.applicationMessage.setField(name.getName(), ec.sequence);
-        return true;
+    public void executeOn(DecoderState ec) {
+        if (ec.loopIndex < ec.loopLimit) {
+            ec.nextCommandIndex++;
+        } else {
+            ec.nextCommandIndex = jumpIndex;
+        }
     }
 }

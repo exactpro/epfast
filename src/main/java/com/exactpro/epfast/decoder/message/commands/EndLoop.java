@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,22 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 
-public class ReadMandatoryInt32 extends PrimitiveInstruction<DecodeMandatoryInt32> {
+public class EndLoop implements DecoderCommand {
 
-    public ReadMandatoryInt32() {
-        super(new DecodeMandatoryInt32());
+    private final int nextCommandIndex;
+
+    public EndLoop(int nextCommandIndex) {
+        this.nextCommandIndex = nextCommandIndex;
     }
 
     @Override
-    public void setRegisterValue(ExecutionContext ec) throws OverflowException {
-        ec.registers.mandatoryInt32Value = fieldDecoder.getValue();
+    public void executeOn(DecoderState decoderState) {
+        ++decoderState.loopIndex;
+        decoderState.nextCommandIndex = nextCommandIndex;
     }
 }

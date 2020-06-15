@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,20 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.ascii.DecodeNullableAsciiString;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
-import java.util.ArrayList;
+public class ReadNullableAsciiString extends PrimitiveInstruction<DecodeNullableAsciiString> {
 
-public class CallWithInstructions implements NormalInstruction {
-    private ArrayList<NormalInstruction> instructions;
-
-    public CallWithInstructions(ArrayList<NormalInstruction> instructions) {
-        this.instructions = instructions;
+    public ReadNullableAsciiString() {
+        super(new DecodeNullableAsciiString());
     }
 
-    @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.call();
-        ec.instructions = this.instructions;
-        ec.nextInstructionIndex = 0;
-        return true;
+    public void setRegisterValue(DecoderState ec) throws OverflowException {
+        ec.register.stringValue = fieldDecoder.getValue();
     }
 }

@@ -14,26 +14,21 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 
-public class Loop implements NormalInstruction {
-
-    private int jumpIndex;
-
-    public void setJumpIndex(int jumpIndex) {
-        this.jumpIndex = jumpIndex;
-    }
+public class SetNullableLengthField implements DecoderCommand {
 
     @Override
-    public boolean execute(ExecutionContext ec) {
-        if (ec.loopIndex < ec.loopLimit) {
-            ec.nextInstructionIndex++;
+    public void executeOn(DecoderState ec) {
+        Integer lengthValue = ec.register.optionalInt32Value;
+        if (lengthValue != null) {
+            ec.loopLimit = lengthValue;
         } else {
-            ec.nextInstructionIndex = jumpIndex;
+            ec.loopLimit = -1;
         }
-        return true;
+        ec.nextCommandIndex++;
     }
 }

@@ -14,10 +14,23 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.FastMessage;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.template.Reference;
 
-public interface NormalInstruction {
-    boolean execute(ExecutionContext ec) throws OverflowException;
+public class InitApplicationType implements DecoderCommand {
+    private Reference typeRef;
+
+    public InitApplicationType(Reference typeRef) {
+        this.typeRef = typeRef;
+    }
+
+    @Override
+    public void executeOn(DecoderState ec) {
+        ec.activeMessage = new FastMessage(typeRef);
+        ec.nextCommandIndex++;
+    }
 }

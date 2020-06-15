@@ -403,9 +403,9 @@ class TestDecodeMessage {
     fun testTemplateRef(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templates.templates, Reference("first template", ""))
 
-        var messages: List<Any> = listOf()
+        val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
-            messages += handler.handle(buffer)
+            messages.addAll(handler.process(buffer))
         }
 
         val message: FastMessage = messages[0] as FastMessage
@@ -429,9 +429,9 @@ class TestDecodeMessage {
     fun testGroup(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithGroup.templates, Reference("first template", ""))
 
-        var messages: List<Any> = listOf()
+        val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
-            messages += handler.handle(buffer)
+            messages.addAll(handler.process(buffer))
         }
 
         val message: FastMessage = messages[0] as FastMessage
@@ -457,9 +457,9 @@ class TestDecodeMessage {
     fun testNestedGroup(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithNestedGroup.templates, Reference("first template", ""))
 
-        var messages: List<Any> = listOf()
+        val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
-            messages += handler.handle(buffer)
+            messages.addAll(handler.process(buffer))
         }
 
         val message: FastMessage = messages[0] as FastMessage
@@ -491,9 +491,9 @@ class TestDecodeMessage {
     fun testOptionalSequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithOptionalSequence.templates, Reference("first template", ""))
 
-        var messages: List<Any> = listOf()
+        val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
-            messages += handler.handle(buffer)
+            messages.addAll(handler.process(buffer))
         }
 
         val message: FastMessage = messages[0] as FastMessage
@@ -524,9 +524,9 @@ class TestDecodeMessage {
     fun testMandatorySequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithMandatorySequence.templates, Reference("first template", ""))
 
-        var messages: List<Any> = listOf()
+        val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
-            messages += handler.handle(buffer)
+            messages.addAll(handler.process(buffer))
         }
 
         val message: FastMessage = messages[0] as FastMessage
@@ -557,9 +557,9 @@ class TestDecodeMessage {
     fun testNullSequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithNullSequence.templates, Reference("first template", ""))
 
-        var messages: List<Any> = listOf()
+        val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
-            messages += handler.handle(buffer)
+            messages.addAll(handler.process(buffer))
         }
 
         val message: FastMessage = messages[0] as FastMessage

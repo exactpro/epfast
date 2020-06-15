@@ -17,5 +17,7 @@
 package com.exactpro.epfast.decoder;
 
 public interface IMessage {
+    Object getField(String name);
+
     void setField(String name, Object val);
 }

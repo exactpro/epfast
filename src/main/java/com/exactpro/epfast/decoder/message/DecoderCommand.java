@@ -14,22 +14,10 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.OverflowException;
 
-public class Jump implements NormalInstruction {
-
-    private int jumpIndex;
-
-    public Jump(int jumpIndex) {
-        this.jumpIndex = jumpIndex;
-    }
-
-    @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.nextInstructionIndex = jumpIndex;
-        return true;
-    }
+public interface DecoderCommand {
+    void executeOn(DecoderState ec) throws OverflowException;
 }

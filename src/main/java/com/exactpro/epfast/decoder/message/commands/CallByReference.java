@@ -14,24 +14,30 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.instructions;
+package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.message.ExecutionContext;
-import com.exactpro.epfast.decoder.message.NormalInstruction;
+import com.exactpro.epfast.decoder.UndefinedTemplateException;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.template.Reference;
 
-public class SetString implements NormalInstruction {
+import java.util.List;
 
-    private Reference fieldName;
+public class CallByReference implements DecoderCommand {
 
-    public SetString(Reference fieldName) {
-        this.fieldName = fieldName;
+    private Reference commandSetId;
+
+    public CallByReference(Reference commandSetId) {
+        this.commandSetId = commandSetId;
     }
 
     @Override
-    public boolean execute(ExecutionContext ec) {
-        ec.applicationMessage.setField(fieldName.getName(), ec.registers.stringValue);
-        ec.nextInstructionIndex++;
-        return true;
+    public void executeOn(DecoderState decoderState) {
+        List<DecoderCommand> instructions = decoderState.commandSets.get(commandSetId);
+        if (instructions != null) {
+            decoderState.call(instructions);
+        } else {
+            throw new UndefinedTemplateException("FAST template " + commandSetId + " is not defined");
+        }
     }
 }
