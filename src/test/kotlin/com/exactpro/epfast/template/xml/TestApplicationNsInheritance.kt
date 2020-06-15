@@ -18,8 +18,8 @@ package com.exactpro.epfast.template.xml
 
 import com.exactpro.epfast.template.assertion.TemplatesComparison.assertTemplateListsAreEqual
 import com.exactpro.epfast.template.dsl.template
-import com.exactpro.epfast.template.xml.TemplateReader.Companion.readTemplatesFromResource
-import com.exactpro.epfast.template.xml.TemplateReader.Companion.readTemplatesFromString
+import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromResource
+import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromString
 import org.junit.jupiter.api.Test
 
 class TestApplicationNsInheritance {
@@ -38,14 +38,14 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template">
-                    <int32 name="int">
-                        <copy/>
-                    </int32>
-                </template>
-            </templates>
-            """
+                <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template">
+                        <int32 name="int">
+                            <copy/>
+                        </int32>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -64,12 +64,12 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <uInt32 name="uInt">
-                    <increment/>
-                </uInt32>
-            </template>
-            """
+                <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <uInt32 name="uInt">
+                        <increment/>
+                    </uInt32>
+                </template>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -88,14 +88,14 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template" ns="ns">
-                    <int64 name="int">
-                        <delta/>
-                    </int64>
-                </template>
-            </templates>
-            """
+                <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template" ns="ns">
+                        <int64 name="int">
+                            <delta/>
+                        </int64>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -114,14 +114,14 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template" templateNs="ns">
-                    <uInt64 name="uInt">
-                        <tail/>
-                    </uInt64>
-                </template>
-            </templates>
-            """
+                <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template" templateNs="ns">
+                        <uInt64 name="uInt">
+                            <tail/>
+                        </uInt64>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -138,12 +138,12 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template">
-                    <decimal name="decimal"/>
-                </template>
-            </templates>
-            """
+                <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template">
+                        <decimal name="decimal"/>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -163,17 +163,17 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <decimal name="decimal">
-                    <mantissa>
-                        <delta/>
-                    </mantissa>
-                    <exponent>
-                        <tail/>
-                    </exponent>
-                </decimal>
-            </template>
-            """
+                <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <decimal name="decimal">
+                        <mantissa>
+                            <delta/>
+                        </mantissa>
+                        <exponent>
+                            <tail/>
+                        </exponent>
+                    </decimal>
+                </template>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -190,10 +190,10 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <template name="template" ns="ns" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <string name="string"/>
-            </template>
-            """
+                <template name="template" ns="ns" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <string name="string"/>
+                </template>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -212,12 +212,12 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template" ns="ns">
-                    <string charset="unicode" name="string"/>
-                </template>
-            </templates>
-            """
+                <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template" ns="ns">
+                        <string charset="unicode" name="string"/>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -236,12 +236,12 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template">
-                    <byteVector name="vector" lengthName="length"/>
-                </template>
-            </templates>
-            """
+                <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template">
+                        <byteVector name="vector" lengthName="length"/>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -361,21 +361,21 @@ class TestApplicationNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template1">
-                    <typeRef/>
-                    <group name="group">
+                <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template1">
                         <typeRef/>
-                    </group>
-                </template>
-                <template name="template2" ns="ns">
-                    <typeRef/>
-                    <sequence name="sequence">
+                        <group name="group">
+                            <typeRef/>
+                        </group>
+                    </template>
+                    <template name="template2" ns="ns">
                         <typeRef/>
-                    </sequence>
-                </template>
-            </templates>
-            """
+                        <sequence name="sequence">
+                            <typeRef/>
+                        </sequence>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }

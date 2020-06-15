@@ -18,8 +18,8 @@ package com.exactpro.epfast.template.xml
 
 import com.exactpro.epfast.template.assertion.TemplatesComparison.assertTemplateListsAreEqual
 import com.exactpro.epfast.template.dsl.template
-import com.exactpro.epfast.template.xml.TemplateReader.Companion.readTemplatesFromResource
-import com.exactpro.epfast.template.xml.TemplateReader.Companion.readTemplatesFromString
+import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromResource
+import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromString
 import org.junit.jupiter.api.Test
 
 class TestDictionaryInheritance {
@@ -36,14 +36,14 @@ class TestDictionaryInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template">
-                    <int32 name="int">
-                        <copy/>
-                    </int32>
-                </template>
-            </templates>
-            """
+                <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template">
+                        <int32 name="int">
+                            <copy/>
+                        </int32>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -60,12 +60,12 @@ class TestDictionaryInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <uInt32 name="uInt">
-                    <increment/>
-                </uInt32>
-            </template>
-            """
+                <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <uInt32 name="uInt">
+                        <increment/>
+                    </uInt32>
+                </template>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -82,14 +82,14 @@ class TestDictionaryInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template" dictionary="delta">
-                    <int64 name="int">
-                        <delta/>
-                    </int64>
-                </template>
-            </templates>
-            """
+                <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template" dictionary="delta">
+                        <int64 name="int">
+                            <delta/>
+                        </int64>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -106,14 +106,14 @@ class TestDictionaryInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template">
-                    <uInt64 name="uInt">
-                        <tail/>
-                    </uInt64>
-                </template>
-            </templates>
-            """
+                <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template">
+                        <uInt64 name="uInt">
+                            <tail/>
+                        </uInt64>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -130,12 +130,12 @@ class TestDictionaryInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <decimal name="decimal">
-                    <copy/>
-                </decimal>
-            </template>
-            """
+                <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <decimal name="decimal">
+                        <copy/>
+                    </decimal>
+                </template>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -155,17 +155,17 @@ class TestDictionaryInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <decimal name="decimal">
-                    <mantissa>
-                        <tail dictionary="tail"/>
-                    </mantissa>
-                    <exponent>
-                        <delta/>
-                    </exponent>
-                </decimal>
-            </template>
-            """
+                <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <decimal name="decimal">
+                        <mantissa>
+                            <tail dictionary="tail"/>
+                        </mantissa>
+                        <exponent>
+                            <delta/>
+                        </exponent>
+                    </decimal>
+                </template>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -182,12 +182,12 @@ class TestDictionaryInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <string name="string">
-                    <copy/>
-                </string>
-            </template>
-            """
+                <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <string name="string">
+                        <copy/>
+                    </string>
+                </template>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -204,14 +204,14 @@ class TestDictionaryInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template">
-                    <string charset="unicode" name="string">
-                        <increment/>
-                    </string>
-                </template>
-            </templates>
-            """
+                <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template">
+                        <string charset="unicode" name="string">
+                            <increment/>
+                        </string>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -227,14 +227,14 @@ class TestDictionaryInheritance {
         )
         val actual = readTemplatesFromString(
                 """
-            <templates dictionary="dictionary" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template" dictionary="delta">
-                    <byteVector name="vector">
-                        <delta/>
-                    </byteVector>
-                </template>
-            </templates>
-            """
+                <templates dictionary="dictionary" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template" dictionary="delta">
+                        <byteVector name="vector">
+                            <delta/>
+                        </byteVector>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }

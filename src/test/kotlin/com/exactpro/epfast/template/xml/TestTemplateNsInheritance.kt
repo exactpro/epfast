@@ -18,7 +18,7 @@ package com.exactpro.epfast.template.xml
 
 import com.exactpro.epfast.template.assertion.TemplatesComparison.assertTemplateListsAreEqual
 import com.exactpro.epfast.template.dsl.template
-import com.exactpro.epfast.template.xml.TemplateReader.Companion.readTemplatesFromString
+import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromString
 import org.junit.jupiter.api.Test
 
 class TestTemplateNsInheritance {
@@ -46,15 +46,15 @@ class TestTemplateNsInheritance {
 
         val actual = readTemplatesFromString(
                 """
-            <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                <template name="template1" ns="ns">
-                    <templateRef name="templateRef"/>
-                </template>
-                <template name="template2" templateNs="NS">
-                    <templateRef name="templateRef"/>
-                </template>
-            </templates>
-            """
+                <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                    <template name="template1" ns="ns">
+                        <templateRef name="templateRef"/>
+                    </template>
+                    <template name="template2" templateNs="NS">
+                        <templateRef name="templateRef"/>
+                    </template>
+                </templates>
+                """
         )
         assertTemplateListsAreEqual(actual, expected)
     }

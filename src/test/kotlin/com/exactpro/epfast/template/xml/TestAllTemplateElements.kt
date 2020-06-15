@@ -18,13 +18,13 @@ package com.exactpro.epfast.template.xml
 
 import com.exactpro.epfast.template.assertion.TemplatesComparison.assertTemplateListsAreEqual
 import com.exactpro.epfast.template.dsl.template
-import com.exactpro.epfast.template.xml.TemplateReader.Companion.readTemplatesFromResource
+import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromResource
 import org.junit.jupiter.api.Test
 
 class TestAllTemplateElements {
 
     @Test
-    fun `Can read all elements (Part 1)`() {
+    fun `ensure all FAST template elements can be read (part 1)`() {
         val expected = listOf(
                 template("template1", "templateNs1") {
                     auxiliaryId = "tempId"
@@ -150,7 +150,7 @@ class TestAllTemplateElements {
     }
 
     @Test
-    fun `Can read all elements (Part 2)`() {
+    fun `ensure all FAST template elements can be read (part 2)`() {
         val expected = listOf(
                 template("template1", "templateNs1") {
                     auxiliaryId = "tempId"
