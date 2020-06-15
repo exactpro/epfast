@@ -21,16 +21,16 @@ import java.io.InputStream
 
 object TemplateReader {
     internal fun readTemplatesFromResource(resourceName: String) =
-            resourceInputStream(resourceName).use(XmlTemplates::readFrom)
+        resourceInputStream(resourceName).use(XmlTemplates::readFrom)
 
     internal fun readTemplatesFromString(xmlString: String) =
-            xmlString.reader().use(XmlTemplates::readFrom)
+        xmlString.reader().use(XmlTemplates::readFrom)
 
     private fun resourceInputStream(resourceName: String): InputStream {
         val theClass = TemplateReader::class.java
         val packageName = theClass.getPackage().name
         val path = packageName.replace(Regex.fromLiteral("."), "/")
         return theClass.classLoader.getResourceAsStream("$path/$resourceName")
-                ?: throw IOException("Resource $resourceName can not be found in package $packageName")
+            ?: throw IOException("Resource $resourceName can not be found in package $packageName")
     }
 }

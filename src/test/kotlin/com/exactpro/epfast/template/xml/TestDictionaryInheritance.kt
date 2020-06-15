@@ -27,23 +27,23 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within int32`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        int32("int") { copy { dictionary = "copy" } }
-                    }
+            template("template") {
+                instructions {
+                    int32("int") { copy { dictionary = "copy" } }
                 }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <template name="template">
-                        <int32 name="int">
-                            <copy/>
-                        </int32>
-                    </template>
-                </templates>
-                """
+            """
+            <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <int32 name="int">
+                        <copy/>
+                    </int32>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -51,21 +51,21 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within uInt32`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        uint32("uInt") { increment { dictionary = "increment" } }
-                    }
+            template("template") {
+                instructions {
+                    uint32("uInt") { increment { dictionary = "increment" } }
                 }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <uInt32 name="uInt">
-                        <increment/>
-                    </uInt32>
-                </template>
-                """
+            """
+            <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <uInt32 name="uInt">
+                    <increment/>
+                </uInt32>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -73,23 +73,23 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within int64`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        int64("int") { delta { dictionary = "delta" } }
-                    }
+            template("template") {
+                instructions {
+                    int64("int") { delta { dictionary = "delta" } }
                 }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <template name="template" dictionary="delta">
-                        <int64 name="int">
-                            <delta/>
-                        </int64>
-                    </template>
-                </templates>
-                """
+            """
+            <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template" dictionary="delta">
+                    <int64 name="int">
+                        <delta/>
+                    </int64>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -97,23 +97,23 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within uInt64`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        uint64("uInt") { tail { dictionary = "tail" } }
-                    }
+            template("template") {
+                instructions {
+                    uint64("uInt") { tail { dictionary = "tail" } }
                 }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <template name="template">
-                        <uInt64 name="uInt">
-                            <tail/>
-                        </uInt64>
-                    </template>
-                </templates>
-                """
+            """
+            <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <uInt64 name="uInt">
+                        <tail/>
+                    </uInt64>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -121,21 +121,21 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within simpleDecimal`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        simpleDecimal("decimal") { copy { dictionary = "copy" } }
-                    }
+            template("template") {
+                instructions {
+                    simpleDecimal("decimal") { copy { dictionary = "copy" } }
                 }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <decimal name="decimal">
-                        <copy/>
-                    </decimal>
-                </template>
-                """
+            """
+            <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <decimal name="decimal">
+                    <copy/>
+                </decimal>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -143,29 +143,29 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within compoundDecimal`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        compoundDecimal("decimal") {
-                            exponent { delta { dictionary = "delta" } }
-                            mantissa { tail { dictionary = "tail" } }
-                        }
+            template("template") {
+                instructions {
+                    compoundDecimal("decimal") {
+                        exponent { delta { dictionary = "delta" } }
+                        mantissa { tail { dictionary = "tail" } }
                     }
                 }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <decimal name="decimal">
-                        <mantissa>
-                            <tail dictionary="tail"/>
-                        </mantissa>
-                        <exponent>
-                            <delta/>
-                        </exponent>
-                    </decimal>
-                </template>
-                """
+            """
+            <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <decimal name="decimal">
+                    <mantissa>
+                        <tail dictionary="tail"/>
+                    </mantissa>
+                    <exponent>
+                        <delta/>
+                    </exponent>
+                </decimal>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -173,21 +173,21 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within asciiString`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        asciiString("string") { copy { dictionary = "copy" } }
-                    }
+            template("template") {
+                instructions {
+                    asciiString("string") { copy { dictionary = "copy" } }
                 }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <string name="string">
-                        <copy/>
-                    </string>
-                </template>
-                """
+            """
+            <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <string name="string">
+                    <copy/>
+                </string>
+            </template>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -195,23 +195,23 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within unicodeString`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        unicode("string") { increment { dictionary = "increment" } }
-                    }
+            template("template") {
+                instructions {
+                    unicode("string") { increment { dictionary = "increment" } }
                 }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <template name="template">
-                        <string charset="unicode" name="string">
-                            <increment/>
-                        </string>
-                    </template>
-                </templates>
-                """
+            """
+            <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template">
+                    <string charset="unicode" name="string">
+                        <increment/>
+                    </string>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -219,22 +219,22 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within byteVector`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        byteVector("vector") { delta { dictionary = "delta" } }
-                    }
+            template("template") {
+                instructions {
+                    byteVector("vector") { delta { dictionary = "delta" } }
                 }
+            }
         )
         val actual = readTemplatesFromString(
-                """
-                <templates dictionary="dictionary" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <template name="template" dictionary="delta">
-                        <byteVector name="vector">
-                            <delta/>
-                        </byteVector>
-                    </template>
-                </templates>
-                """
+            """
+            <templates dictionary="dictionary" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template" dictionary="delta">
+                    <byteVector name="vector">
+                        <delta/>
+                    </byteVector>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -242,29 +242,28 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within sequence`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        sequence(null) {
-                            length { operator { tail { dictionary = "sequence" } } }
-                            instructions {
-                                compoundDecimal("decimal") {
-                                    mantissa { copy { dictionary = "sequence" } }
-                                }
-                                sequence(null) {
-                                    length { operator { increment { dictionary = "length" } } }
-                                }
+            template("template") {
+                instructions {
+                    sequence(null) {
+                        length { operator { tail { dictionary = "sequence" } } }
+                        instructions {
+                            compoundDecimal("decimal") {
+                                mantissa { copy { dictionary = "sequence" } }
+                            }
+                            sequence(null) {
+                                length { operator { increment { dictionary = "length" } } }
                             }
                         }
-                        sequence(null) {
-                            instructions {
-                                int32("int") { tail { dictionary = "template" } }
-                                sequence(null) {
-                                    length { operator { delta { dictionary = "template" } } }
-                                    instructions {
-                                        sequence(null) {
-                                            instructions {
-                                                uint64("uInt") { copy { dictionary = "uInt" } }
-                                            }
+                    }
+                    sequence(null) {
+                        instructions {
+                            int32("int") { tail { dictionary = "template" } }
+                            sequence(null) {
+                                length { operator { delta { dictionary = "template" } } }
+                                instructions {
+                                    sequence(null) {
+                                        instructions {
+                                            uint64("uInt") { copy { dictionary = "uInt" } }
                                         }
                                     }
                                 }
@@ -272,6 +271,7 @@ class TestDictionaryInheritance {
                         }
                     }
                 }
+            }
         )
 
         val actual = readTemplatesFromResource("dictInheritanceWithSequence.xml")
@@ -281,27 +281,26 @@ class TestDictionaryInheritance {
     @Test
     fun `ensure dictionary is inherited within group`() {
         val expected = listOf(
-                template("template") {
-                    instructions {
-                        group(null) {
-                            instructions {
-                                group(null) {
-                                    instructions {
-                                        unicode("string") { delta { dictionary = "unicode" } }
-                                    }
+            template("template") {
+                instructions {
+                    group(null) {
+                        instructions {
+                            group(null) {
+                                instructions {
+                                    unicode("string") { delta { dictionary = "unicode" } }
                                 }
-                                byteVector("vector") { copy { dictionary = "group" } }
                             }
+                            byteVector("vector") { copy { dictionary = "group" } }
                         }
-                        group(null) {
-                            instructions {
-                                int64("int") { increment { dictionary = "int" } }
-                                group(null) {
-                                    instructions {
-                                        group(null) {
-                                            instructions {
-                                                uint32("uInt") { tail { dictionary = "tail" } }
-                                            }
+                    }
+                    group(null) {
+                        instructions {
+                            int64("int") { increment { dictionary = "int" } }
+                            group(null) {
+                                instructions {
+                                    group(null) {
+                                        instructions {
+                                            uint32("uInt") { tail { dictionary = "tail" } }
                                         }
                                     }
                                 }
@@ -309,6 +308,7 @@ class TestDictionaryInheritance {
                         }
                     }
                 }
+            }
         )
         val actual = readTemplatesFromResource("dictInheritanceWithGroup.xml")
 

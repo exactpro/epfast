@@ -26,123 +26,123 @@ class TestAllTemplateElements {
     @Test
     fun `ensure all FAST template elements can be read (part 1)`() {
         val expected = listOf(
-                template("template1", "templateNs1") {
-                    auxiliaryId = "tempId"
-                    typeRef {
-                        name = "type"
-                        namespace = "ref"
-                    }
-                    instructions {
-                        sequence("sequence", "namespace") {
-                            auxiliaryId = "id"
-                            optional = true
-                            typeRef {
-                                name = "type"
-                                namespace = "ref"
+            template("template1", "templateNs1") {
+                auxiliaryId = "tempId"
+                typeRef {
+                    name = "type"
+                    namespace = "ref"
+                }
+                instructions {
+                    sequence("sequence", "namespace") {
+                        auxiliaryId = "id"
+                        optional = true
+                        typeRef {
+                            name = "type"
+                            namespace = "ref"
+                        }
+                        length {
+                            name = "length"
+                            namespace = "ns"
+                            auxiliaryId = "lengthId"
+                            operator { constant { initialValue = "value" } }
+                        }
+                        instructions {
+                            int32("int32", "ns") {
+                                delta { dictionaryKey { namespace = "ns" } }
                             }
-                            length {
-                                name = "length"
-                                namespace = "ns"
-                                auxiliaryId = "lengthId"
-                                operator { constant { initialValue = "value" } }
-                            }
-                            instructions {
-                                int32("int32", "ns") {
-                                    delta { dictionaryKey { namespace = "ns" } }
+                            unicode("string", "ns") {
+                                length {
+                                    name = "length"
+                                    namespace = "ns"
                                 }
-                                unicode("string", "ns") {
-                                    length {
-                                        name = "length"
+                            }
+                        }
+                    }
+                    group("group", "namespace") {
+                        auxiliaryId = "groupId"
+                        optional = false
+                        typeRef {
+                            name = "type"
+                            namespace = "ref"
+                        }
+                        instructions {
+                            sequence("name", "namespace") {
+                                instructions {
+                                    compoundDecimal("decimal", "ns") { mantissa {} }
+                                    templateRef {
+                                        name = "tempRef"
                                         namespace = "ns"
                                     }
                                 }
                             }
-                        }
-                        group("group", "namespace") {
-                            auxiliaryId = "groupId"
-                            optional = false
-                            typeRef {
-                                name = "type"
-                                namespace = "ref"
-                            }
-                            instructions {
-                                sequence("name", "namespace") {
-                                    instructions {
-                                        compoundDecimal("decimal", "ns") { mantissa {} }
-                                        templateRef {
-                                            name = "tempRef"
-                                            namespace = "ns"
-                                        }
-                                    }
-                                }
-                                byteVector("vector", "ns") {
-                                    optional = true
-                                    length {
-                                        auxiliaryId = "id"
-                                        namespace = "ns"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                template("template2", "templateNs2") {
-                    auxiliaryId = "tempId"
-                    typeRef {
-                        name = "type"
-                        namespace = "ref"
-                    }
-                    instructions {
-                        int32("int", "intNs") {
-                            auxiliaryId = "32"
-                            optional = false
-                            increment {
-                                initialValue = "value"
-                                dictionary = "template"
-                                dictionaryKey {
-                                    name = "intKey"
-                                    namespace = "ns"
-                                }
-                            }
-                        }
-                        int64("int", "intNs") {
-                            auxiliaryId = "64"
-                            optional = false
-                            increment {
-                                initialValue = "value"
-                                dictionary = "global"
-                                dictionaryKey {
-                                    name = "intKey"
-                                    namespace = "ns"
-                                }
-                            }
-                        }
-                        uint32("uInt", "uIntNs") {
-                            auxiliaryId = "32"
-                            optional = true
-                            increment {
-                                initialValue = "value"
-                                dictionary = "template"
-                                dictionaryKey {
-                                    name = "intKey"
-                                    namespace = "ns"
-                                }
-                            }
-                        }
-                        uint64("uInt", "uIntNs") {
-                            auxiliaryId = "64"
-                            optional = true
-                            increment {
-                                initialValue = "value"
-                                dictionary = "global"
-                                dictionaryKey {
-                                    name = "intKey"
+                            byteVector("vector", "ns") {
+                                optional = true
+                                length {
+                                    auxiliaryId = "id"
                                     namespace = "ns"
                                 }
                             }
                         }
                     }
                 }
+            },
+            template("template2", "templateNs2") {
+                auxiliaryId = "tempId"
+                typeRef {
+                    name = "type"
+                    namespace = "ref"
+                }
+                instructions {
+                    int32("int", "intNs") {
+                        auxiliaryId = "32"
+                        optional = false
+                        increment {
+                            initialValue = "value"
+                            dictionary = "template"
+                            dictionaryKey {
+                                name = "intKey"
+                                namespace = "ns"
+                            }
+                        }
+                    }
+                    int64("int", "intNs") {
+                        auxiliaryId = "64"
+                        optional = false
+                        increment {
+                            initialValue = "value"
+                            dictionary = "global"
+                            dictionaryKey {
+                                name = "intKey"
+                                namespace = "ns"
+                            }
+                        }
+                    }
+                    uint32("uInt", "uIntNs") {
+                        auxiliaryId = "32"
+                        optional = true
+                        increment {
+                            initialValue = "value"
+                            dictionary = "template"
+                            dictionaryKey {
+                                name = "intKey"
+                                namespace = "ns"
+                            }
+                        }
+                    }
+                    uint64("uInt", "uIntNs") {
+                        auxiliaryId = "64"
+                        optional = true
+                        increment {
+                            initialValue = "value"
+                            dictionary = "global"
+                            dictionaryKey {
+                                name = "intKey"
+                                namespace = "ns"
+                            }
+                        }
+                    }
+                }
+            }
         )
 
         val actual = readTemplatesFromResource("allElementsPart1.xml")
@@ -152,101 +152,101 @@ class TestAllTemplateElements {
     @Test
     fun `ensure all FAST template elements can be read (part 2)`() {
         val expected = listOf(
-                template("template1", "templateNs1") {
-                    auxiliaryId = "tempId"
-                    typeRef {
-                        name = "type"
-                        namespace = "ref"
+            template("template1", "templateNs1") {
+                auxiliaryId = "tempId"
+                typeRef {
+                    name = "type"
+                    namespace = "ref"
+                }
+                instructions {
+                    asciiString("ascii", "stringNs") {
+                        auxiliaryId = "string"
+                        optional = true
+                        default { initialValue = "value" }
                     }
-                    instructions {
-                        asciiString("ascii", "stringNs") {
-                            auxiliaryId = "string"
-                            optional = true
-                            default { initialValue = "value" }
+                    unicode("unicode", "stringNs") {
+                        auxiliaryId = "string"
+                        optional = false
+                        length("length") {
+                            namespace = "stringNs"
+                            auxiliaryId = "lengthId"
                         }
-                        unicode("unicode", "stringNs") {
-                            auxiliaryId = "string"
-                            optional = false
-                            length("length") {
-                                namespace = "stringNs"
-                                auxiliaryId = "lengthId"
-                            }
-                            copy {
-                                initialValue = "value"
-                                dictionary = "copy"
-                                dictionaryKey {
-                                    name = "key"
-                                    namespace = "ns"
-                                }
-                            }
-                        }
-                        simpleDecimal("simple", "decimalNs") {
-                            auxiliaryId = "decimal"
-                            optional = false
-                            delta {
-                                initialValue = "value"
-                                dictionary = "delta"
-                                dictionaryKey {
-                                    name = "key"
-                                    namespace = "ns"
-                                }
+                        copy {
+                            initialValue = "value"
+                            dictionary = "copy"
+                            dictionaryKey {
+                                name = "key"
+                                namespace = "ns"
                             }
                         }
                     }
-                },
-                template("template2", "templateNs2") {
-                    auxiliaryId = "tempId"
-                    typeRef {
-                        name = "type"
-                        namespace = "ref"
-                    }
-                    instructions {
-                        compoundDecimal("compound", "decimalNs") {
-                            auxiliaryId = "decimal"
-                            optional = true
-                            mantissa {
-                                increment {
-                                    initialValue = "value"
-                                    dictionary = "increment"
-                                    dictionaryKey {
-                                        name = "key"
-                                        namespace = "ns"
-                                    }
-                                }
+                    simpleDecimal("simple", "decimalNs") {
+                        auxiliaryId = "decimal"
+                        optional = false
+                        delta {
+                            initialValue = "value"
+                            dictionary = "delta"
+                            dictionaryKey {
+                                name = "key"
+                                namespace = "ns"
                             }
-                            exponent {
-                                tail {
-                                    initialValue = "value"
-                                    dictionary = "tail"
-                                    dictionaryKey {
-                                        name = "key"
-                                        namespace = "ns"
-                                    }
-                                }
-                            }
-                        }
-                        byteVector("byte", "vectorNs") {
-                            auxiliaryId = "vector"
-                            optional = true
-                            length("length") {
-                                namespace = "vectorNs"
-                                auxiliaryId = "lengthId"
-                            }
-                            copy {
-                                initialValue = "value"
-                                dictionary = "type"
-                                dictionaryKey {
-                                    name = "key"
-                                    namespace = "ns"
-                                }
-                            }
-                        }
-                        templateRef {
-                            name = "templateRef"
-                            namespace = "ns"
                         }
                     }
                 }
+            },
+            template("template2", "templateNs2") {
+                auxiliaryId = "tempId"
+                typeRef {
+                    name = "type"
+                    namespace = "ref"
+                }
+                instructions {
+                    compoundDecimal("compound", "decimalNs") {
+                        auxiliaryId = "decimal"
+                        optional = true
+                        mantissa {
+                            increment {
+                                initialValue = "value"
+                                dictionary = "increment"
+                                dictionaryKey {
+                                    name = "key"
+                                    namespace = "ns"
+                                }
+                            }
+                        }
+                        exponent {
+                            tail {
+                                initialValue = "value"
+                                dictionary = "tail"
+                                dictionaryKey {
+                                    name = "key"
+                                    namespace = "ns"
+                                }
+                            }
+                        }
+                    }
+                    byteVector("byte", "vectorNs") {
+                        auxiliaryId = "vector"
+                        optional = true
+                        length("length") {
+                            namespace = "vectorNs"
+                            auxiliaryId = "lengthId"
+                        }
+                        copy {
+                            initialValue = "value"
+                            dictionary = "type"
+                            dictionaryKey {
+                                name = "key"
+                                namespace = "ns"
+                            }
+                        }
+                    }
+                    templateRef {
+                        name = "templateRef"
+                        namespace = "ns"
+                    }
+                }
+            }
         )
 
         val actual = readTemplatesFromResource("allElementsPart2.xml")

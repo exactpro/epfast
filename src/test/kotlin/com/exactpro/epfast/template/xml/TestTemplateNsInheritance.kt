@@ -26,35 +26,35 @@ class TestTemplateNsInheritance {
     @Test
     fun `ensure namespace is inherited within template and templateRef`() {
         val expected = listOf(
-                template("template1", "tempNS") {
-                    instructions {
-                        templateRef {
-                            name = "templateRef"
-                            namespace = "tempNS"
-                        }
-                    }
-                },
-                template("template2", "NS") {
-                    instructions {
-                        templateRef {
-                            name = "templateRef"
-                            namespace = "NS"
-                        }
+            template("template1", "tempNS") {
+                instructions {
+                    templateRef {
+                        name = "templateRef"
+                        namespace = "tempNS"
                     }
                 }
+            },
+            template("template2", "NS") {
+                instructions {
+                    templateRef {
+                        name = "templateRef"
+                        namespace = "NS"
+                    }
+                }
+            }
         )
 
         val actual = readTemplatesFromString(
-                """
-                <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
-                    <template name="template1" ns="ns">
-                        <templateRef name="templateRef"/>
-                    </template>
-                    <template name="template2" templateNs="NS">
-                        <templateRef name="templateRef"/>
-                    </template>
-                </templates>
-                """
+            """
+            <templates templateNs="tempNS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+                <template name="template1" ns="ns">
+                    <templateRef name="templateRef"/>
+                </template>
+                <template name="template2" templateNs="NS">
+                    <templateRef name="templateRef"/>
+                </template>
+            </templates>
+            """
         )
         assertTemplateListsAreEqual(actual, expected)
     }
