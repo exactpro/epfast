@@ -185,7 +185,7 @@ class TestTemplatesWithSequence {
         }
     }
 
-    @WithByteBuf(BufferStrings.optionalSequenceBytesString)
+    @WithByteBuf(optionalSequenceBytesString)
     @Throws(IOException::class)
     fun testOptionalSequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithOptionalSequence.templates, Reference("first template", ""))
@@ -218,7 +218,7 @@ class TestTemplatesWithSequence {
         }
     }
 
-    @WithByteBuf(BufferStrings.mandatorySequenceBytesString)
+    @WithByteBuf(mandatorySequenceBytesString)
     @Throws(IOException::class)
     fun testMandatorySequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithMandatorySequence.templates, Reference("first template", ""))
@@ -251,7 +251,7 @@ class TestTemplatesWithSequence {
         }
     }
 
-    @WithByteBuf(BufferStrings.nullSequenceBytesString)
+    @WithByteBuf(nullSequenceBytesString)
     @Throws(IOException::class)
     fun testNullSequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithNullSequence.templates, Reference("first template", ""))
@@ -271,5 +271,28 @@ class TestTemplatesWithSequence {
         Assertions.assertThat(message.getField(Reference("ascii_null_2"))).isEqualTo("ABC")
         Assertions.assertThat(message.getField(Reference("ascii_1"))).isEqualTo("\u0000\u0000")
         Assertions.assertThat(message.getField(Reference("ascii_null_1"))).isEqualTo("ABC")
+    }
+
+    companion object {
+
+        const val optionalSequenceBytesString = BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.OPTIONAL_LENGTH_3 + BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
+                BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC + BufferStrings.MANDATORY_INT32_942755 +
+                BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.ASCII_ABC + BufferStrings.ASCII_ABC + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC
+
+        const val mandatorySequenceBytesString = BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.MANDATORY_LENGTH_3 + BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
+                BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC + BufferStrings.MANDATORY_INT32_942755 +
+                BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.ASCII_ABC + BufferStrings.ASCII_ABC + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC
+
+        const val nullSequenceBytesString = BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.NULL_LENGTH + BufferStrings.ASCII_ABC + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC
     }
 }

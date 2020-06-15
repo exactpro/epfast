@@ -17,18 +17,11 @@
 package com.exactpro.epfast.decoder.message
 
 object BufferStrings {
-    private const val firstT_part1 = "39 45 a3 81 " // 942755, 0
-    private const val secondT_part1 = "39 45 a3 81 00 00 80 " // 942755, 0, "\u0000\u0000"
-    private const val thirdT = "39 45 a3 81 00 00 80 41 42 c3 " // 942755, 0, "\u0000\u0000", ABC
-    private const val secondT_part2 = "41 42 c3 " // ABC
-    private const val firstT_part2 = "00 00 80 41 42 c3 " // "\u0000\u0000", ABC
-    private const val optionalSequenceLength = "84 "
-    private const val mandatorySequenceLength = "83 "
-    private const val nullLength = "80 "
-
-    const val bytesString = firstT_part1 + secondT_part1 + thirdT + secondT_part2 + firstT_part2
-    const val optionalSequenceBytesString = firstT_part1 + secondT_part1 + optionalSequenceLength + thirdT + thirdT + thirdT + secondT_part2 + firstT_part2
-    const val mandatorySequenceBytesString = firstT_part1 + secondT_part1 + mandatorySequenceLength + thirdT + thirdT + thirdT + secondT_part2 + firstT_part2
-    const val nestedGroupBytesString = firstT_part1 + secondT_part1 + firstT_part1 + thirdT + firstT_part2 + secondT_part2 + firstT_part2
-    const val nullSequenceBytesString = firstT_part1 + secondT_part1 + nullLength + secondT_part2 + firstT_part2
+    const val MANDATORY_INT32_942755 = "39 45 a3 "
+    const val OPTIONAL_INT32_0 = "81 "
+    const val ASCII_ZERO = "00 00 80 "
+    const val ASCII_ABC = "41 42 c3 "
+    const val OPTIONAL_LENGTH_3 = "84 "
+    const val MANDATORY_LENGTH_3 = "83 "
+    const val NULL_LENGTH = "80 "
 }

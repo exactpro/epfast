@@ -158,7 +158,7 @@ class TestTemplatesWithGroup {
         }
     }
 
-    @WithByteBuf(BufferStrings.bytesString)
+    @WithByteBuf(bytesString)
     @Throws(IOException::class)
     fun testGroup(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithGroup.templates, Reference("first template", ""))
@@ -186,7 +186,7 @@ class TestTemplatesWithGroup {
         Assertions.assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
     }
 
-    @WithByteBuf(BufferStrings.nestedGroupBytesString)
+    @WithByteBuf(nestedGroupBytesString)
     @Throws(IOException::class)
     fun testNestedGroup(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithNestedGroup.templates, Reference("first template", ""))
@@ -218,5 +218,18 @@ class TestTemplatesWithGroup {
         Assertions.assertThat(nestedGroup.getField(Reference("int32_null_3_nested"))).isEqualTo(0)
         Assertions.assertThat(nestedGroup.getField(Reference("ascii_3_nested"))).isEqualTo("\u0000\u0000")
         Assertions.assertThat(nestedGroup.getField(Reference("ascii_null_3_nested"))).isEqualTo("ABC")
+    }
+
+    companion object {
+        const val bytesString = BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.ASCII_ABC + BufferStrings.ASCII_ABC + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC
+
+        const val nestedGroupBytesString = BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.MANDATORY_INT32_942755 +
+                BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC + BufferStrings.ASCII_ZERO +
+                BufferStrings.ASCII_ABC + BufferStrings.ASCII_ABC + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC
     }
 }

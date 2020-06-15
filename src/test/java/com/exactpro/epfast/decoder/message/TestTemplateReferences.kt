@@ -88,7 +88,7 @@ class TestTemplateReferences {
         }
     }
 
-    @WithByteBuf(BufferStrings.bytesString)
+    @WithByteBuf(bytesString)
     @Throws(IOException::class)
     fun testTemplateRef(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templates.templates, Reference("first template", ""))
@@ -112,5 +112,12 @@ class TestTemplateReferences {
         assertThat(message.getField(Reference("ascii_null_2"))).isEqualTo("ABC")
         assertThat(message.getField(Reference("ascii_1"))).isEqualTo("\u0000\u0000")
         assertThat(message.getField(Reference("ascii_null_1"))).isEqualTo("ABC")
+    }
+
+    companion object {
+        const val bytesString = BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
+                BufferStrings.ASCII_ABC + BufferStrings.ASCII_ABC + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC
     }
 }
