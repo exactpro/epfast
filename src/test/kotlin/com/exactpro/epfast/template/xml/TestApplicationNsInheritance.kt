@@ -18,8 +18,6 @@ package com.exactpro.epfast.template.xml
 
 import com.exactpro.epfast.template.assertion.TemplatesComparison.assertTemplateListsAreEqual
 import com.exactpro.epfast.template.dsl.template
-import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromResource
-import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromString
 import org.junit.jupiter.api.Test
 
 class TestApplicationNsInheritance {
@@ -35,7 +33,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -61,7 +58,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -85,7 +81,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -111,7 +106,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates templateNs="tempNS" ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -135,7 +129,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -160,7 +153,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <template name="template" ns="ns" templateNs="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -187,7 +179,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <template name="template" ns="ns" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -209,7 +200,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -233,7 +223,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -287,7 +276,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromResource("nsInheritanceWithSequence.xml")
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -337,7 +325,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromResource("nsInheritanceWithGroup.xml")
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -358,7 +345,6 @@ class TestApplicationNsInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">

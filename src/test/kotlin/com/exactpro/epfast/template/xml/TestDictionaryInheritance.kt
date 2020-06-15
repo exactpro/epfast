@@ -18,8 +18,6 @@ package com.exactpro.epfast.template.xml
 
 import com.exactpro.epfast.template.assertion.TemplatesComparison.assertTemplateListsAreEqual
 import com.exactpro.epfast.template.dsl.template
-import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromResource
-import com.exactpro.epfast.template.xml.TemplateReader.readTemplatesFromString
 import org.junit.jupiter.api.Test
 
 class TestDictionaryInheritance {
@@ -33,7 +31,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -57,7 +54,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <template name="template" dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -79,7 +75,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates dictionary="temp" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -103,7 +98,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates dictionary="tail" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -127,7 +121,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -152,7 +145,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <template name="template" dictionary="delta" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -179,7 +171,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <template name="template" dictionary="copy" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -201,7 +192,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromString(
             """
             <templates dictionary="increment" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
@@ -273,7 +263,6 @@ class TestDictionaryInheritance {
                 }
             }
         )
-
         val actual = readTemplatesFromResource("dictInheritanceWithSequence.xml")
         assertTemplateListsAreEqual(actual, expected)
     }
@@ -311,7 +300,6 @@ class TestDictionaryInheritance {
             }
         )
         val actual = readTemplatesFromResource("dictInheritanceWithGroup.xml")
-
         assertTemplateListsAreEqual(actual, expected)
     }
 }
