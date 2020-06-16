@@ -14,31 +14,21 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.simple;
+package com.exactpro.epfast.template.xml
 
-import com.exactpro.epfast.template.Instruction;
+import java.io.IOException
+import java.io.InputStream
 
-public abstract class FieldInstruction implements com.exactpro.epfast.template.FieldInstruction, Instruction {
-    
-    private Identity fieldId = new Identity();
+internal fun readTemplatesFromResource(resourceName: String) =
+    resourceInputStream(resourceName).use(XmlTemplates::readFrom)
 
-    private boolean optional = false;
+internal fun readTemplatesFromString(xmlString: String) =
+    xmlString.reader().use(XmlTemplates::readFrom)
 
-    @Override
-    public Identity getFieldId() {
-        return fieldId;
-    }
-
-    @Override
-    public boolean isOptional() {
-        return optional;
-    }
-
-    public void setFieldId(Identity fieldId) {
-        this.fieldId = fieldId;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
+private fun resourceInputStream(resourceName: String): InputStream {
+    val theClass = ::resourceInputStream::class.java
+    val packageName = theClass.getPackage().name
+    val path = packageName.replace(Regex.fromLiteral("."), "/")
+    return theClass.classLoader.getResourceAsStream("$path/$resourceName")
+        ?: throw IOException("Resource $resourceName can not be found in package $packageName")
 }

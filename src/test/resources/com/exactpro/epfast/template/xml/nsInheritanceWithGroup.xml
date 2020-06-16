@@ -1,0 +1,32 @@
+<templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <template name="template" ns="ns">
+        <group>
+            <typeRef/>
+            <group ns="groupNS">
+                <string charset="unicode" name="string"/>
+            </group>
+            <byteVector name="vector">
+                <tail/>
+            </byteVector>
+        </group>
+        <group ns="namespace">
+            <int64 name="int"/>
+            <group>
+                <typeRef/>
+                <decimal ns="decimal">
+                    <exponent>
+                        <increment/>
+                    </exponent>
+                    <mantissa>
+                        <copy/>
+                    </mantissa>
+                </decimal>
+                <group>
+                    <uInt32 name="uInt">
+                        <delta/>
+                    </uInt32>
+                </group>
+            </group>
+        </group>
+    </template>
+</templates>

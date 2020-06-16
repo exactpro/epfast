@@ -1,0 +1,29 @@
+<templates ns="NS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <template name="template" ns="ns">
+        <sequence>
+            <length/>
+            <decimal name="decimal">
+                <exponent>
+                    <tail/>
+                </exponent>
+            </decimal>
+            <sequence ns="sequenceNS">
+                <typeRef/>
+                <string name="string">
+                    <copy/>
+                </string>
+            </sequence>
+        </sequence>
+        <sequence ns="namespace">
+            <int32 name="int"/>
+            <sequence>
+                <sequence>
+                    <typeRef/>
+                    <uInt64 name="uInt">
+                        <increment/>
+                    </uInt64>
+                </sequence>
+            </sequence>
+        </sequence>
+    </template>
+</templates>

@@ -18,37 +18,24 @@ package com.exactpro.epfast.template.xml;
 
 import com.exactpro.epfast.template.Reference;
 
-import javax.xml.bind.Unmarshaller;
+public abstract class AbstractReferenceImpl extends AbstractNamespaceProvider implements Reference {
 
-public class ReferenceImpl implements Reference {
-
-    private final String name;
-
-    private final String applicationNs;
-
-    private NamespaceProvider parentNsProvider;
-
-    public ReferenceImpl(String name, String ns) {
-        this.name = name;
-        this.applicationNs = ns;
-    }
+    private String name;
 
     @Override
     public String getName() {
         return name;
     }
 
-    @Override
-    public String getNamespace() {
-        if (applicationNs != null) {
-            return applicationNs;
-        }
-        return parentNsProvider.getApplicationNamespace();
+    protected void setName(String name) {
+        this.name = name;
     }
 
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
+    @Override
+    public String toString() {
+        return "Reference{" +
+            "name='" + name + '\'' +
+            ", namespace='" + getNamespace() + '\'' +
+            '}';
     }
 }

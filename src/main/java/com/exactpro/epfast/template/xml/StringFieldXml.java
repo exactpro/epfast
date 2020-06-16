@@ -40,12 +40,12 @@ public class StringFieldXml extends FieldInstrContent implements InstructionXml 
     }
 
     @XmlAttribute(name = "lengthName")
-    public void setName(String name) {
+    public void setLengthName(String name) {
         this.lengthFieldId.setName(name);
     }
 
     @XmlAttribute(name = "lengthId")
-    public void setId(String id) {
+    public void setLengthId(String id) {
         this.lengthFieldId.setAuxiliaryId(id);
     }
 

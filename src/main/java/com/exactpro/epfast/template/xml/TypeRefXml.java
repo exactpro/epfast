@@ -14,19 +14,24 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.dsl
+package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.simple.Template
-import com.exactpro.epfast.template.simple.Templates
+import javax.xml.bind.annotation.XmlAttribute;
 
-class TemplatesBuilder internal constructor(val templates: Templates = Templates()) {
+public class TypeRefXml extends AbstractReferenceImpl {
 
-    fun templates(block: TemplateBuilder.() -> Unit) {
-        val template = Template()
-        TemplateBuilder(template).apply(block)
-        templates.templates.add(template)
+    @Override
+    public String getNamespace() {
+        return super.getApplicationNamespace();
+    }
+
+    @XmlAttribute(name = "name")
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @XmlAttribute(name = "ns")
+    public void setNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 }
-
-fun templates(block: TemplatesBuilder.() -> Unit): Templates =
-        TemplatesBuilder(Templates()).apply(block).templates

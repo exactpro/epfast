@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright 2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,8 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.simple;
+@XmlSchema(namespace = NamespaceProvider.XML_NAMESPACE, elementFormDefault = XmlNsForm.QUALIFIED)
+package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Instruction;
-
-public abstract class FieldInstruction implements com.exactpro.epfast.template.FieldInstruction, Instruction {
-    
-    private Identity fieldId = new Identity();
-
-    private boolean optional = false;
-
-    @Override
-    public Identity getFieldId() {
-        return fieldId;
-    }
-
-    @Override
-    public boolean isOptional() {
-        return optional;
-    }
-
-    public void setFieldId(Identity fieldId) {
-        this.fieldId = fieldId;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-}
+import javax.xml.bind.annotation.XmlNsForm;
+import javax.xml.bind.annotation.XmlSchema;

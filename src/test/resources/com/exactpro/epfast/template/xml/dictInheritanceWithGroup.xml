@@ -1,0 +1,26 @@
+<templates dictionary="int" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <template name="template">
+        <group dictionary="group">
+            <group dictionary="unicode">
+                <string charset="unicode" name="string">
+                    <delta/>
+                </string>
+            </group>
+            <byteVector name="vector">
+                <copy/>
+            </byteVector>
+        </group>
+        <group>
+            <int64 name="int">
+                <increment/>
+            </int64>
+            <group dictionary="tail">
+                <group>
+                    <uInt32 name="uInt">
+                        <tail/>
+                    </uInt32>
+                </group>
+            </group>
+        </group>
+    </template>
+</templates>

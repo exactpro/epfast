@@ -16,52 +16,34 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
-import com.exactpro.epfast.template.Identity;
-import com.exactpro.epfast.template.Instruction;
-import com.exactpro.epfast.template.Sequence;
+import com.exactpro.epfast.template.*;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 public class SequenceFieldXml extends InstructionsXml implements Sequence, InstructionXml, NamespaceProvider {
 
-    private NamespaceProvider parentNsProvider;
-
     private ApplicationIdentity fieldId = new ApplicationIdentity(this);
-
-    private String localNamespace;
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
-    private Dictionary dictionary;
-
-    private ReferenceImpl typeRef;
+    private TypeRefXml typeRef;
 
     private LengthXml length;
+
+    @XmlAttribute(name = "ns")
+    public void setApplicationNamespace(String ns) {
+        super.setApplicationNamespace(ns);
+    }
+
+    @XmlAttribute(name = "dictionary")
+    public void setDictionaryName(String dictionary) {
+        super.setDictionaryName(dictionary);
+    }
 
     @Override
     public Identity getFieldId() {
         return fieldId;
-    }
-
-    @Override
-    public String getTemplateNamespace() {
-        return null;
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        if (localNamespace != null) {
-            return localNamespace;
-        }
-        return parentNsProvider.getApplicationNamespace();
-    }
-
-    @XmlAttribute(name = "namespace")
-    public void setNamespace(String namespace) {
-        this.localNamespace = namespace;
     }
 
     @XmlAttribute(name = "name")
@@ -79,22 +61,13 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         this.presence = presence;
     }
 
-    public Dictionary getDictionary() {
-        return dictionary;
-    }
-
-    @XmlElement(name = "dictionary", namespace = XML_NAMESPACE)
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
-    }
-
     @Override
-    public ReferenceImpl getTypeRef() {
+    public TypeRefXml getTypeRef() {
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
-    public void setTypeRef(ReferenceImpl typeRef) {
+    @XmlElement(name = "typeRef")
+    public void setTypeRef(TypeRefXml typeRef) {
         this.typeRef = typeRef;
     }
 
@@ -103,7 +76,7 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
         return length;
     }
 
-    @XmlElement(name = "length", namespace = XML_NAMESPACE)
+    @XmlElement(name = "length")
     public void setLength(LengthXml length) {
         this.length = length;
     }
@@ -116,12 +89,6 @@ public class SequenceFieldXml extends InstructionsXml implements Sequence, Instr
     @Override
     public Instruction toInstruction() {
         return this;
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
     }
 }
 

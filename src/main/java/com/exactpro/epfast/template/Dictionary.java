@@ -27,12 +27,12 @@ public class Dictionary {
     public static final Dictionary GLOBAL = new Dictionary("global");
 
     public static Dictionary getDictionary(String name) {
-        if (TEMPLATE.getName().equals(name)) {
-            return TEMPLATE;
+        if (GLOBAL.getName().equals(name)) {
+            return GLOBAL;
         } else if (TYPE.getName().equals(name)) {
             return TYPE;
-        } else if (GLOBAL.getName().equals(name)) {
-            return GLOBAL;
+        } else if (TEMPLATE.getName().equals(name)) {
+            return TEMPLATE;
         }
         return new Dictionary(name);
     }

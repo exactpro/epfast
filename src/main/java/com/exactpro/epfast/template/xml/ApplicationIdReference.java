@@ -14,17 +14,20 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.simple;
+package com.exactpro.epfast.template.xml;
 
-import java.util.ArrayList;
-import java.util.List;
+public class ApplicationIdReference extends AbstractReferenceImpl {
 
-public class Templates implements com.exactpro.epfast.template.Templates {
-
-    private final List<Template> templates = new ArrayList<>();
+    public ApplicationIdReference(NamespaceProvider parentNsProvider) {
+        super.setNamespaceProvider(parentNsProvider);
+    }
 
     @Override
-    public List<Template> getTemplates() {
-        return templates;
+    public String getNamespace() {
+        return super.getApplicationNamespace();
+    }
+
+    public void setNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 }

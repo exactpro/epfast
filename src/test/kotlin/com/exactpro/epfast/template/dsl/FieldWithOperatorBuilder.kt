@@ -18,9 +18,11 @@ package com.exactpro.epfast.template.dsl
 
 import com.exactpro.epfast.template.simple.FieldInstructionWithOperator
 
-abstract class FieldWithOperatorBuilder<T : FieldInstructionWithOperator>
-internal constructor(field: T, name: String, namespace: String) :
-    FieldBuilder<T>(field, name, namespace) {
+abstract class FieldWithOperatorBuilder<T : FieldInstructionWithOperator> internal constructor(
+    field: T,
+    name: String?,
+    namespace: String
+) : FieldBuilder<T>(field, name, namespace) {
 
     fun constant(block: ConstantOperatorBuilder.() -> Unit) {
         field.operator = build(block)

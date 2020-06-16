@@ -16,32 +16,29 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
-
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
 
 public class DictionaryFieldOperatorXml extends FieldOperatorXml {
 
-    private Dictionary dictionary;
+    private ApplicationIdReference dictionaryKey = new ApplicationIdReference(this);
 
-    private ReferenceImpl dictionaryKey;
-
-    public Dictionary getDictionary() {
-        return dictionary;
+    @XmlAttribute(name = "dictionary")
+    public void setDictionaryName(String dictionary) {
+        super.setDictionaryName(dictionary);
     }
 
-    @XmlElement(name = "dictionary", namespace = NamespaceProvider.XML_NAMESPACE)
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
-    }
-
-    public ReferenceImpl getDictionaryKey() {
+    public ApplicationIdReference getDictionaryKey() {
         return dictionaryKey;
     }
 
-    @XmlElement(name = "nsKey", namespace = NamespaceProvider.XML_NAMESPACE)
-    public void setDictionaryKey(ReferenceImpl dictionaryKey) {
-        this.dictionaryKey = dictionaryKey;
+    @XmlAttribute(name = "key")
+    public void setDictionaryKeyName(String key) {
+        dictionaryKey.setName(key);
+    }
+
+    @Override
+    @XmlAttribute(name = "ns")
+    public void setApplicationNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 }
-
