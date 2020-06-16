@@ -14,18 +14,20 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.dsl
+package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Reference
-import com.exactpro.epfast.template.simple.Template
-import com.exactpro.epfast.template.simple.Templates
+public class TemplateIdReference extends AbstractReferenceImpl {
 
-class TemplatesBuilder internal constructor(val templates: Templates) {
+    public TemplateIdReference(NamespaceProvider parentNsProvider) {
+        super.setNamespaceProvider(parentNsProvider);
+    }
 
-    fun template(name: String, namespace: String = Reference.DEFAULT_NAMESPACE, block: TemplateBuilder.() -> Unit) {
-        templates.templates.add(TemplateBuilder(name, namespace, Template()).apply(block).template)
+    @Override
+    public String getNamespace() {
+        return super.getTemplateNamespace();
+    }
+
+    public void setNamespace(String ns) {
+        super.setTemplateNamespace(ns);
     }
 }
-
-fun templates(block: TemplatesBuilder.() -> Unit): Templates =
-        TemplatesBuilder(Templates()).apply(block).templates

@@ -22,25 +22,23 @@ import com.exactpro.epfast.template.TemplateRef;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class TemplateRefXml implements TemplateRef, InstructionXml {
+public class TemplateRefXml extends DelegatingNamespaceProvider implements TemplateRef, InstructionXml {
 
-    private String name;
-
-    private String templateNs;
+    private TemplateIdReference templateRef = new TemplateIdReference(this);
 
     @Override
     public Reference getTemplateRef() {
-        return new ReferenceImpl(name, templateNs);
+        return templateRef;
     }
 
     @XmlAttribute(name = "name")
     public void setName(String name) {
-        this.name = name;
+        templateRef.setName(name);
     }
 
     @XmlAttribute(name = "templateNs")
     public void setTemplateNs(String templateNs) {
-        this.templateNs = templateNs;
+        templateRef.setNamespace(templateNs);
     }
 
     @Override

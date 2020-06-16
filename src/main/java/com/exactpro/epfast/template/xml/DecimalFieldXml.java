@@ -30,7 +30,7 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
         return exponent;
     }
 
-    @XmlElement(name = "exponent", namespace = XML_NAMESPACE)
+    @XmlElement(name = "exponent")
     public void setExponent(AbstractFieldXml exponent) {
         this.exponent = exponent;
     }
@@ -39,20 +39,22 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
         return mantissa;
     }
 
-    @XmlElement(name = "mantissa", namespace = XML_NAMESPACE)
+    @XmlElement(name = "mantissa")
     public void setMantissa(AbstractFieldXml mantissa) {
         this.mantissa = mantissa;
     }
 
-    class CompoundDecimal implements CompoundDecimalField {
+    private class CompoundDecimal implements CompoundDecimalField {
         @Override
         public FieldOperator getExponent() {
-            return (FieldOperator) DecimalFieldXml.this.getExponent();
+            AbstractFieldXml exponent = DecimalFieldXml.this.getExponent();
+            return exponent == null ? null : exponent.getOperator();
         }
 
         @Override
         public FieldOperator getMantissa() {
-            return (FieldOperator) DecimalFieldXml.this.getMantissa();
+            AbstractFieldXml mantissa = DecimalFieldXml.this.getMantissa();
+            return mantissa == null ? null : mantissa.getOperator();
         }
 
         @Override
@@ -66,7 +68,7 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
         }
     }
 
-    class SimpleDecimal implements SimpleDecimalField {
+    private class SimpleDecimal implements SimpleDecimalField {
         @Override
         public FieldOperator getOperator() {
             return DecimalFieldXml.this.getOperator();
@@ -85,7 +87,7 @@ public class DecimalFieldXml extends FieldInstrContent implements InstructionXml
 
     @Override
     public Instruction toInstruction() {
-        if (mantissa == null) {
+        if (mantissa == null && exponent == null) {
             return new SimpleDecimal();
         }
         return new CompoundDecimal();

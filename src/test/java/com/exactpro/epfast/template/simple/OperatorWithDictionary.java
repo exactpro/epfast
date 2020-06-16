@@ -20,9 +20,9 @@ import com.exactpro.epfast.template.Dictionary;
 
 public abstract class OperatorWithDictionary extends FieldOperator {
 
-    private Reference dictionaryKey;
+    private Reference dictionaryKey = new Reference();
 
-    private Dictionary dictionary;
+    private Dictionary dictionary = Dictionary.GLOBAL;
 
     public Dictionary getDictionary() {
         return dictionary;

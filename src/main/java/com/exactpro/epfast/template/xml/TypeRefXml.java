@@ -14,13 +14,24 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.dsl
+package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.simple.Reference
+import javax.xml.bind.annotation.XmlAttribute;
 
-open class ReferenceBuilder internal constructor(val reference: Reference = Reference()) {
+public class TypeRefXml extends AbstractReferenceImpl {
 
-    var name: String? by javaProperty(reference::getName, reference::setName)
+    @Override
+    public String getNamespace() {
+        return super.getApplicationNamespace();
+    }
 
-    var namespace: String? by javaProperty(reference::getNamespace, reference::setNamespace)
+    @XmlAttribute(name = "name")
+    public void setName(String name) {
+        super.setName(name);
+    }
+
+    @XmlAttribute(name = "ns")
+    public void setNamespace(String ns) {
+        super.setApplicationNamespace(ns);
+    }
 }

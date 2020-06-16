@@ -16,20 +16,13 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.FieldInstruction;
-import com.exactpro.epfast.template.Identity;
-import com.exactpro.epfast.template.Instruction;
+import com.exactpro.epfast.template.*;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 
-public class FieldInstrContent extends AbstractFieldXml implements FieldInstruction, NamespaceProvider {
-
-    private NamespaceProvider parentNsProvider;
+public class FieldInstrContent extends AbstractFieldXml implements FieldInstruction {
 
     private ApplicationIdentity fieldId = new ApplicationIdentity(this);
-
-    private String localNamespace;
 
     private PresenceXml presence = PresenceXml.MANDATORY;
 
@@ -38,22 +31,9 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
         return fieldId;
     }
 
-    @Override
-    public String getTemplateNamespace() {
-        return null;
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        if (localNamespace != null) {
-            return localNamespace;
-        }
-        return parentNsProvider.getApplicationNamespace();
-    }
-
-    @XmlAttribute(name = "namespace")
-    public void setNamespace(String namespace) {
-        this.localNamespace = namespace;
+    @XmlAttribute(name = "ns")
+    public void setApplicationNamespace(String namespace) {
+        super.setApplicationNamespace(namespace);
     }
 
     @XmlAttribute(name = "name")
@@ -78,11 +58,5 @@ public class FieldInstrContent extends AbstractFieldXml implements FieldInstruct
 
     public Instruction toInstruction() {
         return this;
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
     }
 }

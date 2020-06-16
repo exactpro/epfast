@@ -14,31 +14,24 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.template.simple;
+package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Instruction;
+import com.exactpro.epfast.template.Template;
 
-public abstract class FieldInstruction implements com.exactpro.epfast.template.FieldInstruction, Instruction {
-    
-    private Identity fieldId = new Identity();
+import javax.xml.bind.JAXBException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.List;
 
-    private boolean optional = false;
-
-    @Override
-    public Identity getFieldId() {
-        return fieldId;
+public final class XmlTemplates {
+    public static List<? extends Template> readFrom(InputStream inputStream) throws JAXBException {
+        return new XmlTemplateUnmarshaller().unmarshall(inputStream);
     }
 
-    @Override
-    public boolean isOptional() {
-        return optional;
+    public static List<? extends Template> readFrom(Reader reader) throws JAXBException {
+        return new XmlTemplateUnmarshaller().unmarshall(reader);
     }
 
-    public void setFieldId(Identity fieldId) {
-        this.fieldId = fieldId;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
+    private XmlTemplates() {
     }
 }

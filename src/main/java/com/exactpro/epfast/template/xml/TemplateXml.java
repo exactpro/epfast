@@ -16,30 +16,19 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
 import com.exactpro.epfast.template.Identity;
-import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
 
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "template", namespace = NamespaceProvider.XML_NAMESPACE)
+@XmlRootElement(name = "template")
 public class TemplateXml extends InstructionsXml implements Template, NamespaceProvider {
-
-    private NamespaceProvider parentNsProvider;
 
     private TemplateIdentity templateId = new TemplateIdentity(this);
 
-    private String templateNs;
-
-    private String applicationNs;
-
-    private Dictionary dictionary;
-
-    private ReferenceImpl typeRef;
+    private TypeRefXml typeRef;
 
     @Override
     public Identity getTemplateId() {
@@ -57,56 +46,27 @@ public class TemplateXml extends InstructionsXml implements Template, NamespaceP
     }
 
     @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        this.templateNs = templateNs;
-    }
-
-    @Override
-    public String getTemplateNamespace() {
-        if (templateNs != null) {
-            return templateNs;
-        }
-        return parentNsProvider.getTemplateNamespace();
-    }
-
-    @Override
-    public String getApplicationNamespace() {
-        if (applicationNs != null) {
-            return applicationNs;
-        }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+    public void setTemplateNamespace(String templateNs) {
+        super.setTemplateNamespace(templateNs);
     }
 
     @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        this.applicationNs = ns;
+    public void setApplicationNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 
-    public Dictionary getDictionary() {
-        return dictionary;
-    }
-
-    @XmlElement(name = "dictionary", namespace = XML_NAMESPACE)
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
+    @XmlAttribute(name = "dictionary")
+    public void setDictionaryName(String dictionary) {
+        super.setDictionaryName(dictionary);
     }
 
     @Override
-    public ReferenceImpl getTypeRef() {
+    public TypeRefXml getTypeRef() {
         return typeRef;
     }
 
-    @XmlElement(name = "typeRef", namespace = XML_NAMESPACE)
-    public void setTypeRef(ReferenceImpl typeRef) {
+    @XmlElement(name = "typeRef")
+    public void setTypeRef(TypeRefXml typeRef) {
         this.typeRef = typeRef;
-    }
-
-    private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
-        if (parent instanceof NamespaceProvider) {
-            parentNsProvider = (NamespaceProvider) parent;
-        }
     }
 }

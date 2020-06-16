@@ -16,78 +16,39 @@
 
 package com.exactpro.epfast.template.xml;
 
-import com.exactpro.epfast.template.Dictionary;
-import com.exactpro.epfast.template.Reference;
 import com.exactpro.epfast.template.Template;
-import com.exactpro.epfast.template.Templates;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
+import java.util.ArrayList;
 
-@XmlRootElement(name = "templates", namespace = NamespaceProvider.XML_NAMESPACE)
-public class TemplatesXml implements Templates, NamespaceProvider {
+@XmlRootElement(name = "templates")
+public class TemplatesXml extends AbstractNamespaceProvider {
 
-    private NamespaceProvider parentNsProvider;
+    private ArrayList<Template> templates = new ArrayList<>();
 
-    private String applicationNs;
-
-    private String templateNs;
-
-    private Dictionary dictionary;
-
-    private List<Template> templates;
-
-    @Override
-    public String getApplicationNamespace() {
-        if (applicationNs != null) {
-            return applicationNs;
-        }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getApplicationNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
-    }
-
-    @Override
-    public String getTemplateNamespace() {
-        if (templateNs != null) {
-            return templateNs;
-        }
-        if (parentNsProvider != null) {
-            return parentNsProvider.getTemplateNamespace();
-        }
-        return Reference.DEFAULT_NAMESPACE;
+    @XmlAttribute(name = "templateNs")
+    public void setTemplateNamespace(String templateNs) {
+        super.setTemplateNamespace(templateNs);
     }
 
     @XmlAttribute(name = "ns")
-    public void setApplicationNs(String ns) {
-        this.applicationNs = ns;
+    public void setApplicationNamespace(String ns) {
+        super.setApplicationNamespace(ns);
     }
 
-    @XmlAttribute(name = "templateNs")
-    public void setTemplateNs(String templateNs) {
-        this.templateNs = templateNs;
+    @XmlAttribute(name = "dictionary")
+    public void setDictionaryName(String dictionary) {
+        super.setDictionaryName(dictionary);
     }
 
-    public Dictionary getDictionary() {
-        return dictionary;
-    }
-
-    @XmlElement(name = "dictionary", namespace = XML_NAMESPACE)
-    public void setDictionary(Dictionary dictionary) {
-        this.dictionary = dictionary;
-    }
-
-    @Override
-    public List<Template> getTemplates() {
+    public ArrayList<Template> getTemplates() {
         return templates;
     }
 
-    @XmlElement(name = "template", type = TemplateXml.class, namespace = XML_NAMESPACE)
-    public void setTemplates(List<Template> templates) {
+    @XmlElement(name = "template", type = TemplateXml.class)
+    public void setTemplates(ArrayList<Template> templates) {
         this.templates = templates;
     }
 }
-

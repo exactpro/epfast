@@ -1,0 +1,32 @@
+<templates templateNs="TNS" ns="ANS" xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
+    <template name="template1" ns="ns" id="tempId" templateNs="templateNs1">
+        <typeRef name="type" ns="ref"/>
+        <string charset="ascii" name="ascii" ns="stringNs" id="string" presence="optional">
+            <default value="value"/>
+        </string>
+        <string charset="unicode" name="unicode" ns="stringNs" id="string" presence="mandatory"
+                lengthName="length" lengthId="lengthId">
+            <copy value="value" dictionary="copy" key="key" ns="ns"/>
+        </string>
+        <decimal name="simple" ns="decimalNs" id="decimal" presence="mandatory">
+            <delta value="value" dictionary="delta" key="key" ns="ns"/>
+        </decimal>
+    </template>
+
+    <template name="template2" ns="ns" id="tempId" templateNs="templateNs2">
+        <typeRef name="type" ns="ref"/>
+        <decimal name="compound" ns="decimalNs" id="decimal" presence="optional">
+            <mantissa>
+                <increment value="value" dictionary="increment" key="key" ns="ns"/>
+            </mantissa>
+            <exponent>
+                <tail value="value" dictionary="tail" key="key" ns="ns"/>
+            </exponent>
+        </decimal>
+        <byteVector name="byte" ns="vectorNs" id="vector" presence="optional"
+                    lengthName="length" lengthId="lengthId">
+            <copy value="value" dictionary="type" key="key" ns="ns"/>
+        </byteVector>
+        <templateRef name="templateRef" templateNs="ns"/>
+    </template>
+</templates>

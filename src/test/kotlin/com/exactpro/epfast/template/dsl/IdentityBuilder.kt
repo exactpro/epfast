@@ -17,8 +17,18 @@
 package com.exactpro.epfast.template.dsl
 
 import com.exactpro.epfast.template.simple.Identity
+import com.exactpro.epfast.template.simple.Reference
 
-class IdentityBuilder internal constructor(val identity: Identity = Identity()) : ReferenceBuilder(identity) {
+abstract class AbstractIdentityBuilder<T : Reference> internal constructor(
+    internal val value: T
+) {
+    var name: String by javaProperty(value::getName, value::setName)
 
-    var auxiliaryId: String? by javaProperty(identity::getAuxiliaryId, identity::setAuxiliaryId)
+    var namespace: String by javaProperty(value::getNamespace, value::setNamespace)
+}
+
+class ReferenceBuilder internal constructor() : AbstractIdentityBuilder<Reference>(Reference())
+
+class IdentityBuilder internal constructor() : AbstractIdentityBuilder<Identity>(Identity()) {
+    var auxiliaryId: String by javaProperty(value::getAuxiliaryId, value::setAuxiliaryId)
 }

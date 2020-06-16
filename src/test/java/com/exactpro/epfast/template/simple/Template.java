@@ -51,5 +51,4 @@ public class Template implements com.exactpro.epfast.template.Template {
     public void setTypeRef(Reference typeRef) {
         this.typeRef = typeRef;
     }
-
 }

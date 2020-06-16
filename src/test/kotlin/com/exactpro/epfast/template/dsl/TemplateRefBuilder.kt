@@ -18,12 +18,14 @@ package com.exactpro.epfast.template.dsl
 
 import com.exactpro.epfast.template.simple.TemplateRef
 
-class TemplateRefBuilder internal constructor(private val instruction: TemplateRef = TemplateRef()) {
+class TemplateRefBuilder internal constructor() {
+    private val instruction: TemplateRef = TemplateRef()
+
     internal fun build(block: ReferenceBuilder.() -> Unit): TemplateRef {
-        instruction.templateRef = ReferenceBuilder().apply(block).reference
+        instruction.templateRef = ReferenceBuilder().apply(block).value
         return instruction
     }
 }
 
-internal fun build(block: ReferenceBuilder.() -> Unit): TemplateRef =
-        TemplateRefBuilder().build(block)
+internal fun build(block: ReferenceBuilder.() -> Unit) =
+    TemplateRefBuilder().build(block)

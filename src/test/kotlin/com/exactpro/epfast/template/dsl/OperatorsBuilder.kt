@@ -19,8 +19,7 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.simple.FieldOperator
 
 class OperatorsBuilder {
-
-    var operator: FieldOperator? = null
+    internal var operator: FieldOperator? = null
 
     fun constant(block: ConstantOperatorBuilder.() -> Unit) {
         operator = build(block)

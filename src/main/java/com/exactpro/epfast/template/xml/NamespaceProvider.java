@@ -16,6 +16,8 @@
 
 package com.exactpro.epfast.template.xml;
 
+import com.exactpro.epfast.template.Dictionary;
+
 public interface NamespaceProvider {
 
     String XML_NAMESPACE = "http://www.fixprotocol.org/ns/fast/td/1.1";
@@ -24,4 +26,5 @@ public interface NamespaceProvider {
 
     String getApplicationNamespace();
 
+    Dictionary getDictionary();
 }

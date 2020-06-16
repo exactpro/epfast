@@ -24,11 +24,20 @@ import java.util.Objects;
 public class IdentitiesEquality {
 
     static boolean areEqualReferences(Reference actual, Reference expected) {
-        return actual == expected || (Objects.equals(actual.getName(), expected.getName()) &&
-            Objects.equals(actual.getNamespace(), expected.getNamespace()));
+        if (actual == expected) {
+            return true;
+        }
+        if ((actual == null) || (expected == null)) {
+            return false;
+        }
+        return Objects.equals(actual.getName(), expected.getName())
+                && Objects.equals(actual.getNamespace(), expected.getNamespace());
     }
 
     static boolean areEqualIdentities(Identity actual, Identity expected) {
+        if (actual == expected) {
+            return true;
+        }
         return areEqualReferences(actual, expected) &&
             Objects.equals(actual.getAuxiliaryId(), expected.getAuxiliaryId());
     }
