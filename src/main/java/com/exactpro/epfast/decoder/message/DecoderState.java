@@ -46,7 +46,7 @@ public class DecoderState {
 
     public int loopIndex;
 
-    public int loopLimit;
+    public long loopLimit;
 
     public final UnionRegister register = new UnionRegister();
 
@@ -86,6 +86,10 @@ public class DecoderState {
 
         public Integer optionalInt32Value;
 
+        public Long optionalUInt32Value;
+
+        public long mandatoryUInt32Value;
+
         public String stringValue;
 
         public long mandatoryInt64Value;
@@ -107,7 +111,7 @@ public class DecoderState {
 
         private final int nextCommandIndex;
 
-        private final int loopLimit;
+        private final long loopLimit;
 
         private final int loopIndex;
 

@@ -74,10 +74,10 @@ public class FastCompiler {
 
     private void compileSequence(Sequence sequence) {
         if (sequence.isOptional()) {
-            commandSet.add(new ReadNullableInt32());
+            commandSet.add(new ReadNullableUInt32());
             commandSet.add(new SetNullableLengthField());
         } else {
-            commandSet.add(new ReadMandatoryInt32());
+            commandSet.add(new ReadMandatoryUInt32());
             commandSet.add(new SetMandatoryLengthField());
         }
         commandSet.add(new InitIndexedProperty(sequence.getFieldId()));

@@ -14,14 +14,21 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message
+package com.exactpro.epfast.decoder.message.commands;
 
-object BufferStrings {
-    const val MANDATORY_INT32_942755 = "39 45 a3 "
-    const val OPTIONAL_INT32_0 = "81 "
-    const val ASCII_ZERO = "00 00 80 "
-    const val ASCII_ABC = "41 42 c3 "
-    const val OPTIONAL_LENGTH_3 = "84 "
-    const val MANDATORY_LENGTH_3 = "83 "
-    const val NULL_LENGTH = "80 "
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.integer.DecodeMandatoryUInt32;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+
+public class ReadMandatoryUInt32 extends PrimitiveInstruction<DecodeMandatoryUInt32> {
+
+    public ReadMandatoryUInt32() {
+        super(new DecodeMandatoryUInt32());
+    }
+
+    @Override
+    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
+        decoderState.register.mandatoryUInt32Value = fieldDecoder.getValue();
+    }
 }

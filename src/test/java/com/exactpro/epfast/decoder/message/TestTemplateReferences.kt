@@ -115,9 +115,9 @@ class TestTemplateReferences {
     }
 
     companion object {
-        const val bytesString = BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 +
-                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
-                BufferStrings.MANDATORY_INT32_942755 + BufferStrings.OPTIONAL_INT32_0 + BufferStrings.ASCII_ZERO +
-                BufferStrings.ASCII_ABC + BufferStrings.ASCII_ABC + BufferStrings.ASCII_ZERO + BufferStrings.ASCII_ABC
+        const val bytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
+                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
+                FastSnippets.ABC + FastSnippets.ABC + FastSnippets.ASCII_ZERO + FastSnippets.ABC
     }
 }

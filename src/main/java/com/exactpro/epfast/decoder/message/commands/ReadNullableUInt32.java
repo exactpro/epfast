@@ -16,28 +16,17 @@
 
 package com.exactpro.epfast.decoder.message.commands;
 
-import com.exactpro.epfast.decoder.IMessage;
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.integer.DecodeNullableUInt32;
 import com.exactpro.epfast.decoder.message.DecoderState;
-import com.exactpro.epfast.decoder.message.DecoderCommand;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
-public class InitIndexedProperty implements DecoderCommand {
-
-    private final Reference propertyId;
-
-    public InitIndexedProperty(Reference propertyId) {
-        this.propertyId = propertyId;
+public class ReadNullableUInt32 extends PrimitiveInstruction<DecodeNullableUInt32> {
+    public ReadNullableUInt32() {
+        super(new DecodeNullableUInt32());
     }
 
-    @Override
-    public void executeOn(DecoderState decoderState) {
-        if (decoderState.loopLimit <= Integer.MAX_VALUE) {
-            IMessage[] array = (decoderState.loopLimit < 0) ? null : new IMessage[(int) decoderState.loopLimit];
-            decoderState.activeMessage.setField(propertyId, array);
-        } else {
-            //TODO
-        }
-        decoderState.loopIndex = 0;
-        decoderState.nextCommandIndex++;
+    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
+        decoderState.register.optionalUInt32Value = fieldDecoder.getValue();
     }
 }

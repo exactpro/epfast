@@ -14,21 +14,14 @@
  * limitations under the License.
  ******************************************************************************/
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message
 
-import com.exactpro.epfast.decoder.message.DecoderState;
-import com.exactpro.epfast.decoder.message.DecoderCommand;
-
-public class SetNullableLengthField implements DecoderCommand {
-
-    @Override
-    public void executeOn(DecoderState decoderState) {
-        Long lengthValue = decoderState.register.optionalUInt32Value;
-        if (lengthValue != null) {
-            decoderState.loopLimit = lengthValue;
-        } else {
-            decoderState.loopLimit = -1;
-        }
-        decoderState.nextCommandIndex++;
-    }
+object FastSnippets {
+    const val MANDATORY_INT32_942755 = "39 45 a3 "
+    const val OPTIONAL_INT32_0 = "81 "
+    const val ASCII_ZERO = "00 00 80 "
+    const val ABC = "41 42 c3 "
+    const val OPTIONAL_UINT32_3 = "84 "
+    const val MANDATORY_UINT32_3 = "83 "
+    const val OPTIONAL_UINT32_NULL = "80 "
 }
