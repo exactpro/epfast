@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder.message
 
-import com.exactpro.epfast.template.dsl.templates
+import com.exactpro.epfast.template.dsl.template
 import com.exactpro.epfast.template.simple.Reference
 import com.exactpro.junit5.WithByteBuf
 import io.netty.buffer.ByteBuf
@@ -25,7 +25,7 @@ import org.assertj.core.api.Assertions.assertThat
 
 class TestTemplateReferences {
 
-    private val templates = templates {
+    private val templates = listOf(
         template("first template") {
             typeRef {
                 name = "fooBar"
@@ -33,65 +33,65 @@ class TestTemplateReferences {
             auxiliaryId = "id_1"
             instructions {
                 int32("int32_1") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_1") {
-                    isOptional = true
+                    optional = true
                 }
                 templateRef {
                     name = "second template"
                 }
                 asciiString("ascii_1") {
-                    isOptional = false
+                    optional = false
                 }
                 asciiString("ascii_null_1") {
-                    isOptional = true
+                    optional = true
                 }
             }
-        }
+        },
         template("second template") {
             auxiliaryId = "id_2"
             instructions {
                 int32("int32_2") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_2") {
-                    isOptional = true
+                    optional = true
                 }
                 asciiString("ascii_2") {
-                    isOptional = false
+                    optional = false
                 }
                 templateRef {
                     name = "third template"
                 }
                 asciiString("ascii_null_2") {
-                    isOptional = true
+                    optional = true
                 }
             }
-        }
+        },
         template("third template") {
             auxiliaryId = "id_3"
             instructions {
                 int32("int32_3") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_3") {
-                    isOptional = true
+                    optional = true
                 }
                 asciiString("ascii_3") {
-                    isOptional = false
+                    optional = false
                 }
                 asciiString("ascii_null_3") {
-                    isOptional = true
+                    optional = true
                 }
             }
         }
-    }
+    )
 
     @WithByteBuf(bytesString)
     @Throws(IOException::class)
     fun testTemplateRef(buffers: Collection<ByteBuf>) {
-        val handler = FastDecoder(templates.templates, Reference("first template", ""))
+        val handler = FastDecoder(templates, Reference("first template", ""))
 
         val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {

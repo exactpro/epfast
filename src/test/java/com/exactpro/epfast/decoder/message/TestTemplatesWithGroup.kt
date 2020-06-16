@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder.message
 
-import com.exactpro.epfast.template.dsl.templates
+import com.exactpro.epfast.template.dsl.template
 import com.exactpro.epfast.template.simple.Reference
 import com.exactpro.junit5.WithByteBuf
 import io.netty.buffer.ByteBuf
@@ -24,7 +24,7 @@ import java.io.IOException
 import org.assertj.core.api.Assertions
 
 class TestTemplatesWithGroup {
-    private val templatesWithGroup = templates {
+    private val templatesWithGroup = listOf(
         template("first template") {
             typeRef {
                 name = "fooBar"
@@ -32,58 +32,58 @@ class TestTemplatesWithGroup {
             auxiliaryId = "id_1"
             instructions {
                 int32("int32_1") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_1") {
-                    isOptional = true
+                    optional = true
                 }
                 templateRef {
                     name = "second template"
                 }
                 asciiString("ascii_1") {
-                    isOptional = false
+                    optional = false
                 }
                 asciiString("ascii_null_1") {
-                    isOptional = true
+                    optional = true
                 }
             }
-        }
+        },
         template("second template") {
             auxiliaryId = "id_2"
             instructions {
                 int32("int32_2") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_2") {
-                    isOptional = true
+                    optional = true
                 }
                 asciiString("ascii_2") {
-                    isOptional = false
+                    optional = false
                 }
                 group("group") {
                     instructions {
                         int32("int32_3") {
-                            isOptional = false
+                            optional = false
                         }
                         int32("int32_null_3") {
-                            isOptional = true
+                            optional = true
                         }
                         asciiString("ascii_3") {
-                            isOptional = false
+                            optional = false
                         }
                         asciiString("ascii_null_3") {
-                            isOptional = true
+                            optional = true
                         }
                     }
                 }
                 asciiString("ascii_null_2") {
-                    isOptional = true
+                    optional = true
                 }
             }
         }
-    }
+    )
 
-    private val templatesWithNestedGroup = templates {
+    private val templatesWithNestedGroup = listOf(
         template("first template") {
             typeRef {
                 name = "fooBar"
@@ -91,77 +91,77 @@ class TestTemplatesWithGroup {
             auxiliaryId = "id_1"
             instructions {
                 int32("int32_1") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_1") {
-                    isOptional = true
+                    optional = true
                 }
                 templateRef {
                     name = "second template"
                 }
                 asciiString("ascii_1") {
-                    isOptional = false
+                    optional = false
                 }
                 asciiString("ascii_null_1") {
-                    isOptional = true
+                    optional = true
                 }
             }
-        }
+        },
         template("second template") {
             auxiliaryId = "id_2"
             instructions {
                 int32("int32_2") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_2") {
-                    isOptional = true
+                    optional = true
                 }
                 asciiString("ascii_2") {
-                    isOptional = false
+                    optional = false
                 }
                 group("group") {
                     instructions {
                         int32("int32_3") {
-                            isOptional = false
+                            optional = false
                         }
                         int32("int32_null_3") {
-                            isOptional = true
+                            optional = true
                         }
                         group("nested group") {
                             instructions {
                                 int32("int32_3_nested") {
-                                    isOptional = false
+                                    optional = false
                                 }
                                 int32("int32_null_3_nested") {
-                                    isOptional = true
+                                    optional = true
                                 }
                                 asciiString("ascii_3_nested") {
-                                    isOptional = false
+                                    optional = false
                                 }
                                 asciiString("ascii_null_3_nested") {
-                                    isOptional = true
+                                    optional = true
                                 }
                             }
                         }
                         asciiString("ascii_3") {
-                            isOptional = false
+                            optional = false
                         }
                         asciiString("ascii_null_3") {
-                            isOptional = true
+                            optional = true
                         }
                     }
                 }
                 asciiString("ascii_null_2") {
-                    isOptional = true
+                    optional = true
                 }
             }
         }
-    }
+    )
 
     @WithByteBuf(bytesString)
     @Throws(IOException::class)
     fun testGroup(buffers: Collection<ByteBuf>) {
-        val handler = FastDecoder(templatesWithGroup.templates, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithGroup, Reference("first template", ""))
 
         val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
@@ -189,7 +189,7 @@ class TestTemplatesWithGroup {
     @WithByteBuf(nestedGroupBytesString)
     @Throws(IOException::class)
     fun testNestedGroup(buffers: Collection<ByteBuf>) {
-        val handler = FastDecoder(templatesWithNestedGroup.templates, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithNestedGroup, Reference("first template", ""))
 
         val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {

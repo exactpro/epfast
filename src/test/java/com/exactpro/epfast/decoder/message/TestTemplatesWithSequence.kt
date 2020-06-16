@@ -1,7 +1,7 @@
 package com.exactpro.epfast.decoder.message
 
 import com.exactpro.epfast.decoder.IMessage
-import com.exactpro.epfast.template.dsl.templates
+import com.exactpro.epfast.template.dsl.template
 import com.exactpro.epfast.template.simple.Reference
 import com.exactpro.junit5.WithByteBuf
 import io.netty.buffer.ByteBuf
@@ -10,7 +10,7 @@ import org.assertj.core.api.Assertions
 
 class TestTemplatesWithSequence {
 
-    private val templatesWithOptionalSequence = templates {
+    private val templatesWithOptionalSequence = listOf(
         template("first template") {
             typeRef {
                 name = "fooBar"
@@ -18,62 +18,62 @@ class TestTemplatesWithSequence {
             auxiliaryId = "id_1"
             instructions {
                 int32("int32_1") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_1") {
-                    isOptional = true
+                    optional = true
                 }
                 templateRef {
                     name = "second template"
                 }
                 asciiString("ascii_1") {
-                    isOptional = false
+                    optional = false
                 }
                 asciiString("ascii_null_1") {
-                    isOptional = true
+                    optional = true
                 }
             }
-        }
+        },
         template("second template") {
             auxiliaryId = "id_2"
             instructions {
                 int32("int32_2") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_2") {
-                    isOptional = true
+                    optional = true
                 }
                 asciiString("ascii_2") {
-                    isOptional = false
+                    optional = false
                 }
                 sequence("sequence") {
-                    isOptional = true
+                    optional = true
                     length {
                         name = "length"
                     }
                     instructions {
                         int32("int32_3") {
-                            isOptional = false
+                            optional = false
                         }
                         int32("int32_null_3") {
-                            isOptional = true
+                            optional = true
                         }
                         asciiString("ascii_3") {
-                            isOptional = false
+                            optional = false
                         }
                         asciiString("ascii_null_3") {
-                            isOptional = true
+                            optional = true
                         }
                     }
                 }
                 asciiString("ascii_null_2") {
-                    isOptional = true
+                    optional = true
                 }
             }
         }
-    }
+    )
 
-    private val templatesWithMandatorySequence = templates {
+    private val templatesWithMandatorySequence = listOf(
         template("first template") {
             typeRef {
                 name = "fooBar"
@@ -81,62 +81,62 @@ class TestTemplatesWithSequence {
             auxiliaryId = "id_1"
             instructions {
                 int32("int32_1") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_1") {
-                    isOptional = true
+                    optional = true
                 }
                 templateRef {
                     name = "second template"
                 }
                 asciiString("ascii_1") {
-                    isOptional = false
+                    optional = false
                 }
                 asciiString("ascii_null_1") {
-                    isOptional = true
+                    optional = true
                 }
             }
-        }
+        },
         template("second template") {
             auxiliaryId = "id_2"
             instructions {
                 int32("int32_2") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_2") {
-                    isOptional = true
+                    optional = true
                 }
                 asciiString("ascii_2") {
-                    isOptional = false
+                    optional = false
                 }
                 sequence("sequence") {
-                    isOptional = false
+                    optional = false
                     length {
                         name = "length"
                     }
                     instructions {
                         int32("int32_3") {
-                            isOptional = false
+                            optional = false
                         }
                         int32("int32_null_3") {
-                            isOptional = true
+                            optional = true
                         }
                         asciiString("ascii_3") {
-                            isOptional = false
+                            optional = false
                         }
                         asciiString("ascii_null_3") {
-                            isOptional = true
+                            optional = true
                         }
                     }
                 }
                 asciiString("ascii_null_2") {
-                    isOptional = true
+                    optional = true
                 }
             }
         }
-    }
+    )
 
-    private val templatesWithNullSequence = templates {
+    private val templatesWithNullSequence = listOf(
         template("first template") {
             typeRef {
                 name = "fooBar"
@@ -144,51 +144,51 @@ class TestTemplatesWithSequence {
             auxiliaryId = "id_1"
             instructions {
                 int32("int32_1") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_1") {
-                    isOptional = true
+                    optional = true
                 }
                 templateRef {
                     name = "second template"
                 }
                 asciiString("ascii_1") {
-                    isOptional = false
+                    optional = false
                 }
                 asciiString("ascii_null_1") {
-                    isOptional = true
+                    optional = true
                 }
             }
-        }
+        },
         template("second template") {
             auxiliaryId = "id_2"
             instructions {
                 int32("int32_2") {
-                    isOptional = false
+                    optional = false
                 }
                 int32("int32_null_2") {
-                    isOptional = true
+                    optional = true
                 }
                 asciiString("ascii_2") {
-                    isOptional = false
+                    optional = false
                 }
                 sequence("sequence") {
-                    isOptional = true
+                    optional = true
                     length {
                         name = "length"
                     }
                 }
                 asciiString("ascii_null_2") {
-                    isOptional = true
+                    optional = true
                 }
             }
         }
-    }
+    )
 
     @WithByteBuf(optionalSequenceBytesString)
     @Throws(IOException::class)
     fun testOptionalSequence(buffers: Collection<ByteBuf>) {
-        val handler = FastDecoder(templatesWithOptionalSequence.templates, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithOptionalSequence, Reference("first template", ""))
 
         val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
@@ -221,7 +221,7 @@ class TestTemplatesWithSequence {
     @WithByteBuf(mandatorySequenceBytesString)
     @Throws(IOException::class)
     fun testMandatorySequence(buffers: Collection<ByteBuf>) {
-        val handler = FastDecoder(templatesWithMandatorySequence.templates, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithMandatorySequence, Reference("first template", ""))
 
         val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
@@ -254,7 +254,7 @@ class TestTemplatesWithSequence {
     @WithByteBuf(nullSequenceBytesString)
     @Throws(IOException::class)
     fun testNullSequence(buffers: Collection<ByteBuf>) {
-        val handler = FastDecoder(templatesWithNullSequence.templates, Reference("first template", ""))
+        val handler = FastDecoder(templatesWithNullSequence, Reference("first template", ""))
 
         val messages: MutableList<Any?> = mutableListOf()
         for (buffer in buffers) {
