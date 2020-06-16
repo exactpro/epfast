@@ -224,12 +224,12 @@ class TestTemplatesWithGroup {
         const val bytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
                 FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
                 FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.ABC + FastSnippets.ABC + FastSnippets.ASCII_ZERO + FastSnippets.ABC
+                FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
 
         const val nestedGroupBytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
                 FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
                 FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.MANDATORY_INT32_942755 +
-                FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ABC + FastSnippets.ASCII_ZERO +
-                FastSnippets.ABC + FastSnippets.ABC + FastSnippets.ASCII_ZERO + FastSnippets.ABC
+                FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO +
+                FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
     }
 }

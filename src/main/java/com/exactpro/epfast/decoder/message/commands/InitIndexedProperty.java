@@ -35,7 +35,7 @@ public class InitIndexedProperty implements DecoderCommand {
             IMessage[] array = (decoderState.loopLimit < 0) ? null : new IMessage[(int) decoderState.loopLimit];
             decoderState.activeMessage.setField(propertyId, array);
         } else {
-            //TODO
+            throw new RuntimeException();
         }
         decoderState.loopIndex = 0;
         decoderState.nextCommandIndex++;
