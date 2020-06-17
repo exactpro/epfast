@@ -19,7 +19,7 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.simple.Sequence
 
 class SequenceBuilder internal constructor(
-    name: String?,
+    name: String,
     namespace: String
 ) : FieldBuilder<Sequence>(Sequence(), name, namespace) {
 
@@ -38,5 +38,5 @@ class SequenceBuilder internal constructor(
     }
 }
 
-internal fun build(name: String?, namespace: String, block: SequenceBuilder.() -> Unit) =
+internal fun build(name: String, namespace: String, block: SequenceBuilder.() -> Unit) =
     SequenceBuilder(name, namespace).build(block)

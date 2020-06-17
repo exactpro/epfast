@@ -240,13 +240,13 @@ class TestApplicationNsInheritance {
         val expected = listOf(
             template("template") {
                 instructions {
-                    sequence(null, "ns") {
+                    sequence("sequence", "ns") {
                         length { namespace = "ns" }
                         instructions {
                             compoundDecimal("decimal", "ns") {
                                 exponent { tail { dictionaryKey { namespace = "ns" } } }
                             }
-                            sequence(null, "sequenceNS") {
+                            sequence("sequence", "sequenceNS") {
                                 typeRef { namespace = "sequenceNS" }
                                 instructions {
                                     asciiString("string", "sequenceNS") {
@@ -256,12 +256,12 @@ class TestApplicationNsInheritance {
                             }
                         }
                     }
-                    sequence(null, "namespace") {
+                    sequence("sequence", "namespace") {
                         instructions {
                             int32("int", "namespace") {}
-                            sequence(null, "namespace") {
+                            sequence("sequence", "namespace") {
                                 instructions {
-                                    sequence(null, "namespace") {
+                                    sequence("sequence", "namespace") {
                                         typeRef { namespace = "namespace" }
                                         instructions {
                                             uint64("uInt", "namespace") {
@@ -285,10 +285,10 @@ class TestApplicationNsInheritance {
         val expected = listOf(
             template("template") {
                 instructions {
-                    group(null, "ns") {
+                    group("group", "ns") {
                         typeRef { namespace = "ns" }
                         instructions {
-                            group(null, "groupNS") {
+                            group("group", "groupNS") {
                                 instructions {
                                     unicode("string", "groupNS") {
                                         length { namespace = "groupNS" }
@@ -301,17 +301,17 @@ class TestApplicationNsInheritance {
                             }
                         }
                     }
-                    group(null, "namespace") {
+                    group("group", "namespace") {
                         instructions {
                             int64("int", "namespace") {}
-                            group(null, "namespace") {
+                            group("group", "namespace") {
                                 typeRef { namespace = "namespace" }
                                 instructions {
-                                    compoundDecimal(null, "decimal") {
+                                    compoundDecimal("decimal", "decimal") {
                                         exponent { increment { dictionaryKey { namespace = "decimal" } } }
                                         mantissa { copy { dictionaryKey { namespace = "decimal" } } }
                                     }
-                                    group(null, "namespace") {
+                                    group("group", "namespace") {
                                         instructions {
                                             uint32("uInt", "namespace") {
                                                 delta { dictionaryKey { namespace = "namespace" } }

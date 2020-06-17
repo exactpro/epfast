@@ -1,19 +1,19 @@
 <templates xmlns="http://www.fixprotocol.org/ns/fast/td/1.1">
     <template name="template" ns="ns">
-        <group>
+        <group name="group">
             <typeRef/>
-            <group ns="groupNS">
+            <group name="group" ns="groupNS">
                 <string charset="unicode" name="string"/>
             </group>
             <byteVector name="vector">
                 <tail/>
             </byteVector>
         </group>
-        <group ns="namespace">
+        <group name="group" ns="namespace">
             <int64 name="int"/>
-            <group>
+            <group name="group">
                 <typeRef/>
-                <decimal ns="decimal">
+                <decimal name="decimal" ns="decimal">
                     <exponent>
                         <increment/>
                     </exponent>
@@ -21,7 +21,7 @@
                         <copy/>
                     </mantissa>
                 </decimal>
-                <group>
+                <group name="group">
                     <uInt32 name="uInt">
                         <delta/>
                     </uInt32>

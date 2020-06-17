@@ -19,7 +19,7 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.simple.CompoundDecimalField
 
 class CompoundDecimalFieldBuilder internal constructor(
-    name: String?,
+    name: String,
     namespace: String
 ) : FieldBuilder<CompoundDecimalField>(CompoundDecimalField(), name, namespace) {
 
@@ -35,7 +35,7 @@ class CompoundDecimalFieldBuilder internal constructor(
 }
 
 internal fun build(
-    name: String?,
+    name: String,
     namespace: String,
     block: CompoundDecimalFieldBuilder.() -> Unit
 ): CompoundDecimalField =

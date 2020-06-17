@@ -20,7 +20,7 @@ import com.exactpro.epfast.template.simple.Identity
 import com.exactpro.epfast.template.simple.UnicodeStringField
 
 class UnicodeStringFieldBuilder internal constructor(
-    name: String?,
+    name: String,
     namespace: String
 ) : FieldWithOperatorBuilder<UnicodeStringField>(UnicodeStringField(), name, namespace) {
 
@@ -39,5 +39,5 @@ class UnicodeStringFieldBuilder internal constructor(
     }
 }
 
-internal fun build(name: String?, namespace: String, block: UnicodeStringFieldBuilder.() -> Unit) =
+internal fun build(name: String, namespace: String, block: UnicodeStringFieldBuilder.() -> Unit) =
     UnicodeStringFieldBuilder(name, namespace).build(block)

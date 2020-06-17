@@ -234,24 +234,24 @@ class TestDictionaryInheritance {
         val expected = listOf(
             template("template") {
                 instructions {
-                    sequence(null) {
+                    sequence("sequence") {
                         length { operator { tail { dictionary = "sequence" } } }
                         instructions {
                             compoundDecimal("decimal") {
                                 mantissa { copy { dictionary = "sequence" } }
                             }
-                            sequence(null) {
+                            sequence("sequence") {
                                 length { operator { increment { dictionary = "length" } } }
                             }
                         }
                     }
-                    sequence(null) {
+                    sequence("sequence") {
                         instructions {
                             int32("int") { tail { dictionary = "template" } }
-                            sequence(null) {
+                            sequence("sequence") {
                                 length { operator { delta { dictionary = "template" } } }
                                 instructions {
-                                    sequence(null) {
+                                    sequence("sequence") {
                                         instructions {
                                             uint64("uInt") { copy { dictionary = "uInt" } }
                                         }
@@ -272,9 +272,9 @@ class TestDictionaryInheritance {
         val expected = listOf(
             template("template") {
                 instructions {
-                    group(null) {
+                    group("group") {
                         instructions {
-                            group(null) {
+                            group("group") {
                                 instructions {
                                     unicode("string") { delta { dictionary = "unicode" } }
                                 }
@@ -282,12 +282,12 @@ class TestDictionaryInheritance {
                             byteVector("vector") { copy { dictionary = "group" } }
                         }
                     }
-                    group(null) {
+                    group("group") {
                         instructions {
                             int64("int") { increment { dictionary = "int" } }
-                            group(null) {
+                            group("group") {
                                 instructions {
-                                    group(null) {
+                                    group("group") {
                                         instructions {
                                             uint32("uInt") { tail { dictionary = "tail" } }
                                         }

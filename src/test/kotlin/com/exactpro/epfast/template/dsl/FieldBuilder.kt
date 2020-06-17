@@ -20,7 +20,7 @@ import com.exactpro.epfast.template.simple.FieldInstruction
 
 abstract class FieldBuilder<T : FieldInstruction> internal constructor(
     protected val field: T,
-    name: String?,
+    name: String,
     namespace: String
 ) {
     init {
