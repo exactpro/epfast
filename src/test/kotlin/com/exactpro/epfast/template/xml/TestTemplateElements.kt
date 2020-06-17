@@ -49,7 +49,7 @@ class TestTemplateElements {
                             int32("int32", "ns") {
                                 delta { dictionaryKey { namespace = "ns" } }
                             }
-                            unicode("string", "ns") {
+                            unicodeString("string", "ns") {
                                 length {
                                     name = "length"
                                     namespace = "ns"
@@ -162,7 +162,7 @@ class TestTemplateElements {
                         optional = true
                         default { initialValue = "value" }
                     }
-                    unicode("unicode", "stringNs") {
+                    unicodeString("unicode", "stringNs") {
                         auxiliaryId = "string"
                         optional = false
                         length("length") {

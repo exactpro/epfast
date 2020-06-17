@@ -23,7 +23,7 @@ class TemplateBuilder internal constructor(
     internal val template: Template,
     initialName: String,
     initialNamespace: String
-) {
+) : InstructionsBuilder(template.instructions) {
     var name: String by javaProperty(template.templateId::getName, template.templateId::setName)
 
     var namespace: String by javaProperty(template.templateId::getNamespace, template.templateId::setNamespace)

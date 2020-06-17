@@ -19,14 +19,14 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.Instruction
 import com.exactpro.epfast.template.Reference.DEFAULT_NAMESPACE
 
-class InstructionsBuilder internal constructor(
+open class InstructionsBuilder internal constructor(
     private val instructions: MutableList<Instruction>
 ) {
     fun asciiString(name: String, namespace: String = DEFAULT_NAMESPACE, block: AsciiStringFieldBuilder.() -> Unit) {
         instructions.add(build(name, namespace, block))
     }
 
-    fun unicode(name: String, namespace: String = DEFAULT_NAMESPACE, block: UnicodeStringFieldBuilder.() -> Unit) {
+    fun unicodeString(name: String, namespace: String = DEFAULT_NAMESPACE, block: UnicodeStringFieldBuilder.() -> Unit) {
         instructions.add(build(name, namespace, block))
     }
 

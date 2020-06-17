@@ -26,19 +26,15 @@ class TestTemplateNsInheritance {
     fun `ensure namespace is inherited within template and templateRef`() {
         val expected = listOf(
             template("template1", "tempNS") {
-                instructions {
-                    templateRef {
-                        name = "templateRef"
-                        namespace = "tempNS"
-                    }
+                templateRef {
+                    name = "templateRef"
+                    namespace = "tempNS"
                 }
             },
             template("template2", "NS") {
-                instructions {
-                    templateRef {
-                        name = "templateRef"
-                        namespace = "NS"
-                    }
+                templateRef {
+                    name = "templateRef"
+                    namespace = "NS"
                 }
             }
         )

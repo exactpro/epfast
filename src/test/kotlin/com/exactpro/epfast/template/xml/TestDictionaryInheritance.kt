@@ -26,9 +26,7 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within int32`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    int32("int") { copy { dictionary = "copy" } }
-                }
+                int32("int") { copy { dictionary = "copy" } }
             }
         )
         val actual = readTemplatesFromString(
@@ -49,9 +47,7 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within uInt32`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    uint32("uInt") { increment { dictionary = "increment" } }
-                }
+                uint32("uInt") { increment { dictionary = "increment" } }
             }
         )
         val actual = readTemplatesFromString(
@@ -70,9 +66,7 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within int64`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    int64("int") { delta { dictionary = "delta" } }
-                }
+                int64("int") { delta { dictionary = "delta" } }
             }
         )
         val actual = readTemplatesFromString(
@@ -93,9 +87,7 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within uInt64`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    uint64("uInt") { tail { dictionary = "tail" } }
-                }
+                uint64("uInt") { tail { dictionary = "tail" } }
             }
         )
         val actual = readTemplatesFromString(
@@ -116,9 +108,7 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within simpleDecimal`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    simpleDecimal("decimal") { copy { dictionary = "copy" } }
-                }
+                simpleDecimal("decimal") { copy { dictionary = "copy" } }
             }
         )
         val actual = readTemplatesFromString(
@@ -137,11 +127,9 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within compoundDecimal`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    compoundDecimal("decimal") {
-                        exponent { delta { dictionary = "delta" } }
-                        mantissa { tail { dictionary = "tail" } }
-                    }
+                compoundDecimal("decimal") {
+                    exponent { delta { dictionary = "delta" } }
+                    mantissa { tail { dictionary = "tail" } }
                 }
             }
         )
@@ -166,9 +154,7 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within asciiString`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    asciiString("string") { copy { dictionary = "copy" } }
-                }
+                asciiString("string") { copy { dictionary = "copy" } }
             }
         )
         val actual = readTemplatesFromString(
@@ -187,9 +173,7 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within unicodeString`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    unicode("string") { increment { dictionary = "increment" } }
-                }
+                unicodeString("string") { increment { dictionary = "increment" } }
             }
         )
         val actual = readTemplatesFromString(
@@ -210,9 +194,7 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within byteVector`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    byteVector("vector") { delta { dictionary = "delta" } }
-                }
+                byteVector("vector") { delta { dictionary = "delta" } }
             }
         )
         val actual = readTemplatesFromString(
@@ -233,28 +215,26 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within sequence`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    sequence("sequence") {
-                        length { operator { tail { dictionary = "sequence" } } }
-                        instructions {
-                            compoundDecimal("decimal") {
-                                mantissa { copy { dictionary = "sequence" } }
-                            }
-                            sequence("sequence") {
-                                length { operator { increment { dictionary = "length" } } }
-                            }
+                sequence("sequence") {
+                    length { operator { tail { dictionary = "sequence" } } }
+                    instructions {
+                        compoundDecimal("decimal") {
+                            mantissa { copy { dictionary = "sequence" } }
+                        }
+                        sequence("sequence") {
+                            length { operator { increment { dictionary = "length" } } }
                         }
                     }
-                    sequence("sequence") {
-                        instructions {
-                            int32("int") { tail { dictionary = "template" } }
-                            sequence("sequence") {
-                                length { operator { delta { dictionary = "template" } } }
-                                instructions {
-                                    sequence("sequence") {
-                                        instructions {
-                                            uint64("uInt") { copy { dictionary = "uInt" } }
-                                        }
+                }
+                sequence("sequence") {
+                    instructions {
+                        int32("int") { tail { dictionary = "template" } }
+                        sequence("sequence") {
+                            length { operator { delta { dictionary = "template" } } }
+                            instructions {
+                                sequence("sequence") {
+                                    instructions {
+                                        uint64("uInt") { copy { dictionary = "uInt" } }
                                     }
                                 }
                             }
@@ -271,26 +251,24 @@ class TestDictionaryInheritance {
     fun `ensure dictionary is inherited within group`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    group("group") {
-                        instructions {
-                            group("group") {
-                                instructions {
-                                    unicode("string") { delta { dictionary = "unicode" } }
-                                }
+                group("group") {
+                    instructions {
+                        group("group") {
+                            instructions {
+                                unicodeString("string") { delta { dictionary = "unicode" } }
                             }
-                            byteVector("vector") { copy { dictionary = "group" } }
                         }
+                        byteVector("vector") { copy { dictionary = "group" } }
                     }
-                    group("group") {
-                        instructions {
-                            int64("int") { increment { dictionary = "int" } }
-                            group("group") {
-                                instructions {
-                                    group("group") {
-                                        instructions {
-                                            uint32("uInt") { tail { dictionary = "tail" } }
-                                        }
+                }
+                group("group") {
+                    instructions {
+                        int64("int") { increment { dictionary = "int" } }
+                        group("group") {
+                            instructions {
+                                group("group") {
+                                    instructions {
+                                        uint32("uInt") { tail { dictionary = "tail" } }
                                     }
                                 }
                             }
