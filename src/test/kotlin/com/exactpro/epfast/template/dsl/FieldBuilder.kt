@@ -20,14 +20,9 @@ import com.exactpro.epfast.template.simple.FieldInstruction
 
 abstract class FieldBuilder<T : FieldInstruction> internal constructor(
     protected val field: T,
-    name: String,
-    namespace: String
+    initialName: String,
+    initialNamespace: String
 ) {
-    init {
-        field.fieldId.name = name
-        field.fieldId.namespace = namespace
-    }
-
     var name: String by javaProperty(field.fieldId::getName, field.fieldId::setName)
 
     var namespace: String by javaProperty(field.fieldId::getNamespace, field.fieldId::setNamespace)
@@ -35,4 +30,9 @@ abstract class FieldBuilder<T : FieldInstruction> internal constructor(
     var auxiliaryId: String by javaProperty(field.fieldId::getAuxiliaryId, field.fieldId::setAuxiliaryId)
 
     var optional: Boolean by javaProperty(field::isOptional, field::setOptional)
+
+    init {
+        name = initialName
+        namespace = initialNamespace
+    }
 }
