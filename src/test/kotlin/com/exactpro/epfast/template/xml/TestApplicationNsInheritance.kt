@@ -238,17 +238,13 @@ class TestApplicationNsInheritance {
                     }
                 }
                 sequence("sequence", "namespace") {
-                    instructions {
-                        int32("int", "namespace") {}
+                    int32("int", "namespace") {}
+                    sequence("sequence", "namespace") {
                         sequence("sequence", "namespace") {
+                            typeRef { namespace = "namespace" }
                             instructions {
-                                sequence("sequence", "namespace") {
-                                    typeRef { namespace = "namespace" }
-                                    instructions {
-                                        uint64("uInt", "namespace") {
-                                            increment { dictionaryKey { namespace = "namespace" } }
-                                        }
-                                    }
+                                uint64("uInt", "namespace") {
+                                    increment { dictionaryKey { namespace = "namespace" } }
                                 }
                             }
                         }
@@ -268,10 +264,8 @@ class TestApplicationNsInheritance {
                     typeRef { namespace = "ns" }
                     instructions {
                         group("group", "groupNS") {
-                            instructions {
-                                unicodeString("string", "groupNS") {
-                                    length { namespace = "groupNS" }
-                                }
+                            unicodeString("string", "groupNS") {
+                                length { namespace = "groupNS" }
                             }
                         }
                         byteVector("vector", "ns") {
@@ -281,21 +275,17 @@ class TestApplicationNsInheritance {
                     }
                 }
                 group("group", "namespace") {
-                    instructions {
-                        int64("int", "namespace") {}
-                        group("group", "namespace") {
-                            typeRef { namespace = "namespace" }
-                            instructions {
-                                compoundDecimal("decimal", "decimal") {
-                                    exponent { increment { dictionaryKey { namespace = "decimal" } } }
-                                    mantissa { copy { dictionaryKey { namespace = "decimal" } } }
-                                }
-                                group("group", "namespace") {
-                                    instructions {
-                                        uint32("uInt", "namespace") {
-                                            delta { dictionaryKey { namespace = "namespace" } }
-                                        }
-                                    }
+                    int64("int", "namespace") {}
+                    group("group", "namespace") {
+                        typeRef { namespace = "namespace" }
+                        instructions {
+                            compoundDecimal("decimal", "decimal") {
+                                exponent { increment { dictionaryKey { namespace = "decimal" } } }
+                                mantissa { copy { dictionaryKey { namespace = "decimal" } } }
+                            }
+                            group("group", "namespace") {
+                                uint32("uInt", "namespace") {
+                                    delta { dictionaryKey { namespace = "namespace" } }
                                 }
                             }
                         }

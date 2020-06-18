@@ -66,12 +66,10 @@ class TestTemplateElements {
                         }
                         instructions {
                             sequence("name", "namespace") {
-                                instructions {
-                                    compoundDecimal("decimal", "ns") { mantissa {} }
-                                    templateRef {
-                                        name = "tempRef"
-                                        namespace = "ns"
-                                    }
+                                compoundDecimal("decimal", "ns") { mantissa {} }
+                                templateRef {
+                                    name = "tempRef"
+                                    namespace = "ns"
                                 }
                             }
                             byteVector("vector", "ns") {

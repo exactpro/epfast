@@ -16,6 +16,7 @@
 
 package com.exactpro.epfast.template.dsl
 
+import com.exactpro.epfast.template.Reference.DEFAULT_NAMESPACE
 import com.exactpro.epfast.template.simple.Sequence
 
 class SequenceBuilder internal constructor(
@@ -35,6 +36,54 @@ class SequenceBuilder internal constructor(
 
     fun instructions(block: InstructionsBuilder.() -> Unit) {
         InstructionsBuilder(field.instructions).apply(block)
+    }
+
+    fun asciiString(name: String, namespace: String = DEFAULT_NAMESPACE, block: AsciiStringFieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).asciiString(name, namespace, block)
+    }
+
+    fun unicodeString(name: String, namespace: String = DEFAULT_NAMESPACE, block: UnicodeStringFieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).unicodeString(name, namespace, block)
+    }
+
+    fun byteVector(name: String, namespace: String = DEFAULT_NAMESPACE, block: ByteVectorFieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).byteVector(name, namespace, block)
+    }
+
+    fun int32(name: String, namespace: String = DEFAULT_NAMESPACE, block: Int32FieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).int32(name, namespace, block)
+    }
+
+    fun int64(name: String, namespace: String = DEFAULT_NAMESPACE, block: Int64FieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).int64(name, namespace, block)
+    }
+
+    fun uint32(name: String, namespace: String = DEFAULT_NAMESPACE, block: UInt32FieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).uint32(name, namespace, block)
+    }
+
+    fun uint64(name: String, namespace: String = DEFAULT_NAMESPACE, block: UInt64FieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).uint64(name, namespace, block)
+    }
+
+    fun simpleDecimal(name: String, namespace: String = DEFAULT_NAMESPACE, block: SimpleDecimalFieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).simpleDecimal(name, namespace, block)
+    }
+
+    fun compoundDecimal(name: String, namespace: String = DEFAULT_NAMESPACE, block: CompoundDecimalFieldBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).compoundDecimal(name, namespace, block)
+    }
+
+    fun group(name: String, namespace: String = DEFAULT_NAMESPACE, block: GroupBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).group(name, namespace, block)
+    }
+
+    fun sequence(name: String, namespace: String = DEFAULT_NAMESPACE, block: SequenceBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).sequence(name, namespace, block)
+    }
+
+    fun templateRef(block: ReferenceBuilder.() -> Unit) {
+        InstructionsBuilder(field.instructions).templateRef(block)
     }
 }
 

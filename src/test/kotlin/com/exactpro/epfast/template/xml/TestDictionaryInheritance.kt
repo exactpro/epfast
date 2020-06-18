@@ -227,16 +227,12 @@ class TestDictionaryInheritance {
                     }
                 }
                 sequence("sequence") {
-                    instructions {
-                        int32("int") { tail { dictionary = "template" } }
-                        sequence("sequence") {
-                            length { operator { delta { dictionary = "template" } } }
-                            instructions {
-                                sequence("sequence") {
-                                    instructions {
-                                        uint64("uInt") { copy { dictionary = "uInt" } }
-                                    }
-                                }
+                    int32("int") { tail { dictionary = "template" } }
+                    sequence("sequence") {
+                        length { operator { delta { dictionary = "template" } } }
+                        instructions {
+                            sequence("sequence") {
+                                uint64("uInt") { copy { dictionary = "uInt" } }
                             }
                         }
                     }
@@ -252,26 +248,16 @@ class TestDictionaryInheritance {
         val expected = listOf(
             template("template") {
                 group("group") {
-                    instructions {
-                        group("group") {
-                            instructions {
-                                unicodeString("string") { delta { dictionary = "unicode" } }
-                            }
-                        }
-                        byteVector("vector") { copy { dictionary = "group" } }
+                    group("group") {
+                        unicodeString("string") { delta { dictionary = "unicode" } }
                     }
+                    byteVector("vector") { copy { dictionary = "group" } }
                 }
                 group("group") {
-                    instructions {
-                        int64("int") { increment { dictionary = "int" } }
+                    int64("int") { increment { dictionary = "int" } }
+                    group("group") {
                         group("group") {
-                            instructions {
-                                group("group") {
-                                    instructions {
-                                        uint32("uInt") { tail { dictionary = "tail" } }
-                                    }
-                                }
-                            }
+                            uint32("uInt") { tail { dictionary = "tail" } }
                         }
                     }
                 }
