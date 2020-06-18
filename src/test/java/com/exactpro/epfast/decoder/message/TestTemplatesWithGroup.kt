@@ -158,7 +158,7 @@ class TestTemplatesWithGroup {
         }
     )
 
-    @WithByteBuf(bytesString)
+    @WithByteBuf(BYTE_STRING)
     @Throws(IOException::class)
     fun testGroup(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithGroup, Reference("first template", ""))
@@ -186,7 +186,7 @@ class TestTemplatesWithGroup {
         Assertions.assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
     }
 
-    @WithByteBuf(nestedGroupBytesString)
+    @WithByteBuf(NESTED_GROUP_BYTE_STRING)
     @Throws(IOException::class)
     fun testNestedGroup(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithNestedGroup, Reference("first template", ""))
@@ -221,15 +221,16 @@ class TestTemplatesWithGroup {
     }
 
     companion object {
-        const val bytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+        private const val BYTE_STRING = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
                 FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
                 FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
                 FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
 
-        const val nestedGroupBytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.MANDATORY_INT32_942755 +
-                FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO +
-                FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
+        private const val NESTED_GROUP_BYTE_STRING =
+            FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
+                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.MANDATORY_INT32_942755 +
+                    FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO +
+                    FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
     }
 }

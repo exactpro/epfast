@@ -88,7 +88,7 @@ class TestTemplateReferences {
         }
     )
 
-    @WithByteBuf(bytesString)
+    @WithByteBuf(BYTE_STRING)
     @Throws(IOException::class)
     fun testTemplateRef(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templates, Reference("first template", ""))
@@ -115,7 +115,7 @@ class TestTemplateReferences {
     }
 
     companion object {
-        const val bytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+        private const val BYTE_STRING = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
                 FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
                 FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
                 FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC

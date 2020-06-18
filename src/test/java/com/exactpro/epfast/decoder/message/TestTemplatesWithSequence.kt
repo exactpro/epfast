@@ -185,7 +185,7 @@ class TestTemplatesWithSequence {
         }
     )
 
-    @WithByteBuf(optionalSequenceBytesString)
+    @WithByteBuf(OPTIONAL_SEQUENCE_BYTE_STRING)
     @Throws(IOException::class)
     fun testOptionalSequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithOptionalSequence, Reference("first template", ""))
@@ -218,7 +218,7 @@ class TestTemplatesWithSequence {
         }
     }
 
-    @WithByteBuf(mandatorySequenceBytesString)
+    @WithByteBuf(MANDATORY_SEQUENCE_BYTE_STRING)
     @Throws(IOException::class)
     fun testMandatorySequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithMandatorySequence, Reference("first template", ""))
@@ -251,7 +251,7 @@ class TestTemplatesWithSequence {
         }
     }
 
-    @WithByteBuf(nullSequenceBytesString)
+    @WithByteBuf(NULL_SEQUENCE_BYTE_STRING)
     @Throws(IOException::class)
     fun testNullSequence(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithNullSequence, Reference("first template", ""))
@@ -275,24 +275,27 @@ class TestTemplatesWithSequence {
 
     companion object {
 
-        const val optionalSequenceBytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.OPTIONAL_UINT32_3 + FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
-                FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC + FastSnippets.MANDATORY_INT32_942755 +
-                FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
+        private const val OPTIONAL_SEQUENCE_BYTE_STRING =
+            FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
+                    FastSnippets.OPTIONAL_UINT32_3 + FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+                    FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC + FastSnippets.MANDATORY_INT32_942755 +
+                    FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC +
+                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
+                    FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
 
-        const val mandatorySequenceBytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.MANDATORY_UINT32_3 + FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
-                FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC + FastSnippets.MANDATORY_INT32_942755 +
-                FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
+        private const val MANDATORY_SEQUENCE_BYTE_STRING =
+            FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
+                    FastSnippets.MANDATORY_UINT32_3 + FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+                    FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC + FastSnippets.MANDATORY_INT32_942755 +
+                    FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC +
+                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
+                    FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
 
-        const val nullSequenceBytesString = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.OPTIONAL_UINT32_NULL + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
+        private const val NULL_SEQUENCE_BYTE_STRING =
+            FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
+                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
+                    FastSnippets.OPTIONAL_UINT32_NULL + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
     }
 }
