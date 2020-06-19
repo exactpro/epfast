@@ -64,7 +64,7 @@ open class InstructionsBuilder internal constructor(
     fun group(name: String, namespace: String = DEFAULT_NAMESPACE, block: GroupBuilder.() -> Unit) =
         instructions.add(build(name, namespace, block))
 
-    fun sequence(name: String, namespace: String = DEFAULT_NAMESPACE, block: SequenceBuilder.() -> Unit) =
+    fun sequence(name: String?, namespace: String = DEFAULT_NAMESPACE, block: FastSequenceBuilder.() -> Unit) {
         instructions.add(build(name, namespace, block))
 
     fun templateRef(block: ReferenceBuilder.() -> Unit) =

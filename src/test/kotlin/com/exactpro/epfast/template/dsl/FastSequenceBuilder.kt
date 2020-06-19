@@ -19,12 +19,9 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.Reference.DEFAULT_NAMESPACE
 import com.exactpro.epfast.template.simple.Sequence
 
-class SequenceBuilder internal constructor(
-    name: String,
-    namespace: String
-) : FieldBuilder<Sequence>(Sequence(), name, namespace) {
-
-    internal fun build(block: SequenceBuilder.() -> Unit) = apply(block).field
+class FastSequenceBuilder internal constructor(name: String?, namespace: String) :
+    FieldBuilder<Sequence>(Sequence(), name, namespace) {
+    internal fun build(block: FastSequenceBuilder.() -> Unit) = apply(block).field
 
     fun typeRef(block: ReferenceBuilder.() -> Unit) {
         field.typeRef = ReferenceBuilder().apply(block).value
@@ -94,5 +91,5 @@ class SequenceBuilder internal constructor(
         InstructionsBuilder(field.instructions).templateRef(block)
 }
 
-internal fun build(name: String, namespace: String, block: SequenceBuilder.() -> Unit) =
-    SequenceBuilder(name, namespace).build(block)
+internal fun build(name: String?, namespace: String, block: FastSequenceBuilder.() -> Unit): Sequence =
+        FastSequenceBuilder(name, namespace).build(block)
