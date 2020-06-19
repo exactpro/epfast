@@ -158,7 +158,7 @@ class TestTemplatesWithGroup {
         }
     )
 
-    @WithByteBuf(BYTE_STRING)
+    @WithByteBuf(HEX_STRING)
     @Throws(IOException::class)
     fun testGroup(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templatesWithGroup, Reference("first template", ""))
@@ -221,16 +221,15 @@ class TestTemplatesWithGroup {
     }
 
     companion object {
-        private const val BYTE_STRING = FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
+        private const val HEX_STRING = MANDATORY_INT32_942755 + OPTIONAL_INT32_0 +
+                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+                ASCII_ABC + ASCII_ABC + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC
 
-        private const val NESTED_GROUP_BYTE_STRING =
-            FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 +
-                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO +
-                    FastSnippets.MANDATORY_INT32_942755 + FastSnippets.OPTIONAL_INT32_0 + FastSnippets.MANDATORY_INT32_942755 +
-                    FastSnippets.OPTIONAL_INT32_0 + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO +
-                    FastSnippets.ASCII_ABC + FastSnippets.ASCII_ABC + FastSnippets.ASCII_ZERO + FastSnippets.ASCII_ABC
+        private const val NESTED_GROUP_BYTE_STRING = MANDATORY_INT32_942755 + OPTIONAL_INT32_0 +
+                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_INT32_942755 +
+                OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC + MANDATORY_ASCII_ZERO_ZERO +
+                ASCII_ABC + ASCII_ABC + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC
     }
 }

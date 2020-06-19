@@ -16,12 +16,10 @@
 
 package com.exactpro.epfast.decoder.message
 
-object FastSnippets {
-    const val MANDATORY_INT32_942755 = "39 45 a3 "
-    const val OPTIONAL_INT32_0 = "81 "
-    const val ASCII_ZERO = "00 00 80 "
-    const val ASCII_ABC = "41 42 c3 "
-    const val OPTIONAL_UINT32_3 = "84 "
-    const val MANDATORY_UINT32_3 = "83 "
-    const val OPTIONAL_UINT32_NULL = "80 "
-}
+internal const val MANDATORY_INT32_942755 = "39 45 a3 "
+internal const val OPTIONAL_INT32_0 = "81 "
+internal const val MANDATORY_ASCII_ZERO_ZERO = "00 00 80 "
+internal const val ASCII_ABC = "41 42 c3 "
+internal const val OPTIONAL_UINT32_3 = "84 "
+internal const val MANDATORY_UINT32_3 = "83 "
+internal const val OPTIONAL_UINT32_NULL = "80 "

@@ -30,24 +30,22 @@ public class ByteBufUtils {
     }
 
     static byte[] bytesFromHex(String hex) {
-        if (!hex.isEmpty()) {
-            String[] values = hex.split(" +");
-            byte[] bytes = new byte[values.length];
-            for (int i = 0; i < values.length; i++) {
-                try {
-                    bytes[i] = (byte) Integer.parseInt(values[i], 16);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Illegal Argument Format. " +
-                        "Invalid value " + values[i] + " in \"" + hex + "\" " +
-                        "Need to pass 1 byte hexadecimal values separated by space. " +
-                        "regex format \"([0-9|a-f]{2} )\"");
-                }
-            }
-            return bytes;
-        } else {
+        if (hex.isEmpty()) {
             return new byte[0];
         }
-
+        String[] values = hex.split(" +");
+        byte[] bytes = new byte[values.length];
+        for (int i = 0; i < values.length; i++) {
+            try {
+                bytes[i] = (byte) Integer.parseInt(values[i], 16);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Illegal Argument Format. " +
+                    "Invalid value " + values[i] + " in \"" + hex + "\" " +
+                    "Need to pass 1 byte hexadecimal values separated by space. " +
+                    "regex format \"([0-9|a-f]{2} )\"");
+            }
+        }
+        return bytes;
     }
 
     static ByteBuf buffFromBytes(byte[] bytes) {
