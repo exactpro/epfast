@@ -180,7 +180,7 @@ class TestApplicationNsInheritance {
         val expected = listOf(
             template("template") {
                 unicodeString("string", "ns") {
-                    length(null) { namespace = "ns" }
+                    length { namespace = "ns" }
                 }
             }
         )

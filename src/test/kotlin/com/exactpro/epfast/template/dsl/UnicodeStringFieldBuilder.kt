@@ -34,8 +34,8 @@ class UnicodeStringFieldBuilder internal constructor(
         field.lengthFieldId = IdentityBuilder().apply(block).value
     }
 
-    fun length(name: String?, block: IdentityBuilder.() -> Unit) {
-        field.lengthFieldId = IdentityBuilder().apply(block).value.also { it.name = name }
+    fun length(name: String, block: IdentityBuilder.() -> Unit) {
+        field.lengthFieldId = IdentityBuilder().also { it.name = name }.apply(block).value
     }
 }
 
