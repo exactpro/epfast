@@ -22,35 +22,59 @@ import com.exactpro.epfast.template.Reference.DEFAULT_NAMESPACE
 open class InstructionsBuilder internal constructor(
     private val instructions: MutableList<Instruction>
 ) {
-    fun asciiString(name: String, namespace: String = DEFAULT_NAMESPACE, block: AsciiStringFieldBuilder.() -> Unit) =
+    fun asciiString(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: AsciiStringFieldBuilder.() -> Unit = {}
+    ) =
         instructions.add(build(name, namespace, block))
 
     fun unicodeString(
         name: String,
         namespace: String = DEFAULT_NAMESPACE,
-        block: UnicodeStringFieldBuilder.() -> Unit
+        block: UnicodeStringFieldBuilder.() -> Unit = {}
     ) =
         instructions.add(build(name, namespace, block))
 
-    fun byteVector(name: String, namespace: String = DEFAULT_NAMESPACE, block: ByteVectorFieldBuilder.() -> Unit) =
+    fun byteVector(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: ByteVectorFieldBuilder.() -> Unit = {}
+    ) =
         instructions.add(build(name, namespace, block))
 
-    fun int32(name: String, namespace: String = DEFAULT_NAMESPACE, block: Int32FieldBuilder.() -> Unit) =
+    fun int32(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: Int32FieldBuilder.() -> Unit = {}
+    ) =
         instructions.add(build(name, namespace, block))
 
-    fun int64(name: String, namespace: String = DEFAULT_NAMESPACE, block: Int64FieldBuilder.() -> Unit) =
+    fun int64(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: Int64FieldBuilder.() -> Unit = {}
+    ) =
         instructions.add(build(name, namespace, block))
 
-    fun uint32(name: String, namespace: String = DEFAULT_NAMESPACE, block: UInt32FieldBuilder.() -> Unit) =
+    fun uint32(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: UInt32FieldBuilder.() -> Unit = {}
+    ) =
         instructions.add(build(name, namespace, block))
 
-    fun uint64(name: String, namespace: String = DEFAULT_NAMESPACE, block: UInt64FieldBuilder.() -> Unit) =
+    fun uint64(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: UInt64FieldBuilder.() -> Unit = {}
+    ) =
         instructions.add(build(name, namespace, block))
 
     fun simpleDecimal(
         name: String,
         namespace: String = DEFAULT_NAMESPACE,
-        block: SimpleDecimalFieldBuilder.() -> Unit
+        block: SimpleDecimalFieldBuilder.() -> Unit = {}
     ) =
         instructions.add(build(name, namespace, block))
 
@@ -61,10 +85,18 @@ open class InstructionsBuilder internal constructor(
     ) =
         instructions.add(build(name, namespace, block))
 
-    fun group(name: String, namespace: String = DEFAULT_NAMESPACE, block: GroupBuilder.() -> Unit) =
+    fun group(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: GroupBuilder.() -> Unit
+    ) =
         instructions.add(build(name, namespace, block))
 
-    fun sequence(name: String?, namespace: String = DEFAULT_NAMESPACE, block: FastSequenceBuilder.() -> Unit) {
+    fun sequence(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: FastSequenceBuilder.() -> Unit
+    ) =
         instructions.add(build(name, namespace, block))
 
     fun templateRef(block: ReferenceBuilder.() -> Unit) =

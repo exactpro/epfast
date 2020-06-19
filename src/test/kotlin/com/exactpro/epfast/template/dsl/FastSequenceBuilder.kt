@@ -19,8 +19,11 @@ package com.exactpro.epfast.template.dsl
 import com.exactpro.epfast.template.Reference.DEFAULT_NAMESPACE
 import com.exactpro.epfast.template.simple.Sequence
 
-class FastSequenceBuilder internal constructor(name: String?, namespace: String) :
-    FieldBuilder<Sequence>(Sequence(), name, namespace) {
+class FastSequenceBuilder internal constructor(
+    name: String,
+    namespace: String
+) : FieldBuilder<Sequence>(Sequence(), name, namespace) {
+
     internal fun build(block: FastSequenceBuilder.() -> Unit) = apply(block).field
 
     fun typeRef(block: ReferenceBuilder.() -> Unit) {
@@ -48,48 +51,76 @@ class FastSequenceBuilder internal constructor(name: String?, namespace: String)
     fun unicodeString(
         name: String,
         namespace: String = DEFAULT_NAMESPACE,
-        block: UnicodeStringFieldBuilder.() -> Unit
+        block: UnicodeStringFieldBuilder.() -> Unit = {}
     ) =
-        InstructionsBuilder(field.instructions).unicodeString(name, namespace, block)
+        instructions { unicodeString(name, namespace, block) }
 
-    fun byteVector(name: String, namespace: String = DEFAULT_NAMESPACE, block: ByteVectorFieldBuilder.() -> Unit) =
-        InstructionsBuilder(field.instructions).byteVector(name, namespace, block)
+    fun byteVector(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: ByteVectorFieldBuilder.() -> Unit = {}
+    ) =
+        instructions { byteVector(name, namespace, block) }
 
-    fun int32(name: String, namespace: String = DEFAULT_NAMESPACE, block: Int32FieldBuilder.() -> Unit) =
-        InstructionsBuilder(field.instructions).int32(name, namespace, block)
+    fun int32(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: Int32FieldBuilder.() -> Unit = {}
+    ) =
+        instructions { int32(name, namespace, block) }
 
-    fun int64(name: String, namespace: String = DEFAULT_NAMESPACE, block: Int64FieldBuilder.() -> Unit) =
-        InstructionsBuilder(field.instructions).int64(name, namespace, block)
+    fun int64(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: Int64FieldBuilder.() -> Unit = {}
+    ) =
+        instructions { int64(name, namespace, block) }
 
-    fun uint32(name: String, namespace: String = DEFAULT_NAMESPACE, block: UInt32FieldBuilder.() -> Unit) =
-        InstructionsBuilder(field.instructions).uint32(name, namespace, block)
+    fun uint32(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: UInt32FieldBuilder.() -> Unit = {}
+    ) =
+        instructions { uint32(name, namespace, block) }
 
-    fun uint64(name: String, namespace: String = DEFAULT_NAMESPACE, block: UInt64FieldBuilder.() -> Unit) =
-        InstructionsBuilder(field.instructions).uint64(name, namespace, block)
+    fun uint64(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: UInt64FieldBuilder.() -> Unit = {}
+    ) =
+        instructions { uint64(name, namespace, block) }
 
     fun simpleDecimal(
         name: String,
         namespace: String = DEFAULT_NAMESPACE,
-        block: SimpleDecimalFieldBuilder.() -> Unit
+        block: SimpleDecimalFieldBuilder.() -> Unit = {}
     ) =
-        InstructionsBuilder(field.instructions).simpleDecimal(name, namespace, block)
+        instructions { simpleDecimal(name, namespace, block) }
 
     fun compoundDecimal(
         name: String,
         namespace: String = DEFAULT_NAMESPACE,
         block: CompoundDecimalFieldBuilder.() -> Unit
     ) =
-        InstructionsBuilder(field.instructions).compoundDecimal(name, namespace, block)
+        instructions { compoundDecimal(name, namespace, block) }
 
-    fun group(name: String, namespace: String = DEFAULT_NAMESPACE, block: GroupBuilder.() -> Unit) =
-        InstructionsBuilder(field.instructions).group(name, namespace, block)
+    fun group(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: GroupBuilder.() -> Unit
+    ) =
+        instructions { group(name, namespace, block) }
 
-    fun sequence(name: String, namespace: String = DEFAULT_NAMESPACE, block: SequenceBuilder.() -> Unit) =
-        InstructionsBuilder(field.instructions).sequence(name, namespace, block)
+    fun sequence(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: FastSequenceBuilder.() -> Unit
+    ) =
+        instructions { sequence(name, namespace, block) }
 
     fun templateRef(block: ReferenceBuilder.() -> Unit) =
-        InstructionsBuilder(field.instructions).templateRef(block)
+        instructions { templateRef(block) }
 }
 
-internal fun build(name: String?, namespace: String, block: FastSequenceBuilder.() -> Unit): Sequence =
-        FastSequenceBuilder(name, namespace).build(block)
+internal fun build(name: String, namespace: String, block: FastSequenceBuilder.() -> Unit) =
+    FastSequenceBuilder(name, namespace).build(block)
