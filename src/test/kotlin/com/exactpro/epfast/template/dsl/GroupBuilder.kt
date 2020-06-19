@@ -106,7 +106,7 @@ class GroupBuilder internal constructor(
     fun sequence(
         name: String,
         namespace: String = DEFAULT_NAMESPACE,
-        block: FastSequenceBuilder.() -> Unit
+        block: SequenceBuilder.() -> Unit
     ) =
         instructions { sequence(name, namespace, block) }
 

@@ -95,7 +95,7 @@ open class InstructionsBuilder internal constructor(
     fun sequence(
         name: String,
         namespace: String = DEFAULT_NAMESPACE,
-        block: FastSequenceBuilder.() -> Unit
+        block: SequenceBuilder.() -> Unit
     ) =
         instructions.add(build(name, namespace, block))
 
