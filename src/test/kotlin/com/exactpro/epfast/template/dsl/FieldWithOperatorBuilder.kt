@@ -20,7 +20,7 @@ import com.exactpro.epfast.template.simple.FieldInstructionWithOperator
 
 abstract class FieldWithOperatorBuilder<T : FieldInstructionWithOperator> internal constructor(
     field: T,
-    name: String?,
+    name: String,
     namespace: String
 ) : FieldBuilder<T>(field, name, namespace) {
 

@@ -16,10 +16,11 @@
 
 package com.exactpro.epfast.template.dsl
 
+import com.exactpro.epfast.template.Reference.DEFAULT_NAMESPACE
 import com.exactpro.epfast.template.simple.Group
 
 class GroupBuilder internal constructor(
-    name: String?,
+    name: String,
     namespace: String
 ) : FieldBuilder<Group>(Group(), name, namespace) {
 
@@ -29,10 +30,89 @@ class GroupBuilder internal constructor(
         field.typeRef = ReferenceBuilder().apply(block).value
     }
 
-    fun instructions(block: InstructionsBuilder.() -> Unit) {
+    fun instructions(block: InstructionsBuilder.() -> Unit) =
         InstructionsBuilder(field.instructions).apply(block)
-    }
+
+    fun asciiString(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: AsciiStringFieldBuilder.() -> Unit = {}
+    ) =
+        instructions { asciiString(name, namespace, block) }
+
+    fun unicodeString(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: UnicodeStringFieldBuilder.() -> Unit = {}
+    ) =
+        instructions { unicodeString(name, namespace, block) }
+
+    fun byteVector(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: ByteVectorFieldBuilder.() -> Unit = {}
+    ) =
+        instructions { byteVector(name, namespace, block) }
+
+    fun int32(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: Int32FieldBuilder.() -> Unit = {}
+    ) =
+        instructions { int32(name, namespace, block) }
+
+    fun int64(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: Int64FieldBuilder.() -> Unit = {}
+    ) =
+        instructions { int64(name, namespace, block) }
+
+    fun uint32(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: UInt32FieldBuilder.() -> Unit = {}
+    ) =
+        instructions { uint32(name, namespace, block) }
+
+    fun uint64(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: UInt64FieldBuilder.() -> Unit = {}
+    ) =
+        instructions { uint64(name, namespace, block) }
+
+    fun simpleDecimal(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: SimpleDecimalFieldBuilder.() -> Unit = {}
+    ) =
+        instructions { simpleDecimal(name, namespace, block) }
+
+    fun compoundDecimal(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: CompoundDecimalFieldBuilder.() -> Unit
+    ) =
+        instructions { compoundDecimal(name, namespace, block) }
+
+    fun group(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: GroupBuilder.() -> Unit
+    ) =
+        instructions { group(name, namespace, block) }
+
+    fun sequence(
+        name: String,
+        namespace: String = DEFAULT_NAMESPACE,
+        block: SequenceBuilder.() -> Unit
+    ) =
+        instructions { sequence(name, namespace, block) }
+
+    fun templateRef(block: ReferenceBuilder.() -> Unit) =
+        instructions { templateRef(block) }
 }
 
-internal fun build(name: String?, namespace: String, block: GroupBuilder.() -> Unit) =
+internal fun build(name: String, namespace: String, block: GroupBuilder.() -> Unit) =
     GroupBuilder(name, namespace).build(block)

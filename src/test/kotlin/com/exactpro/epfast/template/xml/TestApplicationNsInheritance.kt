@@ -26,10 +26,8 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within int32`() {
         val expected = listOf(
             template("template", "tempNS") {
-                instructions {
-                    int32("int", "NS") {
-                        copy { dictionaryKey { namespace = "NS" } }
-                    }
+                int32("int", "NS") {
+                    copy { dictionaryKey { namespace = "NS" } }
                 }
             }
         )
@@ -51,10 +49,8 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within uInt32`() {
         val expected = listOf(
             template("template", "NS") {
-                instructions {
-                    uint32("uInt", "ns") {
-                        increment { dictionaryKey { namespace = "ns" } }
-                    }
+                uint32("uInt", "ns") {
+                    increment { dictionaryKey { namespace = "ns" } }
                 }
             }
         )
@@ -74,10 +70,8 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within int64`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    int64("int", "ns") {
-                        delta { dictionaryKey { namespace = "ns" } }
-                    }
+                int64("int", "ns") {
+                    delta { dictionaryKey { namespace = "ns" } }
                 }
             }
         )
@@ -99,10 +93,8 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within uInt64`() {
         val expected = listOf(
             template("template", "ns") {
-                instructions {
-                    uint64("uInt", "NS") {
-                        tail { dictionaryKey { namespace = "NS" } }
-                    }
+                uint64("uInt", "NS") {
+                    tail { dictionaryKey { namespace = "NS" } }
                 }
             }
         )
@@ -124,9 +116,7 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within simpleDecimal`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    simpleDecimal("decimal", "NS") {}
-                }
+                simpleDecimal("decimal", "NS") {}
             }
         )
         val actual = readTemplatesFromString(
@@ -145,11 +135,9 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within compoundDecimal`() {
         val expected = listOf(
             template("template", "NS") {
-                instructions {
-                    compoundDecimal("decimal", "ns") {
-                        exponent { tail { dictionaryKey { namespace = "ns" } } }
-                        mantissa { delta { dictionaryKey { namespace = "ns" } } }
-                    }
+                compoundDecimal("decimal", "ns") {
+                    exponent { tail { dictionaryKey { namespace = "ns" } } }
+                    mantissa { delta { dictionaryKey { namespace = "ns" } } }
                 }
             }
         )
@@ -174,9 +162,7 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within asciiString`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    asciiString("string", "ns") {}
-                }
+                asciiString("string", "ns") {}
             }
         )
         val actual = readTemplatesFromString(
@@ -193,10 +179,8 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within unicodeString`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    unicode("string", "ns") {
-                        length(null) { namespace = "ns" }
-                    }
+                unicodeString("string", "ns") {
+                    length { namespace = "ns" }
                 }
             }
         )
@@ -216,10 +200,8 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within byteVector`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    byteVector("vector", "NS") {
-                        length("length") { namespace = "NS" }
-                    }
+                byteVector("vector", "NS") {
+                    length("length") { namespace = "NS" }
                 }
             }
         )
@@ -239,36 +221,30 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within sequence`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    sequence(null, "ns") {
-                        length { namespace = "ns" }
-                        instructions {
-                            compoundDecimal("decimal", "ns") {
-                                exponent { tail { dictionaryKey { namespace = "ns" } } }
-                            }
-                            sequence(null, "sequenceNS") {
-                                typeRef { namespace = "sequenceNS" }
-                                instructions {
-                                    asciiString("string", "sequenceNS") {
-                                        copy { dictionaryKey { namespace = "sequenceNS" } }
-                                    }
+                sequence("sequence", "ns") {
+                    length { namespace = "ns" }
+                    instructions {
+                        compoundDecimal("decimal", "ns") {
+                            exponent { tail { dictionaryKey { namespace = "ns" } } }
+                        }
+                        sequence("sequence", "sequenceNS") {
+                            typeRef { namespace = "sequenceNS" }
+                            instructions {
+                                asciiString("string", "sequenceNS") {
+                                    copy { dictionaryKey { namespace = "sequenceNS" } }
                                 }
                             }
                         }
                     }
-                    sequence(null, "namespace") {
-                        instructions {
-                            int32("int", "namespace") {}
-                            sequence(null, "namespace") {
-                                instructions {
-                                    sequence(null, "namespace") {
-                                        typeRef { namespace = "namespace" }
-                                        instructions {
-                                            uint64("uInt", "namespace") {
-                                                increment { dictionaryKey { namespace = "namespace" } }
-                                            }
-                                        }
-                                    }
+                }
+                sequence("sequence", "namespace") {
+                    int32("int", "namespace") {}
+                    sequence("sequence", "namespace") {
+                        sequence("sequence", "namespace") {
+                            typeRef { namespace = "namespace" }
+                            instructions {
+                                uint64("uInt", "namespace") {
+                                    increment { dictionaryKey { namespace = "namespace" } }
                                 }
                             }
                         }
@@ -284,40 +260,32 @@ class TestApplicationNsInheritance {
     fun `ensure namespace is inherited within group`() {
         val expected = listOf(
             template("template") {
-                instructions {
-                    group(null, "ns") {
-                        typeRef { namespace = "ns" }
-                        instructions {
-                            group(null, "groupNS") {
-                                instructions {
-                                    unicode("string", "groupNS") {
-                                        length { namespace = "groupNS" }
-                                    }
-                                }
-                            }
-                            byteVector("vector", "ns") {
-                                length { namespace = "ns" }
-                                tail { dictionaryKey { namespace = "ns" } }
+                group("group", "ns") {
+                    typeRef { namespace = "ns" }
+                    instructions {
+                        group("group", "groupNS") {
+                            unicodeString("string", "groupNS") {
+                                length { namespace = "groupNS" }
                             }
                         }
+                        byteVector("vector", "ns") {
+                            length { namespace = "ns" }
+                            tail { dictionaryKey { namespace = "ns" } }
+                        }
                     }
-                    group(null, "namespace") {
+                }
+                group("group", "namespace") {
+                    int64("int", "namespace") {}
+                    group("group", "namespace") {
+                        typeRef { namespace = "namespace" }
                         instructions {
-                            int64("int", "namespace") {}
-                            group(null, "namespace") {
-                                typeRef { namespace = "namespace" }
-                                instructions {
-                                    compoundDecimal(null, "decimal") {
-                                        exponent { increment { dictionaryKey { namespace = "decimal" } } }
-                                        mantissa { copy { dictionaryKey { namespace = "decimal" } } }
-                                    }
-                                    group(null, "namespace") {
-                                        instructions {
-                                            uint32("uInt", "namespace") {
-                                                delta { dictionaryKey { namespace = "namespace" } }
-                                            }
-                                        }
-                                    }
+                            compoundDecimal("decimal", "decimal") {
+                                exponent { increment { dictionaryKey { namespace = "decimal" } } }
+                                mantissa { copy { dictionaryKey { namespace = "decimal" } } }
+                            }
+                            group("group", "namespace") {
+                                uint32("uInt", "namespace") {
+                                    delta { dictionaryKey { namespace = "namespace" } }
                                 }
                             }
                         }

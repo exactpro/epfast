@@ -30,7 +30,7 @@ import com.exactpro.epfast.template.simple.TailOperator
 abstract class OperatorBuilder<T : FieldOperator> internal constructor(
     protected val operator: T
 ) {
-    var initialValue: String? by javaProperty(operator::getInitialValue, operator::setInitialValue)
+    var initialValue: String by javaProperty(operator::getInitialValue, operator::setInitialValue)
 }
 
 abstract class OperatorWithDictionaryBuilder<T : OperatorWithDictionary> internal constructor(

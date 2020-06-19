@@ -18,13 +18,14 @@ package com.exactpro.epfast.template.dsl
 
 import kotlin.reflect.KProperty
 
-fun <T> javaProperty(getter: () -> T, setter: (T) -> Unit) = JavaProperty(getter, setter)
+fun <T : Any> javaProperty(getter: () -> T?, setter: (T) -> Unit) = JavaProperty(getter, setter)
 
-class JavaProperty<T> internal constructor(
-    private val getter: () -> T,
+class JavaProperty<T : Any> internal constructor(
+    private val getter: () -> T?,
     private val setter: (T) -> Unit
 ) {
-    operator fun getValue(thisRef: Any?, property: KProperty<*>): T = getter()
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): T =
+        getter() ?: throw RuntimeException("Attempt to read uninitialized property " + property.name)
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = setter(value)
 }
