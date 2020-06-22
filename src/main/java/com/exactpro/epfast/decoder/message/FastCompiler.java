@@ -26,28 +26,30 @@ public class FastCompiler {
 
     private final ArrayList<DecoderCommand> commandSet = new ArrayList<>();
 
+    private boolean isMapPresent = false;
+
     private FastCompiler() {
     }
 
     public static Map<Reference, List<DecoderCommand>> compile(Collection<? extends Template> templates) {
         HashMap<Reference, List<DecoderCommand>> commandSets = new HashMap<>();
         for (Template template : templates) {
-            commandSets.put(
-                template.getTemplateId(),
-                compileSubroutine(template.getTypeRef(), template.getInstructions()));
+            FastCompiler compiler = compileSubroutine(template.getTypeRef(), template.getInstructions());
+            commandSets.put(template.getTemplateId(), compiler.commandSet);
         }
         return commandSets;
     }
 
-    private static ArrayList<DecoderCommand> compileSubroutine(
-            Reference typeRef, Collection<? extends Instruction> instructions) {
+    private static FastCompiler compileSubroutine(
+        Reference typeRef, Collection<? extends Instruction> instructions) {
         FastCompiler compiler = new FastCompiler();
         compiler.compile(typeRef, instructions);
-        return compiler.commandSet;
+        return compiler;
     }
 
     private void compile(
-            Reference typeRef, Collection<? extends Instruction> instructions) {
+        Reference typeRef, Collection<? extends Instruction> instructions) {
+        isMapPresent = false;
         if (typeRef != null) {
             commandSet.add(new InitApplicationType(typeRef));
         }
@@ -68,7 +70,14 @@ public class FastCompiler {
     }
 
     private void compileGroup(Group group) {
-        commandSet.add(new StaticCall(compileSubroutine(group.getTypeRef(), group.getInstructions())));
+        FastCompiler compiler = compileSubroutine(group.getTypeRef(), group.getInstructions());
+        if (group.isOptional()) {
+            //commandSet.add(new CheckPresenceBit());
+        }
+        if (compiler.isMapPresent) {
+            //commandSet.add(new ReadPresenceMap());
+        }
+        commandSet.add(new StaticCall(compiler.commandSet));
         commandSet.add(new SetApplicationTypeProperty(group.getFieldId()));
     }
 
@@ -84,7 +93,8 @@ public class FastCompiler {
         int loopCommandIndex = commandSet.size();
         BeginLoop loop = new BeginLoop();
         commandSet.add(loop);
-        commandSet.add(new StaticCall(compileSubroutine(sequence.getTypeRef(), sequence.getInstructions())));
+        FastCompiler compiler = compileSubroutine(sequence.getTypeRef(), sequence.getInstructions());
+        commandSet.add(new StaticCall(compiler.commandSet));
         commandSet.add(new SetIndexedApplicationTypeProperty(sequence.getFieldId()));
         commandSet.add(new EndLoop(loopCommandIndex));
         loop.setJumpIndex(commandSet.size());
@@ -92,6 +102,7 @@ public class FastCompiler {
 
     private void compileFieldInstruction(FieldInstruction instruction) {
         if (instruction instanceof Int32Field) {
+            checkIntegerFieldOperators(((Int32Field) instruction).getOperator());
             if (instruction.isOptional()) {
                 commandSet.add(new ReadNullableInt32());
                 commandSet.add(new SetNullableInt32(instruction.getFieldId()));
@@ -100,12 +111,32 @@ public class FastCompiler {
                 commandSet.add(new SetMandatoryInt32(instruction.getFieldId()));
             }
         } else if (instruction instanceof AsciiStringField) {
+            checkVectorFieldOperators(((AsciiStringField) instruction).getOperator());
             if (instruction.isOptional()) {
                 commandSet.add(new ReadNullableAsciiString());
             } else {
                 commandSet.add(new ReadMandatoryAsciiString());
             }
             commandSet.add(new SetString(instruction.getFieldId()));
+        }
+    }
+
+    private void checkIntegerFieldOperators(FieldOperator operator) {
+        if (operator instanceof CopyOperator
+            || operator instanceof DefaultOperator
+            || operator instanceof IncrementOperator) {
+            //commandSet.add(new CheckPresenceBit());
+            isMapPresent = true;
+        }
+    }
+
+    private void checkVectorFieldOperators(FieldOperator operator) {
+        if (operator instanceof CopyOperator
+            || operator instanceof DefaultOperator
+            || operator instanceof IncrementOperator
+            || operator instanceof TailOperator) {
+            //commandSet.add(new CheckPresenceBit());
+            isMapPresent = true;
         }
     }
 }
