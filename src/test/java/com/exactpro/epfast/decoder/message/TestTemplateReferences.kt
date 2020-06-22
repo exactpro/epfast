@@ -1,4 +1,4 @@
-/******************************************************************************
+/*
  * Copyright 2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- ******************************************************************************/
+ */
 
 package com.exactpro.epfast.decoder.message
 
@@ -116,8 +116,8 @@ class TestTemplateReferences {
 
     companion object {
         private const val HEX_STRING = MANDATORY_INT32_942755 + OPTIONAL_INT32_0 +
-                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
-                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
-                ASCII_ABC + ASCII_ABC + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC
+            MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+            MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+            ASCII_ABC + ASCII_ABC + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC
     }
 }
