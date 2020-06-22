@@ -108,7 +108,7 @@ public class DecoderState {
 
     public static class CallStackFrame {
 
-        // private final PresenceMap presenceMap;
+        private final PresenceMap presenceMap;
 
         private final List<DecoderCommand> activeCommandSet;
 
@@ -126,6 +126,7 @@ public class DecoderState {
             this.loopLimit = decoderState.loopLimit;
             this.loopIndex = decoderState.loopIndex;
             this.activeMessage = decoderState.activeMessage;
+            this.presenceMap = decoderState.presenceMap;
         }
 
         public void restoreTo(DecoderState decoderState) {
@@ -134,6 +135,7 @@ public class DecoderState {
             decoderState.loopIndex = loopIndex;
             decoderState.nextCommandIndex = nextCommandIndex;
             decoderState.activeMessage = activeMessage;
+            decoderState.presenceMap = presenceMap;
         }
     }
 }

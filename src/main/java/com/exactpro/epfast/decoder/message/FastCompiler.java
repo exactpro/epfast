@@ -98,6 +98,9 @@ public class FastCompiler {
         BeginLoop loop = new BeginLoop();
         commandSet.add(loop);
         FastCompiler compiler = compileSubroutine(sequence.getTypeRef(), sequence.getInstructions());
+        if (compiler.isMapPresent) {
+            //commandSet.add(new ReadPresenceMap());
+        }
         commandSet.add(new StaticCall(compiler.commandSet));
         commandSet.add(new SetIndexedApplicationTypeProperty(sequence.getFieldId()));
         commandSet.add(new EndLoop(loopCommandIndex));
