@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.presencemap;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
 import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+import com.exactpro.epfast.decoder.presencemap.DecodePresenceMap;
 
-public class ReadMandatoryInt32 extends PrimitiveInstruction<DecodeMandatoryInt32> {
+public class ReadPresenceMap extends PrimitiveInstruction<DecodePresenceMap> {
 
-    public ReadMandatoryInt32() {
-        super(new DecodeMandatoryInt32());
+    public ReadPresenceMap() {
+        super(new DecodePresenceMap());
     }
 
     @Override
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.mandatoryInt32Value = fieldDecoder.getValue();
+    public void setRegisterValue(DecoderState decoderState) {
+        decoderState.presenceMap = fieldDecoder.getValue();
+        decoderState.nextCommandIndex++;
     }
 }

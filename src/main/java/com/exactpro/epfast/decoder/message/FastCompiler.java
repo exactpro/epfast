@@ -18,6 +18,10 @@ package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.message.commands.*;
 import com.exactpro.epfast.decoder.message.commands.InitIndexedProperty;
+import com.exactpro.epfast.decoder.message.commands.ascii.ReadMandatoryAsciiString;
+import com.exactpro.epfast.decoder.message.commands.ascii.ReadNullableAsciiString;
+import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
+import com.exactpro.epfast.decoder.message.commands.integer.*;
 import com.exactpro.epfast.template.*;
 
 import java.util.*;

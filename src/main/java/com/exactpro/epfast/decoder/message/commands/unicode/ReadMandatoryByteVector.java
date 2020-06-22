@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.unicode;
 
 import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.integer.DecodeMandatoryUInt32;
 import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+import com.exactpro.epfast.decoder.unicode.DecodeMandatoryByteVector;
 
-public class ReadMandatoryUInt32 extends PrimitiveInstruction<DecodeMandatoryUInt32> {
+public class ReadMandatoryByteVector extends PrimitiveInstruction<DecodeMandatoryByteVector> {
 
-    public ReadMandatoryUInt32() {
-        super(new DecodeMandatoryUInt32());
+    public ReadMandatoryByteVector() {
+        super(new DecodeMandatoryByteVector());
     }
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.mandatoryUInt32Value = fieldDecoder.getValue();
+
     }
 }

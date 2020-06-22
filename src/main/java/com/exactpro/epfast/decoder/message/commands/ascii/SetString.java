@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.ascii;
 
 import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
