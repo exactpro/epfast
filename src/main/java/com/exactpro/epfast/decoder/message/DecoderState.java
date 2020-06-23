@@ -43,8 +43,6 @@ public class DecoderState {
 
     public int nextCommandIndex = 0;
 
-    public int nextPresenceBitIndex = 0;
-
     public IMessage activeMessage;
 
     public int loopIndex;

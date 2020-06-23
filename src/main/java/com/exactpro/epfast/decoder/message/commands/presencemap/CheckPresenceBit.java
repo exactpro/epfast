@@ -21,9 +21,15 @@ import com.exactpro.epfast.decoder.message.DecoderState;
 
 public class CheckPresenceBit implements DecoderCommand {
 
+    private final int bitIndex;
+
+    public CheckPresenceBit(int bitIndex) {
+        this.bitIndex = bitIndex;
+    }
+
     @Override
     public void executeOn(DecoderState decoderState) {
-        if (!decoderState.presenceMap.getValue(decoderState.nextPresenceBitIndex)) {
+        if (!decoderState.presenceMap.getValue(bitIndex)) {
             decoderState.nextCommandIndex++;
         }
         decoderState.nextCommandIndex++;

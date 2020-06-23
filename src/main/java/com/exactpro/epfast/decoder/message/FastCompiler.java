@@ -30,6 +30,8 @@ public class FastCompiler {
 
     private final ArrayList<DecoderCommand> commandSet = new ArrayList<>();
 
+    private int presenceBitIndex = 0;
+
     private FastCompiler() {
     }
 
@@ -54,6 +56,9 @@ public class FastCompiler {
         if (typeRef != null) {
             commandSet.add(new InitApplicationType(typeRef));
         }
+        if (checkForPresenceMap(instructions)) {
+            //  commandSet.add(new ReadPresenceMap());
+        }
         for (Instruction instruction : instructions) {
             if (instruction instanceof Group) {
                 compileGroup((Group) instruction);
@@ -72,10 +77,8 @@ public class FastCompiler {
 
     private void compileGroup(Group group) {
         if (group.isOptional()) {
-            //commandSet.add(new CheckPresenceBit());
-        }
-        if (checkForPresenceMap(group.getInstructions())) {
-            //commandSet.add(new ReadPresenceMap());
+            // commandSet.add(new CheckPresenceBit(presenceBitIndex));
+            presenceBitIndex++;
         }
         commandSet.add(new StaticCall(compileSubroutine(group.getTypeRef(), group.getInstructions())));
         commandSet.add(new SetApplicationTypeProperty(group.getFieldId()));
@@ -93,10 +96,6 @@ public class FastCompiler {
         int loopCommandIndex = commandSet.size();
         BeginLoop loop = new BeginLoop();
         commandSet.add(loop);
-
-        if (checkForPresenceMap(sequence.getInstructions())) {
-            //commandSet.add(new ReadPresenceMap());
-        }
         commandSet.add(new StaticCall(compileSubroutine(sequence.getTypeRef(), sequence.getInstructions())));
         commandSet.add(new SetIndexedApplicationTypeProperty(sequence.getFieldId()));
         commandSet.add(new EndLoop(loopCommandIndex));
@@ -105,6 +104,10 @@ public class FastCompiler {
 
     private void compileFieldInstruction(FieldInstruction instruction) {
         if (instruction instanceof Int32Field) {
+            if (checkIntegerFieldOperators(((Int32Field) instruction).getOperator())) {
+                //  commandSet.add(new CheckPresenceBit(presenceBitIndex));
+                presenceBitIndex++;
+            }
             if (instruction.isOptional()) {
                 commandSet.add(new ReadNullableInt32());
                 commandSet.add(new SetNullableInt32(instruction.getFieldId()));
@@ -113,6 +116,10 @@ public class FastCompiler {
                 commandSet.add(new SetMandatoryInt32(instruction.getFieldId()));
             }
         } else if (instruction instanceof AsciiStringField) {
+            if (checkVectorFieldOperators(((AsciiStringField) instruction).getOperator())) {
+                //  commandSet.add(new CheckPresenceBit(presenceBitIndex));
+                presenceBitIndex++;
+            }
             if (instruction.isOptional()) {
                 commandSet.add(new ReadNullableAsciiString());
             } else {
