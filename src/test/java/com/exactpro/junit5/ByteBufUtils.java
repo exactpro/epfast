@@ -34,15 +34,26 @@ public class ByteBufUtils {
             return new byte[0];
         }
         String[] values = hex.split(" +");
-        byte[] bytes = new byte[values.length];
-        for (int i = 0; i < values.length; i++) {
-            try {
-                bytes[i] = (byte) Integer.parseInt(values[i], 16);
-            } catch (NumberFormatException e) {
+        int size = 0;
+        for (String value : values) {
+            if (value.length() % 2 == 1) {
                 throw new IllegalArgumentException("Illegal Argument Format. " +
-                    "Invalid value " + values[i] + " in \"" + hex + "\" " +
-                    "Need to pass 1 byte hexadecimal values separated by space. " +
-                    "regex format \"([0-9|a-f]{2} )\"");
+                    "Invalid value " + value + " in \"" + hex + "\" " +
+                    "Hexadecimal values must have even length");
+            }
+            size += value.length() / 2;
+        }
+        byte[] bytes = new byte[size];
+        int index = 0;
+        for (String value : values) {
+            for (int i = 0; i < value.length(); i += 2) {
+                try {
+                    bytes[index++] = (byte) Integer.parseInt(value.substring(i, i + 2), 16);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Illegal Argument Format. " +
+                        "Invalid value " + value.substring(i, i + 2) + " in \"" + hex + "\" " +
+                        "required regex format \"([0-9|a-f]{2} )\"");
+                }
             }
         }
         return bytes;
