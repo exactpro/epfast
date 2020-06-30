@@ -22,6 +22,8 @@ import com.exactpro.epfast.decoder.message.commands.ascii.ReadMandatoryAsciiStri
 import com.exactpro.epfast.decoder.message.commands.ascii.ReadNullableAsciiString;
 import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
 import com.exactpro.epfast.decoder.message.commands.integer.*;
+import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
+import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
 import com.exactpro.epfast.template.*;
 
 import java.util.*;
@@ -57,7 +59,7 @@ public class FastCompiler {
             commandSet.add(new InitApplicationType(typeRef));
         }
         if (checkForPresenceMap(instructions)) {
-            //  commandSet.add(new ReadPresenceMap());
+              commandSet.add(new ReadPresenceMap());
         }
         for (Instruction instruction : instructions) {
             if (instruction instanceof Group) {
@@ -77,7 +79,7 @@ public class FastCompiler {
 
     private void compileGroup(Group group) {
         if (group.isOptional()) {
-            // commandSet.add(new CheckPresenceBit(presenceBitIndex));
+             commandSet.add(new CheckPresenceBit(presenceBitIndex));
             presenceBitIndex++;
         }
         commandSet.add(new StaticCall(compileSubroutine(group.getTypeRef(), group.getInstructions())));
@@ -105,7 +107,7 @@ public class FastCompiler {
     private void compileFieldInstruction(FieldInstruction instruction) {
         if (instruction instanceof Int32Field) {
             if (checkIntegerFieldOperators(((Int32Field) instruction).getOperator())) {
-                //  commandSet.add(new CheckPresenceBit(presenceBitIndex));
+                  commandSet.add(new CheckPresenceBit(presenceBitIndex));
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
@@ -117,7 +119,7 @@ public class FastCompiler {
             }
         } else if (instruction instanceof AsciiStringField) {
             if (checkVectorFieldOperators(((AsciiStringField) instruction).getOperator())) {
-                //  commandSet.add(new CheckPresenceBit(presenceBitIndex));
+                  commandSet.add(new CheckPresenceBit(presenceBitIndex));
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
