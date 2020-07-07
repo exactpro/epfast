@@ -29,6 +29,5 @@ public class ReadPresenceMap extends PrimitiveInstruction<DecodePresenceMap> {
     @Override
     public void setRegisterValue(DecoderState decoderState) {
         decoderState.presenceMap = fieldDecoder.getValue();
-        decoderState.nextCommandIndex++;
     }
 }

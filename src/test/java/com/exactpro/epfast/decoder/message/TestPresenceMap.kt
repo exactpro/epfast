@@ -1,6 +1,12 @@
 package com.exactpro.epfast.decoder.message
 
+import com.exactpro.epfast.decoder.IMessage
 import com.exactpro.epfast.template.dsl.template
+import com.exactpro.epfast.template.simple.Reference
+import com.exactpro.junit5.WithByteBuf
+import io.netty.buffer.ByteBuf
+import java.io.IOException
+import org.assertj.core.api.Assertions.assertThat
 
 class TestPresenceMap {
     private val templates = listOf(
@@ -115,4 +121,58 @@ class TestPresenceMap {
             }
         }
     )
+
+    @WithByteBuf(HEX_STRING)
+    @Throws(IOException::class)
+    fun testTemplateRef(buffers: Collection<ByteBuf>) {
+        val handler = FastDecoder(templates, Reference("first template", ""))
+
+        val messages: MutableList<Any?> = mutableListOf()
+        for (buffer in buffers) {
+            messages.addAll(handler.process(buffer))
+        }
+
+        val message: FastMessage = messages[0] as FastMessage
+
+        assertThat(message.getField(Reference("int32_1"))).isEqualTo(942755)
+        assertThat(message.getField(Reference("int32_null_1"))).isEqualTo(0)
+        assertThat(message.getField(Reference("int32_2"))).isEqualTo(942755)
+        assertThat(message.getField(Reference("int32_null_2"))).isEqualTo(0)
+        assertThat(message.getField(Reference("ascii_2"))).isEqualTo("\u0000\u0000")
+
+        val group: FastMessage = message.getField(Reference("group")) as FastMessage
+        assertThat(group.getField(Reference("int32_3"))).isEqualTo(942755)
+        assertThat(group.getField(Reference("int32_null_3"))).isEqualTo(0)
+        assertThat(group.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
+        assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
+
+        val sequence: Array<IMessage> = message.getField(Reference("sequence")) as Array<IMessage>
+        assertThat(sequence.size).isEqualTo(3)
+
+        for (sequence_group in sequence) {
+            val groupMessage: FastMessage = sequence_group as FastMessage
+            assertThat(groupMessage.getField(Reference("int32_3"))).isEqualTo(942755)
+            assertThat(groupMessage.getField(Reference("int32_null_3"))).isEqualTo(0)
+            assertThat(groupMessage.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
+            assertThat(groupMessage.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
+        }
+
+        assertThat(message.getField(Reference("ascii_null_2"))).isEqualTo("ABC")
+        assertThat(message.getField(Reference("ascii_1"))).isEqualTo("\u0000\u0000")
+        assertThat(message.getField(Reference("ascii_null_1"))).isEqualTo("ABC")
+    }
+
+    companion object {
+        private const val PM_1 = "82 "
+        private const val PM_2 = "83 "
+        private const val PM_3 = "80 "
+
+        private const val HEX_STRING = PM_1 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 +
+                PM_2 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+                PM_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+                MANDATORY_UINT32_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+                ASCII_ABC + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC
+    }
 }
