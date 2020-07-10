@@ -33,6 +33,9 @@ class TestPresenceMap {
                 }
                 asciiString("ascii_1") {
                     optional = false
+                    copy {
+                        initialValue = "QWERTY"
+                    }
                 }
                 asciiString("ascii_null_1") {
                     optional = true
@@ -98,16 +101,16 @@ class TestPresenceMap {
                         name = "length"
                     }
                     instructions {
-                        int32("int32_3") {
+                        int32("int32_4") {
                             optional = false
                         }
-                        int32("int32_null_3") {
+                        int32("int32_null_4") {
                             optional = true
                         }
-                        asciiString("ascii_3") {
+                        asciiString("ascii_4") {
                             optional = false
                         }
-                        asciiString("ascii_null_3") {
+                        asciiString("ascii_null_4") {
                             optional = true
                         }
                     }
@@ -122,9 +125,9 @@ class TestPresenceMap {
         }
     )
 
-    @WithByteBuf(HEX_STRING)
+    @WithByteBuf(ALL_BITS_PRESENT)
     @Throws(IOException::class)
-    fun testTemplateRef(buffers: Collection<ByteBuf>) {
+    fun testAllBitsPresent(buffers: Collection<ByteBuf>) {
         val handler = FastDecoder(templates, Reference("first template", ""))
 
         val messages: MutableList<Any?> = mutableListOf()
@@ -151,10 +154,10 @@ class TestPresenceMap {
 
         for (sequence_group in sequence) {
             val groupMessage: FastMessage = sequence_group as FastMessage
-            assertThat(groupMessage.getField(Reference("int32_3"))).isEqualTo(942755)
-            assertThat(groupMessage.getField(Reference("int32_null_3"))).isEqualTo(0)
-            assertThat(groupMessage.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
-            assertThat(groupMessage.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
+            assertThat(groupMessage.getField(Reference("int32_4"))).isEqualTo(942755)
+            assertThat(groupMessage.getField(Reference("int32_null_4"))).isEqualTo(0)
+            assertThat(groupMessage.getField(Reference("ascii_4"))).isEqualTo("\u0000\u0000")
+            assertThat(groupMessage.getField(Reference("ascii_null_4"))).isEqualTo("ABC")
         }
 
         assertThat(message.getField(Reference("ascii_null_2"))).isEqualTo("ABC")
@@ -162,14 +165,63 @@ class TestPresenceMap {
         assertThat(message.getField(Reference("ascii_null_1"))).isEqualTo("ABC")
     }
 
-    companion object {
-        private const val PM_1 = "82 "
-        private const val PM_2 = "83 "
-        private const val PM_3 = "80 "
+    @WithByteBuf(HEX_STRING)
+    @Throws(IOException::class)
+    fun testRegularPresenceMap(buffers: Collection<ByteBuf>) {
+        val handler = FastDecoder(templates, Reference("first template", ""))
 
-        private const val HEX_STRING = PM_1 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 +
-                PM_2 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
-                PM_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+        val messages: MutableList<Any?> = mutableListOf()
+        for (buffer in buffers) {
+            messages.addAll(handler.process(buffer))
+        }
+
+        val message: FastMessage = messages[0] as FastMessage
+
+        assertThat(message.getField(Reference("int32_1"))).isEqualTo(942755)
+        assertThat(message.getField(Reference("int32_null_1"))).isEqualTo(-1)
+        assertThat(message.getField(Reference("int32_2"))).isEqualTo(942755)
+        assertThat(message.getField(Reference("int32_null_2"))).isEqualTo(0)
+        assertThat(message.getField(Reference("ascii_2"))).isEqualTo("\u0000\u0000")
+
+        val group: FastMessage = message.getField(Reference("group")) as FastMessage
+        assertThat(group.getField(Reference("int32_3"))).isEqualTo(-1)
+        assertThat(group.getField(Reference("int32_null_3"))).isEqualTo(-1)
+        assertThat(group.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
+        assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
+
+        val sequence: Array<IMessage> = message.getField(Reference("sequence")) as Array<IMessage>
+        assertThat(sequence.size).isEqualTo(3)
+
+        for (sequence_group in sequence) {
+            val groupMessage: FastMessage = sequence_group as FastMessage
+            assertThat(groupMessage.getField(Reference("int32_4"))).isEqualTo(942755)
+            assertThat(groupMessage.getField(Reference("int32_null_4"))).isEqualTo(0)
+            assertThat(groupMessage.getField(Reference("ascii_4"))).isEqualTo("\u0000\u0000")
+            assertThat(groupMessage.getField(Reference("ascii_null_4"))).isEqualTo("ABC")
+        }
+
+        assertThat(message.getField(Reference("ascii_null_2"))).isEqualTo("ABC")
+        assertThat(message.getField(Reference("ascii_1"))).isNull()
+        assertThat(message.getField(Reference("ascii_null_1"))).isEqualTo("ABC")
+    }
+
+    companion object {
+        private const val PM_111 = "87 "
+        private const val PM_100 = "84 "
+        private const val PM_11 = "83 "
+        private const val PM_0 = "80 "
+
+        private const val HEX_STRING = PM_100 + MANDATORY_INT32_942755 +
+                PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+                PM_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+                MANDATORY_UINT32_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+                ASCII_ABC + ASCII_ABC
+
+        private const val ALL_BITS_PRESENT = PM_111 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 +
+                PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+                PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
                 MANDATORY_UINT32_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
                 MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
                 MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +

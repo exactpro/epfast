@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands.presencemap;
+package com.exactpro.epfast.decoder.message.commands.integer;
 
-import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.template.Reference;
 
-public class CheckPresenceBit implements DecoderCommand {
+public class SetNullableInt32 implements DecoderCommand {
 
-    private final int bitIndex;
+    private Reference propertyId;
 
-    public CheckPresenceBit(int bitIndex) {
-        this.bitIndex = bitIndex;
+    public SetNullableInt32(Reference propertyId) {
+        this.propertyId = propertyId;
     }
 
     @Override
     public void executeOn(DecoderState decoderState) {
-        if (decoderState.presenceMap.getValue(bitIndex)) {
-            decoderState.nextCommandIndex++;
-        }
+        decoderState.activeMessage.setField(propertyId, decoderState.register.optionalInt32Value);
         decoderState.nextCommandIndex++;
     }
 }

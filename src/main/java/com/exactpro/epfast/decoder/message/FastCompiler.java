@@ -22,6 +22,7 @@ import com.exactpro.epfast.decoder.message.commands.ascii.ReadMandatoryAsciiStri
 import com.exactpro.epfast.decoder.message.commands.ascii.ReadNullableAsciiString;
 import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
 import com.exactpro.epfast.decoder.message.commands.integer.*;
+import com.exactpro.epfast.decoder.message.commands.operators.CheckDictionary;
 import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
 import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
 import com.exactpro.epfast.template.*;
@@ -58,8 +59,8 @@ public class FastCompiler {
         if (typeRef != null) {
             commandSet.add(new InitApplicationType(typeRef));
         }
-        if (checkForPresenceMap(instructions)) {
-              commandSet.add(new ReadPresenceMap());
+        if (requiresPresenceMap(instructions)) {
+            commandSet.add(new ReadPresenceMap());
         }
         for (Instruction instruction : instructions) {
             if (instruction instanceof Group) {
@@ -79,7 +80,7 @@ public class FastCompiler {
 
     private void compileGroup(Group group) {
         if (group.isOptional()) {
-             commandSet.add(new CheckPresenceBit(presenceBitIndex));
+            commandSet.add(new CheckPresenceBit(presenceBitIndex));
             presenceBitIndex++;
         }
         commandSet.add(new StaticCall(compileSubroutine(group.getTypeRef(), group.getInstructions())));
@@ -106,8 +107,9 @@ public class FastCompiler {
 
     private void compileFieldInstruction(FieldInstruction instruction) {
         if (instruction instanceof Int32Field) {
-            if (checkIntegerFieldOperators(((Int32Field) instruction).getOperator())) {
-                  commandSet.add(new CheckPresenceBit(presenceBitIndex));
+            if (checkOperators(((Int32Field) instruction).getOperator())) {
+                commandSet.add(new CheckPresenceBit(presenceBitIndex));
+                commandSet.add(new CheckDictionary());
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
@@ -118,8 +120,9 @@ public class FastCompiler {
                 commandSet.add(new SetMandatoryInt32(instruction.getFieldId()));
             }
         } else if (instruction instanceof AsciiStringField) {
-            if (checkVectorFieldOperators(((AsciiStringField) instruction).getOperator())) {
-                  commandSet.add(new CheckPresenceBit(presenceBitIndex));
+            if (checkOperators(((AsciiStringField) instruction).getOperator())) {
+                commandSet.add(new CheckPresenceBit(presenceBitIndex));
+                commandSet.add(new CheckDictionary());
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
@@ -131,14 +134,14 @@ public class FastCompiler {
         }
     }
 
-    private boolean checkForPresenceMap(Collection<? extends Instruction> instructions) {
+    private boolean requiresPresenceMap(Collection<? extends Instruction> instructions) {
         for (Instruction instruction : instructions) {
             if (instruction instanceof Int32Field) {
-                if (checkIntegerFieldOperators(((Int32Field) instruction).getOperator())) {
+                if (checkOperators(((Int32Field) instruction).getOperator())) {
                     return true;
                 }
             } else if (instruction instanceof AsciiStringField) {
-                if (checkVectorFieldOperators(((AsciiStringField) instruction).getOperator())) {
+                if (checkOperators(((AsciiStringField) instruction).getOperator())) {
                     return true;
                 }
             }
@@ -146,13 +149,7 @@ public class FastCompiler {
         return false;
     }
 
-    private boolean checkIntegerFieldOperators(FieldOperator operator) {
-        return operator instanceof CopyOperator
-            || operator instanceof DefaultOperator
-            || operator instanceof IncrementOperator;
-    }
-
-    private boolean checkVectorFieldOperators(FieldOperator operator) {
+    private boolean checkOperators(FieldOperator operator) {
         return operator instanceof CopyOperator
             || operator instanceof DefaultOperator
             || operator instanceof IncrementOperator

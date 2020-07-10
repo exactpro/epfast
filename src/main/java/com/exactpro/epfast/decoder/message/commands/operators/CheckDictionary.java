@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.operators;
 
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class SetNullableInt32 implements DecoderCommand {
-
-    private Reference propertyId;
-
-    public SetNullableInt32(Reference propertyId) {
-        this.propertyId = propertyId;
-    }
+public class CheckDictionary implements DecoderCommand {
 
     @Override
     public void executeOn(DecoderState decoderState) {
-        decoderState.activeMessage.setField(propertyId, decoderState.register.optionalInt32Value);
-        decoderState.nextCommandIndex++;
+        //TODO check real values from dictionary
+        //Probably there will be separate commands for each operator instead of this single one.
+        setTempDictionaryValues(decoderState);
+        decoderState.nextCommandIndex += 2;
+    }
+
+    private void setTempDictionaryValues(DecoderState decoderState) {
+        decoderState.register.mandatoryInt32Value = -1;
+        decoderState.register.optionalInt32Value = -1;
+        decoderState.register.stringValue = null;
     }
 }
