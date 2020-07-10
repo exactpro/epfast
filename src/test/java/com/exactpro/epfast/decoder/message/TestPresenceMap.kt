@@ -184,7 +184,7 @@ class TestPresenceMap {
         assertThat(message.getField(Reference("ascii_2"))).isEqualTo("\u0000\u0000")
 
         val group: FastMessage = message.getField(Reference("group")) as FastMessage
-        assertThat(group.getField(Reference("int32_3"))).isEqualTo(-1)
+        assertThat(group.getField(Reference("int32_3"))).isEqualTo(1)
         assertThat(group.getField(Reference("int32_null_3"))).isEqualTo(-1)
         assertThat(group.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
         assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")

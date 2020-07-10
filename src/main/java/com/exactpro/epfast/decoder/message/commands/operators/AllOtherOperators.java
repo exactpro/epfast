@@ -19,17 +19,18 @@ package com.exactpro.epfast.decoder.message.commands.operators;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class CheckDictionary implements DecoderCommand {
+public class AllOtherOperators implements DecoderCommand {
 
     @Override
     public void executeOn(DecoderState decoderState) {
-        //TODO check real values from dictionary
-        //Probably there will be separate commands for each operator instead of this single one.
-        setTempDictionaryValues(decoderState);
-        decoderState.nextCommandIndex += 2;
+        if (!decoderState.valuePresent) {
+            tempOperatorLogic(decoderState);
+            decoderState.valuePresent = true;
+        }
+        decoderState.nextCommandIndex++;
     }
 
-    private void setTempDictionaryValues(DecoderState decoderState) {
+    private void tempOperatorLogic(DecoderState decoderState) {
         decoderState.register.mandatoryInt32Value = -1;
         decoderState.register.optionalInt32Value = -1;
         decoderState.register.stringValue = null;

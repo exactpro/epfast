@@ -22,7 +22,8 @@ import com.exactpro.epfast.decoder.message.commands.ascii.ReadMandatoryAsciiStri
 import com.exactpro.epfast.decoder.message.commands.ascii.ReadNullableAsciiString;
 import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
 import com.exactpro.epfast.decoder.message.commands.integer.*;
-import com.exactpro.epfast.decoder.message.commands.operators.CheckDictionary;
+import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperators;
+import com.exactpro.epfast.decoder.message.commands.operators.Default;
 import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
 import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
 import com.exactpro.epfast.template.*;
@@ -109,20 +110,20 @@ public class FastCompiler {
         if (instruction instanceof Int32Field) {
             if (checkOperators(((Int32Field) instruction).getOperator())) {
                 commandSet.add(new CheckPresenceBit(presenceBitIndex));
-                commandSet.add(new CheckDictionary());
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
                 commandSet.add(new ReadNullableInt32());
+                addOperator(((Int32Field) instruction).getOperator());
                 commandSet.add(new SetNullableInt32(instruction.getFieldId()));
             } else {
                 commandSet.add(new ReadMandatoryInt32());
+                addOperator(((Int32Field) instruction).getOperator());
                 commandSet.add(new SetMandatoryInt32(instruction.getFieldId()));
             }
         } else if (instruction instanceof AsciiStringField) {
             if (checkOperators(((AsciiStringField) instruction).getOperator())) {
                 commandSet.add(new CheckPresenceBit(presenceBitIndex));
-                commandSet.add(new CheckDictionary());
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
@@ -130,6 +131,7 @@ public class FastCompiler {
             } else {
                 commandSet.add(new ReadMandatoryAsciiString());
             }
+            addOperator(((AsciiStringField) instruction).getOperator());
             commandSet.add(new SetString(instruction.getFieldId()));
         }
     }
@@ -154,5 +156,13 @@ public class FastCompiler {
             || operator instanceof DefaultOperator
             || operator instanceof IncrementOperator
             || operator instanceof TailOperator;
+    }
+
+    private void addOperator(FieldOperator operator) {
+        if (operator instanceof DefaultOperator) {
+            commandSet.add(new Default());
+        } else {
+            commandSet.add(new AllOtherOperators());
+        }
     }
 }
