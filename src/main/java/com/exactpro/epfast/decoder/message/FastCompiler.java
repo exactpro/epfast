@@ -22,8 +22,10 @@ import com.exactpro.epfast.decoder.message.commands.ascii.ReadMandatoryAsciiStri
 import com.exactpro.epfast.decoder.message.commands.ascii.ReadNullableAsciiString;
 import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
 import com.exactpro.epfast.decoder.message.commands.integer.*;
-import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperators;
-import com.exactpro.epfast.decoder.message.commands.operators.Default;
+import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperatorsMissingValue;
+import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperatorsPresentValue;
+import com.exactpro.epfast.decoder.message.commands.operators.DefaultMissingValue;
+import com.exactpro.epfast.decoder.message.commands.operators.DefaultPresentValue;
 import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
 import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
 import com.exactpro.epfast.template.*;
@@ -108,21 +110,24 @@ public class FastCompiler {
 
     private void compileFieldInstruction(FieldInstruction instruction) {
         if (instruction instanceof Int32Field) {
-            if (checkOperators(((Int32Field) instruction).getOperator())) {
+            FieldOperator operator = ((Int32Field) instruction).getOperator();
+            if (requiresBit(operator)) {
                 commandSet.add(new CheckPresenceBit(presenceBitIndex));
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
                 commandSet.add(new ReadNullableInt32());
-                addOperator(((Int32Field) instruction).getOperator());
+                addOperator(operator);
                 commandSet.add(new SetNullableInt32(instruction.getFieldId()));
             } else {
                 commandSet.add(new ReadMandatoryInt32());
-                addOperator(((Int32Field) instruction).getOperator());
+                addOperator(operator);
                 commandSet.add(new SetMandatoryInt32(instruction.getFieldId()));
             }
         } else if (instruction instanceof AsciiStringField) {
-            if (checkOperators(((AsciiStringField) instruction).getOperator())) {
+            FieldOperator operator = ((AsciiStringField) instruction).getOperator();
+
+            if (requiresBit(operator)) {
                 commandSet.add(new CheckPresenceBit(presenceBitIndex));
                 presenceBitIndex++;
             }
@@ -131,7 +136,7 @@ public class FastCompiler {
             } else {
                 commandSet.add(new ReadMandatoryAsciiString());
             }
-            addOperator(((AsciiStringField) instruction).getOperator());
+            addOperator(operator);
             commandSet.add(new SetString(instruction.getFieldId()));
         }
     }
@@ -139,11 +144,11 @@ public class FastCompiler {
     private boolean requiresPresenceMap(Collection<? extends Instruction> instructions) {
         for (Instruction instruction : instructions) {
             if (instruction instanceof Int32Field) {
-                if (checkOperators(((Int32Field) instruction).getOperator())) {
+                if (requiresBit(((Int32Field) instruction).getOperator())) {
                     return true;
                 }
             } else if (instruction instanceof AsciiStringField) {
-                if (checkOperators(((AsciiStringField) instruction).getOperator())) {
+                if (requiresBit(((AsciiStringField) instruction).getOperator())) {
                     return true;
                 }
             }
@@ -151,7 +156,7 @@ public class FastCompiler {
         return false;
     }
 
-    private boolean checkOperators(FieldOperator operator) {
+    private boolean requiresBit(FieldOperator operator) {
         return operator instanceof CopyOperator
             || operator instanceof DefaultOperator
             || operator instanceof IncrementOperator
@@ -160,9 +165,11 @@ public class FastCompiler {
 
     private void addOperator(FieldOperator operator) {
         if (operator instanceof DefaultOperator) {
-            commandSet.add(new Default());
+            commandSet.add(new DefaultPresentValue());
+            commandSet.add(new DefaultMissingValue());
         } else {
-            commandSet.add(new AllOtherOperators());
+            commandSet.add(new AllOtherOperatorsPresentValue());
+            commandSet.add(new AllOtherOperatorsMissingValue());
         }
     }
 }

@@ -19,22 +19,10 @@ package com.exactpro.epfast.decoder.message.commands.operators;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class Default implements DecoderCommand {
+public class AllOtherOperatorsPresentValue implements DecoderCommand {
 
     @Override
     public void executeOn(DecoderState decoderState) {
-        if (!decoderState.valuePresent) {
-            //TODO do default operator logic
-            tempDefaultOperatorLogic(decoderState);
-            decoderState.valuePresent = true;
-        }
-        decoderState.nextCommandIndex++;
+        decoderState.nextCommandIndex += 2;
     }
-
-    private void tempDefaultOperatorLogic(DecoderState decoderState) {
-        decoderState.register.mandatoryInt32Value = 1;
-        decoderState.register.optionalInt32Value = 1;
-        decoderState.register.stringValue = "Default";
-    }
-
 }

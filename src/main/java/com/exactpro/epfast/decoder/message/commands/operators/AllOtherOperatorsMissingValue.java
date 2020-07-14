@@ -14,24 +14,21 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands.presencemap;
+package com.exactpro.epfast.decoder.message.commands.operators;
 
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class CheckPresenceBit implements DecoderCommand {
-
-    private final int bitIndex;
-
-    public CheckPresenceBit(int bitIndex) {
-        this.bitIndex = bitIndex;
-    }
-
+public class AllOtherOperatorsMissingValue implements DecoderCommand {
     @Override
     public void executeOn(DecoderState decoderState) {
-        if (!decoderState.presenceMap.getValue(bitIndex)) {
-            decoderState.nextCommandIndex += 2;
-        }
+        tempOperatorLogic(decoderState);
         decoderState.nextCommandIndex++;
+    }
+
+    private void tempOperatorLogic(DecoderState decoderState) {
+        decoderState.register.mandatoryInt32Value = -1;
+        decoderState.register.optionalInt32Value = -1;
+        decoderState.register.stringValue = null;
     }
 }

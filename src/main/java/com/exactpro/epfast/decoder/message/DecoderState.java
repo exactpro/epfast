@@ -51,8 +51,6 @@ public class DecoderState {
 
     public final UnionRegister register = new UnionRegister();
 
-    public boolean valuePresent = true;
-
     public DecoderState(Map<Reference, List<DecoderCommand>> commandSets,
                         List<DecoderCommand> bootstrapCommands) {
         this.commandSets = Objects.requireNonNull(commandSets, "commandSets cannot be null");
@@ -120,8 +118,6 @@ public class DecoderState {
 
         private final IMessage activeMessage;
 
-        private final boolean valuePresent;
-
         public CallStackFrame(DecoderState decoderState) {
             this.activeCommandSet = decoderState.activeCommandSet;
             this.nextCommandIndex = decoderState.nextCommandIndex;
@@ -129,7 +125,6 @@ public class DecoderState {
             this.loopIndex = decoderState.loopIndex;
             this.activeMessage = decoderState.activeMessage;
             this.presenceMap = decoderState.presenceMap;
-            this.valuePresent = decoderState.valuePresent;
         }
 
         public void restoreTo(DecoderState decoderState) {
@@ -139,7 +134,6 @@ public class DecoderState {
             decoderState.nextCommandIndex = nextCommandIndex;
             decoderState.activeMessage = activeMessage;
             decoderState.presenceMap = presenceMap;
-            decoderState.valuePresent = valuePresent;
         }
     }
 }
