@@ -164,11 +164,12 @@ public class FastCompiler {
     }
 
     private void addOperator(FieldOperator operator) {
+        int offset = 2;
         if (operator instanceof DefaultOperator) {
-            commandSet.add(new DefaultPresentValue());
+            commandSet.add(new DefaultPresentValue(offset));
             commandSet.add(new DefaultMissingValue());
         } else {
-            commandSet.add(new AllOtherOperatorsPresentValue());
+            commandSet.add(new AllOtherOperatorsPresentValue(offset));
             commandSet.add(new AllOtherOperatorsMissingValue());
         }
     }

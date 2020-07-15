@@ -21,9 +21,15 @@ import com.exactpro.epfast.decoder.message.DecoderState;
 
 public class DefaultPresentValue implements DecoderCommand {
 
+    private int offset;
+
+    public DefaultPresentValue(int offset) {
+        this.offset = offset;
+    }
+
     @Override
     public void executeOn(DecoderState decoderState) {
         //TODO default operator logic with present value
-        decoderState.nextCommandIndex += 2;
+        decoderState.nextCommandIndex += offset;
     }
 }
