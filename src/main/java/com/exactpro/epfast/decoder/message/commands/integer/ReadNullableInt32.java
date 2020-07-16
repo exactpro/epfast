@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.presencemap;
+package com.exactpro.epfast.decoder.message.commands.integer;
 
-import java.util.BitSet;
+import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
-public class PresenceMap {
+public class ReadNullableInt32 extends PrimitiveInstruction<DecodeNullableInt32> {
 
-    private BitSet bitContent;
-
-    PresenceMap(BitSet bitContent) {
-        this.bitContent = bitContent;
+    public ReadNullableInt32() {
+        super(new DecodeNullableInt32());
     }
 
-    public boolean getValue(int index) {
-        return bitContent.get(index);
+    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
+        decoderState.register.optionalInt32Value = fieldDecoder.getValue();
     }
 }

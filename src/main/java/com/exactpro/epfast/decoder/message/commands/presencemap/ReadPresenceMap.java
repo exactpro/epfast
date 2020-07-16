@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.presencemap;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.integer.DecodeNullableUInt32;
 import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+import com.exactpro.epfast.decoder.presencemap.DecodePresenceMap;
 
-public class ReadNullableUInt32 extends PrimitiveInstruction<DecodeNullableUInt32> {
-    public ReadNullableUInt32() {
-        super(new DecodeNullableUInt32());
+public class ReadPresenceMap extends PrimitiveInstruction<DecodePresenceMap> {
+
+    public ReadPresenceMap() {
+        super(new DecodePresenceMap());
     }
 
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.optionalUInt32Value = fieldDecoder.getValue();
+    @Override
+    public void setRegisterValue(DecoderState decoderState) {
+        decoderState.presenceMap = fieldDecoder.getValue();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.operators;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.ascii.DecodeNullableAsciiString;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
-import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
-public class ReadNullableAsciiString extends PrimitiveInstruction<DecodeNullableAsciiString> {
+public class DefaultPresentValue implements DecoderCommand {
 
-    public ReadNullableAsciiString() {
-        super(new DecodeNullableAsciiString());
+    private int offset;
+
+    public DefaultPresentValue(int offset) {
+        this.offset = offset;
     }
 
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.stringValue = fieldDecoder.getValue();
+    @Override
+    public void executeOn(DecoderState decoderState) {
+        //TODO default operator logic with present value
+        decoderState.nextCommandIndex += offset;
     }
 }

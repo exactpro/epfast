@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.presencemap;
+package com.exactpro.epfast.decoder.message.commands.operators;
 
-import java.util.BitSet;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class PresenceMap {
+public class AllOtherOperatorsPresentValue implements DecoderCommand {
+    private int offset;
 
-    private BitSet bitContent;
-
-    PresenceMap(BitSet bitContent) {
-        this.bitContent = bitContent;
+    public AllOtherOperatorsPresentValue(int offset) {
+        this.offset = offset;
     }
 
-    public boolean getValue(int index) {
-        return bitContent.get(index);
+    @Override
+    public void executeOn(DecoderState decoderState) {
+        decoderState.nextCommandIndex += offset;
     }
 }

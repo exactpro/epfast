@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.decimal;
 
+import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.decimal.DecodeMandatoryDecimal;
 import com.exactpro.epfast.decoder.message.DecoderState;
-import com.exactpro.epfast.decoder.message.DecoderCommand;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
-public class SetNullableInt32 implements DecoderCommand {
-
-    private Reference propertyId;
-
-    public SetNullableInt32(Reference propertyId) {
-        this.propertyId = propertyId;
+public class ReadMandatorySimpleDecimal extends PrimitiveInstruction<DecodeMandatoryDecimal> {
+    public ReadMandatorySimpleDecimal() {
+        super(new DecodeMandatoryDecimal());
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
-        decoderState.activeMessage.setField(propertyId, decoderState.register.optionalInt32Value);
-        decoderState.nextCommandIndex++;
+    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
+
     }
 }

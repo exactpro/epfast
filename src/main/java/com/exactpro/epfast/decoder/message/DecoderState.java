@@ -17,6 +17,7 @@
 package com.exactpro.epfast.decoder.message;
 
 import com.exactpro.epfast.decoder.IMessage;
+import com.exactpro.epfast.decoder.presencemap.PresenceMap;
 import com.exactpro.epfast.template.*;
 import io.netty.buffer.ByteBuf;
 
@@ -32,7 +33,7 @@ public class DecoderState {
 
     public ArrayList<IMessage> decodedMessages = new ArrayList<>(); // output
 
-    // private PresenceMap presenceMap;
+    public PresenceMap presenceMap;
 
     public final Map<Reference, List<DecoderCommand>> commandSets;
 
@@ -105,7 +106,7 @@ public class DecoderState {
 
     public static class CallStackFrame {
 
-        // private final PresenceMap presenceMap;
+        private final PresenceMap presenceMap;
 
         private final List<DecoderCommand> activeCommandSet;
 
@@ -123,6 +124,7 @@ public class DecoderState {
             this.loopLimit = decoderState.loopLimit;
             this.loopIndex = decoderState.loopIndex;
             this.activeMessage = decoderState.activeMessage;
+            this.presenceMap = decoderState.presenceMap;
         }
 
         public void restoreTo(DecoderState decoderState) {
@@ -131,6 +133,7 @@ public class DecoderState {
             decoderState.loopIndex = loopIndex;
             decoderState.nextCommandIndex = nextCommandIndex;
             decoderState.activeMessage = activeMessage;
+            decoderState.presenceMap = presenceMap;
         }
     }
 }

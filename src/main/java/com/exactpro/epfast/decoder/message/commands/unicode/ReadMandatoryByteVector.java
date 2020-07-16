@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.unicode;
 
+import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.message.DecoderState;
-import com.exactpro.epfast.decoder.message.DecoderCommand;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
+import com.exactpro.epfast.decoder.unicode.DecodeMandatoryByteVector;
 
-public class SetString implements DecoderCommand {
+public class ReadMandatoryByteVector extends PrimitiveInstruction<DecodeMandatoryByteVector> {
 
-    private Reference propertyId;
-
-    public SetString(Reference propertyId) {
-        this.propertyId = propertyId;
+    public ReadMandatoryByteVector() {
+        super(new DecodeMandatoryByteVector());
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
-        decoderState.activeMessage.setField(propertyId, decoderState.register.stringValue);
-        decoderState.nextCommandIndex++;
+    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
+
     }
 }

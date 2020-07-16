@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands;
+package com.exactpro.epfast.decoder.message.commands.operators;
 
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
-import com.exactpro.epfast.template.Reference;
+import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class SetMandatoryInt32 implements DecoderCommand {
-
-    private Reference propertyId;
-
-    public SetMandatoryInt32(Reference propertyId) {
-        this.propertyId = propertyId;
-    }
+public class DefaultMissingValue implements DecoderCommand {
 
     @Override
     public void executeOn(DecoderState decoderState) {
-        decoderState.activeMessage.setField(propertyId, decoderState.register.mandatoryInt32Value);
+        //TODO default operator logic when value is not present
+        tempDefaultOperatorLogic(decoderState);
         decoderState.nextCommandIndex++;
     }
-}
 
+    private void tempDefaultOperatorLogic(DecoderState decoderState) {
+        decoderState.register.mandatoryInt32Value = 1;
+        decoderState.register.optionalInt32Value = 1;
+        decoderState.register.stringValue = "Default";
+    }
+
+}
