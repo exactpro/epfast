@@ -22,10 +22,7 @@ import com.exactpro.epfast.decoder.message.commands.ascii.ReadMandatoryAsciiStri
 import com.exactpro.epfast.decoder.message.commands.ascii.ReadNullableAsciiString;
 import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
 import com.exactpro.epfast.decoder.message.commands.integer.*;
-import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperatorsMissingValue;
-import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperatorsPresentValue;
-import com.exactpro.epfast.decoder.message.commands.operators.DefaultMissingValue;
-import com.exactpro.epfast.decoder.message.commands.operators.DefaultPresentValue;
+import com.exactpro.epfast.decoder.message.commands.operators.*;
 import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
 import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
 import com.exactpro.epfast.template.*;
@@ -165,12 +162,22 @@ public class FastCompiler {
 
     private void addOperator(FieldOperator operator) {
         int offset = 2;
-        if (operator instanceof DefaultOperator) {
+        if (operator instanceof ConstantOperator) {
+            commandSet.add(new Constant());
+        } else if (operator instanceof CopyOperator) {
+            commandSet.add(new CopyPresentValue(offset));
+            commandSet.add(new CopyMissingValue());
+        } else if (operator instanceof DefaultOperator) {
             commandSet.add(new DefaultPresentValue(offset));
             commandSet.add(new DefaultMissingValue());
-        } else {
-            commandSet.add(new AllOtherOperatorsPresentValue(offset));
-            commandSet.add(new AllOtherOperatorsMissingValue());
+        } else if (operator instanceof DeltaOperator) {
+            commandSet.add(new Delta());
+        } else if (operator instanceof IncrementOperator) {
+            commandSet.add(new IncrementPresentValue(offset));
+            commandSet.add(new IncrementMissingValue());
+        } else if (operator instanceof TailOperator) {
+            commandSet.add(new TailPresentValue(offset));
+            commandSet.add(new TailMissingValue());
         }
     }
 }

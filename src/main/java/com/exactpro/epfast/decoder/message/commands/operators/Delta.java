@@ -19,19 +19,9 @@ package com.exactpro.epfast.decoder.message.commands.operators;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class DefaultMissingValue implements DecoderCommand {
-
+public class Delta implements DecoderCommand {
     @Override
     public void executeOn(DecoderState decoderState) {
-        //TODO default operator logic when value is not present
-        tempLogic(decoderState);
         decoderState.nextCommandIndex++;
     }
-
-    private void tempLogic(DecoderState decoderState) {
-        decoderState.register.mandatoryInt32Value = 1;
-        decoderState.register.optionalInt32Value = 1;
-        decoderState.register.stringValue = "Default";
-    }
-
 }

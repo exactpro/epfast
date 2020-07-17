@@ -19,15 +19,16 @@ package com.exactpro.epfast.decoder.message.commands.operators;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class AllOtherOperatorsPresentValue implements DecoderCommand {
+public class IncrementPresentValue implements DecoderCommand {
+
     private int offset;
 
-    public AllOtherOperatorsPresentValue(int offset) {
+    public IncrementPresentValue(int offset) {
         this.offset = offset;
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public void executeOn(DecoderState decoderState)  {
         decoderState.nextCommandIndex += offset;
     }
 }

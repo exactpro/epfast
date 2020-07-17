@@ -178,14 +178,14 @@ class TestPresenceMap {
         val message: FastMessage = messages[0] as FastMessage
 
         assertThat(message.getField(Reference("int32_1"))).isEqualTo(942755)
-        assertThat(message.getField(Reference("int32_null_1"))).isEqualTo(-1)
+        assertThat(message.getField(Reference("int32_null_1"))).isEqualTo(1)
         assertThat(message.getField(Reference("int32_2"))).isEqualTo(942755)
         assertThat(message.getField(Reference("int32_null_2"))).isEqualTo(0)
         assertThat(message.getField(Reference("ascii_2"))).isEqualTo("\u0000\u0000")
 
         val group: FastMessage = message.getField(Reference("group")) as FastMessage
         assertThat(group.getField(Reference("int32_3"))).isEqualTo(1)
-        assertThat(group.getField(Reference("int32_null_3"))).isEqualTo(-1)
+        assertThat(group.getField(Reference("int32_null_3"))).isEqualTo(1)
         assertThat(group.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
         assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
 
@@ -201,7 +201,7 @@ class TestPresenceMap {
         }
 
         assertThat(message.getField(Reference("ascii_null_2"))).isEqualTo("ABC")
-        assertThat(message.getField(Reference("ascii_1"))).isNull()
+        assertThat(message.getField(Reference("ascii_1"))).isEqualTo("Copy")
         assertThat(message.getField(Reference("ascii_null_1"))).isEqualTo("ABC")
     }
 
