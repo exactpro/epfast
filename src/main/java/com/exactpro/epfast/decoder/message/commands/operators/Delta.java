@@ -19,9 +19,12 @@ package com.exactpro.epfast.decoder.message.commands.operators;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class Delta implements DecoderCommand {
+public abstract class Delta implements DecoderCommand {
     @Override
     public void executeOn(DecoderState decoderState) {
+        convert(decoderState);
         decoderState.nextCommandIndex++;
     }
+
+    public abstract void convert(DecoderState decoderState);
 }

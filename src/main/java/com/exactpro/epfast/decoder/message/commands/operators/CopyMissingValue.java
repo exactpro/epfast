@@ -19,10 +19,12 @@ package com.exactpro.epfast.decoder.message.commands.operators;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class CopyMissingValue implements DecoderCommand {
+public abstract class CopyMissingValue implements DecoderCommand {
+
     @Override
     public void executeOn(DecoderState decoderState) {
         tempLogic(decoderState);
+        convert(decoderState);
         decoderState.nextCommandIndex++;
     }
 
@@ -31,4 +33,6 @@ public class CopyMissingValue implements DecoderCommand {
         decoderState.register.optionalInt32Value = 1;
         decoderState.register.stringValue = "Copy";
     }
+
+    public abstract void convert(DecoderState decoderState);
 }

@@ -19,10 +19,11 @@ package com.exactpro.epfast.decoder.message.commands.operators;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class TailMissingValue implements DecoderCommand {
+public abstract class TailMissingValue implements DecoderCommand {
     @Override
     public void executeOn(DecoderState decoderState) {
         tempLogic(decoderState);
+        convert(decoderState);
         decoderState.nextCommandIndex++;
     }
 
@@ -31,4 +32,6 @@ public class TailMissingValue implements DecoderCommand {
         decoderState.register.optionalInt32Value = 1;
         decoderState.register.stringValue = "Tail";
     }
+
+    public abstract void convert(DecoderState decoderState);
 }

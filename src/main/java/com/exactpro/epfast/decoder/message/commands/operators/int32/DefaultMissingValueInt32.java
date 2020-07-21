@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands.operators;
+package com.exactpro.epfast.decoder.message.commands.operators.int32;
 
-import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.commands.operators.DefaultMissingValue;
 
-public abstract class DefaultPresentValue implements DecoderCommand {
+public class DefaultMissingValueInt32 extends DefaultMissingValue {
 
-    private int offset;
-
-    public DefaultPresentValue(int offset) {
-        this.offset = offset;
+    public DefaultMissingValueInt32(String initialValue) {
+        super(initialValue);
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
-        //TODO default operator logic with present value
-        convert(decoderState);
-        decoderState.nextCommandIndex += offset;
-    }
+    public void convert(DecoderState decoderState) {
 
-    public abstract void convert(DecoderState decoderState);
+    }
 }

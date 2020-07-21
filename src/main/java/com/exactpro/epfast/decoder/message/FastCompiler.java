@@ -22,7 +22,8 @@ import com.exactpro.epfast.decoder.message.commands.ascii.ReadMandatoryAsciiStri
 import com.exactpro.epfast.decoder.message.commands.ascii.ReadNullableAsciiString;
 import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
 import com.exactpro.epfast.decoder.message.commands.integer.*;
-import com.exactpro.epfast.decoder.message.commands.operators.*;
+import com.exactpro.epfast.decoder.message.commands.operators.int32.*;
+import com.exactpro.epfast.decoder.message.commands.operators.string.*;
 import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
 import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
 import com.exactpro.epfast.template.*;
@@ -114,11 +115,11 @@ public class FastCompiler {
             }
             if (instruction.isOptional()) {
                 commandSet.add(new ReadNullableInt32());
-                addOperator(operator);
+                addInt32Operator(operator);
                 commandSet.add(new SetNullableInt32(instruction.getFieldId()));
             } else {
                 commandSet.add(new ReadMandatoryInt32());
-                addOperator(operator);
+                addInt32Operator(operator);
                 commandSet.add(new SetMandatoryInt32(instruction.getFieldId()));
             }
         } else if (instruction instanceof AsciiStringField) {
@@ -133,7 +134,7 @@ public class FastCompiler {
             } else {
                 commandSet.add(new ReadMandatoryAsciiString());
             }
-            addOperator(operator);
+            addStringOperator(operator);
             commandSet.add(new SetString(instruction.getFieldId()));
         }
     }
@@ -160,24 +161,38 @@ public class FastCompiler {
             || operator instanceof TailOperator;
     }
 
-    private void addOperator(FieldOperator operator) {
+    private void addInt32Operator(FieldOperator operator) {
         int offset = 2;
         if (operator instanceof ConstantOperator) {
-            commandSet.add(new Constant(operator.getInitialValue()));
+            commandSet.add(new ConstantInt32(operator.getInitialValue()));
         } else if (operator instanceof CopyOperator) {
-            commandSet.add(new CopyPresentValue(offset));
-            commandSet.add(new CopyMissingValue());
+            commandSet.add(new CopyPresentValueInt32(offset));
+            commandSet.add(new CopyMissingValueInt32());
         } else if (operator instanceof DefaultOperator) {
-            commandSet.add(new DefaultPresentValue(offset));
-            commandSet.add(new DefaultMissingValue(operator.getInitialValue()));
+            commandSet.add(new DefaultPresentValueInt32(offset));
+            commandSet.add(new DefaultMissingValueInt32(operator.getInitialValue()));
         } else if (operator instanceof DeltaOperator) {
-            commandSet.add(new Delta());
+            commandSet.add(new DeltaInt32());
         } else if (operator instanceof IncrementOperator) {
-            commandSet.add(new IncrementPresentValue(offset));
-            commandSet.add(new IncrementMissingValue());
-        } else if (operator instanceof TailOperator) {
-            commandSet.add(new TailPresentValue(offset));
-            commandSet.add(new TailMissingValue());
+            commandSet.add(new IncrementPresentValueInt32(offset));
+            commandSet.add(new IncrementMissingValueInt32());
         }
     }
+
+    private void addStringOperator(FieldOperator operator) {
+        int offset = 2;
+        if (operator instanceof ConstantOperator) {
+            commandSet.add(new ConstantString(operator.getInitialValue()));
+        } else if (operator instanceof CopyOperator) {
+            commandSet.add(new CopyPresentValueString(offset));
+            commandSet.add(new CopyMissingValueString());
+        } else if (operator instanceof DefaultOperator) {
+            commandSet.add(new DefaultPresentValueString(offset));
+            commandSet.add(new DefaultMissingValueString(operator.getInitialValue()));
+        } else if (operator instanceof TailOperator) {
+            commandSet.add(new TailPresentValueString(offset));
+            commandSet.add(new TailMissingValueString());
+        }
+    }
+
 }

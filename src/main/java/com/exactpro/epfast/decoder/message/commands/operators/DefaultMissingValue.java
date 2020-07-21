@@ -19,7 +19,7 @@ package com.exactpro.epfast.decoder.message.commands.operators;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
 
-public class DefaultMissingValue implements DecoderCommand {
+public abstract class DefaultMissingValue implements DecoderCommand {
 
     String initialValue;
 
@@ -31,6 +31,7 @@ public class DefaultMissingValue implements DecoderCommand {
     public void executeOn(DecoderState decoderState) {
         //TODO default operator logic when value is not present
         tempLogic(decoderState);
+        convert(decoderState);
         decoderState.nextCommandIndex++;
     }
 
@@ -39,5 +40,7 @@ public class DefaultMissingValue implements DecoderCommand {
         decoderState.register.optionalInt32Value = 1;
         decoderState.register.stringValue = "Default";
     }
+
+    public abstract void convert(DecoderState decoderState);
 
 }
