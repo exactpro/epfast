@@ -163,13 +163,13 @@ public class FastCompiler {
     private void addOperator(FieldOperator operator) {
         int offset = 2;
         if (operator instanceof ConstantOperator) {
-            commandSet.add(new Constant());
+            commandSet.add(new Constant(operator.getInitialValue()));
         } else if (operator instanceof CopyOperator) {
             commandSet.add(new CopyPresentValue(offset));
             commandSet.add(new CopyMissingValue());
         } else if (operator instanceof DefaultOperator) {
             commandSet.add(new DefaultPresentValue(offset));
-            commandSet.add(new DefaultMissingValue());
+            commandSet.add(new DefaultMissingValue(operator.getInitialValue()));
         } else if (operator instanceof DeltaOperator) {
             commandSet.add(new Delta());
         } else if (operator instanceof IncrementOperator) {

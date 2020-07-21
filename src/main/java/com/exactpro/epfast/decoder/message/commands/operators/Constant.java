@@ -21,6 +21,12 @@ import com.exactpro.epfast.decoder.message.DecoderState;
 
 public class Constant implements DecoderCommand {
 
+    String initialValue;
+
+    public Constant(String initialValue) {
+        this.initialValue = initialValue;
+    }
+
     @Override
     public void executeOn(DecoderState decoderState) {
         decoderState.nextCommandIndex++;

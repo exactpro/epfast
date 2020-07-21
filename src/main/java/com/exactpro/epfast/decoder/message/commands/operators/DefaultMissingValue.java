@@ -21,6 +21,12 @@ import com.exactpro.epfast.decoder.message.DecoderState;
 
 public class DefaultMissingValue implements DecoderCommand {
 
+    String initialValue;
+
+    public DefaultMissingValue(String initialValue) {
+        this.initialValue = initialValue;
+    }
+
     @Override
     public void executeOn(DecoderState decoderState) {
         //TODO default operator logic when value is not present
