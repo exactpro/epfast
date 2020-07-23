@@ -21,15 +21,15 @@ import com.exactpro.epfast.decoder.message.DecoderCommand;
 
 public class EndLoop implements DecoderCommand {
 
-    private final int nextCommandIndex;
+    private final int nextCommandOffset;
 
-    public EndLoop(int nextCommandIndex) {
-        this.nextCommandIndex = nextCommandIndex;
+    public EndLoop(int nextCommandOffset) {
+        this.nextCommandOffset = nextCommandOffset;
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         ++decoderState.loopIndex;
-        decoderState.nextCommandIndex = nextCommandIndex;
+        return nextCommandOffset;
     }
 }

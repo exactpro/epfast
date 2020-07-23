@@ -28,10 +28,10 @@ public class CheckPresenceBit implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         if (!decoderState.presenceMap.getValue(bitIndex)) {
-            decoderState.nextCommandIndex += 2;
+            return 3;
         }
-        decoderState.nextCommandIndex++;
+        return 1;
     }
 }

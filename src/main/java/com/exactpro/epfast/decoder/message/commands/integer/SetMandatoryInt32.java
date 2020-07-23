@@ -29,9 +29,9 @@ public class SetMandatoryInt32 implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         decoderState.activeMessage.setField(propertyId, decoderState.register.mandatoryInt32Value);
-        decoderState.nextCommandIndex++;
+        return 1;
     }
 }
 

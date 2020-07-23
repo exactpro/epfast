@@ -22,13 +22,13 @@ import com.exactpro.epfast.decoder.message.DecoderCommand;
 public class SetNullableLengthField implements DecoderCommand {
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         Long lengthValue = decoderState.register.optionalUInt32Value;
         if (lengthValue != null) {
             decoderState.loopLimit = lengthValue;
         } else {
             decoderState.loopLimit = -1;
         }
-        decoderState.nextCommandIndex++;
+        return 1;
     }
 }

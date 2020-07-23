@@ -28,8 +28,8 @@ public class DefaultPresentValue implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         //TODO default operator logic with present value
-        decoderState.nextCommandIndex += offset;
+        return offset;
     }
 }

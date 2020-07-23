@@ -23,7 +23,7 @@ import com.exactpro.epfast.decoder.message.DecoderState;
 public class SetMandatoryCompoundDecimal implements DecoderCommand {
 
     @Override
-    public void executeOn(DecoderState decoderState) throws OverflowException {
-
+    public int executeOn(DecoderState decoderState) throws OverflowException {
+        return 1;
     }
 }

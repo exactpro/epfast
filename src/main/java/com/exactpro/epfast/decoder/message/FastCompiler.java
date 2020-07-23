@@ -104,8 +104,8 @@ public class FastCompiler {
         commandSet.add(loop);
         commandSet.add(new StaticCall(compileSubroutine(sequence.getTypeRef(), sequence.getInstructions())));
         commandSet.add(new SetIndexedApplicationTypeProperty(sequence.getFieldId()));
-        commandSet.add(new EndLoop(loopCommandIndex));
-        loop.setJumpIndex(commandSet.size());
+        commandSet.add(new EndLoop(loopCommandIndex - commandSet.size()));
+        loop.setJumpOffset(commandSet.size() - loopCommandIndex);
     }
 
     private void compileFieldInstruction(FieldInstruction instruction) {

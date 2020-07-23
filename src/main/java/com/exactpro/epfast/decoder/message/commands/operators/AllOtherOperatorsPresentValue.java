@@ -27,7 +27,7 @@ public class AllOtherOperatorsPresentValue implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
-        decoderState.nextCommandIndex += offset;
+    public int executeOn(DecoderState decoderState) {
+        return offset;
     }
 }

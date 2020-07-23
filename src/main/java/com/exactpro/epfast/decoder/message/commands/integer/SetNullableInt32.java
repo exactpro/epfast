@@ -29,8 +29,8 @@ public class SetNullableInt32 implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         decoderState.activeMessage.setField(propertyId, decoderState.register.optionalInt32Value);
-        decoderState.nextCommandIndex++;
+        return 1;
     }
 }

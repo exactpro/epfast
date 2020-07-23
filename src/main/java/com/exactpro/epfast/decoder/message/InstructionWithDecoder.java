@@ -40,10 +40,10 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) throws OverflowException {
+    public int executeOn(DecoderState decoderState) throws OverflowException {
         if (!decoderState.inputBuffer.isReadable()) {
             decoderState.canProceed = false;
-            return;
+            return 0;
         }
         if (!decoderStarted) {
             decode(decoderState);
@@ -51,9 +51,10 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
             continueDecode(decoderState);
         }
         if (isReady()) {
-            decoderState.nextCommandIndex++;
+            return 1;
         } else {
             decoderState.canProceed = false;
+            return 0;
         }
     }
 }

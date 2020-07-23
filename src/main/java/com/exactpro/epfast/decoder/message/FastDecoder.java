@@ -40,7 +40,8 @@ public class FastDecoder {
         decoderState.inputBuffer = Objects.requireNonNull(buffer, "buffer cannot be null");
         decoderState.canProceed = true;
         do {
-            decoderState.nextCommand().executeOn(decoderState);
+            int offset = decoderState.nextCommand().executeOn(decoderState);
+            decoderState.nextCommandIndex += offset;
         } while (decoderState.canProceed);
         return decoderState.readMessages();
     }
