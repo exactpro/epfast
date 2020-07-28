@@ -16,7 +16,6 @@
 
 package com.exactpro.epfast.decoder.message.commands.integer;
 
-import com.exactpro.epfast.decoder.NotSupportedOperationException;
 import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt64;
 import com.exactpro.epfast.decoder.message.DecoderState;
@@ -29,6 +28,6 @@ public class ReadMandatoryInt64 extends PrimitiveInstruction<DecodeMandatoryInt6
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        throw new NotSupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 }

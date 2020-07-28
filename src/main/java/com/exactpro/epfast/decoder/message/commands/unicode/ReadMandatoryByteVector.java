@@ -16,7 +16,6 @@
 
 package com.exactpro.epfast.decoder.message.commands.unicode;
 
-import com.exactpro.epfast.decoder.NotSupportedOperationException;
 import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
@@ -30,6 +29,6 @@ public class ReadMandatoryByteVector extends PrimitiveInstruction<DecodeMandator
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        throw new NotSupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 }

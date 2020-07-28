@@ -16,7 +16,6 @@
 
 package com.exactpro.epfast.decoder.message.commands.integer;
 
-import com.exactpro.epfast.decoder.NotSupportedOperationException;
 import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
@@ -25,6 +24,6 @@ public class SetNullableUInt64 implements DecoderCommand {
 
     @Override
     public int executeOn(DecoderState decoderState) throws OverflowException {
-        throw new NotSupportedOperationException();
+        throw new UnsupportedOperationException();
     }
 }
