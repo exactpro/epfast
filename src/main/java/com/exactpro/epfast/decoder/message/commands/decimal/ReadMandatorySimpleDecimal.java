@@ -16,6 +16,7 @@
 
 package com.exactpro.epfast.decoder.message.commands.decimal;
 
+import com.exactpro.epfast.decoder.NotSupportedOperationException;
 import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.decimal.DecodeMandatoryDecimal;
 import com.exactpro.epfast.decoder.message.DecoderState;
@@ -28,6 +29,6 @@ public class ReadMandatorySimpleDecimal extends PrimitiveInstruction<DecodeManda
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-
+        throw new NotSupportedOperationException();
     }
 }

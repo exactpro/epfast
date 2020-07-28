@@ -25,7 +25,6 @@ public class ReadyMessage implements DecoderCommand {
     @Override
     public int executeOn(DecoderState decoderState) {
         decoderState.decodedMessages.add((IMessage) decoderState.register.applicationValue);
-        decoderState.nextCommandIndex = 0;
-        return 0;
+        return -decoderState.nextCommandIndex;
     }
 }

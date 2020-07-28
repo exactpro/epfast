@@ -14,17 +14,7 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands.integer;
+package com.exactpro.epfast.decoder;
 
-import com.exactpro.epfast.decoder.NotSupportedOperationException;
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.message.DecoderCommand;
-import com.exactpro.epfast.decoder.message.DecoderState;
-
-public class SetMandatoryUInt64 implements DecoderCommand {
-
-    @Override
-    public int executeOn(DecoderState decoderState) throws OverflowException {
-        throw new NotSupportedOperationException();
-    }
+public class NotSupportedOperationException extends RuntimeException {
 }

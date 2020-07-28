@@ -16,6 +16,7 @@
 
 package com.exactpro.epfast.decoder.message.commands.unicode;
 
+import com.exactpro.epfast.decoder.NotSupportedOperationException;
 import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
@@ -24,6 +25,6 @@ public class SetMandatoryByteVector implements DecoderCommand {
 
     @Override
     public int executeOn(DecoderState decoderState) throws OverflowException {
-        return 1;
+        throw new NotSupportedOperationException();
     }
 }
