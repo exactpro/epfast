@@ -30,7 +30,7 @@ public class InitIndexedProperty implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         if (decoderState.loopLimit > Integer.MAX_VALUE) {
             throw new RuntimeException("Sequence length " + decoderState.loopIndex
                 + " exceeded maximum allowed length (" + Integer.MAX_VALUE + ")");
@@ -38,6 +38,6 @@ public class InitIndexedProperty implements DecoderCommand {
         IMessage[] array = (decoderState.loopLimit < 0) ? null : new IMessage[(int) decoderState.loopLimit];
         decoderState.activeMessage.setField(propertyId, array);
         decoderState.loopIndex = 0;
-        decoderState.nextCommandIndex++;
+        return 1;
     }
 }

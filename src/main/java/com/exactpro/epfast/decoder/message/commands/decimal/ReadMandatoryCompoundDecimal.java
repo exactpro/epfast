@@ -28,6 +28,6 @@ public class ReadMandatoryCompoundDecimal extends PrimitiveInstruction<DecodeMan
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-
+        throw new UnsupportedOperationException();
     }
 }

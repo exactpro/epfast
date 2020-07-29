@@ -32,10 +32,10 @@ public class CallByReference implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         List<DecoderCommand> commandSet = decoderState.commandSets.get(commandSetId);
         if (commandSet != null) {
-            decoderState.call(commandSet);
+           return decoderState.call(commandSet);
         } else {
             throw new UndefinedTemplateException("FAST template " + commandSetId + " is not defined");
         }

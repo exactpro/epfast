@@ -29,8 +29,8 @@ public class SetApplicationTypeProperty implements DecoderCommand {
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         decoderState.activeMessage.setField(propertyId, decoderState.register.applicationValue);
-        decoderState.nextCommandIndex++;
+        return 1;
     }
 }

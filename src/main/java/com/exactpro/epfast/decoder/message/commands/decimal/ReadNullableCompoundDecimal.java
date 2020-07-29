@@ -29,6 +29,6 @@ public class ReadNullableCompoundDecimal extends PrimitiveInstruction<DecodeNull
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-
+        throw new UnsupportedOperationException();
     }
 }

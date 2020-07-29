@@ -22,10 +22,10 @@ import com.exactpro.epfast.decoder.message.DecoderState;
 public class DefaultMissingValue implements DecoderCommand {
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         //TODO default operator logic when value is not present
         tempDefaultOperatorLogic(decoderState);
-        decoderState.nextCommandIndex++;
+        return 1;
     }
 
     private void tempDefaultOperatorLogic(DecoderState decoderState) {

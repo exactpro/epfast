@@ -28,6 +28,6 @@ public class ReadMandatoryInt64 extends PrimitiveInstruction<DecodeMandatoryInt6
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-
+        throw new UnsupportedOperationException();
     }
 }

@@ -61,15 +61,16 @@ public class DecoderState {
         return activeCommandSet.get(nextCommandIndex);
     }
 
-    public void call(List<DecoderCommand> commandSet) {
-        nextCommandIndex++;
+    public int call(List<DecoderCommand> commandSet) {
         callStack.push(new CallStackFrame(this));
         activeCommandSet = commandSet;
         nextCommandIndex = 0;
+        return 0;
     }
 
-    public void ret() {
+    public int ret() {
         callStack.pop().restoreTo(this);
+        return 1;
     }
 
     public Collection<?> readMessages() {

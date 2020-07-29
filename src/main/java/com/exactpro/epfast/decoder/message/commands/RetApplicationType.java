@@ -22,9 +22,8 @@ import com.exactpro.epfast.decoder.message.DecoderCommand;
 public class RetApplicationType implements DecoderCommand {
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         decoderState.register.applicationValue = decoderState.activeMessage;
-        decoderState.ret();
+        return decoderState.ret();
     }
-
 }

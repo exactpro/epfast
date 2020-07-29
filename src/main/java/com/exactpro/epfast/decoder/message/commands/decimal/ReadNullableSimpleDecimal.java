@@ -29,6 +29,6 @@ public class ReadNullableSimpleDecimal extends PrimitiveInstruction<DecodeNullab
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-
+        throw new UnsupportedOperationException();
     }
 }

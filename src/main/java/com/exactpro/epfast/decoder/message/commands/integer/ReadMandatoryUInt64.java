@@ -29,6 +29,6 @@ public class ReadMandatoryUInt64 extends PrimitiveInstruction<DecodeMandatoryUIn
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-
+        throw new UnsupportedOperationException();
     }
 }

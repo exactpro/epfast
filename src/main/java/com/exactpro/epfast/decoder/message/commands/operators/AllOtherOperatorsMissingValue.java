@@ -21,9 +21,9 @@ import com.exactpro.epfast.decoder.message.DecoderState;
 
 public class AllOtherOperatorsMissingValue implements DecoderCommand {
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         tempOperatorLogic(decoderState);
-        decoderState.nextCommandIndex++;
+        return 1;
     }
 
     private void tempOperatorLogic(DecoderState decoderState) {

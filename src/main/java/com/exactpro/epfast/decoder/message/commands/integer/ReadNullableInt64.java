@@ -29,6 +29,6 @@ public class ReadNullableInt64 extends PrimitiveInstruction<DecodeNullableInt64>
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-
+        throw new UnsupportedOperationException();
     }
 }

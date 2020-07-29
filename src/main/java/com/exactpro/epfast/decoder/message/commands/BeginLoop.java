@@ -21,18 +21,18 @@ import com.exactpro.epfast.decoder.message.DecoderCommand;
 
 public class BeginLoop implements DecoderCommand {
 
-    private int jumpIndex;
+    private int jumpOffset;
 
-    public void setJumpIndex(int jumpIndex) {
-        this.jumpIndex = jumpIndex;
+    public void setJumpOffset(int jumpOffset) {
+        this.jumpOffset = jumpOffset;
     }
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         if (decoderState.loopIndex < decoderState.loopLimit) {
-            decoderState.nextCommandIndex++;
+            return 1;
         } else {
-            decoderState.nextCommandIndex = jumpIndex;
+            return jumpOffset;
         }
     }
 }

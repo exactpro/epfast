@@ -23,8 +23,8 @@ import com.exactpro.epfast.decoder.message.DecoderCommand;
 public class ReadyMessage implements DecoderCommand {
 
     @Override
-    public void executeOn(DecoderState decoderState) {
+    public int executeOn(DecoderState decoderState) {
         decoderState.decodedMessages.add((IMessage) decoderState.register.applicationValue);
-        decoderState.nextCommandIndex = 0;
+        return -decoderState.nextCommandIndex;
     }
 }

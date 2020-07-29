@@ -29,6 +29,6 @@ public class ReadMandatoryByteVector extends PrimitiveInstruction<DecodeMandator
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-
+        throw new UnsupportedOperationException();
     }
 }
