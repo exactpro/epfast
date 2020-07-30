@@ -21,8 +21,6 @@ import com.exactpro.epfast.decoder.presencemap.PresenceMap;
 import com.exactpro.epfast.template.*;
 import io.netty.buffer.ByteBuf;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 
 public class DecoderState {
@@ -77,32 +75,6 @@ public class DecoderState {
         ArrayList<IMessage> messages = decodedMessages;
         decodedMessages = new ArrayList<>();
         return messages;
-    }
-
-    // Logically it's one register. It's up to application to ensure that the right field is used for read / write.
-    public static class UnionRegister {
-
-        // public boolean isNull;
-
-        public int mandatoryInt32Value;
-
-        public Integer optionalInt32Value;
-
-        public Long optionalUInt32Value;
-
-        public long mandatoryUInt32Value;
-
-        public String stringValue;
-
-        public long mandatoryInt64Value;
-
-        public Long optionalInt64Value;
-
-        public BigInteger unsignedInt64Value;
-
-        public BigDecimal decimalValue;
-
-        public Object applicationValue;
     }
 
     public static class CallStackFrame {

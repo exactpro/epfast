@@ -30,7 +30,11 @@ public class SetNullableInt32 implements DecoderCommand {
 
     @Override
     public int executeOn(DecoderState decoderState) {
-        decoderState.activeMessage.setField(propertyId, decoderState.register.optionalInt32Value);
+        if (decoderState.register.isNull) {
+            decoderState.activeMessage.setField(propertyId, null);
+        } else {
+            decoderState.activeMessage.setField(propertyId, decoderState.register.int32Value);
+        }
         return 1;
     }
 }

@@ -22,7 +22,7 @@ import com.exactpro.epfast.decoder.message.DecoderCommand;
 public class SetMandatoryLengthField implements DecoderCommand {
     @Override
     public int executeOn(DecoderState decoderState) {
-        decoderState.loopLimit = decoderState.register.mandatoryUInt32Value;
+        decoderState.loopLimit = decoderState.register.uInt32Value;
         return 1;
     }
 }

@@ -29,6 +29,7 @@ public class ReadMandatoryUInt32 extends PrimitiveInstruction<DecodeMandatoryUIn
 
     @Override
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.mandatoryUInt32Value = fieldDecoder.getValue();
+        decoderState.register.uInt32Value = fieldDecoder.getValue();
+        decoderState.register.isNull = false;
     }
 }

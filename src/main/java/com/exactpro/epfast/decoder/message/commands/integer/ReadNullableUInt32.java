@@ -27,6 +27,11 @@ public class ReadNullableUInt32 extends PrimitiveInstruction<DecodeNullableUInt3
     }
 
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.optionalUInt32Value = fieldDecoder.getValue();
+        if (fieldDecoder.getValue() == null) {
+            decoderState.register.isNull = true;
+        } else {
+            decoderState.register.uInt32Value = fieldDecoder.getValue();
+            decoderState.register.isNull = false;
+        }
     }
 }
