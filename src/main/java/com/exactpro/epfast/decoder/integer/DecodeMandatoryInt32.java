@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 public final class DecodeMandatoryInt32 extends DecodeInteger {
@@ -27,7 +27,7 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
 
     private int value;
 
-    public void decode(ByteBuf buf) {
+    public int decode(ByteBuf buf, UnionRegister register) {
         reset();
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
@@ -36,8 +36,9 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
             value = 0;
             accumulatePositive(oneByte);
             if (oneByte < 0) {
+                setRegisterValue(register);
                 buf.readerIndex(readerIndex);
-                return;
+                return 1;
             }
             if (readerIndex < readLimit) {
                 checkOverlongPositive(buf.getByte(readerIndex)); //check second byte
@@ -51,8 +52,9 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
             value = -1;
             accumulateNegative(oneByte);
             if (oneByte < 0) {
+                setRegisterValue(register);
                 buf.readerIndex(readerIndex);
-                return;
+                return 1;
             }
             if (readerIndex < readLimit) {
                 checkOverlongNegative(buf.getByte(readerIndex)); //check second byte
@@ -64,9 +66,15 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
             }
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public void continueDecode(ByteBuf buf) {
+    public int continueDecode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         if (value >= 0) {
@@ -87,13 +95,23 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
             } while (!ready && readerIndex < readLimit);
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public int getValue() throws OverflowException {
+    @Override
+    public void setRegisterValue(UnionRegister register) {
         if (overflow) {
-            throw new OverflowException("Int32 Overflow");
+            register.isOverflow = true;
+            register.errorMessage = "Int32 Overflow";
         } else {
-            return value;
+            register.isOverflow = false;
+            register.isNull = false;
+            register.int32Value = value;
         }
     }
 

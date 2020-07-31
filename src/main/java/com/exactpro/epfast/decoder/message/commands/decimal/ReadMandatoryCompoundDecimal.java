@@ -16,18 +16,12 @@
 
 package com.exactpro.epfast.decoder.message.commands.decimal;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.decimal.DecodeMandatoryDecimal;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
 public class ReadMandatoryCompoundDecimal extends PrimitiveInstruction<DecodeMandatoryDecimal> {
 
     public ReadMandatoryCompoundDecimal() {
-        super(new DecodeMandatoryDecimal()); }
-
-    @Override
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        throw new UnsupportedOperationException();
+        super(new DecodeMandatoryDecimal());
     }
 }

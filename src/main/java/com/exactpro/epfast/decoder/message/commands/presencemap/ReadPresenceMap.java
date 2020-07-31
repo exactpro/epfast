@@ -16,7 +16,6 @@
 
 package com.exactpro.epfast.decoder.message.commands.presencemap;
 
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 import com.exactpro.epfast.decoder.presencemap.DecodePresenceMap;
 
@@ -26,8 +25,4 @@ public class ReadPresenceMap extends PrimitiveInstruction<DecodePresenceMap> {
         super(new DecodePresenceMap());
     }
 
-    @Override
-    public void setRegisterValue(DecoderState decoderState) {
-        decoderState.presenceMap = fieldDecoder.getValue();
-    }
 }

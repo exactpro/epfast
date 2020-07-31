@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder;
+package com.exactpro.epfast.decoder.message.commands.presencemap;
 
-import com.exactpro.epfast.decoder.message.UnionRegister;
-import io.netty.buffer.ByteBuf;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.decoder.message.DecoderState;
 
-public interface IDecodeContext {
-
-    int CLEAR_STOP_BIT_MASK = 0b01111111;
-
-    int decode(ByteBuf buf, UnionRegister register);
-
-    int continueDecode(ByteBuf buf, UnionRegister register);
-
-    boolean isReady();
-
-    boolean isOverlong();
+public class SetPresenceMap implements DecoderCommand {
+    @Override
+    public int executeOn(DecoderState decoderState) {
+        decoderState.presenceMap = decoderState.register.presenceMap;
+        return 1;
+    }
 }

@@ -16,18 +16,12 @@
 
 package com.exactpro.epfast.decoder.message.commands.ascii;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.ascii.DecodeMandatoryAsciiString;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
 public class ReadMandatoryAsciiString extends PrimitiveInstruction<DecodeMandatoryAsciiString> {
 
     public ReadMandatoryAsciiString() {
         super(new DecodeMandatoryAsciiString());
-    }
-
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        //will be removed
     }
 }

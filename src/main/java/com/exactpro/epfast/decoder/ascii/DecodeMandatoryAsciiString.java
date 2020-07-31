@@ -16,8 +16,6 @@
 
 package com.exactpro.epfast.decoder.ascii;
 
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 
 public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
@@ -34,41 +32,25 @@ public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
     public void setRegisterValue(UnionRegister register) {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             register.isOverflow = true;
-            //TODO what to do with overflow information ?
-            //throw new OverflowException("String is longer than allowed");
-        }
-        if (zeroCount < stringBuilder.length()) {
+            register.errorMessage = "String is longer than allowed";
+        } else if (zeroCount < stringBuilder.length()) {
             if (zeroPreamble && checkOverlong) {
-                //TODO set register flag
                 register.isOverflow = true;
-                //throw new OverflowException("String with zero preamble can't contain any value except 0");
+                register.errorMessage = "String with zero preamble can't contain any value except 0";
             } else {
+                register.isOverflow = false;
+                register.isNull = false;
                 register.stringValue = stringBuilder.toString();
             }
         } else if (zeroCount == 1) {
+            register.isOverflow = false;
+            register.isNull = false;
             register.stringValue = "";
         } else {
             stringBuilder.setLength(zeroCount - 1);
+            register.isOverflow = false;
+            register.isNull = false;
             register.stringValue = stringBuilder.toString();
-        }
-    }
-
-    @Override
-    public String getValue() throws OverflowException {
-        if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
-            throw new OverflowException("String is longer than allowed");
-        }
-        if (zeroCount < stringBuilder.length()) {
-            if (zeroPreamble && checkOverlong) {
-                throw new OverflowException("String with zero preamble can't contain any value except 0");
-            } else {
-                return stringBuilder.toString();
-            }
-        } else if (zeroCount == 1) {
-            return "";
-        } else {
-            stringBuilder.setLength(zeroCount - 1);
-            return stringBuilder.toString();
         }
     }
 }

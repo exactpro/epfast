@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 public final class DecodeNullableInt64 extends DecodeInteger {
@@ -29,7 +29,7 @@ public final class DecodeNullableInt64 extends DecodeInteger {
 
     private long value;
 
-    public void decode(ByteBuf buf) {
+    public int decode(ByteBuf buf, UnionRegister register) {
         reset();
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
@@ -39,8 +39,9 @@ public final class DecodeNullableInt64 extends DecodeInteger {
             value = 0;
             accumulatePositive(oneByte);
             if (oneByte < 0) {
+                setRegisterValue(register);
                 buf.readerIndex(readerIndex);
-                return;
+                return 1;
             }
             if (readerIndex < readLimit) {
                 checkOverlongPositive(buf.getByte(readerIndex)); //check second byte
@@ -55,8 +56,9 @@ public final class DecodeNullableInt64 extends DecodeInteger {
             value = -1;
             accumulateNegative(oneByte);
             if (oneByte < 0) {
+                setRegisterValue(register);
                 buf.readerIndex(readerIndex);
-                return;
+                return 1;
             }
             if (readerIndex < readLimit) {
                 checkOverlongNegative(buf.getByte(readerIndex)); //check second byte
@@ -68,9 +70,15 @@ public final class DecodeNullableInt64 extends DecodeInteger {
             }
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public void continueDecode(ByteBuf buf) {
+    public int continueDecode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         if (value >= 0) {
@@ -91,13 +99,27 @@ public final class DecodeNullableInt64 extends DecodeInteger {
             } while (!ready && readerIndex < readLimit);
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public Long getValue() throws OverflowException {
+    @Override
+    public void setRegisterValue(UnionRegister register) {
         if (overflow) {
-            throw new OverflowException("Int64 Overflow");
+            register.isOverflow = true;
+            register.errorMessage = "Int64 Overflow";
         } else {
-            return value == 0 ? null : positive ? value - 1 : value;
+            register.isOverflow = false;
+            if (value == 0) {
+                register.isNull = true;
+            } else {
+                register.isNull = false;
+                register.int64Value = positive ? value - 1 : value;
+            }
         }
     }
 

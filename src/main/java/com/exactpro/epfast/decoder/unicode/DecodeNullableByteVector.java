@@ -16,27 +16,27 @@
 
 package com.exactpro.epfast.decoder.unicode;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeNullableUInt32;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 public final class DecodeNullableByteVector extends DecodeByteVector {
 
     private DecodeNullableUInt32 lengthDecoder = new DecodeNullableUInt32();
 
-    private Long messageLength;
+    private long messageLength;
 
-    public void decode(ByteBuf buf) {
+    public int decode(ByteBuf buf, UnionRegister register) {
         reset();
-        lengthDecoder.decode(buf);
+        lengthDecoder.decode(buf, register);
         if (lengthDecoder.isReady()) {
             lengthReady = true;
-            try {
-                messageLength = lengthDecoder.getValue();
-            } catch (OverflowException ex) {
+            if (register.isOverflow) {
                 overflow = true;
+            } else {
+                messageLength = register.uInt32Value;
             }
-            if (messageLength != null && messageLength > 0) {
+            if (!register.isNull && messageLength > 0) {
                 int readerIndex = buf.readerIndex();
                 int readLimit = buf.writerIndex();
                 while ((readerIndex < readLimit) && !ready) {
@@ -53,9 +53,15 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
                 ready = true;
             }
         }
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public void continueDecode(ByteBuf buf) {
+    public int continueDecode(ByteBuf buf, UnionRegister register) {
         if (lengthReady) {
             int readerIndex = buf.readerIndex();
             int readLimit = buf.writerIndex();
@@ -70,15 +76,15 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
             }
             buf.readerIndex(readerIndex);
         } else {
-            lengthDecoder.continueDecode(buf);
+            lengthDecoder.continueDecode(buf, register);
             if (lengthDecoder.isReady()) {
                 lengthReady = true;
-                try {
-                    messageLength = lengthDecoder.getValue();
-                } catch (OverflowException ex) {
+                if (register.isOverflow) {
                     overflow = true;
+                } else {
+                    messageLength = register.uInt32Value;
                 }
-                if (messageLength != null && messageLength > 0) {
+                if (!register.isNull && messageLength > 0) {
                     int readerIndex = buf.readerIndex();
                     int readLimit = buf.writerIndex();
                     while ((readerIndex < readLimit) && !ready) {
@@ -96,17 +102,30 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
                 }
             }
         }
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public byte[] getValue() throws OverflowException {
+    @Override
+    public void setRegisterValue(UnionRegister register) {
         if (overflow) {
-            throw new OverflowException("length value range is uint32");
+            register.isOverflow = true;
+            register.errorMessage = "length value range is uint32";
         } else {
             byte[] finalVal = new byte[value.size()];
             for (int i = 0; i < value.size(); i++) {
                 finalVal[i] = value.get(i);
             }
-            return messageLength == null ? null : finalVal;
+            register.isOverflow = false;
+            if (register.isNull) {
+                register.byteVectorValue = null;
+            } else {
+                register.byteVectorValue = finalVal;
+            }
         }
     }
 }

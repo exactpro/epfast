@@ -16,9 +16,7 @@
 
 package com.exactpro.epfast.decoder.message.commands.ascii;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.ascii.DecodeNullableAsciiString;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
 public class ReadNullableAsciiString extends PrimitiveInstruction<DecodeNullableAsciiString> {
@@ -27,7 +25,4 @@ public class ReadNullableAsciiString extends PrimitiveInstruction<DecodeNullable
         super(new DecodeNullableAsciiString());
     }
 
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-       //will be removed
-    }
 }

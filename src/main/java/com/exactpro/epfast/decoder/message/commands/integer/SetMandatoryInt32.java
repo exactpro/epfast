@@ -30,7 +30,7 @@ public class SetMandatoryInt32 implements DecoderCommand {
 
     @Override
     public int executeOn(DecoderState decoderState) {
-        decoderState.activeMessage.setField(propertyId, decoderState.register.mandatoryInt32Value);
+        decoderState.activeMessage.setField(propertyId, decoderState.register.int32Value);
         return 1;
     }
 }

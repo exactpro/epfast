@@ -17,17 +17,18 @@
 package com.exactpro.epfast;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Iterator;
 
 public class DecoderUtils {
 
-    public static void decode(IDecodeContext decoder, Iterable<ByteBuf> buffers) {
+    public static void decode(IDecodeContext decoder, Iterable<ByteBuf> buffers, UnionRegister register) {
         Iterator<ByteBuf> it = buffers.iterator();
-        decoder.decode(nextNonEmptyBuffer(it));
+        decoder.decode(nextNonEmptyBuffer(it), register);
         while (!decoder.isReady()) {
-            decoder.continueDecode(nextNonEmptyBuffer(it));
+            decoder.continueDecode(nextNonEmptyBuffer(it), register);
         }
     }
 

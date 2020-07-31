@@ -16,9 +16,7 @@
 
 package com.exactpro.epfast.decoder.message.commands.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryUInt32;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
 public class ReadMandatoryUInt32 extends PrimitiveInstruction<DecodeMandatoryUInt32> {
@@ -27,9 +25,4 @@ public class ReadMandatoryUInt32 extends PrimitiveInstruction<DecodeMandatoryUIn
         super(new DecodeMandatoryUInt32());
     }
 
-    @Override
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.uInt32Value = fieldDecoder.getValue();
-        decoderState.register.isNull = false;
-    }
 }

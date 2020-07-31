@@ -16,6 +16,7 @@
 
 package com.exactpro.epfast.decoder.presencemap;
 
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import com.exactpro.junit5.WithByteBuf;
 import io.netty.buffer.ByteBuf;
 
@@ -27,11 +28,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class TestDecodePresenceMap {
 
     private DecodePresenceMap presenceMapDecoder = new DecodePresenceMap();
+    
+    private UnionRegister register = new UnionRegister();
 
     @WithByteBuf("95") //0b10010101
     void testSingleByte(Collection<ByteBuf> buffers) {
-        decode(presenceMapDecoder, buffers);
-        PresenceMap presenceMap = presenceMapDecoder.getValue();
+        decode(presenceMapDecoder, buffers, register);
+        PresenceMap presenceMap = register.presenceMap;
         assertTrue(presenceMap.getValue(0));
         assertFalse(presenceMap.getValue(1));
         assertTrue(presenceMap.getValue(2));
@@ -43,9 +46,9 @@ class TestDecodePresenceMap {
 
     @WithByteBuf("15 15 00 00 00 80")
     void testOverlong(Collection<ByteBuf> buffers) {
-        decode(presenceMapDecoder, buffers);
+        decode(presenceMapDecoder, buffers, register);
         assertTrue(presenceMapDecoder.isReady());
-        PresenceMap presenceMap = presenceMapDecoder.getValue();
+        PresenceMap presenceMap = register.presenceMap;
         assertTrue(presenceMap.getValue(0));
         assertFalse(presenceMap.getValue(1));
         assertTrue(presenceMap.getValue(2));
@@ -58,9 +61,9 @@ class TestDecodePresenceMap {
 
     @WithByteBuf("15 15 00 00 00 82")
     void testTruncateWhenNotOverlong(Collection<ByteBuf> buffers) {
-        decode(presenceMapDecoder, buffers);
+        decode(presenceMapDecoder, buffers, register);
         assertTrue(presenceMapDecoder.isReady());
-        PresenceMap presenceMap = presenceMapDecoder.getValue();
+        PresenceMap presenceMap = register.presenceMap;
         assertTrue(presenceMap.getValue(0));
         assertFalse(presenceMap.getValue(1));
         assertTrue(presenceMap.getValue(2));

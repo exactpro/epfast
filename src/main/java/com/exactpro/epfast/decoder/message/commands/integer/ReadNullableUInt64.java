@@ -16,18 +16,11 @@
 
 package com.exactpro.epfast.decoder.message.commands.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeNullableUInt64;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
 public class ReadNullableUInt64 extends PrimitiveInstruction<DecodeNullableUInt64> {
     public ReadNullableUInt64() {
         super(new DecodeNullableUInt64());
-    }
-
-    @Override
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        throw new UnsupportedOperationException();
     }
 }

@@ -23,9 +23,8 @@ public class SetNullableLengthField implements DecoderCommand {
 
     @Override
     public int executeOn(DecoderState decoderState) {
-        Long lengthValue = decoderState.register.optionalUInt32Value;
-        if (lengthValue != null) {
-            decoderState.loopLimit = lengthValue;
+        if (!decoderState.register.isNull) {
+            decoderState.loopLimit = decoderState.register.uInt32Value;
         } else {
             decoderState.loopLimit = -1;
         }

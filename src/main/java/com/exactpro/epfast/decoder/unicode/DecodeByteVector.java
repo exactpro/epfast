@@ -17,7 +17,7 @@
 package com.exactpro.epfast.decoder.unicode;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
@@ -35,11 +35,11 @@ public abstract class DecodeByteVector implements IDecodeContext {
 
     boolean overflow;
 
-    public abstract void decode(ByteBuf buf);
+    public abstract int decode(ByteBuf buf, UnionRegister register);
 
-    public abstract void continueDecode(ByteBuf buf);
+    public abstract int continueDecode(ByteBuf buf, UnionRegister register);
 
-    public abstract byte[] getValue() throws OverflowException;
+    public abstract void setRegisterValue(UnionRegister register);
 
     public boolean isReady() {
         return ready;

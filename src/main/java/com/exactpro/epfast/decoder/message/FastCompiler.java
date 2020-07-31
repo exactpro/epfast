@@ -28,6 +28,7 @@ import com.exactpro.epfast.decoder.message.commands.operators.DefaultMissingValu
 import com.exactpro.epfast.decoder.message.commands.operators.DefaultPresentValue;
 import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
 import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
+import com.exactpro.epfast.decoder.message.commands.presencemap.SetPresenceMap;
 import com.exactpro.epfast.template.*;
 
 import java.util.*;
@@ -64,6 +65,7 @@ public class FastCompiler {
         }
         if (requiresPresenceMap(instructions)) {
             commandSet.add(new ReadPresenceMap());
+            commandSet.add(new SetPresenceMap());
         }
         for (Instruction instruction : instructions) {
             if (instruction instanceof Group) {

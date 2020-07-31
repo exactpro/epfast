@@ -16,19 +16,12 @@
 
 package com.exactpro.epfast.decoder.message.commands.decimal;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.decimal.DecodeNullableDecimal;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
 public class ReadNullableSimpleDecimal extends PrimitiveInstruction<DecodeNullableDecimal> {
 
     public ReadNullableSimpleDecimal() {
         super(new DecodeNullableDecimal());
-    }
-
-    @Override
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        throw new UnsupportedOperationException();
     }
 }

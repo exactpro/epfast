@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.math.BigInteger;
@@ -29,7 +29,7 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
 
     private long value;
 
-    public void decode(ByteBuf buf) {
+    public int decode(ByteBuf buf, UnionRegister register) {
         reset();
         value = 0;
         int readerIndex = buf.readerIndex();
@@ -37,8 +37,9 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
         int oneByte = buf.getByte(readerIndex++);
         accumulate(oneByte);
         if (oneByte < 0) {
+            setRegisterValue(register);
             buf.readerIndex(readerIndex);
-            return;
+            return 1;
         }
         if (readerIndex < readLimit) {
             checkOverlong(buf.getByte(readerIndex)); //check second byte
@@ -49,9 +50,15 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
             checkForSignExtension = true;
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public void continueDecode(ByteBuf buf) {
+    public int continueDecode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         if (checkForSignExtension) {
@@ -62,14 +69,24 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
             accumulate(buf.getByte(readerIndex++));
         } while (!ready && readerIndex < readLimit);
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public BigInteger getValue() throws OverflowException {
+    @Override
+    public void setRegisterValue(UnionRegister register) {
         if (overflow) {
-            throw new OverflowException("UInt32 Overflow");
+            register.isOverflow = true;
+            register.errorMessage = "UInt32 Overflow";
         } else {
             longToBytes(value, bytes);
-            return new BigInteger(1, bytes);
+            register.isOverflow = false;
+            register.isNull = false;
+            register.unsignedInt64Value = new BigInteger(1, bytes);
         }
     }
 

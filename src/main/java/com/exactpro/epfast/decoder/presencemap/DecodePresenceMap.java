@@ -17,6 +17,7 @@
 package com.exactpro.epfast.decoder.presencemap;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.util.BitSet;
@@ -31,22 +32,35 @@ public class DecodePresenceMap implements IDecodeContext {
 
     private boolean ready;
 
-    public void decode(ByteBuf buf) {
+    public int decode(ByteBuf buf, UnionRegister register) {
         reset();
-        continueDecode(buf);
+        continueDecode(buf, register);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public void continueDecode(ByteBuf buf) {
+    public int continueDecode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         while ((readerIndex < readLimit) && !ready) {
             accumulateValue(buf.getByte(readerIndex++));
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public PresenceMap getValue() {
-        return new PresenceMap((BitSet) value.clone());
+    public void setRegisterValue(UnionRegister register) {
+        //TODO add overlong checks for presence map
+        register.presenceMap = new PresenceMap((BitSet) value.clone());
     }
 
     public boolean isReady() {

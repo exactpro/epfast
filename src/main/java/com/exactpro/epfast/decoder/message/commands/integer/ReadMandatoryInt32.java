@@ -16,20 +16,12 @@
 
 package com.exactpro.epfast.decoder.message.commands.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
 public class ReadMandatoryInt32 extends PrimitiveInstruction<DecodeMandatoryInt32> {
 
     public ReadMandatoryInt32() {
         super(new DecodeMandatoryInt32());
-    }
-
-    @Override
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.int32Value = fieldDecoder.getValue();
-        decoderState.register.isNull = false;
     }
 }

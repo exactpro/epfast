@@ -17,22 +17,11 @@
 package com.exactpro.epfast.decoder.message.commands.integer;
 
 import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
-import com.exactpro.epfast.decoder.OverflowException;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
 
 public class ReadNullableInt32 extends PrimitiveInstruction<DecodeNullableInt32> {
 
     public ReadNullableInt32() {
         super(new DecodeNullableInt32());
-    }
-
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        if (fieldDecoder.getValue() == null) {
-            decoderState.register.isNull = true;
-        } else {
-            decoderState.register.int32Value = fieldDecoder.getValue();
-        }
-
     }
 }

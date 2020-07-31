@@ -17,11 +17,9 @@
 package com.exactpro.epfast.decoder.decimal;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt64;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
-
-import java.math.BigDecimal;
 
 public abstract class DecodeDecimal implements IDecodeContext {
 
@@ -39,9 +37,9 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     boolean mantissaOverflow;
 
-    public abstract void decode(ByteBuf buf);
+    public abstract int decode(ByteBuf buf, UnionRegister register);
 
-    public abstract void continueDecode(ByteBuf buf);
+    public abstract int continueDecode(ByteBuf buf, UnionRegister register);
 
     public final void reset() {
         exponentReady = false;
@@ -51,7 +49,7 @@ public abstract class DecodeDecimal implements IDecodeContext {
         mantissaOverflow = false;
     }
 
-    public abstract BigDecimal getValue() throws OverflowException;
+    public abstract void setRegisterValue(UnionRegister register);
 
     public boolean isReady() {
         return ready;

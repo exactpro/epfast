@@ -16,10 +16,10 @@
 
 package com.exactpro.epfast.decoder.integer;
 
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import com.exactpro.junit5.WithByteBuf;
 import io.netty.buffer.ByteBuf;
 
-import java.io.IOException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,286 +31,288 @@ class TestInt64 {
 
     private DecodeMandatoryInt64 mandatoryInt64Decoder = new DecodeMandatoryInt64();
 
+    private UnionRegister register = new UnionRegister();
+
     @WithByteBuf("80")
-    void testNull(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void testNull(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertNull(nullableInt64Decoder.getValue());
+        assertTrue(register.isNull);
     }
 
     @WithByteBuf("81")
-    void optionalZero(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void optionalZero(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(0, nullableInt64Decoder.getValue());
+        assertEquals(0, register.int64Value);
     }
 
     @WithByteBuf("80")
-    void mandatoryZero(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryZero(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(0, mandatoryInt64Decoder.getValue());
+        assertEquals(0, register.int64Value);
     }
 
     @WithByteBuf("01 00 00 00 00 00 00 00 00 80")
-    void testMaxNullable(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void testMaxNullable(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(Long.MAX_VALUE, nullableInt64Decoder.getValue());
+        assertEquals(Long.MAX_VALUE, register.int64Value);
     }
 
     @WithByteBuf("00 7f 7f 7f 7f 7f 7f 7f 7f ff")
-    void testMaxMandatory(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void testMaxMandatory(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(Long.MAX_VALUE, mandatoryInt64Decoder.getValue());
+        assertEquals(Long.MAX_VALUE, register.int64Value);
     }
 
     @WithByteBuf("7f 00 00 00 00 00 00 00 00 80")
-    void testMinNullable(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void testMinNullable(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(Long.MIN_VALUE, nullableInt64Decoder.getValue());
+        assertEquals(Long.MIN_VALUE, register.int64Value);
     }
 
     @WithByteBuf("7f 00 00 00 00 00 00 00 00 80")
-    void testMinMandatory(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void testMinMandatory(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(Long.MIN_VALUE, mandatoryInt64Decoder.getValue());
+        assertEquals(Long.MIN_VALUE, register.int64Value);
     }
 
     @WithByteBuf("01 00 00 00 00 00 00 00 00 81")
     void testMaxOverflowNullable1(Collection<ByteBuf> buffers) {
-        decode(nullableInt64Decoder, buffers);
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertThrows(IOException.class, () -> nullableInt64Decoder.getValue());
+        assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("01 00 00 00 00 00 00 00 00 00 80")
     void testMaxOverflowNullable2(Collection<ByteBuf> buffers) {
-        decode(nullableInt64Decoder, buffers);
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertThrows(IOException.class, () -> nullableInt64Decoder.getValue());
+        assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("01 00 00 00 00 00 00 00 00 80")
     void testMaxOverflowMandatory1(Collection<ByteBuf> buffers) {
-        decode(mandatoryInt64Decoder, buffers);
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertThrows(IOException.class, () -> mandatoryInt64Decoder.getValue());
+        assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("00 7f 00 7f 7f 7f 7f 7f 7f 7f ff")
     void testMaxOverflowMandatory2(Collection<ByteBuf> buffers) {
-        decode(mandatoryInt64Decoder, buffers);
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertThrows(IOException.class, () -> mandatoryInt64Decoder.getValue());
+        assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("77 7f 7f 7f 7f 7f 7f 7f 7f ff")
     void testMinOverflowNullable1(Collection<ByteBuf> buffers) {
-        decode(nullableInt64Decoder, buffers);
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertThrows(IOException.class, () -> nullableInt64Decoder.getValue());
+        assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("7f 00 00 00 00 00 00 00 00 00 80")
     void testMinOverflowNullable2(Collection<ByteBuf> buffers) {
-        decode(nullableInt64Decoder, buffers);
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertThrows(IOException.class, () -> nullableInt64Decoder.getValue());
+        assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("77 7f 7f 7f 7f 7f 7f 7f 7f ff")
     void testMinOverflowMandatory1(Collection<ByteBuf> buffers) {
-        decode(mandatoryInt64Decoder, buffers);
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertThrows(IOException.class, () -> mandatoryInt64Decoder.getValue());
+        assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("7f 00 00 00 00 00 00 00 00 00 80")
     void testMinOverflowMandatory2(Collection<ByteBuf> buffers) {
-        decode(mandatoryInt64Decoder, buffers);
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertThrows(IOException.class, () -> mandatoryInt64Decoder.getValue());
+        assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("39 45 a4")
-    void optionalPositive(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void optionalPositive(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(942755, nullableInt64Decoder.getValue());
+        assertEquals(942755, register.int64Value);
     }
 
     @WithByteBuf("39 45 a3")
-    void mandatoryPositive(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryPositive(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(942755, mandatoryInt64Decoder.getValue());
+        assertEquals(942755, register.int64Value);
     }
 
     @WithByteBuf("46 3a dd")
-    void optionalNegative(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void optionalNegative(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(-942755, nullableInt64Decoder.getValue());
+        assertEquals(-942755, register.int64Value);
     }
 
     @WithByteBuf("7c 1b 1b 9d")
-    void mandatoryNegative(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryNegative(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(-7942755, mandatoryInt64Decoder.getValue());
+        assertEquals(-7942755, register.int64Value);
     }
 
     @WithByteBuf("ff")
-    void optionalMinusOne(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void optionalMinusOne(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(-1, nullableInt64Decoder.getValue());
+        assertEquals(-1, register.int64Value);
     }
 
     @WithByteBuf("ff")
-    void mandatoryMinusOne(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryMinusOne(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(-1, mandatoryInt64Decoder.getValue());
+        assertEquals(-1, register.int64Value);
     }
 
     @WithByteBuf("00 00 40 82")
-    void optionalSignExtensionPositive(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void optionalSignExtensionPositive(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(8193, nullableInt64Decoder.getValue());
+        assertEquals(8193, register.int64Value);
     }
 
     @WithByteBuf("00 00 40 81")
-    void mandatorySignExtensionPositive(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatorySignExtensionPositive(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(8193, mandatoryInt64Decoder.getValue());
+        assertEquals(8193, register.int64Value);
     }
 
     @WithByteBuf("7f 3f ff")
-    void optionalSignExtensionNegative(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void optionalSignExtensionNegative(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(-8193, nullableInt64Decoder.getValue());
+        assertEquals(-8193, register.int64Value);
     }
 
     @WithByteBuf("7f 3f ff")
-    void mandatorySignExtensionNegative(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatorySignExtensionNegative(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(-8193, mandatoryInt64Decoder.getValue());
+        assertEquals(-8193, register.int64Value);
     }
 
     @WithByteBuf("7f 3f ff 7f 3f ff")
-    void mandatoryNegativeTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryNegativeTwoValuesInRow(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(-8193, mandatoryInt64Decoder.getValue());
+        assertEquals(-8193, register.int64Value);
 
-        decode(mandatoryInt64Decoder, buffers);
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(-8193, mandatoryInt64Decoder.getValue());
+        assertEquals(-8193, register.int64Value);
     }
 
     @WithByteBuf("00 00 40 81 00 00 40 81")
-    void mandatoryPositiveTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryPositiveTwoValuesInRow(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(8193, mandatoryInt64Decoder.getValue());
+        assertEquals(8193, register.int64Value);
 
-        decode(mandatoryInt64Decoder, buffers);
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
-        assertEquals(8193, mandatoryInt64Decoder.getValue());
+        assertEquals(8193, register.int64Value);
     }
 
     @WithByteBuf("7f 3f ff 7f 3f ff")
-    void optionalNegativeTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void optionalNegativeTwoValuesInRow(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(-8193, nullableInt64Decoder.getValue());
+        assertEquals(-8193, register.int64Value);
 
-        decode(nullableInt64Decoder, buffers);
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(-8193, nullableInt64Decoder.getValue());
+        assertEquals(-8193, register.int64Value);
     }
 
     @WithByteBuf("00 00 40 82 00 00 40 82")
-    void optionalPositiveTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void optionalPositiveTwoValuesInRow(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(8193, nullableInt64Decoder.getValue());
+        assertEquals(8193, register.int64Value);
 
-        decode(nullableInt64Decoder, buffers);
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
-        assertEquals(8193, nullableInt64Decoder.getValue());
+        assertEquals(8193, register.int64Value);
     }
 
     @WithByteBuf("00 39 45 a4")
-    void mandatoryOverlong(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryOverlong(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertTrue(mandatoryInt64Decoder.isOverlong());
-        assertEquals(942756, mandatoryInt64Decoder.getValue());
+        assertEquals(942756, register.int64Value);
     }
 
     @WithByteBuf("00 40 81")
-    void mandatoryNotOverlong(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryNotOverlong(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverlong());
-        assertEquals(8193, mandatoryInt64Decoder.getValue());
+        assertEquals(8193, register.int64Value);
     }
 
     @WithByteBuf("7f 7c 1b 1b 9d")
-    void mandatoryOverlongNegative(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryOverlongNegative(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertTrue(mandatoryInt64Decoder.isOverlong());
-        assertEquals(-7942755, mandatoryInt64Decoder.getValue());
+        assertEquals(-7942755, register.int64Value);
     }
 
     @WithByteBuf("7f 3f ff")
-    void mandatoryNotOverlongNegative(Collection<ByteBuf> buffers) throws IOException {
-        decode(mandatoryInt64Decoder, buffers);
+    void mandatoryNotOverlongNegative(Collection<ByteBuf> buffers) {
+        decode(mandatoryInt64Decoder, buffers, register);
         assertTrue(mandatoryInt64Decoder.isReady());
         assertFalse(mandatoryInt64Decoder.isOverlong());
-        assertEquals(-8193, mandatoryInt64Decoder.getValue());
+        assertEquals(-8193, register.int64Value);
     }
 
     @WithByteBuf("00 39 45 a4")
-    void nullableOverlong(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void nullableOverlong(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
         assertTrue(nullableInt64Decoder.isOverlong());
-        assertEquals(942755, nullableInt64Decoder.getValue());
+        assertEquals(942755, register.int64Value);
     }
 
     @WithByteBuf("00 40 81")
-    void nullableNotOverlong(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void nullableNotOverlong(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverlong());
-        assertEquals(8192, nullableInt64Decoder.getValue());
+        assertEquals(8192, register.int64Value);
     }
 
     @WithByteBuf("7f 7c 1b 1b 9d")
-    void nullableOverlongNegative(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void nullableOverlongNegative(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
         assertTrue(nullableInt64Decoder.isOverlong());
-        assertEquals(-7942755, nullableInt64Decoder.getValue());
+        assertEquals(-7942755, register.int64Value);
     }
 
     @WithByteBuf("7f 3f ff")
-    void nullableNotOverlongNegative(Collection<ByteBuf> buffers) throws IOException {
-        decode(nullableInt64Decoder, buffers);
+    void nullableNotOverlongNegative(Collection<ByteBuf> buffers) {
+        decode(nullableInt64Decoder, buffers, register);
         assertTrue(nullableInt64Decoder.isReady());
         assertFalse(nullableInt64Decoder.isOverlong());
-        assertEquals(-8193, nullableInt64Decoder.getValue());
+        assertEquals(-8193, register.int64Value);
     }
 }
