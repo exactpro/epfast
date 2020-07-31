@@ -18,6 +18,8 @@ package com.exactpro.epfast.decoder.ascii;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeAsciiString implements IDecodeContext {
@@ -38,7 +40,7 @@ public abstract class DecodeAsciiString implements IDecodeContext {
         this.checkOverlong = checkOverlong;
     }
 
-    public void decode(ByteBuf buf) {
+    public int decode(ByteBuf buf, UnionRegister unionRegister) {
         reset();
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
@@ -50,16 +52,30 @@ public abstract class DecodeAsciiString implements IDecodeContext {
             accumulateValue(buf.getByte(readerIndex++));
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(unionRegister);
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
-    public void continueDecode(ByteBuf buf) {
+    public int continueDecode(ByteBuf buf, UnionRegister unionRegister) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         while ((readerIndex < readLimit) && !ready) {
             accumulateValue(buf.getByte(readerIndex++));
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(unionRegister);
+            return 1;
+        } else {
+            return 0;
+        }
     }
+
+    public abstract void setRegisterValue(UnionRegister unionRegister);
 
     public abstract String getValue() throws OverflowException;
 

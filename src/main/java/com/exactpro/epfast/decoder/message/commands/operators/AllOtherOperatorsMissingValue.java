@@ -27,8 +27,7 @@ public class AllOtherOperatorsMissingValue implements DecoderCommand {
     }
 
     private void tempOperatorLogic(DecoderState decoderState) {
-        decoderState.register.mandatoryInt32Value = -1;
-        decoderState.register.optionalInt32Value = -1;
+        decoderState.register.int32Value = -1;
         decoderState.register.stringValue = null;
     }
 }

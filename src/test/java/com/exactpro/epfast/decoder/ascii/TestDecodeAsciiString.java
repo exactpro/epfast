@@ -17,6 +17,7 @@
 package com.exactpro.epfast.decoder.ascii;
 
 import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.junit5.WithByteBuf;
 import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Nested;

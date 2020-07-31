@@ -25,21 +25,13 @@ public abstract class PrimitiveInstruction<T extends IDecodeContext> extends Ins
         super(fieldDecoder);
     }
 
-    protected void decode(DecoderState decoderState) throws OverflowException {
+    protected int decode(DecoderState decoderState) throws OverflowException {
         decoderStarted = true;
-        fieldDecoder.decode(decoderState.inputBuffer);
-        if (isReady()) {
-            setRegisterValue(decoderState);
-            decoderStarted = false;
-        }
+        return fieldDecoder.decode(decoderState.inputBuffer, decoderState);
     }
 
-    protected void continueDecode(DecoderState decoderState) throws OverflowException {
-        fieldDecoder.continueDecode(decoderState.inputBuffer);
-        if (isReady()) {
-            setRegisterValue(decoderState);
-            decoderStarted = false;
-        }
+    protected int continueDecode(DecoderState decoderState) throws OverflowException {
+        return fieldDecoder.continueDecode(decoderState.inputBuffer, decoderState);
     }
 
     public abstract void setRegisterValue(DecoderState decoderState) throws OverflowException;

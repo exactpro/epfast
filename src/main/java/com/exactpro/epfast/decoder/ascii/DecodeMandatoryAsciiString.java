@@ -17,17 +17,43 @@
 package com.exactpro.epfast.decoder.ascii;
 
 import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 
 public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
 
-   public DecodeMandatoryAsciiString() {
+    public DecodeMandatoryAsciiString() {
         this(false);
     }
 
-   public DecodeMandatoryAsciiString(boolean checkOverlong) {
+    public DecodeMandatoryAsciiString(boolean checkOverlong) {
         super(checkOverlong);
     }
 
+    @Override
+    public void setRegisterValue(UnionRegister register) {
+        if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
+            register.isOverflow = true;
+            //TODO what to do with overflow information ?
+            //throw new OverflowException("String is longer than allowed");
+        }
+        if (zeroCount < stringBuilder.length()) {
+            if (zeroPreamble && checkOverlong) {
+                //TODO set register flag
+                register.isOverflow = true;
+                //throw new OverflowException("String with zero preamble can't contain any value except 0");
+            } else {
+                register.stringValue = stringBuilder.toString();
+            }
+        } else if (zeroCount == 1) {
+            register.stringValue = "";
+        } else {
+            stringBuilder.setLength(zeroCount - 1);
+            register.stringValue = stringBuilder.toString();
+        }
+    }
+
+    @Override
     public String getValue() throws OverflowException {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             throw new OverflowException("String is longer than allowed");

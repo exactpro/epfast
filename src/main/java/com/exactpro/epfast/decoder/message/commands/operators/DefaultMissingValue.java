@@ -29,8 +29,7 @@ public class DefaultMissingValue implements DecoderCommand {
     }
 
     private void tempDefaultOperatorLogic(DecoderState decoderState) {
-        decoderState.register.mandatoryInt32Value = 1;
-        decoderState.register.optionalInt32Value = 1;
+        decoderState.register.int32Value = 1;
         decoderState.register.stringValue = "Default";
     }
 

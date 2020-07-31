@@ -28,6 +28,6 @@ public class ReadMandatoryAsciiString extends PrimitiveInstruction<DecodeMandato
     }
 
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.stringValue = fieldDecoder.getValue();
+        //will be removed
     }
 }

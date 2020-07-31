@@ -28,6 +28,11 @@ public class ReadNullableInt32 extends PrimitiveInstruction<DecodeNullableInt32>
     }
 
     public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        decoderState.register.optionalInt32Value = fieldDecoder.getValue();
+        if (fieldDecoder.getValue() == null) {
+            decoderState.register.isNull = true;
+        } else {
+            decoderState.register.int32Value = fieldDecoder.getValue();
+        }
+
     }
 }

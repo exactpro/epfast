@@ -17,6 +17,8 @@
 package com.exactpro.epfast.decoder.ascii;
 
 import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 
 public final class DecodeNullableAsciiString extends DecodeAsciiString {
 
@@ -28,6 +30,30 @@ public final class DecodeNullableAsciiString extends DecodeAsciiString {
         super(checkOverlong);
     }
 
+    @Override
+    public void setRegisterValue(UnionRegister register) {
+        if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
+            register.isOverflow = true;
+//            throw new OverflowException("String is longer than allowed");
+        }
+        if (zeroCount < stringBuilder.length()) {
+            if (zeroPreamble && checkOverlong) {
+                register.isOverflow = true;
+//                throw new OverflowException("String with zero preamble can't contain any value except 0");
+            } else {
+                register.stringValue = stringBuilder.toString();
+            }
+        } else if (zeroCount == 1) {
+            register.stringValue = null;
+        } else if (zeroCount == 2) {
+            register.stringValue = "";
+        } else {
+            stringBuilder.setLength(zeroCount - 2);
+            register.stringValue = stringBuilder.toString();
+        }
+    }
+
+    @Override
     public String getValue() throws OverflowException {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             throw new OverflowException("String is longer than allowed");

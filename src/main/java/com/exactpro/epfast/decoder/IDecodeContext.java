@@ -16,15 +16,17 @@
 
 package com.exactpro.epfast.decoder;
 
+import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 public interface IDecodeContext {
 
     int CLEAR_STOP_BIT_MASK = 0b01111111;
 
-    void decode(ByteBuf buf);
+    int decode(ByteBuf buf, UnionRegister unionRegister);
 
-    void continueDecode(ByteBuf buf);
+    int continueDecode(ByteBuf buf, UnionRegister unionRegister);
 
     boolean isReady();
 
