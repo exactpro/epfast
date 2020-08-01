@@ -44,6 +44,8 @@ public abstract class DecodeInteger implements IDecodeContext {
         return overlong;
     }
 
+    protected boolean inProgress;
+
     protected final void reset() {
         ready = false;
         overflow = false;
@@ -59,4 +61,9 @@ public abstract class DecodeInteger implements IDecodeContext {
     }
 
     public abstract void setRegisterValue(UnionRegister register);
+
+    @Override
+    public boolean inProgress() {
+        return inProgress;
+    }
 }

@@ -35,6 +35,8 @@ public abstract class DecodeByteVector implements IDecodeContext {
 
     boolean overflow;
 
+    protected boolean inProgress;
+
     public abstract int decode(ByteBuf buf, UnionRegister register);
 
     public abstract int continueDecode(ByteBuf buf, UnionRegister register);
@@ -60,6 +62,11 @@ public abstract class DecodeByteVector implements IDecodeContext {
         overflow = false;
         counter = 0;
         value = new ArrayList<>();
+    }
+
+    @Override
+    public boolean inProgress() {
+        return inProgress;
     }
 }
 

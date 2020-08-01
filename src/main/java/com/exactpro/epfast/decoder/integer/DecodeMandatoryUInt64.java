@@ -32,6 +32,7 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
     public int decode(ByteBuf buf, UnionRegister register) {
         reset();
         value = 0;
+        inProgress = true;
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         int oneByte = buf.getByte(readerIndex++);
@@ -79,6 +80,7 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
 
     @Override
     public void setRegisterValue(UnionRegister register) {
+        inProgress = false;
         if (overflow) {
             register.isOverflow = true;
             register.errorMessage = "UInt32 Overflow";

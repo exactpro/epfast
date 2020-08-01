@@ -32,8 +32,11 @@ public class DecodePresenceMap implements IDecodeContext {
 
     private boolean ready;
 
+    protected boolean inProgress;
+
     public int decode(ByteBuf buf, UnionRegister register) {
         reset();
+        inProgress = true;
         continueDecode(buf, register);
         if (ready) {
             setRegisterValue(register);
@@ -60,6 +63,7 @@ public class DecodePresenceMap implements IDecodeContext {
 
     public void setRegisterValue(UnionRegister register) {
         //TODO add overlong checks for presence map
+        inProgress = false;
         register.presenceMap = new PresenceMap((BitSet) value.clone());
     }
 
@@ -91,5 +95,9 @@ public class DecodePresenceMap implements IDecodeContext {
         lastNonZeroIndex = 0;
     }
 
+    @Override
+    public boolean inProgress() {
+        return inProgress;
+    }
 }
 

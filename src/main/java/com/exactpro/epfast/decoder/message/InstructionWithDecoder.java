@@ -25,8 +25,6 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
 
     protected T fieldDecoder;
 
-    protected boolean decoderStarted;
-
     protected InstructionWithDecoder(T fieldDecoder) {
         this.fieldDecoder = Objects.requireNonNull(fieldDecoder);
     }
@@ -45,10 +43,10 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
             decoderState.canProceed = false;
             return 0;
         }
-        if (!decoderStarted) {
-          return   decode(decoderState);
+        if (!fieldDecoder.inProgress()) {
+            return decode(decoderState);
         } else {
-          return   continueDecode(decoderState);
+            return continueDecode(decoderState);
         }
     }
 }

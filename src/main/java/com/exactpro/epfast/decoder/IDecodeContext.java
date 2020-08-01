@@ -30,4 +30,6 @@ public interface IDecodeContext {
     boolean isReady();
 
     boolean isOverlong();
+
+    boolean inProgress();
 }

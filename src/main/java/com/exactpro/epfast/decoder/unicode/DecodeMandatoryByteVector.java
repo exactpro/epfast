@@ -28,6 +28,7 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
 
     public int decode(ByteBuf buf, UnionRegister register) {
         reset();
+        inProgress = true;
         lengthDecoder.decode(buf, register);
         if (lengthDecoder.isReady()) {
             lengthReady = true;
@@ -112,6 +113,7 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
 
     @Override
     public void setRegisterValue(UnionRegister register) {
+        inProgress = false;
         if (overflow) {
             register.isOverflow = true;
             register.errorMessage = "length value range is uint32";

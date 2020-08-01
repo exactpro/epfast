@@ -34,12 +34,15 @@ public abstract class DecodeAsciiString implements IDecodeContext {
 
     static final int MAX_ALLOWED_LENGTH = 0x20000;
 
+    protected boolean inProgress;
+
     DecodeAsciiString(boolean checkOverlong) {
         this.checkOverlong = checkOverlong;
     }
 
     public int decode(ByteBuf buf, UnionRegister register) {
         reset();
+        inProgress = true;
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         if (buf.getByte(readerIndex) == 0) {
@@ -101,5 +104,10 @@ public abstract class DecodeAsciiString implements IDecodeContext {
         ready = false;
         zeroCount = 0;
         zeroPreamble = false;
+    }
+
+    @Override
+    public boolean inProgress() {
+        return inProgress;
     }
 }

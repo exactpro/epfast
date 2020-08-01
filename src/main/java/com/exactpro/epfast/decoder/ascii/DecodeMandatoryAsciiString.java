@@ -30,6 +30,7 @@ public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
 
     @Override
     public void setRegisterValue(UnionRegister register) {
+        inProgress = false;
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             register.isOverflow = true;
             register.errorMessage = "String is longer than allowed";

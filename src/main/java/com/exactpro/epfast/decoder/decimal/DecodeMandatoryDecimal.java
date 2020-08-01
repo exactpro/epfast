@@ -30,6 +30,7 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
 
     public int decode(ByteBuf buf, UnionRegister register) {
         reset();
+        inProgress = true;
         exponentDecoder.decode(buf, register);
         if (exponentDecoder.isReady()) {
             exponentReady = true;
@@ -113,6 +114,7 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
     }
 
     public void setRegisterValue(UnionRegister register) {
+        inProgress = false;
         if (exponentOverflow) {
             register.isOverflow = true;
             register.errorMessage = "exponent value range is int32";

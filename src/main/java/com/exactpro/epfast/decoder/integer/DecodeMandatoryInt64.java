@@ -27,37 +27,9 @@ public final class DecodeMandatoryInt64 extends DecodeInteger {
 
     private long value;
 
-    public int continueDecode(ByteBuf buf, UnionRegister register) {
-        int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        if (value >= 0) {
-            if (checkForSignExtension) {
-                checkOverlongPositive(buf.getByte(readerIndex)); //continue checking
-                checkForSignExtension = false;
-            }
-            do {
-                accumulatePositive(buf.getByte(readerIndex++));
-            } while (!ready && readerIndex < readLimit);
-        } else {
-            if (checkForSignExtension) {
-                checkOverlongNegative(buf.getByte(readerIndex)); //check first and second bytes
-                checkForSignExtension = false;
-            }
-            do {
-                accumulateNegative(buf.getByte(readerIndex++));
-            } while (!ready && readerIndex < readLimit);
-        }
-        buf.readerIndex(readerIndex);
-        if (ready) {
-            setRegisterValue(register);
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
     public int decode(ByteBuf buf, UnionRegister register) {
         reset();
+        inProgress = true;
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         int oneByte = buf.getByte(readerIndex++);
@@ -103,8 +75,38 @@ public final class DecodeMandatoryInt64 extends DecodeInteger {
         }
     }
 
+    public int continueDecode(ByteBuf buf, UnionRegister register) {
+        int readerIndex = buf.readerIndex();
+        int readLimit = buf.writerIndex();
+        if (value >= 0) {
+            if (checkForSignExtension) {
+                checkOverlongPositive(buf.getByte(readerIndex)); //continue checking
+                checkForSignExtension = false;
+            }
+            do {
+                accumulatePositive(buf.getByte(readerIndex++));
+            } while (!ready && readerIndex < readLimit);
+        } else {
+            if (checkForSignExtension) {
+                checkOverlongNegative(buf.getByte(readerIndex)); //check first and second bytes
+                checkForSignExtension = false;
+            }
+            do {
+                accumulateNegative(buf.getByte(readerIndex++));
+            } while (!ready && readerIndex < readLimit);
+        }
+        buf.readerIndex(readerIndex);
+        if (ready) {
+            setRegisterValue(register);
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public void setRegisterValue(UnionRegister register) {
+        inProgress = false;
         if (overflow) {
             register.isOverflow = true;
             register.errorMessage = "Int64 Overflow";

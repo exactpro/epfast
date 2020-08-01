@@ -37,6 +37,8 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     boolean mantissaOverflow;
 
+    protected boolean inProgress;
+
     public abstract int decode(ByteBuf buf, UnionRegister register);
 
     public abstract int continueDecode(ByteBuf buf, UnionRegister register);
@@ -56,4 +58,9 @@ public abstract class DecodeDecimal implements IDecodeContext {
     }
 
     public abstract boolean isOverlong();
+
+    @Override
+    public boolean inProgress() {
+        return inProgress;
+    }
 }

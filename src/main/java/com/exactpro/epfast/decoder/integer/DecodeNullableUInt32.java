@@ -31,6 +31,7 @@ public final class DecodeNullableUInt32 extends DecodeInteger {
         reset();
         value = 0;
         isUInt32Limit = false;
+        inProgress = true;
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         int oneByte = buf.getByte(readerIndex++);
@@ -78,6 +79,7 @@ public final class DecodeNullableUInt32 extends DecodeInteger {
 
     @Override
     public void setRegisterValue(UnionRegister register) {
+        inProgress = false;
         if (overflow) {
             register.isOverflow = true;
             register.errorMessage = "UInt32 Overflow";
