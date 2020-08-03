@@ -16,6 +16,7 @@
 
 package com.exactpro.epfast.annotation.processing;
 
+import com.exactpro.epfast.FastPackageHelper;
 import com.exactpro.epfast.annotations.FastPackage;
 
 import javax.lang.model.element.PackageElement;
@@ -59,7 +60,7 @@ class FastPackageResolver {
         if (aPackage.isUnnamed()) { // if the root java package
             return anonymousPackage;
         }
-        return getFastPackageOf(elementUtils.getPackageElement(getParentPackage(aPackage.toString())));
+        return getFastPackageOf(new FastPackageHelper(elementUtils).getPackageElement(getParentPackage(aPackage.toString())));
     }
 
     private static String getParentPackage(String packageString) {

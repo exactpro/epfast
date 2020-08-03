@@ -32,6 +32,7 @@ dependencies {
     implementation("com.google.auto.service:auto-service:1.0-rc6")
     implementation("com.github.spullara.mustache.java:compiler:0.9.6")
     implementation(project(":epfast-annotations"))
+    implementation(project(":package-element-java9+"))
 
     junitImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     junitRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")

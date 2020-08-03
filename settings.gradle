@@ -1,4 +1,6 @@
 rootProject.name = 'epfast'
 include 'annotation-processing'
 include 'epfast-annotations'
+include 'package-element-java9+'
+include 'package-element-java8'
 
