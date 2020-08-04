@@ -27,7 +27,7 @@ public final class DecodeNullableUInt32 extends DecodeInteger {
 
     private int value;
 
-    public int decode(ByteBuf buf, UnionRegister register) {
+    public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         value = 0;
         isUInt32Limit = false;

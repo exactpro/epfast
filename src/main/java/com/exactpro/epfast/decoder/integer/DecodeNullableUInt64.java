@@ -31,7 +31,7 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
 
     private long value;
 
-    public int decode(ByteBuf buf, UnionRegister register) {
+    public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         value = 0;
         isUInt64Limit = false;

@@ -28,6 +28,8 @@ public class UnionRegister {
 
     public boolean isOverflow;
 
+    public boolean isOverlong;
+
     public int int32Value;
 
     public long uInt32Value;

@@ -28,10 +28,10 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
 
     private int exponent;
 
-    public int decode(ByteBuf buf, UnionRegister register) {
+    public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         inProgress = true;
-        exponentDecoder.decode(buf, register);
+        exponentDecoder.startDecode(buf, register);
         if (exponentDecoder.isReady()) {
             exponentReady = true;
             if (register.isOverflow) {
@@ -40,7 +40,7 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
                 exponent = register.int32Value;
             }
             if (buf.isReadable()) {
-                mantissaDecoder.decode(buf, register);
+                mantissaDecoder.startDecode(buf, register);
                 startedMantissa = true;
                 if (mantissaDecoder.isReady()) {
                     ready = true;
@@ -72,7 +72,7 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
                 }
             }
         } else if (exponentReady) {
-            mantissaDecoder.decode(buf, register);
+            mantissaDecoder.startDecode(buf, register);
             startedMantissa = true;
             if (mantissaDecoder.isReady()) {
                 ready = true;
@@ -92,7 +92,7 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
                     exponent = register.int32Value;
                 }
                 if (buf.isReadable()) {
-                    mantissaDecoder.decode(buf, register);
+                    mantissaDecoder.startDecode(buf, register);
                     startedMantissa = true;
                     if (mantissaDecoder.isReady()) {
                         ready = true;

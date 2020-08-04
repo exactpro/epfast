@@ -30,10 +30,10 @@ public final class DecodeNullableDecimal extends DecodeDecimal {
 
     private boolean nullValue;
 
-    public int decode(ByteBuf buf, UnionRegister register) {
+    public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         inProgress = true;
-        exponentDecoder.decode(buf, register);
+        exponentDecoder.startDecode(buf, register);
         if (exponentDecoder.isReady()) {
             exponentReady = true;
             if (register.isOverflow) {
@@ -42,7 +42,7 @@ public final class DecodeNullableDecimal extends DecodeDecimal {
                 exponent = register.int32Value;
             }
             if (!register.isNull && buf.isReadable()) {
-                mantissaDecoder.decode(buf, register);
+                mantissaDecoder.startDecode(buf, register);
                 startedMantissa = true;
                 if (mantissaDecoder.isReady()) {
                     ready = true;
@@ -80,7 +80,7 @@ public final class DecodeNullableDecimal extends DecodeDecimal {
             }
         } else if (exponentReady) {
             startedMantissa = true;
-            mantissaDecoder.decode(buf, register);
+            mantissaDecoder.startDecode(buf, register);
             if (mantissaDecoder.isReady()) {
                 ready = true;
                 if (register.isOverflow) {
@@ -99,7 +99,7 @@ public final class DecodeNullableDecimal extends DecodeDecimal {
                     exponent = register.int32Value;
                 }
                 if (!register.isNull && buf.isReadable()) {
-                    mantissaDecoder.decode(buf, register);
+                    mantissaDecoder.startDecode(buf, register);
                     startedMantissa = true;
                     if (mantissaDecoder.isReady()) {
                         ready = true;

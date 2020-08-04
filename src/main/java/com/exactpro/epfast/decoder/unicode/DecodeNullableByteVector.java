@@ -26,10 +26,10 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
 
     private long messageLength;
 
-    public int decode(ByteBuf buf, UnionRegister register) {
+    public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         inProgress = true;
-        lengthDecoder.decode(buf, register);
+        lengthDecoder.startDecode(buf, register);
         if (lengthDecoder.isReady()) {
             lengthReady = true;
             if (register.isOverflow) {

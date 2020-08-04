@@ -25,10 +25,6 @@ public abstract class PrimitiveInstruction<T extends IDecodeContext> extends Ins
     }
 
     protected int decode(DecoderState decoderState) {
-        return fieldDecoder.decode(decoderState.inputBuffer, decoderState.register);
-    }
-
-    protected int continueDecode(DecoderState decoderState) {
-        return fieldDecoder.continueDecode(decoderState.inputBuffer, decoderState.register);
+        return fieldDecoder.startDecode(decoderState.inputBuffer, decoderState.register);
     }
 }

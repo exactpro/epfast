@@ -25,7 +25,7 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
 
     private int value;
 
-    public int decode(ByteBuf buf, UnionRegister register) {
+    public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         value = 0;
         inProgress = true;

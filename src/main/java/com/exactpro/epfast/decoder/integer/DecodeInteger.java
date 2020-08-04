@@ -32,7 +32,7 @@ public abstract class DecodeInteger implements IDecodeContext {
 
     boolean checkForSignExtension = false;
 
-    public abstract int decode(ByteBuf buf, UnionRegister register);
+    public abstract int startDecode(ByteBuf buf, UnionRegister register);
 
     public abstract int continueDecode(ByteBuf buf, UnionRegister register);
 

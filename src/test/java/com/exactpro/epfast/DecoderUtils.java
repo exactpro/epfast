@@ -21,14 +21,14 @@ import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Iterator;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class DecoderUtils {
 
     public static void decode(IDecodeContext decoder, Iterable<ByteBuf> buffers, UnionRegister register) {
         Iterator<ByteBuf> it = buffers.iterator();
-        decoder.decode(nextNonEmptyBuffer(it), register);
-        while (!decoder.isReady()) {
-            decoder.continueDecode(nextNonEmptyBuffer(it), register);
+        while (decoder.decode(nextNonEmptyBuffer(it), register) == IDecodeContext.MORE_DATA_NEEDED) {
         }
     }
 

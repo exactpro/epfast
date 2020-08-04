@@ -29,13 +29,12 @@ public final class DecodeNullableAsciiString extends DecodeAsciiString {
     }
 
     @Override
-    public void setRegisterValue(UnionRegister register) {
-        inProgress = false;
+    public void setResult(UnionRegister register) {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             register.isOverflow = true;
             register.errorMessage = "String is longer than allowed";
         } else if (zeroCount < stringBuilder.length()) {
-            if (zeroPreamble && checkOverlong) {
+            if ((zeroCount > 0) && checkOverlong) {
                 register.isOverflow = true;
                 register.errorMessage = "String with zero preamble can't contain any value except 0";
             } else {
@@ -46,10 +45,6 @@ public final class DecodeNullableAsciiString extends DecodeAsciiString {
         } else if (zeroCount == 1) {
             register.isOverflow = false;
             register.stringValue = null;
-        } else if (zeroCount == 2) {
-            register.isOverflow = false;
-            register.isNull = false;
-            register.stringValue = "";
         } else {
             stringBuilder.setLength(zeroCount - 2);
             register.isOverflow = false;

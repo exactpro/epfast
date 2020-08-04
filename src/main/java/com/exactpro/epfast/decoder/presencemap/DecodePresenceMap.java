@@ -34,7 +34,7 @@ public class DecodePresenceMap implements IDecodeContext {
 
     protected boolean inProgress;
 
-    public int decode(ByteBuf buf, UnionRegister register) {
+    public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         inProgress = true;
         continueDecode(buf, register);

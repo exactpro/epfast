@@ -29,7 +29,7 @@ public final class DecodeNullableInt32 extends DecodeInteger {
 
     private int value;
 
-    public int decode(ByteBuf buf, UnionRegister register) {
+    public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         inProgress = true;
         int readerIndex = buf.readerIndex();

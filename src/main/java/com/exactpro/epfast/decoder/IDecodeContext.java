@@ -20,10 +20,12 @@ import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 public interface IDecodeContext {
+    int FINISHED = 1;
+    int MORE_DATA_NEEDED = 0;
 
     int CLEAR_STOP_BIT_MASK = 0b01111111;
 
-    int decode(ByteBuf buf, UnionRegister register);
+    int startDecode(ByteBuf buf, UnionRegister register);
 
     int continueDecode(ByteBuf buf, UnionRegister register);
 
@@ -32,4 +34,12 @@ public interface IDecodeContext {
     boolean isOverlong();
 
     boolean inProgress();
+
+    default int decode(ByteBuf buf, UnionRegister register) {
+        if (!inProgress()) {
+            return startDecode(buf, register);
+        } else {
+            return continueDecode(buf, register);
+        }
+    }
 }

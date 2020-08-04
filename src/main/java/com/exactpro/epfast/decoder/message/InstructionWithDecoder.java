@@ -31,8 +31,6 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
 
     protected abstract int decode(DecoderState decoderState) throws OverflowException;
 
-    protected abstract int continueDecode(DecoderState decoderState) throws OverflowException;
-
     public boolean isReady() {
         return fieldDecoder.isReady();
     }
@@ -43,10 +41,6 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
             decoderState.canProceed = false;
             return 0;
         }
-        if (!fieldDecoder.inProgress()) {
-            return decode(decoderState);
-        } else {
-            return continueDecode(decoderState);
-        }
+        return decode(decoderState);
     }
 }

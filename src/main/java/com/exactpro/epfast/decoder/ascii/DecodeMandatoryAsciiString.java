@@ -29,24 +29,19 @@ public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
     }
 
     @Override
-    public void setRegisterValue(UnionRegister register) {
-        inProgress = false;
+    public void setResult(UnionRegister register) {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             register.isOverflow = true;
             register.errorMessage = "String is longer than allowed";
         } else if (zeroCount < stringBuilder.length()) {
-            if (zeroPreamble && checkOverlong) {
+            if ((zeroCount > 0) && checkOverlong) {
                 register.isOverflow = true;
-                register.errorMessage = "String with zero preamble can't contain any value except 0";
+                register.errorMessage = "String with zero preamble can't contain any value except \\0";
             } else {
                 register.isOverflow = false;
                 register.isNull = false;
                 register.stringValue = stringBuilder.toString();
             }
-        } else if (zeroCount == 1) {
-            register.isOverflow = false;
-            register.isNull = false;
-            register.stringValue = "";
         } else {
             stringBuilder.setLength(zeroCount - 1);
             register.isOverflow = false;

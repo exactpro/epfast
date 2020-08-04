@@ -26,7 +26,7 @@ public abstract class DecodeAsciiString implements IDecodeContext {
 
     private boolean ready;
 
-    boolean zeroPreamble;
+    boolean decodingPreamble = true;
 
     final boolean checkOverlong;
 
@@ -34,80 +34,81 @@ public abstract class DecodeAsciiString implements IDecodeContext {
 
     static final int MAX_ALLOWED_LENGTH = 0x20000;
 
-    protected boolean inProgress;
-
     DecodeAsciiString(boolean checkOverlong) {
         this.checkOverlong = checkOverlong;
     }
 
-    public int decode(ByteBuf buf, UnionRegister register) {
-        reset();
-        inProgress = true;
-        int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        if (buf.getByte(readerIndex) == 0) {
-            zeroPreamble = true;
-        }
-        accumulateValue(buf.getByte(readerIndex++));
-        while ((readerIndex < readLimit) && !ready) {
-            accumulateValue(buf.getByte(readerIndex++));
-        }
-        buf.readerIndex(readerIndex);
-        if (ready) {
-            setRegisterValue(register);
-            return 1;
-        } else {
-            return 0;
-        }
+    public int startDecode(ByteBuf buf, UnionRegister register) {
+        throw new UnsupportedOperationException();
     }
 
     public int continueDecode(ByteBuf buf, UnionRegister register) {
+        throw new UnsupportedOperationException();
+    }
+
+    public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
-        while ((readerIndex < readLimit) && !ready) {
-            accumulateValue(buf.getByte(readerIndex++));
+        while (decodingPreamble && !ready && (readerIndex < readLimit)) {
+            accumulateValue(getPreambleByte(readerIndex++, buf));
+        }
+        while (!ready && (readerIndex < readLimit)) {
+            accumulateValue(getByte(readerIndex++, buf));
         }
         buf.readerIndex(readerIndex);
         if (ready) {
-            setRegisterValue(register);
-            return 1;
+            setResult(register);
+            reset();
+            return FINISHED;
         } else {
-            return 0;
+            return MORE_DATA_NEEDED;
         }
     }
 
-    public abstract void setRegisterValue(UnionRegister unionRegister);
+    public abstract void setResult(UnionRegister unionRegister);
 
     public boolean isReady() {
         return ready;
     }
 
     public boolean isOverlong() {
-        return (zeroPreamble && (zeroCount < stringBuilder.length()));
+        throw new UnsupportedOperationException();
     }
 
-    private void accumulateValue(int oneByte) {
-        if (oneByte < 0) { // if stop bit is set
-            oneByte &= CLEAR_STOP_BIT_MASK;
+    private int getPreambleByte(int index, ByteBuf buf) {
+        int aByte = getByte(index, buf);
+        if (aByte == 0) {
+            ++zeroCount;
+        } else {
+            decodingPreamble = false;
+        }
+        return aByte;
+    }
+
+    private int getByte(int index, ByteBuf buf) {
+        int aByte = buf.getByte(index);
+        if (aByte < 0) { // if stop bit is set
+            aByte &= CLEAR_STOP_BIT_MASK;
             ready = true;
         }
-        if (oneByte == 0) {
-            zeroCount++;
-        }
+        return aByte;
+    }
+
+    private void accumulateValue(int aByte) {
         if (stringBuilder.length() < MAX_ALLOWED_LENGTH) {
-            stringBuilder.append((char) oneByte);
+            stringBuilder.append((char) aByte);
         }
     }
 
     public final void reset() {
         stringBuilder.setLength(0);
         ready = false;
+        decodingPreamble = true;
         zeroCount = 0;
-        zeroPreamble = false;
     }
 
     @Override
     public boolean inProgress() {
-        return inProgress;
+        throw new UnsupportedOperationException();
     }
 }

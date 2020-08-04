@@ -37,7 +37,7 @@ public abstract class DecodeByteVector implements IDecodeContext {
 
     protected boolean inProgress;
 
-    public abstract int decode(ByteBuf buf, UnionRegister register);
+    public abstract int startDecode(ByteBuf buf, UnionRegister register);
 
     public abstract int continueDecode(ByteBuf buf, UnionRegister register);
 
