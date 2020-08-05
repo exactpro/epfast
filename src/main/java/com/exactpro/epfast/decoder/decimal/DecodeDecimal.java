@@ -37,6 +37,10 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     boolean mantissaOverflow;
 
+    boolean exponentOverlong;
+
+    boolean mantissaOverlong;
+
     protected boolean inProgress;
 
     public abstract int startDecode(ByteBuf buf, UnionRegister register);
@@ -52,12 +56,6 @@ public abstract class DecodeDecimal implements IDecodeContext {
     }
 
     public abstract void setRegisterValue(UnionRegister register);
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public abstract boolean isOverlong();
 
     @Override
     public boolean inProgress() {

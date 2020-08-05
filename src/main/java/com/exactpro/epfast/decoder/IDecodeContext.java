@@ -31,10 +31,6 @@ public interface IDecodeContext {
 
     int continueDecode(ByteBuf buf, UnionRegister register);
 
-    boolean isReady();
-
-    boolean isOverlong();
-
     boolean inProgress();
 
     default int decode(ByteBuf buf, UnionRegister register) {

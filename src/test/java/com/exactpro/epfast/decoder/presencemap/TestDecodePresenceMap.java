@@ -47,7 +47,6 @@ class TestDecodePresenceMap {
     @WithByteBuf("15 15 00 00 00 80")
     void testOverlong(Collection<ByteBuf> buffers) {
         decode(presenceMapDecoder, buffers, register);
-        assertTrue(presenceMapDecoder.isReady());
         PresenceMap presenceMap = register.presenceMap;
         assertTrue(presenceMap.getValue(0));
         assertFalse(presenceMap.getValue(1));
@@ -56,13 +55,12 @@ class TestDecodePresenceMap {
         assertTrue(presenceMap.getValue(4));
         assertFalse(presenceMap.getValue(5));
         assertFalse(presenceMap.getValue(6));
-        assertTrue(presenceMapDecoder.isOverlong());
+        assertTrue(register.isOverlong);
     }
 
     @WithByteBuf("15 15 00 00 00 82")
     void testTruncateWhenNotOverlong(Collection<ByteBuf> buffers) {
         decode(presenceMapDecoder, buffers, register);
-        assertTrue(presenceMapDecoder.isReady());
         PresenceMap presenceMap = register.presenceMap;
         assertTrue(presenceMap.getValue(0));
         assertFalse(presenceMap.getValue(1));
@@ -71,6 +69,6 @@ class TestDecodePresenceMap {
         assertTrue(presenceMap.getValue(4));
         assertFalse(presenceMap.getValue(5));
         assertFalse(presenceMap.getValue(6));
-        assertFalse(presenceMapDecoder.isOverlong());
+        assertFalse(register.isOverlong);
     }
 }

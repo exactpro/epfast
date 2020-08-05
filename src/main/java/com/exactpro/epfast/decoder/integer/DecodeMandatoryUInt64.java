@@ -43,7 +43,7 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
             return 1;
         }
         if (readerIndex < readLimit) {
-            checkOverlong(buf.getByte(readerIndex)); //check second byte
+            checkOverlong(buf.getByte(readerIndex), register); //check second byte
             do {
                 accumulate(buf.getByte(readerIndex++));
             } while (!ready && readerIndex < readLimit);
@@ -63,7 +63,7 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         if (checkForSignExtension) {
-            checkOverlong(buf.getByte(readerIndex)); //continue checking
+            checkOverlong(buf.getByte(readerIndex), register); //continue checking
             checkForSignExtension = false;
         }
         do {
@@ -104,8 +104,8 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
         }
     }
 
-    private void checkOverlong(int secondByte) {
-        overlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
+    private void checkOverlong(int secondByte, UnionRegister register) {
+        register.isOverlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
     }
 
 }

@@ -45,7 +45,7 @@ public final class DecodeNullableInt64 extends DecodeInteger {
                 return 1;
             }
             if (readerIndex < readLimit) {
-                checkOverlongPositive(buf.getByte(readerIndex)); //check second byte
+                checkOverlongPositive(buf.getByte(readerIndex), register); //check second byte
                 do {
                     accumulatePositive(buf.getByte(readerIndex++));
                 } while (!ready && readerIndex < readLimit);
@@ -62,7 +62,7 @@ public final class DecodeNullableInt64 extends DecodeInteger {
                 return 1;
             }
             if (readerIndex < readLimit) {
-                checkOverlongNegative(buf.getByte(readerIndex)); //check second byte
+                checkOverlongNegative(buf.getByte(readerIndex), register); //check second byte
                 do {
                     accumulateNegative(buf.getByte(readerIndex++));
                 } while (!ready && readerIndex < readLimit);
@@ -84,7 +84,7 @@ public final class DecodeNullableInt64 extends DecodeInteger {
         int readLimit = buf.writerIndex();
         if (value >= 0) {
             if (checkForSignExtension) {
-                checkOverlongPositive(buf.getByte(readerIndex)); //continue checking
+                checkOverlongPositive(buf.getByte(readerIndex), register); //continue checking
                 checkForSignExtension = false;
             }
             do {
@@ -92,7 +92,7 @@ public final class DecodeNullableInt64 extends DecodeInteger {
             } while (!ready && readerIndex < readLimit);
         } else {
             if (checkForSignExtension) {
-                checkOverlongNegative(buf.getByte(readerIndex)); //check first and second bytes
+                checkOverlongNegative(buf.getByte(readerIndex), register); //check first and second bytes
                 checkForSignExtension = false;
             }
             do {
@@ -151,11 +151,11 @@ public final class DecodeNullableInt64 extends DecodeInteger {
         }
     }
 
-    private void checkOverlongPositive(int secondByte) {
-        overlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
+    private void checkOverlongPositive(int secondByte, UnionRegister register) {
+        register.isOverlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
     }
 
-    private void checkOverlongNegative(int secondByte) {
-        overlong = value == -1 && ((secondByte & SIGN_BIT_MASK) != 0);
+    private void checkOverlongNegative(int secondByte, UnionRegister register) {
+        register.isOverlong = value == -1 && ((secondByte & SIGN_BIT_MASK) != 0);
     }
 }

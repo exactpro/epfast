@@ -68,14 +68,6 @@ public abstract class DecodeAsciiString implements IDecodeContext {
 
     public abstract void setResult(UnionRegister unionRegister);
 
-    public boolean isReady() {
-        return ready;
-    }
-
-    public boolean isOverlong() {
-        throw new UnsupportedOperationException();
-    }
-
     private int getPreambleByte(int index, ByteBuf buf) {
         int aByte = getByte(index, buf);
         if (aByte == 0) {

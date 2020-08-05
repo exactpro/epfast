@@ -159,7 +159,7 @@ class TestUInt32 {
     void mandatoryOverlong(Collection<ByteBuf> buffers)  {
         decode(mandatoryUInt32Decoder, buffers, register);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertTrue(mandatoryUInt32Decoder.isOverlong());
+        assertTrue(register.isOverlong);
         assertEquals(942756, register.uInt32Value);
     }
 
@@ -167,7 +167,7 @@ class TestUInt32 {
     void mandatoryNotOverlong(Collection<ByteBuf> buffers)  {
         decode(mandatoryUInt32Decoder, buffers, register);
         assertTrue(mandatoryUInt32Decoder.isReady());
-        assertFalse(mandatoryUInt32Decoder.isOverlong());
+        assertFalse(register.isOverlong);
         assertEquals(8193, register.uInt32Value);
     }
 
@@ -175,7 +175,7 @@ class TestUInt32 {
     void nullableOverlong(Collection<ByteBuf> buffers)  {
         decode(nullableUInt32Decoder, buffers, register);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertTrue(nullableUInt32Decoder.isOverlong());
+        assertTrue(register.isOverlong);
         assertEquals(942755, register.uInt32Value);
     }
 
@@ -183,7 +183,7 @@ class TestUInt32 {
     void nullableNotOverlong(Collection<ByteBuf> buffers)  {
         decode(nullableUInt32Decoder, buffers, register);
         assertTrue(nullableUInt32Decoder.isReady());
-        assertFalse(nullableUInt32Decoder.isOverlong());
+        assertFalse(register.isOverlong);
         assertEquals(8192, register.uInt32Value);
     }
 }

@@ -51,7 +51,6 @@ public abstract class DecodeByteVector implements IDecodeContext {
         return overflow;
     }
 
-    @Override
     public boolean isOverlong() {
         return false;
     }

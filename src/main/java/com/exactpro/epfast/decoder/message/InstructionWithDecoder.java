@@ -31,10 +31,6 @@ public abstract class InstructionWithDecoder<T extends IDecodeContext> implement
 
     protected abstract int decode(DecoderState decoderState) throws OverflowException;
 
-    public boolean isReady() {
-        return fieldDecoder.isReady();
-    }
-
     @Override
     public int executeOn(DecoderState decoderState) throws OverflowException {
         if (!decoderState.inputBuffer.isReadable()) {

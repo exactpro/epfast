@@ -34,6 +34,9 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
         exponentDecoder.startDecode(buf, register);
         if (exponentDecoder.isReady()) {
             exponentReady = true;
+            if (register.isOverlong) {
+                exponentOverlong = true;
+            }
             if (register.isOverflow) {
                 exponentOverflow = true;
             } else {
@@ -44,6 +47,9 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
                 startedMantissa = true;
                 if (mantissaDecoder.isReady()) {
                     ready = true;
+                    if (register.isOverlong) {
+                        mantissaOverlong = true;
+                    }
                     if (register.isOverflow) {
                         mantissaOverflow = true;
                     } else {
@@ -65,6 +71,9 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
             mantissaDecoder.continueDecode(buf, register);
             if (mantissaDecoder.isReady()) {
                 ready = true;
+                if (register.isOverlong) {
+                    mantissaOverlong = true;
+                }
                 if (register.isOverflow) {
                     mantissaOverflow = true;
                 } else {
@@ -76,6 +85,9 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
             startedMantissa = true;
             if (mantissaDecoder.isReady()) {
                 ready = true;
+                if (register.isOverlong) {
+                    mantissaOverlong = true;
+                }
                 if (register.isOverflow) {
                     mantissaOverflow = true;
                 } else {
@@ -86,6 +98,9 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
             exponentDecoder.continueDecode(buf, register);
             if (exponentDecoder.isReady()) {
                 exponentReady = true;
+                if (register.isOverlong) {
+                    exponentOverlong = true;
+                }
                 if (register.isOverflow) {
                     exponentOverflow = true;
                 } else {
@@ -96,6 +111,9 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
                     startedMantissa = true;
                     if (mantissaDecoder.isReady()) {
                         ready = true;
+                        if (register.isOverlong) {
+                            mantissaOverlong = true;
+                        }
                         if (register.isOverflow) {
                             mantissaOverflow = true;
                         } else {
@@ -115,6 +133,7 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
 
     public void setRegisterValue(UnionRegister register) {
         inProgress = false;
+        register.isOverlong = exponentOverlong || mantissaOverlong;
         if (exponentOverflow) {
             register.isOverflow = true;
             register.infoMessage = "exponent value range is int32";
@@ -129,10 +148,5 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
             register.isOverflow = true;
             register.infoMessage = "exponent value allowed range is -63 ... 63";
         }
-    }
-
-    @Override
-    public boolean isOverlong() {
-        return exponentDecoder.isOverlong() || mantissaDecoder.isOverlong();
     }
 }

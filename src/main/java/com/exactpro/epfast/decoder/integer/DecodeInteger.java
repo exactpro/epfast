@@ -28,28 +28,17 @@ public abstract class DecodeInteger implements IDecodeContext {
 
     protected boolean overflow;
 
-    boolean overlong;
-
     boolean checkForSignExtension = false;
 
     public abstract int startDecode(ByteBuf buf, UnionRegister register);
 
     public abstract int continueDecode(ByteBuf buf, UnionRegister register);
 
-    public boolean isReady() {
-        return ready;
-    }
-
-    public boolean isOverlong() {
-        return overlong;
-    }
-
     protected boolean inProgress;
 
     protected final void reset() {
         ready = false;
         overflow = false;
-        overlong = false;
         checkForSignExtension = false;
     }
 

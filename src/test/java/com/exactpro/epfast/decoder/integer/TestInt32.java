@@ -257,7 +257,7 @@ class TestInt32 {
     void mandatoryOverlong(Collection<ByteBuf> buffers) {
         decode(mandatoryInt32Decoder, buffers, register);
         assertTrue(mandatoryInt32Decoder.isReady());
-        assertTrue(mandatoryInt32Decoder.isOverlong());
+        assertTrue(register.isOverlong);
         assertEquals(942756, register.int32Value);
     }
 
@@ -265,7 +265,7 @@ class TestInt32 {
     void mandatoryNotOverlong(Collection<ByteBuf> buffers) {
         decode(mandatoryInt32Decoder, buffers, register);
         assertTrue(mandatoryInt32Decoder.isReady());
-        assertFalse(mandatoryInt32Decoder.isOverlong());
+        assertFalse(register.isOverlong);
         assertEquals(8193, register.int32Value);
     }
 
@@ -273,7 +273,7 @@ class TestInt32 {
     void mandatoryOverlongNegative(Collection<ByteBuf> buffers) {
         decode(mandatoryInt32Decoder, buffers, register);
         assertTrue(mandatoryInt32Decoder.isReady());
-        assertTrue(mandatoryInt32Decoder.isOverlong());
+        assertTrue(register.isOverlong);
         assertEquals(-7942755, register.int32Value);
     }
 
@@ -281,7 +281,7 @@ class TestInt32 {
     void mandatoryNotOverlongNegative(Collection<ByteBuf> buffers) {
         decode(mandatoryInt32Decoder, buffers, register);
         assertTrue(mandatoryInt32Decoder.isReady());
-        assertFalse(mandatoryInt32Decoder.isOverlong());
+        assertFalse(register.isOverlong);
         assertEquals(-8193, register.int32Value);
     }
 
@@ -289,7 +289,7 @@ class TestInt32 {
     void nullableOverlong(Collection<ByteBuf> buffers) {
         decode(nullableInt32Decoder, buffers, register);
         assertTrue(nullableInt32Decoder.isReady());
-        assertTrue(nullableInt32Decoder.isOverlong());
+        assertTrue(register.isOverlong);
         assertEquals(942755, register.int32Value);
     }
 
@@ -297,7 +297,7 @@ class TestInt32 {
     void nullableNotOverlong(Collection<ByteBuf> buffers) {
         decode(nullableInt32Decoder, buffers, register);
         assertTrue(nullableInt32Decoder.isReady());
-        assertFalse(nullableInt32Decoder.isOverlong());
+        assertFalse(register.isOverlong);
         assertEquals(8192, register.int32Value);
     }
 
@@ -305,7 +305,7 @@ class TestInt32 {
     void nullableOverlongNegative(Collection<ByteBuf> buffers) {
         decode(nullableInt32Decoder, buffers, register);
         assertTrue(nullableInt32Decoder.isReady());
-        assertTrue(nullableInt32Decoder.isOverlong());
+        assertTrue(register.isOverlong);
         assertEquals(-7942755, register.int32Value);
     }
 
@@ -313,7 +313,7 @@ class TestInt32 {
     void nullableNotOverlongNegative(Collection<ByteBuf> buffers) {
         decode(nullableInt32Decoder, buffers, register);
         assertTrue(nullableInt32Decoder.isReady());
-        assertFalse(nullableInt32Decoder.isOverlong());
+        assertFalse(register.isOverlong);
         assertEquals(-8193, register.int32Value);
     }
 }

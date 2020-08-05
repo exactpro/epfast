@@ -32,21 +32,16 @@ public class DecodePresenceMap implements IDecodeContext {
 
     private boolean ready;
 
-    protected boolean inProgress;
-
     public int startDecode(ByteBuf buf, UnionRegister register) {
-        reset();
-        inProgress = true;
-        continueDecode(buf, register);
-        if (ready) {
-            setRegisterValue(register);
-            return 1;
-        } else {
-            return 0;
-        }
+        throw new UnsupportedOperationException();
     }
 
     public int continueDecode(ByteBuf buf, UnionRegister register) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         while ((readerIndex < readLimit) && !ready) {
@@ -55,15 +50,15 @@ public class DecodePresenceMap implements IDecodeContext {
         buf.readerIndex(readerIndex);
         if (ready) {
             setRegisterValue(register);
-            return 1;
+            reset();
+            return FINISHED;
         } else {
-            return 0;
+            return MORE_DATA_NEEDED;
         }
     }
 
     public void setRegisterValue(UnionRegister register) {
-        //TODO add overlong checks for presence map
-        inProgress = false;
+        register.isOverlong = setIndex > lastNonZeroIndex;
         register.presenceMap = new PresenceMap((BitSet) value.clone());
     }
 
@@ -72,7 +67,7 @@ public class DecodePresenceMap implements IDecodeContext {
     }
 
     public boolean isOverlong() {
-        return setIndex > lastNonZeroIndex;
+        throw new UnsupportedOperationException();
     }
 
     private void accumulateValue(int oneByte) {
@@ -97,7 +92,7 @@ public class DecodePresenceMap implements IDecodeContext {
 
     @Override
     public boolean inProgress() {
-        return inProgress;
+        throw new UnsupportedOperationException();
     }
 }
 
