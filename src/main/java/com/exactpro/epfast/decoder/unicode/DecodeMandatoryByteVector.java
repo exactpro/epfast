@@ -29,8 +29,7 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
     public int startDecode(ByteBuf buf, UnionRegister register) {
         reset();
         inProgress = true;
-        lengthDecoder.startDecode(buf, register);
-        if (lengthDecoder.isReady()) {
+        if (lengthDecoder.decode(buf, register) == FINISHED) {
             lengthReady = true;
             if (register.isOverflow) {
                 overflow = true;
@@ -76,31 +75,28 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
                 }
             }
             buf.readerIndex(readerIndex);
-        } else {
-            lengthDecoder.continueDecode(buf, register);
-            if (lengthDecoder.isReady()) {
-                lengthReady = true;
-                if (register.isOverflow) {
-                    overflow = true;
-                } else {
-                    messageLength = register.uInt32Value;
-                }
-                if (messageLength > 0) {
-                    int readerIndex = buf.readerIndex();
-                    int readLimit = buf.writerIndex();
-                    while ((readerIndex < readLimit) && !ready) {
-                        if (counter < messageLength) {
-                            value.add(buf.getByte(readerIndex++));
-                            counter++;
-                        }
-                        if (counter == messageLength) {
-                            ready = true;
-                        }
+        } else if (lengthDecoder.decode(buf, register) == FINISHED) {
+            lengthReady = true;
+            if (register.isOverflow) {
+                overflow = true;
+            } else {
+                messageLength = register.uInt32Value;
+            }
+            if (messageLength > 0) {
+                int readerIndex = buf.readerIndex();
+                int readLimit = buf.writerIndex();
+                while ((readerIndex < readLimit) && !ready) {
+                    if (counter < messageLength) {
+                        value.add(buf.getByte(readerIndex++));
+                        counter++;
                     }
-                    buf.readerIndex(readerIndex);
-                } else {
-                    ready = true;
+                    if (counter == messageLength) {
+                        ready = true;
+                    }
                 }
+                buf.readerIndex(readerIndex);
+            } else {
+                ready = true;
             }
         }
         if (ready) {

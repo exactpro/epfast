@@ -26,51 +26,51 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
     private int value;
 
     public int startDecode(ByteBuf buf, UnionRegister register) {
-        reset();
-        value = 0;
-        inProgress = true;
-        int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        int oneByte = buf.getByte(readerIndex++);
-        accumulate(oneByte);
-        if (oneByte < 0) {
-            setRegisterValue(register);
-            buf.readerIndex(readerIndex);
-            return 1;
-        }
-        if (readerIndex < readLimit) {
-            checkOverlong(buf.getByte(readerIndex), register); //check second byte
-            do {
-                accumulate(buf.getByte(readerIndex++));
-            } while (!ready && readerIndex < readLimit);
-        } else {
-            checkForSignExtension = true;
-        }
-        buf.readerIndex(readerIndex);
-        if (ready) {
-            setRegisterValue(register);
-            return 1;
-        } else {
-            return 0;
-        }
+        throw new UnsupportedOperationException();
     }
 
     public int continueDecode(ByteBuf buf, UnionRegister register) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
-        if (checkForSignExtension) {
-            checkOverlong(buf.getByte(readerIndex), register); //continue checking
-            checkForSignExtension = false;
+        if (!inProgress) {
+            value = 0;
+            inProgress = true;
+            int oneByte = buf.getByte(readerIndex++);
+            accumulate(oneByte);
+            if (oneByte < 0) {
+                setRegisterValue(register);
+                buf.readerIndex(readerIndex);
+                return FINISHED;
+            }
+            if (readerIndex < readLimit) {
+                checkOverlong(buf.getByte(readerIndex), register); //check second byte
+                do {
+                    accumulate(buf.getByte(readerIndex++));
+                } while (!ready && readerIndex < readLimit);
+            } else {
+                checkForSignExtension = true;
+            }
+        } else {
+            if (checkForSignExtension) {
+                checkOverlong(buf.getByte(readerIndex), register); //continue checking
+                checkForSignExtension = false;
+            }
+            do {
+                accumulate(buf.getByte(readerIndex++));
+            } while (!ready && readerIndex < readLimit);
         }
-        do {
-            accumulate(buf.getByte(readerIndex++));
-        } while (!ready && readerIndex < readLimit);
         buf.readerIndex(readerIndex);
         if (ready) {
             setRegisterValue(register);
-            return 1;
+            reset();
+            return FINISHED;
         } else {
-            return 0;
+            return MORE_DATA_NEEDED;
         }
     }
 
