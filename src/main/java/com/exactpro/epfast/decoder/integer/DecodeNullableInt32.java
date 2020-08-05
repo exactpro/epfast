@@ -113,7 +113,7 @@ public final class DecodeNullableInt32 extends DecodeInteger {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
-            register.errorMessage = "Int32 Overflow";
+            register.infoMessage = "Int32 Overflow";
         } else {
             register.isOverflow = false;
             if (value == 0) {

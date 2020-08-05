@@ -39,13 +39,14 @@ public abstract class DecodeAsciiString implements IDecodeContext {
     }
 
     public int startDecode(ByteBuf buf, UnionRegister register) {
-        throw new UnsupportedOperationException();
+       throw new UnsupportedOperationException();
     }
 
     public int continueDecode(ByteBuf buf, UnionRegister register) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();

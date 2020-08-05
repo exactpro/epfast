@@ -21,8 +21,6 @@ import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Iterator;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class DecoderUtils {
 

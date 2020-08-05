@@ -86,7 +86,7 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
-            register.errorMessage = "UInt64 Overflow";
+            register.infoMessage = "UInt64 Overflow";
         } else if (value == 0) {
             register.isOverflow = false;
             register.isNull = true;

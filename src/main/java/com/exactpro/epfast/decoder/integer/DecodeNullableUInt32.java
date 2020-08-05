@@ -82,7 +82,7 @@ public final class DecodeNullableUInt32 extends DecodeInteger {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
-            register.errorMessage = "UInt32 Overflow";
+            register.infoMessage = "UInt32 Overflow";
         } else if (value == 0) {
             register.isOverflow = false;
             register.isNull = true;

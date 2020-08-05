@@ -47,7 +47,7 @@ class TestDecodeAsciiString {
 
     @Nested
     class TestOptional {
-        private final DecodeNullableAsciiString decoder = new DecodeNullableAsciiString();
+        private final DecodeNullableAsciiString decoder = new DecodeNullableAsciiString(true);
 
         @WithByteBuf("80")
         void testNull(Collection<ByteBuf> buffers) {
@@ -148,7 +148,7 @@ class TestDecodeAsciiString {
                 decode(decoder, buffers, decodeResult);
                 assertFalse(decodeResult.isOverflow);
                 assertFalse(decodeResult.isNull);
-                assertTrue(decodeResult.isOverlong);
+                assertFalse(decodeResult.isOverlong);
                 assertEquals("\0A", decodeResult.stringValue);
             }
 
@@ -179,7 +179,7 @@ class TestDecodeAsciiString {
 
     @Nested
     class TestMandatory {
-        private final DecodeMandatoryAsciiString decoder = new DecodeMandatoryAsciiString();
+        private final DecodeMandatoryAsciiString decoder = new DecodeMandatoryAsciiString(true);
 
         @WithByteBuf("80")
         void testMandatoryEmptyString(Collection<ByteBuf> buffers)  {

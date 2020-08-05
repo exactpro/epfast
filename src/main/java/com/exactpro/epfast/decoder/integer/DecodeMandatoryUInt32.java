@@ -79,7 +79,7 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
-            register.errorMessage = "UInt32 Overflow";
+            register.infoMessage = "UInt32 Overflow";
         } else {
             register.isOverflow = false;
             register.isNull = false;

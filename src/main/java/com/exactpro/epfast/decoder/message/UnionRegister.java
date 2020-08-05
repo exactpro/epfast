@@ -46,7 +46,7 @@ public class UnionRegister {
 
     public Object applicationValue;
 
-    public String errorMessage;
+    public String infoMessage;
 
     public PresenceMap presenceMap;
 }

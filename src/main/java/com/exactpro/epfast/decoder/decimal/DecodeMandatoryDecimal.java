@@ -117,17 +117,17 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
         inProgress = false;
         if (exponentOverflow) {
             register.isOverflow = true;
-            register.errorMessage = "exponent value range is int32";
+            register.infoMessage = "exponent value range is int32";
         } else if (mantissaOverflow) {
             register.isOverflow = true;
-            register.errorMessage = "mantissa value range is int64";
+            register.infoMessage = "mantissa value range is int64";
         } else if (exponent >= -63 && exponent <= 63) {
             register.isOverflow = false;
             register.isNull = false;
             register.decimalValue = new BigDecimal(mantissa).movePointRight(exponent);
         } else {
             register.isOverflow = true;
-            register.errorMessage = "exponent value allowed range is -63 ... 63";
+            register.infoMessage = "exponent value allowed range is -63 ... 63";
         }
     }
 

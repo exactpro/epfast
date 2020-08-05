@@ -109,7 +109,7 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
-            register.errorMessage = "Int32 Overflow";
+            register.infoMessage = "Int32 Overflow";
         } else {
             register.isOverflow = false;
             register.isNull = false;

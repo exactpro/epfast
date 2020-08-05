@@ -32,19 +32,27 @@ public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
     public void setResult(UnionRegister register) {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             register.isOverflow = true;
-            register.errorMessage = "String is longer than allowed";
+            register.infoMessage = "String is longer than allowed";
         } else if (zeroCount < stringBuilder.length()) {
-            if ((zeroCount > 0) && checkOverlong) {
-                register.isOverflow = true;
-                register.errorMessage = "String with zero preamble can't contain any value except \\0";
+            if ((zeroCount > 1) && checkOverlong) {
+                register.isOverflow = false;
+                register.isOverlong = false;
+                register.stringValue = stringBuilder.substring(1);
+            } else if (zeroCount == 1) {
+                register.isOverflow = false;
+                register.isOverlong = true;
+                register.infoMessage = "String is overlong if first 7 bits after zero preamble are not \\0";
+                register.stringValue = stringBuilder.substring(1);
             } else {
                 register.isOverflow = false;
+                register.isOverlong = false;
                 register.isNull = false;
                 register.stringValue = stringBuilder.toString();
             }
         } else {
             stringBuilder.setLength(zeroCount - 1);
             register.isOverflow = false;
+            register.isOverlong = false;
             register.isNull = false;
             register.stringValue = stringBuilder.toString();
         }

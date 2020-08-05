@@ -20,7 +20,9 @@ import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 public interface IDecodeContext {
+
     int FINISHED = 1;
+
     int MORE_DATA_NEEDED = 0;
 
     int CLEAR_STOP_BIT_MASK = 0b01111111;
