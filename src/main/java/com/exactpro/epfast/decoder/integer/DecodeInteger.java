@@ -18,7 +18,6 @@ package com.exactpro.epfast.decoder.integer;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.message.UnionRegister;
-import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeInteger implements IDecodeContext {
 
@@ -29,10 +28,6 @@ public abstract class DecodeInteger implements IDecodeContext {
     protected boolean overflow;
 
     boolean checkForSignExtension = false;
-
-    public abstract int startDecode(ByteBuf buf, UnionRegister register);
-
-    public abstract int continueDecode(ByteBuf buf, UnionRegister register);
 
     protected boolean inProgress;
 
@@ -49,10 +44,5 @@ public abstract class DecodeInteger implements IDecodeContext {
         }
     }
 
-    public abstract void setRegisterValue(UnionRegister register);
-
-    @Override
-    public boolean inProgress() {
-        return inProgress;
-    }
+    public abstract void setResult(UnionRegister register);
 }

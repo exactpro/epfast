@@ -19,7 +19,6 @@ package com.exactpro.epfast.decoder.decimal;
 import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt64;
 import com.exactpro.epfast.decoder.message.UnionRegister;
-import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeDecimal implements IDecodeContext {
 
@@ -43,22 +42,15 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     protected boolean inProgress;
 
-    public abstract int startDecode(ByteBuf buf, UnionRegister register);
-
-    public abstract int continueDecode(ByteBuf buf, UnionRegister register);
-
     public final void reset() {
         exponentReady = false;
         startedMantissa = false;
         ready = false;
         exponentOverflow = false;
         mantissaOverflow = false;
+        exponentOverlong = false;
+        mantissaOverlong = false;
     }
 
-    public abstract void setRegisterValue(UnionRegister register);
-
-    @Override
-    public boolean inProgress() {
-        return inProgress;
-    }
+    public abstract void setResult(UnionRegister register);
 }

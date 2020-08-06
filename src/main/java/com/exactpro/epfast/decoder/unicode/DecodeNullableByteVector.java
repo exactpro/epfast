@@ -26,17 +26,36 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
 
     private long messageLength;
 
-    public int startDecode(ByteBuf buf, UnionRegister register) {
-        reset();
-        inProgress = true;
-        if (lengthDecoder.decode(buf, register) == FINISHED) {
-            lengthReady = true;
-            if (register.isOverflow) {
-                overflow = true;
-            } else {
-                messageLength = register.uInt32Value;
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
+        if (!inProgress) {
+            inProgress = true;
+            if (lengthDecoder.decode(buf, register) == FINISHED) {
+                lengthReady = true;
+                if (register.isOverflow) {
+                    overflow = true;
+                } else {
+                    messageLength = register.uInt32Value;
+                }
+                if (!register.isNull && messageLength > 0) {
+                    int readerIndex = buf.readerIndex();
+                    int readLimit = buf.writerIndex();
+                    while ((readerIndex < readLimit) && !ready) {
+                        if (counter < messageLength) {
+                            value.add(buf.getByte(readerIndex++));
+                            counter++;
+                        }
+                        if (counter == messageLength) {
+                            ready = true;
+                        }
+                    }
+                    buf.readerIndex(readerIndex);
+                } else {
+                    ready = true;
+                }
             }
-            if (!register.isNull && messageLength > 0) {
+        } else {
+            if (lengthReady) {
                 int readerIndex = buf.readerIndex();
                 int readLimit = buf.writerIndex();
                 while ((readerIndex < readLimit) && !ready) {
@@ -49,66 +68,41 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
                     }
                 }
                 buf.readerIndex(readerIndex);
-            } else {
-                ready = true;
+            } else if (lengthDecoder.decode(buf, register) == FINISHED) {
+                lengthReady = true;
+                if (register.isOverflow) {
+                    overflow = true;
+                } else {
+                    messageLength = register.uInt32Value;
+                }
+                if (!register.isNull && messageLength > 0) {
+                    int readerIndex = buf.readerIndex();
+                    int readLimit = buf.writerIndex();
+                    while ((readerIndex < readLimit) && !ready) {
+                        if (counter < messageLength) {
+                            value.add(buf.getByte(readerIndex++));
+                            counter++;
+                        }
+                        if (counter == messageLength) {
+                            ready = true;
+                        }
+                    }
+                    buf.readerIndex(readerIndex);
+                } else {
+                    ready = true;
+                }
             }
         }
         if (ready) {
-            setRegisterValue(register);
+            setResult(register);
             return FINISHED;
         } else {
             return MORE_DATA_NEEDED;
         }
     }
 
-    public int continueDecode(ByteBuf buf, UnionRegister register) {
-        if (lengthReady) {
-            int readerIndex = buf.readerIndex();
-            int readLimit = buf.writerIndex();
-            while ((readerIndex < readLimit) && !ready) {
-                if (counter < messageLength) {
-                    value.add(buf.getByte(readerIndex++));
-                    counter++;
-                }
-                if (counter == messageLength) {
-                    ready = true;
-                }
-            }
-            buf.readerIndex(readerIndex);
-        } else if (lengthDecoder.decode(buf, register) == FINISHED) {
-            lengthReady = true;
-            if (register.isOverflow) {
-                overflow = true;
-            } else {
-                messageLength = register.uInt32Value;
-            }
-            if (!register.isNull && messageLength > 0) {
-                int readerIndex = buf.readerIndex();
-                int readLimit = buf.writerIndex();
-                while ((readerIndex < readLimit) && !ready) {
-                    if (counter < messageLength) {
-                        value.add(buf.getByte(readerIndex++));
-                        counter++;
-                    }
-                    if (counter == messageLength) {
-                        ready = true;
-                    }
-                }
-                buf.readerIndex(readerIndex);
-            } else {
-                ready = true;
-            }
-        }
-        if (ready) {
-            setRegisterValue(register);
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
     @Override
-    public void setRegisterValue(UnionRegister register) {
+    public void setResult(UnionRegister register) {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
@@ -125,5 +119,6 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
                 register.byteVectorValue = finalVal;
             }
         }
+        reset();
     }
 }

@@ -18,14 +18,13 @@ package com.exactpro.epfast.decoder.unicode;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.message.UnionRegister;
-import io.netty.buffer.ByteBuf;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DecodeByteVector implements IDecodeContext {
 
-    List<Byte> value;
+    List<Byte> value = new ArrayList<>();
 
     int counter;
 
@@ -37,23 +36,7 @@ public abstract class DecodeByteVector implements IDecodeContext {
 
     protected boolean inProgress;
 
-    public abstract int startDecode(ByteBuf buf, UnionRegister register);
-
-    public abstract int continueDecode(ByteBuf buf, UnionRegister register);
-
-    public abstract void setRegisterValue(UnionRegister register);
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public boolean isOverflow() {
-        return overflow;
-    }
-
-    public boolean isOverlong() {
-        return false;
-    }
+    public abstract void setResult(UnionRegister register);
 
     public final void reset() {
         lengthReady = false;
@@ -63,10 +46,6 @@ public abstract class DecodeByteVector implements IDecodeContext {
         value = new ArrayList<>();
     }
 
-    @Override
-    public boolean inProgress() {
-        return inProgress;
-    }
 }
 
 

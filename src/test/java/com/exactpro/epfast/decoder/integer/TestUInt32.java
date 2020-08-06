@@ -36,91 +36,78 @@ class TestUInt32 {
     @WithByteBuf("80")
     void testNull(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertTrue(register.isNull);
     }
 
     @WithByteBuf("81")
     void optionalZero(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertEquals(0, register.uInt32Value);
     }
 
     @WithByteBuf("80")
     void mandatoryZero(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertEquals(0, register.uInt32Value);
     }
 
     @WithByteBuf("10 00 00 00 80")
     void testMaxNullable(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertEquals(4294967295L, register.uInt32Value);
     }
 
     @WithByteBuf("0f 7f 7f 7f ff")
     void testMaxMandatory(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertEquals(4294967295L, register.uInt32Value);
     }
 
     @WithByteBuf("10 00 00 00 81")
     void testMaxOverflowNullable1(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("10 00 00 00 00 00 80")
     void testMaxOverflowNullable2(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("10 00 00 00 80")
     void testMaxOverflowMandatory1(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("0f 7f 7f 7f 7f 00 ff")
     void testMaxOverflowMandatory2(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertTrue(register.isOverflow);
     }
 
     @WithByteBuf("39 45 a4")
     void optionalSimpleNumber(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertEquals(942755, register.uInt32Value);
     }
 
     @WithByteBuf("0f 7f 7f 7f ff")
     void optionalSimpleNumber2(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertEquals(4294967294L, register.uInt32Value);
     }
 
     @WithByteBuf("39 45 a3")
     void mandatorySimpleNumber(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertEquals(942755, register.uInt32Value);
     }
 
     @WithByteBuf("39 45 a4")
     void optionalSimpleNumberGetValueTwice(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertEquals(942755, register.uInt32Value);
         assertEquals(942755, register.uInt32Value);
     }
@@ -128,7 +115,6 @@ class TestUInt32 {
     @WithByteBuf("39 45 a3")
     void mandatorySimpleNumberGetValueTwice(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertEquals(942755, register.uInt32Value);
         assertEquals(942755, register.uInt32Value);
     }
@@ -136,29 +122,24 @@ class TestUInt32 {
     @WithByteBuf("39 45 a4 0f 7f 7f 7f ff")
     void optionalSimpleNumbersTwoValuesInRow(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertEquals(942755, register.uInt32Value);
 
         decode(nullableUInt32Decoder, buffers, register);
-
         assertEquals(4294967294L, register.uInt32Value);
     }
 
     @WithByteBuf("39 45 a3 39 45 a3")
     void mandatorySimpleNumbersTwoValuesInRow(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertEquals(942755, register.uInt32Value);
 
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertEquals(942755, register.uInt32Value);
     }
 
     @WithByteBuf("00 39 45 a4")
     void mandatoryOverlong(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertTrue(register.isOverlong);
         assertEquals(942756, register.uInt32Value);
     }
@@ -166,7 +147,6 @@ class TestUInt32 {
     @WithByteBuf("00 40 81")
     void mandatoryNotOverlong(Collection<ByteBuf> buffers) {
         decode(mandatoryUInt32Decoder, buffers, register);
-
         assertFalse(register.isOverlong);
         assertEquals(8193, register.uInt32Value);
     }
@@ -174,7 +154,6 @@ class TestUInt32 {
     @WithByteBuf("00 39 45 a4")
     void nullableOverlong(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertTrue(register.isOverlong);
         assertEquals(942755, register.uInt32Value);
     }
@@ -182,7 +161,6 @@ class TestUInt32 {
     @WithByteBuf("00 40 81")
     void nullableNotOverlong(Collection<ByteBuf> buffers) {
         decode(nullableUInt32Decoder, buffers, register);
-
         assertFalse(register.isOverlong);
         assertEquals(8192, register.uInt32Value);
     }

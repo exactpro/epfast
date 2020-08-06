@@ -25,14 +25,6 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
 
     private int value;
 
-    public int startDecode(ByteBuf buf, UnionRegister register) {
-        throw new UnsupportedOperationException();
-    }
-
-    public int continueDecode(ByteBuf buf, UnionRegister register) {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
@@ -43,7 +35,7 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
             int oneByte = buf.getByte(readerIndex++);
             accumulate(oneByte);
             if (oneByte < 0) {
-                setRegisterValue(register);
+                setResult(register);
                 buf.readerIndex(readerIndex);
                 return FINISHED;
             }
@@ -66,8 +58,7 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
         }
         buf.readerIndex(readerIndex);
         if (ready) {
-            setRegisterValue(register);
-            reset();
+            setResult(register);
             return FINISHED;
         } else {
             return MORE_DATA_NEEDED;
@@ -75,7 +66,7 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
     }
 
     @Override
-    public void setRegisterValue(UnionRegister register) {
+    public void setResult(UnionRegister register) {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
@@ -85,6 +76,7 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
             register.isNull = false;
             register.uInt32Value = value & 0x0_FFFFFFFFL;
         }
+        reset();
     }
 
     private void accumulate(int oneByte) {
@@ -101,10 +93,5 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
 
     private void checkOverlong(int secondByte, UnionRegister register) {
         register.isOverlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
-    }
-
-    //TODO remove
-    public boolean isReady() {
-        return ready;
     }
 }

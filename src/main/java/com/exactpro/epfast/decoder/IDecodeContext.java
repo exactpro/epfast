@@ -27,17 +27,5 @@ public interface IDecodeContext {
 
     int CLEAR_STOP_BIT_MASK = 0b01111111;
 
-    int startDecode(ByteBuf buf, UnionRegister register);
-
-    int continueDecode(ByteBuf buf, UnionRegister register);
-
-    boolean inProgress();
-
-    default int decode(ByteBuf buf, UnionRegister register) {
-        if (!inProgress()) {
-            return startDecode(buf, register);
-        } else {
-            return continueDecode(buf, register);
-        }
-    }
+    int decode(ByteBuf buf, UnionRegister register);
 }

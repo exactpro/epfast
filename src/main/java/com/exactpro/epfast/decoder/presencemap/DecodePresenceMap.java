@@ -32,14 +32,6 @@ public class DecodePresenceMap implements IDecodeContext {
 
     private boolean ready;
 
-    public int startDecode(ByteBuf buf, UnionRegister register) {
-        throw new UnsupportedOperationException();
-    }
-
-    public int continueDecode(ByteBuf buf, UnionRegister register) {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
@@ -49,7 +41,7 @@ public class DecodePresenceMap implements IDecodeContext {
         }
         buf.readerIndex(readerIndex);
         if (ready) {
-            setRegisterValue(register);
+            setResult(register);
             reset();
             return FINISHED;
         } else {
@@ -57,17 +49,9 @@ public class DecodePresenceMap implements IDecodeContext {
         }
     }
 
-    public void setRegisterValue(UnionRegister register) {
+    public void setResult(UnionRegister register) {
         register.isOverlong = setIndex > lastNonZeroIndex;
         register.presenceMap = new PresenceMap((BitSet) value.clone());
-    }
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public boolean isOverlong() {
-        throw new UnsupportedOperationException();
     }
 
     private void accumulateValue(int oneByte) {
@@ -88,11 +72,6 @@ public class DecodePresenceMap implements IDecodeContext {
         ready = false;
         setIndex = 0;
         lastNonZeroIndex = 0;
-    }
-
-    @Override
-    public boolean inProgress() {
-        throw new UnsupportedOperationException();
     }
 }
 

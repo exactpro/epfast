@@ -38,14 +38,6 @@ public abstract class DecodeAsciiString implements IDecodeContext {
         this.checkOverlong = checkOverlong;
     }
 
-    public int startDecode(ByteBuf buf, UnionRegister register) {
-       throw new UnsupportedOperationException();
-    }
-
-    public int continueDecode(ByteBuf buf, UnionRegister register) {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
@@ -98,10 +90,5 @@ public abstract class DecodeAsciiString implements IDecodeContext {
         ready = false;
         decodingPreamble = true;
         zeroCount = 0;
-    }
-
-    @Override
-    public boolean inProgress() {
-        throw new UnsupportedOperationException();
     }
 }

@@ -26,63 +26,36 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
 
     private long messageLength;
 
-    public int startDecode(ByteBuf buf, UnionRegister register) {
-        reset();
-        inProgress = true;
-        if (lengthDecoder.decode(buf, register) == FINISHED) {
-            lengthReady = true;
-            if (register.isOverflow) {
-                overflow = true;
-            } else {
-                messageLength = register.uInt32Value;
-            }
-            if (messageLength > 0) {
-                int readerIndex = buf.readerIndex();
-                int readLimit = buf.writerIndex();
-                while ((readerIndex < readLimit) && !ready) {
-                    if (counter < messageLength) {
-                        value.add(buf.getByte(readerIndex++));
-                        counter++;
-                    }
-                    if (counter == messageLength) {
-                        ready = true;
-                    }
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
+        if (!inProgress) {
+            inProgress = true;
+            if (lengthDecoder.decode(buf, register) == FINISHED) {
+                lengthReady = true;
+                if (register.isOverflow) {
+                    overflow = true;
+                } else {
+                    messageLength = register.uInt32Value;
                 }
-                buf.readerIndex(readerIndex);
-            } else {
-                ready = true;
-            }
-        }
-        if (ready) {
-            setRegisterValue(register);
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    public int continueDecode(ByteBuf buf, UnionRegister register) {
-        if (lengthReady) {
-            int readerIndex = buf.readerIndex();
-            int readLimit = buf.writerIndex();
-            while ((readerIndex < readLimit) && !ready) {
-                if (counter < messageLength) {
-                    value.add(buf.getByte(readerIndex++));
-                    counter++;
-                }
-                if (counter == messageLength) {
+                if (messageLength > 0) {
+                    int readerIndex = buf.readerIndex();
+                    int readLimit = buf.writerIndex();
+                    while ((readerIndex < readLimit) && !ready) {
+                        if (counter < messageLength) {
+                            value.add(buf.getByte(readerIndex++));
+                            counter++;
+                        }
+                        if (counter == messageLength) {
+                            ready = true;
+                        }
+                    }
+                    buf.readerIndex(readerIndex);
+                } else {
                     ready = true;
                 }
             }
-            buf.readerIndex(readerIndex);
-        } else if (lengthDecoder.decode(buf, register) == FINISHED) {
-            lengthReady = true;
-            if (register.isOverflow) {
-                overflow = true;
-            } else {
-                messageLength = register.uInt32Value;
-            }
-            if (messageLength > 0) {
+        } else {
+            if (lengthReady) {
                 int readerIndex = buf.readerIndex();
                 int readLimit = buf.writerIndex();
                 while ((readerIndex < readLimit) && !ready) {
@@ -95,20 +68,41 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
                     }
                 }
                 buf.readerIndex(readerIndex);
-            } else {
-                ready = true;
+            } else if (lengthDecoder.decode(buf, register) == FINISHED) {
+                lengthReady = true;
+                if (register.isOverflow) {
+                    overflow = true;
+                } else {
+                    messageLength = register.uInt32Value;
+                }
+                if (messageLength > 0) {
+                    int readerIndex = buf.readerIndex();
+                    int readLimit = buf.writerIndex();
+                    while ((readerIndex < readLimit) && !ready) {
+                        if (counter < messageLength) {
+                            value.add(buf.getByte(readerIndex++));
+                            counter++;
+                        }
+                        if (counter == messageLength) {
+                            ready = true;
+                        }
+                    }
+                    buf.readerIndex(readerIndex);
+                } else {
+                    ready = true;
+                }
             }
         }
         if (ready) {
-            setRegisterValue(register);
-            return 1;
+            setResult(register);
+            return FINISHED;
         } else {
-            return 0;
+            return MORE_DATA_NEEDED;
         }
     }
 
     @Override
-    public void setRegisterValue(UnionRegister register) {
+    public void setResult(UnionRegister register) {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
@@ -122,5 +116,6 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
             register.isNull = false;
             register.byteVectorValue = finalVal;
         }
+        reset();
     }
 }

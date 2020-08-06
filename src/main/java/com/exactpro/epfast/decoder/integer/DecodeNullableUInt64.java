@@ -31,58 +31,51 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
 
     private long value;
 
-    public int startDecode(ByteBuf buf, UnionRegister register) {
-        reset();
-        value = 0;
-        isUInt64Limit = false;
-        inProgress = true;
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
-        int oneByte = buf.getByte(readerIndex++);
-        accumulate(oneByte);
-        if (oneByte < 0) {
-            setRegisterValue(register);
-            buf.readerIndex(readerIndex);
-            return 1;
-        }
-        if (readerIndex < readLimit) {
-            checkOverlong(buf.getByte(readerIndex), register); //check second byte
+        if (!inProgress) {
+
+            value = 0;
+            isUInt64Limit = false;
+            inProgress = true;
+
+            int oneByte = buf.getByte(readerIndex++);
+            accumulate(oneByte);
+            if (oneByte < 0) {
+                setResult(register);
+                buf.readerIndex(readerIndex);
+                return FINISHED;
+            }
+            if (readerIndex < readLimit) {
+                checkOverlong(buf.getByte(readerIndex), register); //check second byte
+                do {
+                    accumulate(buf.getByte(readerIndex++));
+                } while (!ready && readerIndex < readLimit);
+            } else {
+                checkForSignExtension = true;
+            }
+        } else {
+            if (checkForSignExtension) {
+                checkOverlong(buf.getByte(readerIndex), register); //continue checking
+                checkForSignExtension = false;
+            }
             do {
                 accumulate(buf.getByte(readerIndex++));
             } while (!ready && readerIndex < readLimit);
-        } else {
-            checkForSignExtension = true;
         }
         buf.readerIndex(readerIndex);
         if (ready) {
-            setRegisterValue(register);
-            return 1;
+            setResult(register);
+            return FINISHED;
         } else {
-            return 0;
-        }
-    }
-
-    public int continueDecode(ByteBuf buf, UnionRegister register) {
-        int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        if (checkForSignExtension) {
-            checkOverlong(buf.getByte(readerIndex), register); //continue checking
-            checkForSignExtension = false;
-        }
-        do {
-            accumulate(buf.getByte(readerIndex++));
-        } while (!ready && readerIndex < readLimit);
-        buf.readerIndex(readerIndex);
-        if (ready) {
-            setRegisterValue(register);
-            return 1;
-        } else {
-            return 0;
+            return MORE_DATA_NEEDED;
         }
     }
 
     @Override
-    public void setRegisterValue(UnionRegister register) {
+    public void setResult(UnionRegister register) {
         inProgress = false;
         if (overflow) {
             register.isOverflow = true;
@@ -100,6 +93,7 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
             }
             register.unsignedInt64Value = new BigInteger(1, bytes);
         }
+        reset();
     }
 
     private void accumulate(int oneByte) {
