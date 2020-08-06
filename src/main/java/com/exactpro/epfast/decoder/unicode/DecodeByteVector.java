@@ -34,8 +34,6 @@ public abstract class DecodeByteVector implements IDecodeContext {
 
     boolean overflow;
 
-    protected boolean inProgress;
-
     public abstract void setResult(UnionRegister register);
 
     public final void reset() {

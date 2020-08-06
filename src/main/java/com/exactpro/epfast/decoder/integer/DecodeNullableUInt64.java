@@ -36,7 +36,6 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         if (!inProgress) {
-
             value = 0;
             isUInt64Limit = false;
             inProgress = true;

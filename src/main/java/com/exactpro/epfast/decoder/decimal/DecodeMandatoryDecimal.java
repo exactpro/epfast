@@ -30,8 +30,7 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
 
     @Override
     public int decode(ByteBuf buf, UnionRegister register) {
-        if (!inProgress) {
-            inProgress = true;
+        if (!exponentReady) {
             if (exponentDecoder.decode(buf, register) == FINISHED) {
                 exponentReady = true;
                 if (register.isOverlong) {
@@ -43,7 +42,6 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
                     exponent = register.int32Value;
                 }
                 if (buf.isReadable()) {
-                    startedMantissa = true;
                     if (mantissaDecoder.decode(buf, register) == FINISHED) {
                         ready = true;
                         if (register.isOverlong) {
@@ -54,73 +52,28 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
                         } else {
                             mantissa = register.int64Value;
                         }
+                        setResult(register);
+                        return FINISHED;
                     }
                 }
             }
-        } else {
-            if (exponentReady && startedMantissa) {
-                if (mantissaDecoder.decode(buf, register) == FINISHED) {
-                    ready = true;
-                    if (register.isOverlong) {
-                        mantissaOverlong = true;
-                    }
-                    if (register.isOverflow) {
-                        mantissaOverflow = true;
-                    } else {
-                        mantissa = register.int64Value;
-                    }
-                }
-            } else if (exponentReady) {
-                startedMantissa = true;
-                if (mantissaDecoder.decode(buf, register) == FINISHED) {
-                    ready = true;
-                    if (register.isOverlong) {
-                        mantissaOverlong = true;
-                    }
-                    if (register.isOverflow) {
-                        mantissaOverflow = true;
-                    } else {
-                        mantissa = register.int64Value;
-                    }
-                }
+        } else if (mantissaDecoder.decode(buf, register) == FINISHED) {
+            ready = true;
+            if (register.isOverlong) {
+                mantissaOverlong = true;
+            }
+            if (register.isOverflow) {
+                mantissaOverflow = true;
             } else {
-                if (exponentDecoder.decode(buf, register) == FINISHED) {
-                    exponentReady = true;
-                    if (register.isOverlong) {
-                        exponentOverlong = true;
-                    }
-                    if (register.isOverflow) {
-                        exponentOverflow = true;
-                    } else {
-                        exponent = register.int32Value;
-                    }
-                    if (buf.isReadable()) {
-                        startedMantissa = true;
-                        if (mantissaDecoder.decode(buf, register) == FINISHED) {
-                            ready = true;
-                            if (register.isOverlong) {
-                                mantissaOverlong = true;
-                            }
-                            if (register.isOverflow) {
-                                mantissaOverflow = true;
-                            } else {
-                                mantissa = register.int64Value;
-                            }
-                        }
-                    }
-                }
+                mantissa = register.int64Value;
             }
-        }
-        if (ready) {
             setResult(register);
             return FINISHED;
-        } else {
-            return MORE_DATA_NEEDED;
         }
+        return MORE_DATA_NEEDED;
     }
 
     public void setResult(UnionRegister register) {
-        inProgress = false;
         register.isOverlong = exponentOverlong || mantissaOverlong;
         if (exponentOverflow) {
             register.isOverflow = true;

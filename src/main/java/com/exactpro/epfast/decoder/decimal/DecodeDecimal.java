@@ -28,8 +28,6 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     boolean exponentReady;
 
-    boolean startedMantissa;
-
     boolean ready;
 
     boolean exponentOverflow;
@@ -40,11 +38,8 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     boolean mantissaOverlong;
 
-    protected boolean inProgress;
-
     public final void reset() {
         exponentReady = false;
-        startedMantissa = false;
         ready = false;
         exponentOverflow = false;
         mantissaOverflow = false;

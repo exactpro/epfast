@@ -36,7 +36,6 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
         if (!inProgress) {
             value = 0;
             inProgress = true;
-
             int oneByte = buf.getByte(readerIndex++);
             accumulate(oneByte);
             if (oneByte < 0) {
