@@ -32,8 +32,11 @@ public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
     public void setResult(UnionRegister register) {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             register.isOverflow = true;
+            register.isOverlong = false;
+            register.isNull = false;
             register.infoMessage = "String is longer than allowed";
         } else if (zeroCount < stringBuilder.length()) {
+            register.isNull = false;
             if ((zeroCount > 1) && checkOverlong) {
                 register.isOverflow = false;
                 register.isOverlong = false;
@@ -46,7 +49,6 @@ public final class DecodeMandatoryAsciiString extends DecodeAsciiString {
             } else {
                 register.isOverflow = false;
                 register.isOverlong = false;
-                register.isNull = false;
                 register.stringValue = stringBuilder.toString();
             }
         } else {

@@ -27,6 +27,8 @@ public abstract class DecodeInteger implements IDecodeContext {
 
     protected boolean overflow;
 
+    protected boolean overlong;
+
     boolean checkForSignExtension = false;
 
     protected boolean inProgress;
@@ -34,6 +36,7 @@ public abstract class DecodeInteger implements IDecodeContext {
     protected final void reset() {
         ready = false;
         overflow = false;
+        overlong = false;
         checkForSignExtension = false;
     }
 

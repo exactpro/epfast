@@ -44,7 +44,7 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
                 return FINISHED;
             }
             if (readerIndex < readLimit) {
-                checkOverlong(buf.getByte(readerIndex), register); //check second byte
+                checkOverlong(buf.getByte(readerIndex)); //check second byte
                 do {
                     accumulate(buf.getByte(readerIndex++));
                 } while (!ready && readerIndex < readLimit);
@@ -53,7 +53,7 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
             }
         } else {
             if (checkForSignExtension) {
-                checkOverlong(buf.getByte(readerIndex), register); //continue checking
+                checkOverlong(buf.getByte(readerIndex)); //continue checking
                 checkForSignExtension = false;
             }
             do {
@@ -72,14 +72,16 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
     @Override
     public void setResult(UnionRegister register) {
         inProgress = false;
+        register.isOverlong = overlong;
         if (overflow) {
             register.isOverflow = true;
+            register.isNull = false;
             register.infoMessage = "UInt32 Overflow";
         } else {
             longToBytes(value, bytes);
             register.isOverflow = false;
             register.isNull = false;
-            register.unsignedInt64Value = new BigInteger(1, bytes);
+            register.uInt64Value = new BigInteger(1, bytes);
         }
         reset();
     }
@@ -96,8 +98,8 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
         }
     }
 
-    private void checkOverlong(int secondByte, UnionRegister register) {
-        register.isOverlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
+    private void checkOverlong(int secondByte) {
+        overlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
     }
 
 }

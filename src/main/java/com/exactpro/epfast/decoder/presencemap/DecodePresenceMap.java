@@ -51,6 +51,7 @@ public class DecodePresenceMap implements IDecodeContext {
 
     public void setResult(UnionRegister register) {
         register.isOverlong = setIndex > lastNonZeroIndex;
+        register.isNull = false;
         register.presenceMap = new PresenceMap((BitSet) value.clone());
     }
 

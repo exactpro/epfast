@@ -43,7 +43,7 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
                     return FINISHED;
                 }
                 if (readerIndex < readLimit) {
-                    checkOverlongPositive(buf.getByte(readerIndex), register); //check second byte
+                    checkOverlongPositive(buf.getByte(readerIndex)); //check second byte
                     do {
                         accumulatePositive(buf.getByte(readerIndex++));
                     } while (!ready && readerIndex < readLimit);
@@ -59,7 +59,7 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
                     return FINISHED;
                 }
                 if (readerIndex < readLimit) {
-                    checkOverlongNegative(buf.getByte(readerIndex), register); //check second byte
+                    checkOverlongNegative(buf.getByte(readerIndex)); //check second byte
                     do {
                         accumulateNegative(buf.getByte(readerIndex++));
                     } while (!ready && readerIndex < readLimit);
@@ -70,7 +70,7 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
         } else {
             if (value >= 0) {
                 if (checkForSignExtension) {
-                    checkOverlongPositive(buf.getByte(readerIndex), register); //continue checking
+                    checkOverlongPositive(buf.getByte(readerIndex)); //continue checking
                     checkForSignExtension = false;
                 }
                 do {
@@ -78,7 +78,7 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
                 } while (!ready && readerIndex < readLimit);
             } else {
                 if (checkForSignExtension) {
-                    checkOverlongNegative(buf.getByte(readerIndex), register); //check first and second bytes
+                    checkOverlongNegative(buf.getByte(readerIndex)); //check first and second bytes
                     checkForSignExtension = false;
                 }
                 do {
@@ -98,6 +98,7 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
     @Override
     public void setResult(UnionRegister register) {
         inProgress = false;
+        register.isOverlong = overlong;
         if (overflow) {
             register.isOverflow = true;
             register.infoMessage = "Int32 Overflow";
@@ -133,11 +134,11 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
         }
     }
 
-    private void checkOverlongPositive(int secondByte, UnionRegister register) {
-        register.isOverlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
+    private void checkOverlongPositive(int secondByte) {
+        overlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
     }
 
-    private void checkOverlongNegative(int secondByte, UnionRegister register) {
-        register.isOverlong = value == -1 && ((secondByte & SIGN_BIT_MASK) != 0);
+    private void checkOverlongNegative(int secondByte) {
+        overlong = value == -1 && ((secondByte & SIGN_BIT_MASK) != 0);
     }
 }

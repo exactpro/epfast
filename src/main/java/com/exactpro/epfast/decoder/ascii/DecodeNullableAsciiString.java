@@ -32,8 +32,11 @@ public final class DecodeNullableAsciiString extends DecodeAsciiString {
     public void setResult(UnionRegister register) {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
             register.isOverflow = true;
+            register.isOverlong = false;
+            register.isNull = false;
             register.infoMessage = "String is longer than allowed";
         } else if (zeroCount < stringBuilder.length()) {
+            register.isNull = false;
             if ((zeroCount > 2) && checkOverlong) {
                 register.isOverflow = false;
                 register.isOverlong = false;
@@ -50,7 +53,7 @@ public final class DecodeNullableAsciiString extends DecodeAsciiString {
                 register.stringValue = stringBuilder.substring(2);
             } else {
                 register.isOverflow = false;
-                register.isNull = false;
+                register.isOverlong = false;
                 register.stringValue = stringBuilder.toString();
             }
         } else if (zeroCount == 1) {
@@ -61,6 +64,7 @@ public final class DecodeNullableAsciiString extends DecodeAsciiString {
         } else {
             stringBuilder.setLength(zeroCount - 2);
             register.isOverflow = false;
+            register.isOverlong = false;
             register.isNull = false;
             register.stringValue = stringBuilder.toString();
         }

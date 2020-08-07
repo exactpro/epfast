@@ -38,7 +38,7 @@ public class UnionRegister {
 
     public long int64Value;
 
-    public BigInteger unsignedInt64Value;
+    public BigInteger uInt64Value;
 
     public BigDecimal decimalValue;
 
