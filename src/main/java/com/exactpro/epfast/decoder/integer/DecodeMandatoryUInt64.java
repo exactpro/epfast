@@ -73,14 +73,13 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
     public void setResult(UnionRegister register) {
         inProgress = false;
         register.isOverlong = overlong;
+        register.isNull = false;
         if (overflow) {
             register.isOverflow = true;
-            register.isNull = false;
             register.infoMessage = "UInt32 Overflow";
         } else {
             longToBytes(value, bytes);
             register.isOverflow = false;
-            register.isNull = false;
             register.uInt64Value = new BigInteger(1, bytes);
         }
         reset();

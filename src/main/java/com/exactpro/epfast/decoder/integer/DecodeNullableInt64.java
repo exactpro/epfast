@@ -105,6 +105,7 @@ public final class DecodeNullableInt64 extends DecodeInteger {
         register.isOverlong = overlong;
         if (overflow) {
             register.isOverflow = true;
+            register.isNull = false;
             register.infoMessage = "Int64 Overflow";
         } else {
             register.isOverflow = false;

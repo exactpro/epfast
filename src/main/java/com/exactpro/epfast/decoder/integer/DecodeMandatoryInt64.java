@@ -99,12 +99,12 @@ public final class DecodeMandatoryInt64 extends DecodeInteger {
     public void setResult(UnionRegister register) {
         inProgress = false;
         register.isOverlong = overlong;
+        register.isNull = false;
         if (overflow) {
             register.isOverflow = true;
             register.infoMessage = "Int64 Overflow";
         } else {
             register.isOverflow = false;
-            register.isNull = false;
             register.int64Value = value;
         }
         reset();

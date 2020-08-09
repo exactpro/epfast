@@ -69,13 +69,12 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
     public void setResult(UnionRegister register) {
         inProgress = false;
         register.isOverlong = overlong;
+        register.isNull = false;
         if (overflow) {
             register.isOverflow = true;
-            register.isNull = false;
             register.infoMessage = "UInt32 Overflow";
         } else {
             register.isOverflow = false;
-            register.isNull = false;
             register.uInt32Value = value & 0x0_FFFFFFFFL;
         }
         reset();

@@ -42,7 +42,7 @@ class TestInt64 {
         assertTrue(decodeResult.isNull);
         assertFalse(decodeResult.isOverflow);
         assertFalse(decodeResult.isOverlong);
-        assertEquals(decodeResult.int32Value, -999);
+        assertEquals(decodeResult.int64Value, -999);
     }
 
     @WithByteBuf("81")
@@ -233,7 +233,7 @@ class TestInt64 {
         assertEquals(-1, decodeResult.int64Value);
     }
 
-    @WithByteBuf("00 00 40 82")
+    @WithByteBuf("00 40 82")
     void optionalSignExtensionPositive(Collection<ByteBuf> buffers) {
         decode(nullableInt64Decoder, buffers, decodeResult);
         assertFalse(decodeResult.isNull);
@@ -242,12 +242,34 @@ class TestInt64 {
         assertEquals(8193, decodeResult.int64Value);
     }
 
-    @WithByteBuf("00 00 40 81")
+    @WithByteBuf("00 00 40 82")
+    void optionalSignExtensionPositiveOverlong(Collection<ByteBuf> buffers) {
+        decodeResult.isOverlong = false;
+
+        decode(nullableInt64Decoder, buffers, decodeResult);
+        assertFalse(decodeResult.isNull);
+        assertFalse(decodeResult.isOverflow);
+        assertTrue(decodeResult.isOverlong);
+        assertEquals(8193, decodeResult.int64Value);
+    }
+
+    @WithByteBuf("00 40 81")
     void mandatorySignExtensionPositive(Collection<ByteBuf> buffers) {
         decode(mandatoryInt64Decoder, buffers, decodeResult);
         assertFalse(decodeResult.isNull);
         assertFalse(decodeResult.isOverflow);
         assertFalse(decodeResult.isOverlong);
+        assertEquals(8193, decodeResult.int64Value);
+    }
+
+    @WithByteBuf("00 00 40 81")
+    void mandatorySignExtensionPositiveOverlong(Collection<ByteBuf> buffers) {
+        decodeResult.isOverlong = false;
+
+        decode(mandatoryInt64Decoder, buffers, decodeResult);
+        assertFalse(decodeResult.isNull);
+        assertFalse(decodeResult.isOverflow);
+        assertTrue(decodeResult.isOverlong);
         assertEquals(8193, decodeResult.int64Value);
     }
 
@@ -284,7 +306,7 @@ class TestInt64 {
         assertEquals(-8193, decodeResult.int64Value);
     }
 
-    @WithByteBuf("00 00 40 81 00 00 40 81")
+    @WithByteBuf("00 40 81 00 40 81")
     void mandatoryPositiveTwoValuesInRow(Collection<ByteBuf> buffers) {
         decode(mandatoryInt64Decoder, buffers, decodeResult);
         assertFalse(decodeResult.isNull);
@@ -314,7 +336,7 @@ class TestInt64 {
         assertEquals(-8193, decodeResult.int64Value);
     }
 
-    @WithByteBuf("00 00 40 82 00 00 40 82")
+    @WithByteBuf("00 40 82 00 40 82")
     void optionalPositiveTwoValuesInRow(Collection<ByteBuf> buffers) {
         decode(nullableInt64Decoder, buffers, decodeResult);
         assertFalse(decodeResult.isNull);

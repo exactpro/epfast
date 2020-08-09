@@ -230,7 +230,7 @@ class TestInt32 {
         assertEquals(-1, decodeResult.int32Value);
     }
 
-    @WithByteBuf("00 00 40 82")
+    @WithByteBuf("00 40 82")
     void optionalSignExtensionPositive(Collection<ByteBuf> buffers) {
         decode(nullableInt32Decoder, buffers, decodeResult);
         assertFalse(decodeResult.isOverflow);
@@ -239,12 +239,34 @@ class TestInt32 {
         assertEquals(8193, decodeResult.int32Value);
     }
 
-    @WithByteBuf("00 00 40 81")
+    @WithByteBuf("00 00 40 82")
+    void optionalSignExtensionPositiveOverlong(Collection<ByteBuf> buffers) {
+        decodeResult.isOverlong = false;
+
+        decode(nullableInt32Decoder, buffers, decodeResult);
+        assertFalse(decodeResult.isOverflow);
+        assertFalse(decodeResult.isNull);
+        assertTrue(decodeResult.isOverlong);
+        assertEquals(8193, decodeResult.int32Value);
+    }
+
+    @WithByteBuf("00 40 81")
     void mandatorySignExtensionPositive(Collection<ByteBuf> buffers) {
         decode(mandatoryInt32Decoder, buffers, decodeResult);
         assertFalse(decodeResult.isOverflow);
         assertFalse(decodeResult.isNull);
         assertFalse(decodeResult.isOverlong);
+        assertEquals(8193, decodeResult.int32Value);
+    }
+
+    @WithByteBuf("00 00 40 81")
+    void mandatorySignExtensionPositiveOverlong(Collection<ByteBuf> buffers) {
+        decodeResult.isOverlong = false;
+
+        decode(mandatoryInt32Decoder, buffers, decodeResult);
+        assertFalse(decodeResult.isOverflow);
+        assertFalse(decodeResult.isNull);
+        assertTrue(decodeResult.isOverlong);
         assertEquals(8193, decodeResult.int32Value);
     }
 
@@ -281,7 +303,7 @@ class TestInt32 {
         assertEquals(-8193, decodeResult.int32Value);
     }
 
-    @WithByteBuf("00 00 40 81 00 00 40 81")
+    @WithByteBuf("00 40 81 00 40 81")
     void mandatoryPositiveTwoValuesInRow(Collection<ByteBuf> buffers) {
         decode(mandatoryInt32Decoder, buffers, decodeResult);
         assertFalse(decodeResult.isOverflow);
@@ -311,7 +333,7 @@ class TestInt32 {
         assertEquals(-8193, decodeResult.int32Value);
     }
 
-    @WithByteBuf("00 00 40 82 00 00 40 82")
+    @WithByteBuf("00 40 82 00 40 82")
     void optionalPositiveTwoValuesInRow(Collection<ByteBuf> buffers) {
         decode(nullableInt32Decoder, buffers, decodeResult);
         assertFalse(decodeResult.isOverflow);
