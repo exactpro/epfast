@@ -22,7 +22,7 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.BitSet;
 
-public class DecodePresenceMap implements IDecodeContext {
+public class DecodePresenceMap extends IDecodeContext {
 
     private BitSet value = new BitSet();
 

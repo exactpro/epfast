@@ -20,7 +20,7 @@ import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt64;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 
-public abstract class DecodeDecimal implements IDecodeContext {
+public abstract class DecodeDecimal extends IDecodeContext {
 
     DecodeMandatoryInt64 mantissaDecoder = new DecodeMandatoryInt64();
 

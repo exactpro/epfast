@@ -16,16 +16,27 @@
 
 package com.exactpro.epfast.decoder;
 
+import com.exactpro.epfast.decoder.message.DecoderCommand;
+import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
-public interface IDecodeContext {
+public abstract class IDecodeContext implements DecoderCommand {
 
-    int FINISHED = 1;
+    protected static final int FINISHED = 1;
 
-    int MORE_DATA_NEEDED = 0;
+    public static final int MORE_DATA_NEEDED = 0;
 
-    int CLEAR_STOP_BIT_MASK = 0b01111111;
+    protected static final int CLEAR_STOP_BIT_MASK = 0b01111111;
 
-    int decode(ByteBuf buf, UnionRegister register);
+    public abstract int decode(ByteBuf buf, UnionRegister register);
+
+    @Override
+    public int executeOn(DecoderState decoderState) {
+        if (!decoderState.inputBuffer.isReadable()) {
+            decoderState.canProceed = false;
+            return 0;
+        }
+        return decode(decoderState.inputBuffer, decoderState.register);
+    }
 }

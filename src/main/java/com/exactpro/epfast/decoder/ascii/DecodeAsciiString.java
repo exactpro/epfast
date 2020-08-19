@@ -20,7 +20,7 @@ import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
-public abstract class DecodeAsciiString implements IDecodeContext {
+public abstract class DecodeAsciiString extends IDecodeContext {
 
     final StringBuilder stringBuilder = new StringBuilder();
 

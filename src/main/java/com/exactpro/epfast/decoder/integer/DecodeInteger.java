@@ -19,7 +19,7 @@ package com.exactpro.epfast.decoder.integer;
 import com.exactpro.epfast.decoder.IDecodeContext;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 
-public abstract class DecodeInteger implements IDecodeContext {
+public abstract class DecodeInteger extends IDecodeContext {
 
     static final int SIGN_BIT_MASK = 0b01000000;
 
