@@ -33,16 +33,20 @@ public abstract class DecodeInteger extends IDecodeContext {
 
     protected boolean inProgress;
 
+    protected int bytesRead;
+
     protected final void reset() {
         inProgress = false;
+        bytesRead = 0;
         ready = false;
         overflow = false;
         overlong = false;
         checkForSignExtension = true;
     }
 
-    protected final int getByte(ByteBuf buf, int index) {
+    protected int getByte(ByteBuf buf, int index) {
         int oneByte = buf.getByte(index);
+        ++bytesRead;
         if (oneByte < 0) { // if stop bit is set
             ready = true;
             return oneByte & CLEAR_STOP_BIT_MASK;
