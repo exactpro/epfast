@@ -19,7 +19,9 @@ package com.exactpro.epfast.decoder.message;
 import com.exactpro.epfast.decoder.ascii.DecodeMandatoryAsciiString;
 import com.exactpro.epfast.decoder.ascii.DecodeNullableAsciiString;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
+import com.exactpro.epfast.decoder.integer.DecodeMandatoryUInt32;
 import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
+import com.exactpro.epfast.decoder.integer.DecodeNullableUInt32;
 import com.exactpro.epfast.decoder.message.commands.*;
 import com.exactpro.epfast.decoder.message.commands.InitIndexedProperty;
 import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
@@ -29,8 +31,8 @@ import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperatorsP
 import com.exactpro.epfast.decoder.message.commands.operators.DefaultMissingValue;
 import com.exactpro.epfast.decoder.message.commands.operators.DefaultPresentValue;
 import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
-import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
 import com.exactpro.epfast.decoder.message.commands.presencemap.SetPresenceMap;
+import com.exactpro.epfast.decoder.presencemap.DecodePresenceMap;
 import com.exactpro.epfast.template.*;
 
 import java.util.*;
@@ -66,7 +68,7 @@ public class FastCompiler {
             commandSet.add(new InitApplicationType(typeRef));
         }
         if (requiresPresenceMap(instructions)) {
-            commandSet.add(new ReadPresenceMap());
+            commandSet.add(new DecodePresenceMap());
             commandSet.add(new SetPresenceMap());
         }
         for (Instruction instruction : instructions) {
@@ -96,10 +98,10 @@ public class FastCompiler {
 
     private void compileSequence(Sequence sequence) {
         if (sequence.isOptional()) {
-            commandSet.add(new ReadNullableUInt32());
+            commandSet.add(new DecodeNullableUInt32());
             commandSet.add(new SetNullableLengthField());
         } else {
-            commandSet.add(new ReadMandatoryUInt32());
+            commandSet.add(new DecodeMandatoryUInt32());
             commandSet.add(new SetMandatoryLengthField());
         }
         commandSet.add(new InitIndexedProperty(sequence.getFieldId()));
