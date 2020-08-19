@@ -47,11 +47,10 @@ public final class DecodeNullableInt32 extends DecodeInteger {
                 }
                 if (readerIndex < readLimit) {
                     checkOverlongPositive(buf.getByte(readerIndex)); //check second byte
+                    checkForSignExtension = false;
                     do {
                         accumulatePositive(buf.getByte(readerIndex++));
                     } while (!ready && readerIndex < readLimit);
-                } else {
-                    checkForSignExtension = true;
                 }
             } else {
                 positive = false;
@@ -64,11 +63,10 @@ public final class DecodeNullableInt32 extends DecodeInteger {
                 }
                 if (readerIndex < readLimit) {
                     checkOverlongNegative(buf.getByte(readerIndex)); //check second byte
+                    checkForSignExtension = false;
                     do {
                         accumulateNegative(buf.getByte(readerIndex++));
                     } while (!ready && readerIndex < readLimit);
-                } else {
-                    checkForSignExtension = true;
                 }
             }
         } else {
@@ -99,8 +97,7 @@ public final class DecodeNullableInt32 extends DecodeInteger {
         }
     }
 
-    @Override
-    public void setResult(UnionRegister register) {
+    private void setResult(UnionRegister register) {
         inProgress = false;
         register.isOverlong = overlong;
         if (overflow) {

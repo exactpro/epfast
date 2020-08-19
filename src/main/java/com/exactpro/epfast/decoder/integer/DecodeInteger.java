@@ -17,11 +17,11 @@
 package com.exactpro.epfast.decoder.integer;
 
 import com.exactpro.epfast.decoder.IDecodeContext;
-import com.exactpro.epfast.decoder.message.UnionRegister;
+import io.netty.buffer.ByteBuf;
 
 public abstract class DecodeInteger extends IDecodeContext {
 
-    static final int SIGN_BIT_MASK = 0b01000000;
+    protected static final int SIGN_BIT_MASK = 0b01000000;
 
     protected boolean ready;
 
@@ -29,23 +29,32 @@ public abstract class DecodeInteger extends IDecodeContext {
 
     protected boolean overlong;
 
-    boolean checkForSignExtension = false;
+    protected boolean checkForSignExtension = true;
 
     protected boolean inProgress;
 
     protected final void reset() {
+        inProgress = false;
         ready = false;
         overflow = false;
         overlong = false;
-        checkForSignExtension = false;
+        checkForSignExtension = true;
     }
 
-    static void longToBytes(long value, byte[] bytes) {
+    protected final int getByte(ByteBuf buf, int index) {
+        int oneByte = buf.getByte(index);
+        if (oneByte < 0) { // if stop bit is set
+            ready = true;
+            return oneByte & CLEAR_STOP_BIT_MASK;
+        } else {
+            return oneByte;
+        }
+    }
+
+    protected static void longToBytes(long value, byte[] bytes) {
         for (int i = 7; i >= 0; --i) {
             bytes[i] = (byte) value;
             value >>>= 8;
         }
     }
-
-    public abstract void setResult(UnionRegister register);
 }

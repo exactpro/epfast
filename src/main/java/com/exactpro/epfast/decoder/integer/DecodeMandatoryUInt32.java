@@ -41,11 +41,10 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
             }
             if (readerIndex < readLimit) {
                 checkOverlong(buf.getByte(readerIndex)); //check second byte
+                checkForSignExtension = false;
                 do {
                     accumulate(buf.getByte(readerIndex++));
                 } while (!ready && readerIndex < readLimit);
-            } else {
-                checkForSignExtension = true;
             }
         } else {
             if (checkForSignExtension) {
@@ -65,8 +64,7 @@ public final class DecodeMandatoryUInt32 extends DecodeInteger {
         }
     }
 
-    @Override
-    public void setResult(UnionRegister register) {
+    private void setResult(UnionRegister register) {
         inProgress = false;
         register.isOverlong = overlong;
         register.isNull = false;

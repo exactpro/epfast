@@ -30,60 +30,28 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
     @Override
     public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        if (!inProgress) {
+        int readerLimit = buf.writerIndex();
+        if (inProgress) {
+            if (value >= 0) {
+                readerIndex = continuePositive(buf, readerIndex, readerLimit);
+            } else {
+                readerIndex = continueNegative(buf, readerIndex, readerLimit);
+            }
+        } else {
             inProgress = true;
-            int oneByte = buf.getByte(readerIndex++);
+            int oneByte = getByte(buf, readerIndex++);
             if ((oneByte & SIGN_BIT_MASK) == 0) {
                 value = 0;
                 accumulatePositive(oneByte);
-                if (oneByte < 0) {
-                    setResult(register);
-                    buf.readerIndex(readerIndex);
-                    return FINISHED;
-                }
-                if (readerIndex < readLimit) {
-                    checkOverlongPositive(buf.getByte(readerIndex)); //check second byte
-                    do {
-                        accumulatePositive(buf.getByte(readerIndex++));
-                    } while (!ready && readerIndex < readLimit);
-                } else {
-                    checkForSignExtension = true;
+                if (!ready && (readerIndex < readerLimit)) {
+                    readerIndex = continuePositive(buf, readerIndex, readerLimit);
                 }
             } else {
                 value = -1;
                 accumulateNegative(oneByte);
-                if (oneByte < 0) {
-                    buf.readerIndex(readerIndex);
-                    setResult(register);
-                    return FINISHED;
+                if (!ready && (readerIndex < readerLimit)) {
+                    readerIndex = continueNegative(buf, readerIndex, readerLimit);
                 }
-                if (readerIndex < readLimit) {
-                    checkOverlongNegative(buf.getByte(readerIndex)); //check second byte
-                    do {
-                        accumulateNegative(buf.getByte(readerIndex++));
-                    } while (!ready && readerIndex < readLimit);
-                } else {
-                    checkForSignExtension = true;
-                }
-            }
-        } else {
-            if (value >= 0) {
-                if (checkForSignExtension) {
-                    checkOverlongPositive(buf.getByte(readerIndex)); //continue checking
-                    checkForSignExtension = false;
-                }
-                do {
-                    accumulatePositive(buf.getByte(readerIndex++));
-                } while (!ready && readerIndex < readLimit);
-            } else {
-                if (checkForSignExtension) {
-                    checkOverlongNegative(buf.getByte(readerIndex)); //check first and second bytes
-                    checkForSignExtension = false;
-                }
-                do {
-                    accumulateNegative(buf.getByte(readerIndex++));
-                } while (!ready && readerIndex < readLimit);
             }
         }
         buf.readerIndex(readerIndex);
@@ -95,50 +63,66 @@ public final class DecodeMandatoryInt32 extends DecodeInteger {
         }
     }
 
-    @Override
-    public void setResult(UnionRegister register) {
-        inProgress = false;
-        register.isOverlong = overlong;
-        register.isNull = false;
-        if (overflow) {
-            register.isOverflow = true;
-            register.infoMessage = "Int32 Overflow";
-        } else {
-            register.isOverflow = false;
-            register.int32Value = value;
+    private int continuePositive(ByteBuf buf, int readerIndex, int readerLimit) {
+        int oneByte = getByte(buf, readerIndex++);
+        if (checkForSignExtension) {
+            checkOverlongPositive(oneByte);
+            checkForSignExtension = false;
         }
-        reset();
+        accumulatePositive(oneByte);
+        while (!ready && (readerIndex < readerLimit)) {
+            accumulatePositive(getByte(buf, readerIndex++));
+        }
+        return readerIndex;
+    }
+
+    private int continueNegative(ByteBuf buf, int readerIndex, int readerLimit) {
+        int oneByte = getByte(buf, readerIndex++);
+        if (checkForSignExtension) {
+            checkOverlongNegative(oneByte);
+            checkForSignExtension = false;
+        }
+        accumulateNegative(oneByte);
+        while (!ready && (readerIndex < readerLimit)) {
+            accumulateNegative(getByte(buf, readerIndex++));
+        }
+        return readerIndex;
     }
 
     private void accumulatePositive(int oneByte) {
-        if (oneByte < 0) { // if stop bit is set
-            oneByte &= CLEAR_STOP_BIT_MASK;
-            ready = true;
-        }
         if (value <= POSITIVE_LIMIT) {
-            value = (value << 7) | oneByte;
+            accumulate(oneByte);
         } else {
             overflow = true;
         }
     }
 
     private void accumulateNegative(int oneByte) {
-        if (oneByte < 0) { // if stop bit is set
-            oneByte &= CLEAR_STOP_BIT_MASK;
-            ready = true;
-        }
         if (value >= NEGATIVE_LIMIT) {
-            value = (value << 7) | oneByte;
+            accumulate(oneByte);
         } else {
             overflow = true;
         }
     }
 
+    private void accumulate(int oneByte) {
+        value = (value << 7) | oneByte;
+    }
+
     private void checkOverlongPositive(int secondByte) {
-        overlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
+        overlong = (value == 0) && ((secondByte & SIGN_BIT_MASK) == 0);
     }
 
     private void checkOverlongNegative(int secondByte) {
-        overlong = value == -1 && ((secondByte & SIGN_BIT_MASK) != 0);
+        overlong = (value == -1) && ((secondByte & SIGN_BIT_MASK) != 0);
+    }
+
+    private void setResult(UnionRegister register) {
+        register.int32Value = value;
+        register.isNull = false;
+        register.isOverlong = overlong;
+        register.isOverflow = overflow;
+        register.infoMessage = "Int32 Overflow";
+        reset();
     }
 }
