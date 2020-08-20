@@ -31,12 +31,9 @@ public abstract class DecodeInteger extends IDecodeContext {
 
     protected boolean checkForSignExtension = true;
 
-    protected boolean inProgress;
-
     protected int bytesRead;
 
     protected final void reset() {
-        inProgress = false;
         bytesRead = 0;
         ready = false;
         overflow = false;
