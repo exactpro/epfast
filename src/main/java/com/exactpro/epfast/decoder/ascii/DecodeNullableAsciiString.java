@@ -37,23 +37,19 @@ public final class DecodeNullableAsciiString extends DecodeAsciiString {
             register.infoMessage = "String is longer than allowed";
         } else if (zeroCount < stringBuilder.length()) {
             register.isNull = false;
+            register.isOverflow = false;
+            register.isOverlong = false;
             if ((zeroCount > 2) && checkOverlong) {
-                register.isOverflow = false;
-                register.isOverlong = false;
                 register.stringValue = stringBuilder.substring(2);
             } else if ((zeroCount == 1) && checkOverlong) {
-                register.isOverflow = false;
                 register.isOverlong = true;
                 register.infoMessage = "String is overlong if first 7 bits after zero preamble are not \\0";
                 register.stringValue = stringBuilder.substring(1);
             } else if ((zeroCount == 2) && checkOverlong) {
-                register.isOverflow = false;
                 register.isOverlong = true;
                 register.infoMessage = "String is overlong if first 7 bits after zero preamble are not \\0";
                 register.stringValue = stringBuilder.substring(2);
             } else {
-                register.isOverflow = false;
-                register.isOverlong = false;
                 register.stringValue = stringBuilder.toString();
             }
         } else if (zeroCount == 1) {
