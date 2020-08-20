@@ -44,7 +44,6 @@ class TestUInt64 {
         assertTrue(decodeResult.isNull);
         assertFalse(decodeResult.isOverflow);
         assertFalse(decodeResult.isOverlong);
-        assertNull(decodeResult.uInt64Value);
     }
 
     @WithByteBuf("81")

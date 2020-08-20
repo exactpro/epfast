@@ -34,34 +34,17 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
     @Override
     public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        if (!inProgress) {
+        int readerLimit = buf.writerIndex();
+        if (bytesRead == 0) {
+            int oneByte = getByte(buf, readerIndex++);
             value = 0;
             isUInt64Limit = false;
-            inProgress = true;
-
-            int oneByte = buf.getByte(readerIndex++);
             accumulate(oneByte);
-            if (oneByte < 0) {
-                setResult(register);
-                buf.readerIndex(readerIndex);
-                return FINISHED;
-            }
-            if (readerIndex < readLimit) {
-                checkOverlong(buf.getByte(readerIndex)); //check second byte
-                checkForSignExtension = false;
-                do {
-                    accumulate(buf.getByte(readerIndex++));
-                } while (!ready && readerIndex < readLimit);
+            if (!ready && (readerIndex < readerLimit)) {
+                readerIndex = continuePositive(buf, readerIndex, readerLimit);
             }
         } else {
-            if (checkForSignExtension) {
-                checkOverlong(buf.getByte(readerIndex)); //continue checking
-                checkForSignExtension = false;
-            }
-            do {
-                accumulate(buf.getByte(readerIndex++));
-            } while (!ready && readerIndex < readLimit);
+            readerIndex = continuePositive(buf, readerIndex, readerLimit);
         }
         buf.readerIndex(readerIndex);
         if (ready) {
@@ -72,35 +55,18 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
         }
     }
 
-    private void setResult(UnionRegister register) {
-        inProgress = false;
-        register.isOverlong = overlong;
-        if (overflow) {
-            register.isOverflow = true;
-            register.isNull = false;
-            register.infoMessage = "UInt64 Overflow";
-        } else if (value == 0) {
-            register.isOverflow = false;
-            register.isNull = true;
-            register.uInt64Value = null;
-        } else {
-            register.isOverflow = false;
-            register.isNull = false;
-            if (isUInt64Limit) {
-                longToBytes(-1L, bytes);
-            } else {
-                longToBytes(value - 1, bytes);
+    private int continuePositive(ByteBuf buf, int readerIndex, int readerLimit) {
+        do {
+            int oneByte = getByte(buf, readerIndex++);
+            if (bytesRead == 2) {
+                checkOverlong(oneByte);
             }
-            register.uInt64Value = new BigInteger(1, bytes);
-        }
-        reset();
+            accumulate(oneByte);
+        } while (!ready && (readerIndex < readerLimit));
+        return readerIndex;
     }
 
     private void accumulate(int oneByte) {
-        if (oneByte < 0) { // if stop bit is set
-            oneByte &= CLEAR_STOP_BIT_MASK;
-            ready = true;
-        }
         if (value < POSITIVE_LIMIT) {
             value = (value << 7) | oneByte;
         } else if (value == POSITIVE_LIMIT && oneByte == 0 && ready) {
@@ -108,6 +74,20 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
         } else {
             overflow = true;
         }
+    }
+
+    private void setResult(UnionRegister register) {
+        if (isUInt64Limit) {
+            longToBytes(-1L, bytes);
+        } else {
+            longToBytes(value - 1, bytes);
+        }
+        register.uInt64Value = new BigInteger(1, bytes);
+        register.isNull = value == 0;
+        register.isOverlong = overlong;
+        register.isOverflow = overflow;
+        register.infoMessage = "UInt64 Overflow";
+        reset();
     }
 
     private void checkOverlong(int secondByte) {

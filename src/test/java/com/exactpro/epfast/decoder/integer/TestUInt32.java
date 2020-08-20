@@ -42,8 +42,6 @@ class TestUInt32 {
         assertTrue(decodeResult.isNull);
         assertFalse(decodeResult.isOverflow);
         assertFalse(decodeResult.isOverlong);
-        assertEquals(-999, decodeResult.uInt32Value);
-
     }
 
     @WithByteBuf("81")
