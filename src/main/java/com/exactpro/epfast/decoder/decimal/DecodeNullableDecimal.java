@@ -28,8 +28,6 @@ public final class DecodeNullableDecimal extends DecodeDecimal {
 
     private int exponent;
 
-    private boolean nullValue;
-
     @Override
     public int decode(ByteBuf buf, UnionRegister register) {
         if (!exponentReady) {
@@ -58,7 +56,6 @@ public final class DecodeNullableDecimal extends DecodeDecimal {
                         return FINISHED;
                     }
                 } else if (register.isNull) {
-                    nullValue = true;
                     ready = true;
                     setResult(register);
                     return FINISHED;
@@ -83,24 +80,15 @@ public final class DecodeNullableDecimal extends DecodeDecimal {
     @Override
     public void setResult(UnionRegister register) {
         register.isOverlong = exponentOverlong || mantissaOverlong;
+        register.isOverflow = exponentOverflow || mantissaOverflow;
         if (exponentOverflow) {
-            register.isOverflow = true;
-            register.isNull = false;
             register.infoMessage = "exponent value range is int32";
         } else if (mantissaOverflow) {
-            register.isOverflow = true;
-            register.isNull = false;
             register.infoMessage = "mantissa value range is int64";
-        } else if (nullValue) {
-            register.isOverflow = false;
-            register.decimalValue = null;
         } else if (exponent >= -63 && exponent <= 63) {
-            register.isOverflow = false;
-            register.isNull = false;
             register.decimalValue = new BigDecimal(mantissa).movePointRight(exponent);
         } else {
             register.isOverflow = true;
-            register.isNull = false;
             register.infoMessage = "exponent value allowed range is -63 ... 63";
         }
         reset();

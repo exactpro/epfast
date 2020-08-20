@@ -42,7 +42,6 @@ class TestDecodeByteVector {
         decode(nullableByteVectorDecoder, buffers, decodeResult);
         assertTrue(decodeResult.isNull);
         assertFalse(decodeResult.isOverflow);
-        assertNull(decodeResult.byteVectorValue);
     }
 
     @WithByteBuf("81")

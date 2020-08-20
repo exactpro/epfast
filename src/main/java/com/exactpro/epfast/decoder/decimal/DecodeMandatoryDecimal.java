@@ -75,21 +75,15 @@ public final class DecodeMandatoryDecimal extends DecodeDecimal {
 
     public void setResult(UnionRegister register) {
         register.isOverlong = exponentOverlong || mantissaOverlong;
+        register.isOverflow = exponentOverflow || mantissaOverflow;
         if (exponentOverflow) {
-            register.isOverflow = true;
-            register.isNull = false;
             register.infoMessage = "exponent value range is int32";
         } else if (mantissaOverflow) {
-            register.isOverflow = true;
-            register.isNull = false;
             register.infoMessage = "mantissa value range is int64";
         } else if (exponent >= -63 && exponent <= 63) {
-            register.isOverflow = false;
-            register.isNull = false;
             register.decimalValue = new BigDecimal(mantissa).movePointRight(exponent);
         } else {
             register.isOverflow = true;
-            register.isNull = false;
             register.infoMessage = "exponent value allowed range is -63 ... 63";
         }
         reset();

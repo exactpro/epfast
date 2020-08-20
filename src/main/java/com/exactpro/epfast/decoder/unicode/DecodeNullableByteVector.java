@@ -80,22 +80,13 @@ public final class DecodeNullableByteVector extends DecodeByteVector {
 
     @Override
     public void setResult(UnionRegister register) {
-        if (overflow) {
-            register.isOverflow = true;
-            register.isNull = false;
-            register.infoMessage = "length value range is uint32";
-        } else {
-            byte[] finalVal = new byte[value.size()];
-            for (int i = 0; i < value.size(); i++) {
-                finalVal[i] = value.get(i);
-            }
-            register.isOverflow = false;
-            if (register.isNull) {
-                register.byteVectorValue = null;
-            } else {
-                register.byteVectorValue = finalVal;
-            }
+        register.isOverflow = overflow;
+        register.infoMessage = "length value range is uint32";
+        byte[] finalVal = new byte[value.size()];
+        for (int i = 0; i < value.size(); i++) {
+            finalVal[i] = value.get(i);
         }
+        register.byteVectorValue = finalVal;
         reset();
     }
 }

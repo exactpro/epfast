@@ -45,7 +45,6 @@ class TestDecodeDecimal {
         assertFalse(decodeResult.isOverlong);
         assertFalse(decodeResult.isOverflow);
         assertTrue(decodeResult.isNull);
-        assertNull(decodeResult.decimalValue);
     }
 
     @WithByteBuf("83 39 45 a3")
