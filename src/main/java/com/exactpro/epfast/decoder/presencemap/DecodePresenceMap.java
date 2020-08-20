@@ -16,13 +16,13 @@
 
 package com.exactpro.epfast.decoder.presencemap;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.util.BitSet;
 
-public class DecodePresenceMap extends IDecodeContext {
+public class DecodePresenceMap extends StreamDecoderCommand {
 
     private BitSet value = new BitSet();
 

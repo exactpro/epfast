@@ -16,11 +16,11 @@
 
 package com.exactpro.epfast.decoder.ascii;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
-public abstract class DecodeAsciiString extends IDecodeContext {
+public abstract class DecodeAsciiString extends StreamDecoderCommand {
 
     final StringBuilder stringBuilder = new StringBuilder();
 

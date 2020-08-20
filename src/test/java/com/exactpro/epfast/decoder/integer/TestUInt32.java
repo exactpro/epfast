@@ -24,7 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.DecoderUtils.*;
+import static com.exactpro.epfast.decoder.DecoderUtils.*;
 
 class TestUInt32 {
 

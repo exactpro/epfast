@@ -28,7 +28,7 @@ import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static com.exactpro.junit5.ByteBufUtils.*;
-import static com.exactpro.epfast.DecoderUtils.*;
+import static com.exactpro.epfast.decoder.DecoderUtils.*;
 
 class TestDecodeAsciiString {
 

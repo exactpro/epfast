@@ -16,11 +16,11 @@
 
 package com.exactpro.epfast.decoder.decimal;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt64;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 
-public abstract class DecodeDecimal extends IDecodeContext {
+public abstract class DecodeDecimal extends StreamDecoderCommand {
 
     DecodeMandatoryInt64 mantissaDecoder = new DecodeMandatoryInt64();
 

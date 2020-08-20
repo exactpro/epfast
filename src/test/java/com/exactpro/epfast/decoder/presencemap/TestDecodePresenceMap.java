@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Collection;
 
-import static com.exactpro.epfast.DecoderUtils.decode;
+import static com.exactpro.epfast.decoder.DecoderUtils.decode;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestDecodePresenceMap {

@@ -16,27 +16,26 @@
 
 package com.exactpro.epfast.decoder;
 
-import com.exactpro.epfast.decoder.message.DecoderCommand;
-import com.exactpro.epfast.decoder.message.DecoderState;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
-public abstract class IDecodeContext implements DecoderCommand {
+import java.util.Iterator;
 
-    protected static final int FINISHED = 1;
+public class DecoderUtils {
 
-    public static final int MORE_DATA_NEEDED = 0;
-
-    protected static final int CLEAR_STOP_BIT_MASK = 0b01111111;
-
-    public abstract int decode(ByteBuf buf, UnionRegister register);
-
-    @Override
-    public int executeOn(DecoderState decoderState) {
-        if (!decoderState.inputBuffer.isReadable()) {
-            decoderState.canProceed = false;
-            return 0;
+    public static void decode(StreamDecoderCommand decoder, Iterable<ByteBuf> buffers, UnionRegister register) {
+        Iterator<ByteBuf> it = buffers.iterator();
+        while (decoder.decode(nextNonEmptyBuffer(it), register) == StreamDecoderCommand.MORE_DATA_NEEDED) {
         }
-        return decode(decoderState.inputBuffer, decoderState.register);
+    }
+
+    private static ByteBuf nextNonEmptyBuffer(Iterator<ByteBuf> buffers) {
+        while (buffers.hasNext()) {
+            ByteBuf buffer = buffers.next();
+            if (buffer.isReadable()) {
+                return buffer;
+            }
+        }
+        throw new IllegalArgumentException("No non-empty buffers are left");
     }
 }

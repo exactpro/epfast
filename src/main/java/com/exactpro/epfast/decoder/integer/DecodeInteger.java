@@ -16,10 +16,10 @@
 
 package com.exactpro.epfast.decoder.integer;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
 import io.netty.buffer.ByteBuf;
 
-public abstract class DecodeInteger extends IDecodeContext {
+public abstract class DecodeInteger extends StreamDecoderCommand {
 
     protected static final int SIGN_BIT_MASK = 0b01000000;
 
@@ -29,8 +29,6 @@ public abstract class DecodeInteger extends IDecodeContext {
 
     protected boolean overlong;
 
-    protected boolean checkForSignExtension = true;
-
     protected int bytesRead;
 
     protected final void reset() {
@@ -38,7 +36,6 @@ public abstract class DecodeInteger extends IDecodeContext {
         ready = false;
         overflow = false;
         overlong = false;
-        checkForSignExtension = true;
     }
 
     protected int getByte(ByteBuf buf, int index) {

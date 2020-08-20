@@ -25,7 +25,7 @@ import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.exactpro.epfast.DecoderUtils.*;
+import static com.exactpro.epfast.decoder.DecoderUtils.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 class TestDecodeDecimal {

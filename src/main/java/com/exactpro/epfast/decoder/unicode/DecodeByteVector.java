@@ -16,13 +16,13 @@
 
 package com.exactpro.epfast.decoder.unicode;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
 import com.exactpro.epfast.decoder.message.UnionRegister;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DecodeByteVector extends IDecodeContext {
+public abstract class DecodeByteVector extends StreamDecoderCommand {
 
     List<Byte> value = new ArrayList<>();
 
