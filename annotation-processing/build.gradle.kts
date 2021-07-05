@@ -28,15 +28,15 @@ configurations["integrationTestAnnotationProcessor"]
     .extendsFrom(configurations.runtimeOnly.get(), configurations.implementation.get())
 
 dependencies {
-    annotationProcessor("com.google.auto.service:auto-service:1.0-rc6")
-    implementation("com.google.auto.service:auto-service:1.0-rc6")
+    annotationProcessor("com.google.auto.service:auto-service:1.0")
+    implementation("com.google.auto.service:auto-service:1.0")
     implementation("com.github.spullara.mustache.java:compiler:0.9.6")
     implementation(project(":epfast-annotations"))
 
     junitImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     junitRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 
-    testImplementation("com.google.testing.compile:compile-testing:0.18")
+    testImplementation("com.google.testing.compile:compile-testing:0.19")
     testRuntimeOnly(project(":epfast-annotations"))
 
     integrationTestImplementation(project(":epfast-annotations"))

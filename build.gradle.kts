@@ -1,11 +1,12 @@
-val assertjVersion by extra { "3.15.0" }
-val junitVersion by extra { "5.6.0" }
-val nettyVersion by extra { "4.1.45.Final" }
+val assertjVersion by extra { "3.20.2" }
+val junitVersion by extra("5.7.2")
+val nettyVersion by extra { "4.1.65.Final" }
 
 plugins {
-    kotlin("jvm") version "1.3.61"
-    id("org.jlleitschuh.gradle.ktlint") version "9.2.1"
+    kotlin("jvm") version "1.4.31"
+    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
     `java-library`
+    java
     checkstyle
 }
 
@@ -27,7 +28,7 @@ allprojects {
     }
 
     checkstyle {
-        toolVersion = "8.26"
+        toolVersion = "8.37" // comment-out to check against the latest
         configFile = rootProject.file("config/checkstyle/checkstyle.xml")
     }
 
