@@ -149,6 +149,7 @@ class TestPresenceMap {
         assertThat(group.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
         assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
 
+        @Suppress("UNCHECKED_CAST")
         val sequence: Array<IMessage> = message.getField(Reference("sequence")) as Array<IMessage>
         assertThat(sequence.size).isEqualTo(3)
 
@@ -189,6 +190,7 @@ class TestPresenceMap {
         assertThat(group.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
         assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
 
+        @Suppress("UNCHECKED_CAST")
         val sequence: Array<IMessage> = message.getField(Reference("sequence")) as Array<IMessage>
         assertThat(sequence.size).isEqualTo(3)
 
