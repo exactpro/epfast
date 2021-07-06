@@ -16,8 +16,8 @@
 
 package com.exactpro.epfast.decoder.decimal;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.math.BigDecimal;
@@ -26,104 +26,71 @@ public final class DecodeNullableDecimal extends DecodeDecimal {
 
     private DecodeNullableInt32 exponentDecoder = new DecodeNullableInt32();
 
-    private Integer exponent;
+    private int exponent;
 
-    private boolean nullValue;
-
-    public void decode(ByteBuf buf) {
-        reset();
-        exponentDecoder.decode(buf);
-        if (exponentDecoder.isReady()) {
-            exponentReady = true;
-            try {
-                exponent = exponentDecoder.getValue();
-            } catch (OverflowException ex) {
-                exponentOverflow = true;
-            }
-            if (exponent != null && buf.isReadable()) {
-                mantissaDecoder.decode(buf);
-                startedMantissa = true;
-                if (mantissaDecoder.isReady()) {
-                    ready = true;
-                    try {
-                        mantissa = mantissaDecoder.getValue();
-                    } catch (OverflowException ex) {
-                        mantissaOverflow = true;
-                    }
-                }
-            } else if (exponent == null) {
-                nullValue = true;
-                ready = true;
-            }
-        }
-    }
-
-    public void continueDecode(ByteBuf buf) {
-        if (exponentReady && startedMantissa) {
-            mantissaDecoder.continueDecode(buf);
-            if (mantissaDecoder.isReady()) {
-                ready = true;
-                try {
-                    mantissa = mantissaDecoder.getValue();
-                } catch (OverflowException ex) {
-                    mantissaOverflow = true;
-                }
-            }
-        } else if (exponentReady) {
-            startedMantissa = true;
-            mantissaDecoder.decode(buf);
-            if (mantissaDecoder.isReady()) {
-                ready = true;
-                try {
-                    mantissa = mantissaDecoder.getValue();
-                } catch (OverflowException ex) {
-                    mantissaOverflow = true;
-                }
-            }
-        } else {
-            exponentDecoder.continueDecode(buf);
-            if (exponentDecoder.isReady()) {
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
+        if (!exponentReady) {
+            if (exponentDecoder.decode(buf, register) == FINISHED) {
                 exponentReady = true;
-                try {
-                    exponent = exponentDecoder.getValue();
-                } catch (OverflowException ex) {
-                    exponentOverflow = true;
+                if (register.isOverlong) {
+                    exponentOverlong = true;
                 }
-                if (exponent != null && buf.isReadable()) {
-                    mantissaDecoder.decode(buf);
-                    startedMantissa = true;
-                    if (mantissaDecoder.isReady()) {
+                if (register.isOverflow) {
+                    exponentOverflow = true;
+                } else {
+                    exponent = register.int32Value;
+                }
+                if (!register.isNull && buf.isReadable()) {
+                    if (mantissaDecoder.decode(buf, register) == FINISHED) {
                         ready = true;
-                        try {
-                            mantissa = mantissaDecoder.getValue();
-                        } catch (OverflowException ex) {
-                            mantissaOverflow = true;
+                        if (register.isOverlong) {
+                            mantissaOverlong = true;
                         }
+                        if (register.isOverflow) {
+                            mantissaOverflow = true;
+                        } else {
+                            mantissa = register.int64Value;
+                        }
+                        setResult(register);
+                        return FINISHED;
                     }
-                } else if (exponent == null) {
-                    nullValue = true;
+                } else if (register.isNull) {
                     ready = true;
+                    setResult(register);
+                    return FINISHED;
                 }
             }
+        } else if (mantissaDecoder.decode(buf, register) == FINISHED) {
+            ready = true;
+            if (register.isOverlong) {
+                mantissaOverlong = true;
+            }
+            if (register.isOverflow) {
+                mantissaOverflow = true;
+            } else {
+                mantissa = register.int64Value;
+            }
+            setResult(register);
+            return FINISHED;
         }
-    }
-
-    public BigDecimal getValue() throws OverflowException {
-        if (exponentOverflow) {
-            throw new OverflowException("exponent value range is int32");
-        } else if (mantissaOverflow) {
-            throw new OverflowException("mantissa value range is int64");
-        } else if (nullValue) {
-            return null;
-        } else if (exponent >= -63 && exponent <= 63) {
-            return new BigDecimal(mantissa).movePointRight(exponent);
-        } else {
-            throw new OverflowException("exponent value allowed range is -63 ... 63");
-        }
+        return MORE_DATA_NEEDED;
     }
 
     @Override
-    public boolean isOverlong() {
-        return exponentDecoder.isOverlong() || mantissaDecoder.isOverlong();
+    public void setResult(UnionRegister register) {
+        register.isOverlong = exponentOverlong || mantissaOverlong;
+        register.isOverflow = exponentOverflow || mantissaOverflow;
+        if (exponentOverflow) {
+            register.infoMessage = "exponent value range is int32";
+        } else if (mantissaOverflow) {
+            register.infoMessage = "mantissa value range is int64";
+        } else if (exponent >= -63 && exponent <= 63) {
+            register.decimalValue = new BigDecimal(mantissa).movePointRight(exponent);
+        } else {
+            register.isOverflow = true;
+            register.infoMessage = "exponent value allowed range is -63 ... 63";
+        }
+        reset();
     }
 }

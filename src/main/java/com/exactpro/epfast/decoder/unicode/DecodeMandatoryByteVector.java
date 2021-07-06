@@ -16,8 +16,8 @@
 
 package com.exactpro.epfast.decoder.unicode;
 
-import com.exactpro.epfast.decoder.OverflowException;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryUInt32;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 public final class DecodeMandatoryByteVector extends DecodeByteVector {
@@ -26,57 +26,15 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
 
     private long messageLength;
 
-    public void decode(ByteBuf buf) {
-        reset();
-        lengthDecoder.decode(buf);
-        if (lengthDecoder.isReady()) {
-            lengthReady = true;
-            try {
-                messageLength = lengthDecoder.getValue();
-            } catch (OverflowException ex) {
-                overflow = true;
-            }
-            if (messageLength > 0) {
-                int readerIndex = buf.readerIndex();
-                int readLimit = buf.writerIndex();
-                while ((readerIndex < readLimit) && !ready) {
-                    if (counter < messageLength) {
-                        value.add(buf.getByte(readerIndex++));
-                        counter++;
-                    }
-                    if (counter == messageLength) {
-                        ready = true;
-                    }
-                }
-                buf.readerIndex(readerIndex);
-            } else {
-                ready = true;
-            }
-        }
-    }
-
-    public void continueDecode(ByteBuf buf) {
-        if (lengthReady) {
-            int readerIndex = buf.readerIndex();
-            int readLimit = buf.writerIndex();
-            while ((readerIndex < readLimit) && !ready) {
-                if (counter < messageLength) {
-                    value.add(buf.getByte(readerIndex++));
-                    counter++;
-                }
-                if (counter == messageLength) {
-                    ready = true;
-                }
-            }
-            buf.readerIndex(readerIndex);
-        } else {
-            lengthDecoder.continueDecode(buf);
-            if (lengthDecoder.isReady()) {
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
+        if (!lengthReady) {
+            if (lengthDecoder.decode(buf, register) == FINISHED) {
                 lengthReady = true;
-                try {
-                    messageLength = lengthDecoder.getValue();
-                } catch (OverflowException ex) {
+                if (register.isOverflow) {
                     overflow = true;
+                } else {
+                    messageLength = register.uInt32Value;
                 }
                 if (messageLength > 0) {
                     int readerIndex = buf.readerIndex();
@@ -88,25 +46,47 @@ public final class DecodeMandatoryByteVector extends DecodeByteVector {
                         }
                         if (counter == messageLength) {
                             ready = true;
+                            buf.readerIndex(readerIndex);
+                            setResult(register);
+                            return FINISHED;
                         }
                     }
                     buf.readerIndex(readerIndex);
                 } else {
                     ready = true;
+                    setResult(register);
+                    return FINISHED;
                 }
             }
+        } else {
+            int readerIndex = buf.readerIndex();
+            int readLimit = buf.writerIndex();
+            while ((readerIndex < readLimit) && !ready) {
+                if (counter < messageLength) {
+                    value.add(buf.getByte(readerIndex++));
+                    counter++;
+                }
+                if (counter == messageLength) {
+                    ready = true;
+                    buf.readerIndex(readerIndex);
+                    setResult(register);
+                    return FINISHED;
+                }
+            }
+            buf.readerIndex(readerIndex);
         }
+        return MORE_DATA_NEEDED;
     }
 
-    public byte[] getValue() throws OverflowException {
-        if (overflow) {
-            throw new OverflowException("length value range is uint32");
-        } else {
-            byte[] finalVal = new byte[value.size()];
-            for (int i = 0; i < value.size(); i++) {
-                finalVal[i] = value.get(i);
-            }
-            return finalVal;
+    @Override
+    public void setResult(UnionRegister register) {
+        register.isOverflow = overflow;
+        register.infoMessage = "length value range is uint32";
+        byte[] finalVal = new byte[value.size()];
+        for (int i = 0; i < value.size(); i++) {
+            finalVal[i] = value.get(i);
         }
+        register.byteVectorValue = finalVal;
+        reset();
     }
 }

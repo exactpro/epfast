@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder.ascii;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 
 public final class DecodeNullableAsciiString extends DecodeAsciiString {
 
@@ -28,23 +28,41 @@ public final class DecodeNullableAsciiString extends DecodeAsciiString {
         super(checkOverlong);
     }
 
-    public String getValue() throws OverflowException {
+    @Override
+    public void setResult(UnionRegister register) {
         if (stringBuilder.length() >= MAX_ALLOWED_LENGTH) {
-            throw new OverflowException("String is longer than allowed");
-        }
-        if (zeroCount < stringBuilder.length()) {
-            if (zeroPreamble && checkOverlong) {
-                throw new OverflowException("String with zero preamble can't contain any value except 0");
+            register.isOverflow = true;
+            register.isOverlong = false;
+            register.isNull = false;
+            register.infoMessage = "String is longer than allowed";
+        } else if (zeroCount < stringBuilder.length()) {
+            register.isNull = false;
+            register.isOverflow = false;
+            register.isOverlong = false;
+            if ((zeroCount > 2) && checkOverlong) {
+                register.stringValue = stringBuilder.substring(2);
+            } else if ((zeroCount == 1) && checkOverlong) {
+                register.isOverlong = true;
+                register.infoMessage = "String is overlong if first 7 bits after zero preamble are not \\0";
+                register.stringValue = stringBuilder.substring(1);
+            } else if ((zeroCount == 2) && checkOverlong) {
+                register.isOverlong = true;
+                register.infoMessage = "String is overlong if first 7 bits after zero preamble are not \\0";
+                register.stringValue = stringBuilder.substring(2);
             } else {
-                return stringBuilder.toString();
+                register.stringValue = stringBuilder.toString();
             }
         } else if (zeroCount == 1) {
-            return null;
-        } else if (zeroCount == 2) {
-            return "";
+            register.isOverflow = false;
+            register.isNull = true;
+            register.isOverlong = false;
+            register.stringValue = null;
         } else {
             stringBuilder.setLength(zeroCount - 2);
-            return stringBuilder.toString();
+            register.isOverflow = false;
+            register.isOverlong = false;
+            register.isNull = false;
+            register.stringValue = stringBuilder.toString();
         }
     }
 }

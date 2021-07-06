@@ -16,21 +16,23 @@
 
 package com.exactpro.epfast.decoder.ascii;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import com.exactpro.junit5.WithByteBuf;
 import io.netty.buffer.ByteBuf;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static com.exactpro.junit5.ByteBufUtils.*;
-import static com.exactpro.epfast.DecoderUtils.*;
+import static com.exactpro.epfast.decoder.DecoderUtils.*;
 
 class TestDecodeAsciiString {
+
+    private final UnionRegister decodeResult = new UnionRegister();
 
     static String fastAsciiStringOf(char character, int length) {
         if (character > 0 && character < 128) {
@@ -45,190 +47,244 @@ class TestDecodeAsciiString {
     }
 
     @Nested
-    class TestNullable {
-
-        private DecodeNullableAsciiString decoder = new DecodeNullableAsciiString();
+    class TestOptional {
+        private final DecodeNullableAsciiString decoder = new DecodeNullableAsciiString(true);
 
         @WithByteBuf("80")
-        void testNull(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertNull(decoder.getValue());
-            assertFalse(decoder.isOverlong());
+        void testNull(Collection<ByteBuf> buffers) {
+            decodeResult.isNull = false;
+            decodeResult.stringValue = "";
+
+            decode(decoder, buffers, decodeResult);
+            assertNull(decodeResult.stringValue);
+            assertTrue(decodeResult.isNull);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isOverlong);
         }
 
         @WithByteBuf("00 80")
-        void testOptionalEmptyString(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertEquals("", decoder.getValue());
-            assertFalse(decoder.isOverlong());
+        void testOptionalEmptyString(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("", decodeResult.stringValue);
         }
 
         @WithByteBuf("41 42 c3")
-        void testSimpleString(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertEquals("ABC", decoder.getValue());
-            assertFalse(decoder.isOverlong());
+        void testOptionalSimpleString(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("ABC", decodeResult.stringValue);
         }
 
-        @WithByteBuf("00 00 80")
-        void testZeroByteStringNullable1(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertEquals("\0", decoder.getValue());
-            assertFalse(decoder.isOverlong());
+        @WithByteBuf("00 C1")
+        void testOptionalOverlongString1(Collection<ByteBuf> buffers) {
+            decodeResult.isOverlong = false;
+
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertTrue(decodeResult.isOverlong);
+            assertEquals("A", decodeResult.stringValue);
+        }
+
+        @WithByteBuf("00 00 C1")
+        void testOptionalOverlongString2(Collection<ByteBuf> buffers) {
+            decodeResult.isOverlong = false;
+
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertTrue(decodeResult.isOverlong);
+            assertEquals("A", decodeResult.stringValue);
         }
 
         @WithByteBuf("00 00 00 00 80")
-        void testZeroByteStringNullable2(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertEquals("\0\0\0", decoder.getValue());
-            assertFalse(decoder.isOverlong());
+        void testOptionalStringAllZeros(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0\0\0", decodeResult.stringValue);
         }
 
         @WithByteBuf("41 42 c3 42 42 c3 41 44 c3")
-        void testNullableReuse(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("ABC", decoder.getValue());
-            decode(decoder, buffers);
-            assertEquals("BBC", decoder.getValue());
-            decode(decoder, buffers);
-            assertEquals("ADC", decoder.getValue());
+        void testOptionalStringDecoderReuse(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("ABC", decodeResult.stringValue);
+
+            resetRegisterFlags();
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("BBC", decodeResult.stringValue);
+
+            resetRegisterFlags();
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("ADC", decodeResult.stringValue);
         }
 
-        @WithByteBuf("41 42 c3")
-        void testSimpleStringGetValueTwice(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("ABC", decoder.getValue());
-            assertEquals("ABC", decoder.getValue());
-        }
-
-        @WithByteBuf("00 00 00 81")
-        void testNullableOverlongNoException(Collection<ByteBuf> buffers) {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertTrue(decoder.isOverlong());
+        @WithByteBuf("00 00 00 C1")
+        void testOptionalStringStartedWithZero(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0A", decodeResult.stringValue);
         }
 
         @Nested
         class TestOverflowException {
+            private final DecodeNullableAsciiString decoder = new DecodeNullableAsciiString(true);
 
-            private DecodeNullableAsciiString decoder = new DecodeNullableAsciiString(true);
-
-            @WithByteBuf("00 00 00 81")
-            void testNullableOverlong1(Collection<ByteBuf> buffers) {
-                decode(decoder, buffers);
-                assertTrue(decoder.isReady());
-                assertTrue(decoder.isOverlong());
-                assertThrows(OverflowException.class, () -> decoder.getValue());
+            @WithByteBuf("00 00 00 C1")
+            void testOptionalOverlong1(Collection<ByteBuf> buffers) {
+                decode(decoder, buffers, decodeResult);
+                assertFalse(decodeResult.isOverflow);
+                assertFalse(decodeResult.isNull);
+                assertFalse(decodeResult.isOverlong);
+                assertEquals("\0A", decodeResult.stringValue);
             }
 
             @Test
-            void testNullableOverlong2() {
-                decoder.decode(fromHex(fastAsciiStringOf(')', 2 * DecodeAsciiString.MAX_ALLOWED_LENGTH)));
-                assertTrue(decoder.isReady());
-                assertThrows(OverflowException.class, () -> decoder.getValue());
+            void testOptionalOverlong2() {
+                decodeResult.isOverflow = false;
+
+                decoder.decode(
+                    fromHex(fastAsciiStringOf(')', 2 * DecodeAsciiString.MAX_ALLOWED_LENGTH)),
+                    decodeResult);
+                assertTrue(decodeResult.isOverflow);
+                assertFalse(decodeResult.isNull);
+                assertFalse(decodeResult.isOverlong);
             }
         }
 
         @WithByteBuf("00 00 80 00 00 00 00 80")
-        void testZeroByteStringNullableTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("\0", decoder.getValue());
+        void testOptionalStringTwoValuesInRow(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0", decodeResult.stringValue);
 
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("\0\0\0", decoder.getValue());
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0\0\0", decodeResult.stringValue);
         }
     }
 
     @Nested
     class TestMandatory {
-
-        private DecodeMandatoryAsciiString decoder = new DecodeMandatoryAsciiString();
+        private final DecodeMandatoryAsciiString decoder = new DecodeMandatoryAsciiString(true);
 
         @WithByteBuf("80")
-        void testMandatoryEmptyString(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("", decoder.getValue());
+        void testMandatoryEmptyString(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("", decodeResult.stringValue);
         }
 
         @WithByteBuf("00 00 80")
-        void testZeroByteStringMandatory1(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("\0\0", decoder.getValue());
+        void testMandatoryStringAllZeros1(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0\0", decodeResult.stringValue);
         }
 
         @WithByteBuf("00 00 00 00 80")
-        void testZeroByteStringMandatory2(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("\0\0\0\0", decoder.getValue());
+        void testMandatoryStringAllZeros2(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0\0\0\0", decodeResult.stringValue);
         }
 
-        @WithByteBuf("80")
-        void testMandatoryEmptyStringGetValueTwice(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("", decoder.getValue());
-            assertEquals("", decoder.getValue());
+        @WithByteBuf("00 C1")
+        void testMandatoryOverlongString(Collection<ByteBuf> buffers) {
+            decodeResult.isOverlong = false;
+
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertTrue(decodeResult.isOverlong);
+            assertEquals("A", decodeResult.stringValue);
         }
 
-        @WithByteBuf("00 00 00 81")
-        void testMandatoryOverlongNoException(Collection<ByteBuf> buffers) {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertTrue(decoder.isOverlong());
+        @WithByteBuf("00 00 C1")
+        void testMandatoryStringStartedWithZero(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0A", decodeResult.stringValue);
         }
 
         @Nested
         class TestOverflowException {
+            private final DecodeMandatoryAsciiString decoder = new DecodeMandatoryAsciiString(true);
 
-            private DecodeMandatoryAsciiString decoder = new DecodeMandatoryAsciiString(true);
-
-            @WithByteBuf("00 81")
+            @WithByteBuf("00 C1")
             void testMandatoryOverlong1(Collection<ByteBuf> buffers) {
-                decode(decoder, buffers);
-                assertTrue(decoder.isReady());
-                assertTrue(decoder.isOverlong());
-                assertThrows(OverflowException.class, () -> decoder.getValue());
+                decodeResult.isOverlong = false;
+
+                decode(decoder, buffers, decodeResult);
+                assertFalse(decodeResult.isOverflow);
+                assertFalse(decodeResult.isNull);
+                assertTrue(decodeResult.isOverlong);
+                assertEquals("A", decodeResult.stringValue);
             }
 
             @Test
             void testMandatoryOverlong2() {
-                decoder.decode(fromHex(fastAsciiStringOf('*', 3 * DecodeAsciiString.MAX_ALLOWED_LENGTH)));
-                assertTrue(decoder.isReady());
-                assertThrows(OverflowException.class, () -> decoder.getValue());
+                decodeResult.isOverflow = false;
+
+                decoder.decode(
+                    fromHex(fastAsciiStringOf('*', 3 * DecodeAsciiString.MAX_ALLOWED_LENGTH)),
+                    decodeResult);
+                assertTrue(decodeResult.isOverflow);
+                assertFalse(decodeResult.isNull);
+                assertFalse(decodeResult.isOverlong);
             }
         }
 
         @WithByteBuf("00 00 80 00 00 00 00 80")
-        void testZeroByteStringMandatoryTwoValuesInRow(Collection<ByteBuf> buffers) throws IOException {
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("\0\0", decoder.getValue());
+        void testMandatoryStringTwoValuesInRow(Collection<ByteBuf> buffers) {
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0\0", decodeResult.stringValue);
 
-            decode(decoder, buffers);
-            assertTrue(decoder.isReady());
-            assertFalse(decoder.isOverlong());
-            assertEquals("\0\0\0\0", decoder.getValue());
+            decode(decoder, buffers, decodeResult);
+            assertFalse(decodeResult.isOverflow);
+            assertFalse(decodeResult.isNull);
+            assertFalse(decodeResult.isOverlong);
+            assertEquals("\0\0\0\0", decodeResult.stringValue);
         }
+    }
+
+    @BeforeEach
+    void resetRegisterFlags() {
+        decodeResult.isOverlong = true;
+        decodeResult.isNull = true;
+        decodeResult.isOverflow = true;
+        decodeResult.stringValue = null;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Exactpro (Exactpro Systems Limited)
+ * Copyright 2019-2020 Exactpro (Exactpro Systems Limited)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands.operators;
+package com.exactpro.epfast.decoder;
 
 import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
+import com.exactpro.epfast.decoder.message.UnionRegister;
+import io.netty.buffer.ByteBuf;
 
-public class AllOtherOperatorsMissingValue implements DecoderCommand {
+public abstract class StreamDecoderCommand implements DecoderCommand {
+
+    public static final int FINISHED = 1;
+
+    public static final int MORE_DATA_NEEDED = 0;
+
+    protected static final int CLEAR_STOP_BIT_MASK = 0b01111111;
+
+    protected abstract int decode(ByteBuf buf, UnionRegister register);
+
     @Override
     public int executeOn(DecoderState decoderState) {
-        tempOperatorLogic(decoderState);
-        return 1;
-    }
-
-    private void tempOperatorLogic(DecoderState decoderState) {
-        decoderState.register.int32Value = -1;
-        decoderState.register.stringValue = null;
+        if (!decoderState.inputBuffer.isReadable()) {
+            decoderState.canProceed = false;
+            return MORE_DATA_NEEDED;
+        }
+        return decode(decoderState.inputBuffer, decoderState.register);
     }
 }

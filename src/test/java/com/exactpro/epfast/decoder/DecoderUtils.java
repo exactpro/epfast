@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast;
+package com.exactpro.epfast.decoder;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Iterator;
 
 public class DecoderUtils {
 
-    public static void decode(IDecodeContext decoder, Iterable<ByteBuf> buffers) {
+    public static void decode(StreamDecoderCommand decoder, Iterable<ByteBuf> buffers, UnionRegister register) {
         Iterator<ByteBuf> it = buffers.iterator();
-        decoder.decode(nextNonEmptyBuffer(it));
-        while (!decoder.isReady()) {
-            decoder.continueDecode(nextNonEmptyBuffer(it));
+        while (decoder.decode(nextNonEmptyBuffer(it), register) == StreamDecoderCommand.MORE_DATA_NEEDED) {
         }
     }
 

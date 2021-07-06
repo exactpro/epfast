@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.math.BigInteger;
@@ -29,55 +29,41 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
 
     private long value;
 
-    public void decode(ByteBuf buf) {
-        reset();
-        value = 0;
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        int oneByte = buf.getByte(readerIndex++);
-        accumulate(oneByte);
-        if (oneByte < 0) {
-            buf.readerIndex(readerIndex);
-            return;
-        }
-        if (readerIndex < readLimit) {
-            checkOverlong(buf.getByte(readerIndex)); //check second byte
-            do {
-                accumulate(buf.getByte(readerIndex++));
-            } while (!ready && readerIndex < readLimit);
+        int readerLimit = buf.writerIndex();
+        if (bytesRead == 0) {
+            int oneByte = getByte(buf, readerIndex++);
+            value = 0;
+            accumulate(oneByte);
+            if (!ready && (readerIndex < readerLimit)) {
+                readerIndex = continuePositive(buf, readerIndex, readerLimit);
+            }
         } else {
-            checkForSignExtension = true;
+            readerIndex = continuePositive(buf, readerIndex, readerLimit);
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setResult(register);
+            return FINISHED;
+        } else {
+            return MORE_DATA_NEEDED;
+        }
     }
 
-    public void continueDecode(ByteBuf buf) {
-        int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        if (checkForSignExtension) {
-            checkOverlong(buf.getByte(readerIndex)); //continue checking
-            checkForSignExtension = false;
-        }
+    private int continuePositive(ByteBuf buf, int readerIndex, int readerLimit) {
         do {
-            accumulate(buf.getByte(readerIndex++));
-        } while (!ready && readerIndex < readLimit);
-        buf.readerIndex(readerIndex);
-    }
-
-    public BigInteger getValue() throws OverflowException {
-        if (overflow) {
-            throw new OverflowException("UInt32 Overflow");
-        } else {
-            longToBytes(value, bytes);
-            return new BigInteger(1, bytes);
-        }
+            int oneByte = getByte(buf, readerIndex++);
+            if (bytesRead == 2) {
+                checkOverlong(oneByte);
+            }
+            accumulate(oneByte);
+        } while (!ready && (readerIndex < readerLimit));
+        return readerIndex;
     }
 
     private void accumulate(int oneByte) {
-        if (oneByte < 0) { // if stop bit is set
-            oneByte &= CLEAR_STOP_BIT_MASK;
-            ready = true;
-        }
         if ((value & OVERFLOW_MASK) == 0) {
             value = (value << 7) | oneByte;
         } else {
@@ -85,8 +71,17 @@ public final class DecodeMandatoryUInt64 extends DecodeInteger {
         }
     }
 
+    private void setResult(UnionRegister register) {
+        longToBytes(value, bytes);
+        register.uInt64Value = new BigInteger(1, bytes);
+        register.isNull = false;
+        register.isOverlong = overlong;
+        register.isOverflow = overflow;
+        register.infoMessage = "UInt64 Overflow";
+        reset();
+    }
+
     private void checkOverlong(int secondByte) {
         overlong = value == 0 && ((secondByte & SIGN_BIT_MASK) == 0);
     }
-
 }

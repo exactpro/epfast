@@ -16,10 +16,14 @@
 
 package com.exactpro.epfast.decoder.message;
 
+import com.exactpro.epfast.decoder.ascii.DecodeMandatoryAsciiString;
+import com.exactpro.epfast.decoder.ascii.DecodeNullableAsciiString;
+import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt32;
+import com.exactpro.epfast.decoder.integer.DecodeMandatoryUInt32;
+import com.exactpro.epfast.decoder.integer.DecodeNullableInt32;
+import com.exactpro.epfast.decoder.integer.DecodeNullableUInt32;
 import com.exactpro.epfast.decoder.message.commands.*;
 import com.exactpro.epfast.decoder.message.commands.InitIndexedProperty;
-import com.exactpro.epfast.decoder.message.commands.ascii.ReadMandatoryAsciiString;
-import com.exactpro.epfast.decoder.message.commands.ascii.ReadNullableAsciiString;
 import com.exactpro.epfast.decoder.message.commands.ascii.SetString;
 import com.exactpro.epfast.decoder.message.commands.integer.*;
 import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperatorsMissingValue;
@@ -27,7 +31,8 @@ import com.exactpro.epfast.decoder.message.commands.operators.AllOtherOperatorsP
 import com.exactpro.epfast.decoder.message.commands.operators.DefaultMissingValue;
 import com.exactpro.epfast.decoder.message.commands.operators.DefaultPresentValue;
 import com.exactpro.epfast.decoder.message.commands.presencemap.CheckPresenceBit;
-import com.exactpro.epfast.decoder.message.commands.presencemap.ReadPresenceMap;
+import com.exactpro.epfast.decoder.message.commands.presencemap.SetPresenceMap;
+import com.exactpro.epfast.decoder.presencemap.DecodePresenceMap;
 import com.exactpro.epfast.template.*;
 
 import java.util.*;
@@ -63,7 +68,8 @@ public class FastCompiler {
             commandSet.add(new InitApplicationType(typeRef));
         }
         if (requiresPresenceMap(instructions)) {
-            commandSet.add(new ReadPresenceMap());
+            commandSet.add(new DecodePresenceMap());
+            commandSet.add(new SetPresenceMap());
         }
         for (Instruction instruction : instructions) {
             if (instruction instanceof Group) {
@@ -92,10 +98,10 @@ public class FastCompiler {
 
     private void compileSequence(Sequence sequence) {
         if (sequence.isOptional()) {
-            commandSet.add(new ReadNullableUInt32());
+            commandSet.add(new DecodeNullableUInt32());
             commandSet.add(new SetNullableLengthField());
         } else {
-            commandSet.add(new ReadMandatoryUInt32());
+            commandSet.add(new DecodeMandatoryUInt32());
             commandSet.add(new SetMandatoryLengthField());
         }
         commandSet.add(new InitIndexedProperty(sequence.getFieldId()));
@@ -116,11 +122,11 @@ public class FastCompiler {
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
-                commandSet.add(new ReadNullableInt32());
+                commandSet.add(new DecodeNullableInt32());
                 addOperator(operator);
                 commandSet.add(new SetNullableInt32(instruction.getFieldId()));
             } else {
-                commandSet.add(new ReadMandatoryInt32());
+                commandSet.add(new DecodeMandatoryInt32());
                 addOperator(operator);
                 commandSet.add(new SetMandatoryInt32(instruction.getFieldId()));
             }
@@ -132,9 +138,9 @@ public class FastCompiler {
                 presenceBitIndex++;
             }
             if (instruction.isOptional()) {
-                commandSet.add(new ReadNullableAsciiString());
+                commandSet.add(new DecodeNullableAsciiString());
             } else {
-                commandSet.add(new ReadMandatoryAsciiString());
+                commandSet.add(new DecodeMandatoryAsciiString());
             }
             addOperator(operator);
             commandSet.add(new SetString(instruction.getFieldId()));

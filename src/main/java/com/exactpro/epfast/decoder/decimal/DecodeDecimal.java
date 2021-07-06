@@ -16,14 +16,11 @@
 
 package com.exactpro.epfast.decoder.decimal;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
 import com.exactpro.epfast.decoder.integer.DecodeMandatoryInt64;
-import io.netty.buffer.ByteBuf;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 
-import java.math.BigDecimal;
-
-public abstract class DecodeDecimal implements IDecodeContext {
+public abstract class DecodeDecimal extends StreamDecoderCommand {
 
     DecodeMandatoryInt64 mantissaDecoder = new DecodeMandatoryInt64();
 
@@ -31,31 +28,24 @@ public abstract class DecodeDecimal implements IDecodeContext {
 
     boolean exponentReady;
 
-    boolean startedMantissa;
-
     boolean ready;
 
     boolean exponentOverflow;
 
     boolean mantissaOverflow;
 
-    public abstract void decode(ByteBuf buf);
+    boolean exponentOverlong;
 
-    public abstract void continueDecode(ByteBuf buf);
+    boolean mantissaOverlong;
 
     public final void reset() {
         exponentReady = false;
-        startedMantissa = false;
         ready = false;
         exponentOverflow = false;
         mantissaOverflow = false;
+        exponentOverlong = false;
+        mantissaOverlong = false;
     }
 
-    public abstract BigDecimal getValue() throws OverflowException;
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public abstract boolean isOverlong();
+    public abstract void setResult(UnionRegister register);
 }

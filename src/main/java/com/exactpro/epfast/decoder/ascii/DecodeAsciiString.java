@@ -16,17 +16,17 @@
 
 package com.exactpro.epfast.decoder.ascii;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
-public abstract class DecodeAsciiString implements IDecodeContext {
+public abstract class DecodeAsciiString extends StreamDecoderCommand {
 
     final StringBuilder stringBuilder = new StringBuilder();
 
     private boolean ready;
 
-    boolean zeroPreamble;
+    boolean decodingPreamble = true;
 
     final boolean checkOverlong;
 
@@ -38,56 +38,57 @@ public abstract class DecodeAsciiString implements IDecodeContext {
         this.checkOverlong = checkOverlong;
     }
 
-    public void decode(ByteBuf buf) {
-        reset();
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
-        if (buf.getByte(readerIndex) == 0) {
-            zeroPreamble = true;
+        while (decodingPreamble && !ready && (readerIndex < readLimit)) {
+            accumulateValue(getPreambleByte(readerIndex++, buf));
         }
-        accumulateValue(buf.getByte(readerIndex++));
-        while ((readerIndex < readLimit) && !ready) {
-            accumulateValue(buf.getByte(readerIndex++));
-        }
-        buf.readerIndex(readerIndex);
-    }
-
-    public void continueDecode(ByteBuf buf) {
-        int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        while ((readerIndex < readLimit) && !ready) {
-            accumulateValue(buf.getByte(readerIndex++));
+        while (!ready && (readerIndex < readLimit)) {
+            accumulateValue(getByte(readerIndex++, buf));
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setResult(register);
+            reset();
+            return FINISHED;
+        } else {
+            return MORE_DATA_NEEDED;
+        }
     }
 
-    public abstract String getValue() throws OverflowException;
+    public abstract void setResult(UnionRegister unionRegister);
 
-    public boolean isReady() {
-        return ready;
+    private int getPreambleByte(int index, ByteBuf buf) {
+        int aByte = getByte(index, buf);
+        if (aByte == 0) {
+            ++zeroCount;
+        } else {
+            decodingPreamble = false;
+        }
+        return aByte;
     }
 
-    public boolean isOverlong() {
-        return (zeroPreamble && (zeroCount < stringBuilder.length()));
-    }
-
-    private void accumulateValue(int oneByte) {
-        if (oneByte < 0) { // if stop bit is set
-            oneByte &= CLEAR_STOP_BIT_MASK;
+    private int getByte(int index, ByteBuf buf) {
+        int aByte = buf.getByte(index);
+        if (aByte < 0) { // if stop bit is set
+            aByte &= CLEAR_STOP_BIT_MASK;
             ready = true;
         }
-        if (oneByte == 0) {
-            zeroCount++;
-        }
+        return aByte;
+    }
+
+    private void accumulateValue(int aByte) {
         if (stringBuilder.length() < MAX_ALLOWED_LENGTH) {
-            stringBuilder.append((char) oneByte);
+            stringBuilder.append((char) aByte);
         }
     }
 
     public final void reset() {
         stringBuilder.setLength(0);
         ready = false;
+        decodingPreamble = true;
         zeroCount = 0;
-        zeroPreamble = false;
     }
 }

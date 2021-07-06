@@ -16,7 +16,7 @@
 
 package com.exactpro.epfast.decoder.integer;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.math.BigInteger;
@@ -31,63 +31,42 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
 
     private long value;
 
-    public void decode(ByteBuf buf) {
-        reset();
-        value = 0;
-        isUInt64Limit = false;
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        int oneByte = buf.getByte(readerIndex++);
-        accumulate(oneByte);
-        if (oneByte < 0) {
-            buf.readerIndex(readerIndex);
-            return;
-        }
-        if (readerIndex < readLimit) {
-            checkOverlong(buf.getByte(readerIndex)); //check second byte
-            do {
-                accumulate(buf.getByte(readerIndex++));
-            } while (!ready && readerIndex < readLimit);
-        } else {
-            checkForSignExtension = true;
-        }
-        buf.readerIndex(readerIndex);
-    }
-
-    public void continueDecode(ByteBuf buf) {
-        int readerIndex = buf.readerIndex();
-        int readLimit = buf.writerIndex();
-        if (checkForSignExtension) {
-            checkOverlong(buf.getByte(readerIndex)); //continue checking
-            checkForSignExtension = false;
-        }
-        do {
-            accumulate(buf.getByte(readerIndex++));
-        } while (!ready && readerIndex < readLimit);
-        buf.readerIndex(readerIndex);
-    }
-
-    public BigInteger getValue() throws OverflowException {
-        if (overflow) {
-            throw new OverflowException("UInt64 Overflow");
-        } else if (value == 0) {
-            return null;
-        } else {
-            if (isUInt64Limit) {
-                longToBytes(-1L, bytes);
-                return new BigInteger(1, bytes);
-            } else {
-                longToBytes(value - 1, bytes);
-                return new BigInteger(1, bytes);
+        int readerLimit = buf.writerIndex();
+        if (bytesRead == 0) {
+            int oneByte = getByte(buf, readerIndex++);
+            value = 0;
+            isUInt64Limit = false;
+            accumulate(oneByte);
+            if (!ready && (readerIndex < readerLimit)) {
+                readerIndex = continuePositive(buf, readerIndex, readerLimit);
             }
+        } else {
+            readerIndex = continuePositive(buf, readerIndex, readerLimit);
         }
+        buf.readerIndex(readerIndex);
+        if (ready) {
+            setResult(register);
+            return FINISHED;
+        } else {
+            return MORE_DATA_NEEDED;
+        }
+    }
+
+    private int continuePositive(ByteBuf buf, int readerIndex, int readerLimit) {
+        do {
+            int oneByte = getByte(buf, readerIndex++);
+            if (bytesRead == 2) {
+                checkOverlong(oneByte);
+            }
+            accumulate(oneByte);
+        } while (!ready && (readerIndex < readerLimit));
+        return readerIndex;
     }
 
     private void accumulate(int oneByte) {
-        if (oneByte < 0) { // if stop bit is set
-            oneByte &= CLEAR_STOP_BIT_MASK;
-            ready = true;
-        }
         if (value < POSITIVE_LIMIT) {
             value = (value << 7) | oneByte;
         } else if (value == POSITIVE_LIMIT && oneByte == 0 && ready) {
@@ -95,6 +74,20 @@ public final class DecodeNullableUInt64 extends DecodeInteger {
         } else {
             overflow = true;
         }
+    }
+
+    private void setResult(UnionRegister register) {
+        if (isUInt64Limit) {
+            longToBytes(-1L, bytes);
+        } else {
+            longToBytes(value - 1, bytes);
+        }
+        register.uInt64Value = new BigInteger(1, bytes);
+        register.isNull = value == 0;
+        register.isOverlong = overlong;
+        register.isOverflow = overflow;
+        register.infoMessage = "UInt64 Overflow";
+        reset();
     }
 
     private void checkOverlong(int secondByte) {

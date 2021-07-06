@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.exactpro.epfast.decoder.message.commands.unicode;
+package com.exactpro.epfast.decoder.message.commands.presencemap;
 
-import com.exactpro.epfast.decoder.OverflowException;
+import com.exactpro.epfast.decoder.message.DecoderCommand;
 import com.exactpro.epfast.decoder.message.DecoderState;
-import com.exactpro.epfast.decoder.message.PrimitiveInstruction;
-import com.exactpro.epfast.decoder.unicode.DecodeMandatoryByteVector;
 
-public class ReadMandatoryByteVector extends PrimitiveInstruction<DecodeMandatoryByteVector> {
-
-    public ReadMandatoryByteVector() {
-        super(new DecodeMandatoryByteVector());
-    }
-
+public class SetPresenceMap implements DecoderCommand {
     @Override
-    public void setRegisterValue(DecoderState decoderState) throws OverflowException {
-        throw new UnsupportedOperationException();
+    public int executeOn(DecoderState decoderState) {
+        decoderState.presenceMap = decoderState.register.presenceMap;
+        return 1;
     }
 }

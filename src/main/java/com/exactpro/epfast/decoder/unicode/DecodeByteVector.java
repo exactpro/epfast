@@ -16,16 +16,15 @@
 
 package com.exactpro.epfast.decoder.unicode;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
-import com.exactpro.epfast.decoder.OverflowException;
-import io.netty.buffer.ByteBuf;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DecodeByteVector implements IDecodeContext {
+public abstract class DecodeByteVector extends StreamDecoderCommand {
 
-    List<Byte> value;
+    List<Byte> value = new ArrayList<>();
 
     int counter;
 
@@ -35,24 +34,7 @@ public abstract class DecodeByteVector implements IDecodeContext {
 
     boolean overflow;
 
-    public abstract void decode(ByteBuf buf);
-
-    public abstract void continueDecode(ByteBuf buf);
-
-    public abstract byte[] getValue() throws OverflowException;
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public boolean isOverflow() {
-        return overflow;
-    }
-
-    @Override
-    public boolean isOverlong() {
-        return false;
-    }
+    public abstract void setResult(UnionRegister register);
 
     public final void reset() {
         lengthReady = false;
@@ -61,6 +43,7 @@ public abstract class DecodeByteVector implements IDecodeContext {
         counter = 0;
         value = new ArrayList<>();
     }
+
 }
 
 

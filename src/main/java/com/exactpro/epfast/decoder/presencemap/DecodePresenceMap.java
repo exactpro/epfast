@@ -16,12 +16,13 @@
 
 package com.exactpro.epfast.decoder.presencemap;
 
-import com.exactpro.epfast.decoder.IDecodeContext;
+import com.exactpro.epfast.decoder.StreamDecoderCommand;
+import com.exactpro.epfast.decoder.message.UnionRegister;
 import io.netty.buffer.ByteBuf;
 
 import java.util.BitSet;
 
-public class DecodePresenceMap implements IDecodeContext {
+public class DecodePresenceMap extends StreamDecoderCommand {
 
     private BitSet value = new BitSet();
 
@@ -31,30 +32,27 @@ public class DecodePresenceMap implements IDecodeContext {
 
     private boolean ready;
 
-    public void decode(ByteBuf buf) {
-        reset();
-        continueDecode(buf);
-    }
-
-    public void continueDecode(ByteBuf buf) {
+    @Override
+    public int decode(ByteBuf buf, UnionRegister register) {
         int readerIndex = buf.readerIndex();
         int readLimit = buf.writerIndex();
         while ((readerIndex < readLimit) && !ready) {
             accumulateValue(buf.getByte(readerIndex++));
         }
         buf.readerIndex(readerIndex);
+        if (ready) {
+            setResult(register);
+            reset();
+            return FINISHED;
+        } else {
+            return MORE_DATA_NEEDED;
+        }
     }
 
-    public PresenceMap getValue() {
-        return new PresenceMap((BitSet) value.clone());
-    }
-
-    public boolean isReady() {
-        return ready;
-    }
-
-    public boolean isOverlong() {
-        return setIndex > lastNonZeroIndex;
+    public void setResult(UnionRegister register) {
+        register.isOverlong = setIndex > lastNonZeroIndex;
+        register.isNull = false;
+        register.presenceMap = new PresenceMap((BitSet) value.clone());
     }
 
     private void accumulateValue(int oneByte) {
@@ -76,6 +74,5 @@ public class DecodePresenceMap implements IDecodeContext {
         setIndex = 0;
         lastNonZeroIndex = 0;
     }
-
 }
 
