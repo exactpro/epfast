@@ -5,8 +5,8 @@ import com.exactpro.epfast.template.dsl.template
 import com.exactpro.epfast.template.simple.Reference
 import com.exactpro.junit5.WithByteBuf
 import io.netty.buffer.ByteBuf
-import java.io.IOException
 import org.assertj.core.api.Assertions.assertThat
+import java.io.IOException
 
 class TestPresenceMap {
     private val templates = listOf(
@@ -149,6 +149,7 @@ class TestPresenceMap {
         assertThat(group.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
         assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
 
+        @Suppress("UNCHECKED_CAST")
         val sequence: Array<IMessage> = message.getField(Reference("sequence")) as Array<IMessage>
         assertThat(sequence.size).isEqualTo(3)
 
@@ -189,6 +190,7 @@ class TestPresenceMap {
         assertThat(group.getField(Reference("ascii_3"))).isEqualTo("\u0000\u0000")
         assertThat(group.getField(Reference("ascii_null_3"))).isEqualTo("ABC")
 
+        @Suppress("UNCHECKED_CAST")
         val sequence: Array<IMessage> = message.getField(Reference("sequence")) as Array<IMessage>
         assertThat(sequence.size).isEqualTo(3)
 
@@ -212,19 +214,19 @@ class TestPresenceMap {
         private const val PM_0 = "80 "
 
         private const val HEX_STRING = PM_100 + MANDATORY_INT32_942755 +
-                PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
-                PM_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
-                MANDATORY_UINT32_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
-                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
-                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
-                ASCII_ABC + ASCII_ABC
+            PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+            PM_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+            MANDATORY_UINT32_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+            MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+            MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+            ASCII_ABC + ASCII_ABC
 
         private const val ALL_BITS_PRESENT = PM_111 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 +
-                PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
-                PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
-                MANDATORY_UINT32_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
-                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
-                MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
-                ASCII_ABC + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC
+            PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO +
+            PM_11 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+            MANDATORY_UINT32_3 + MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+            MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+            MANDATORY_INT32_942755 + OPTIONAL_INT32_0 + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC +
+            ASCII_ABC + MANDATORY_ASCII_ZERO_ZERO + ASCII_ABC
     }
 }

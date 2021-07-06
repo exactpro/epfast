@@ -21,8 +21,8 @@ import com.exactpro.epfast.template.dsl.template
 import com.exactpro.epfast.template.simple.Reference
 import com.exactpro.junit5.WithByteBuf
 import io.netty.buffer.ByteBuf
-import java.io.IOException
 import org.assertj.core.api.Assertions
+import java.io.IOException
 
 class TestTemplatesWithSequence {
 
@@ -221,7 +221,7 @@ class TestTemplatesWithSequence {
         Assertions.assertThat(message.getField(Reference("ascii_null_2"))).isEqualTo("ABC")
         Assertions.assertThat(message.getField(Reference("ascii_1"))).isEqualTo("\u0000\u0000")
         Assertions.assertThat(message.getField(Reference("ascii_null_1"))).isEqualTo("ABC")
-
+        @Suppress("UNCHECKED_CAST")
         val sequence: Array<IMessage> = message.getField(Reference("sequence")) as Array<IMessage>
         Assertions.assertThat(sequence.size).isEqualTo(3)
 
@@ -254,7 +254,7 @@ class TestTemplatesWithSequence {
         Assertions.assertThat(message.getField(Reference("ascii_null_2"))).isEqualTo("ABC")
         Assertions.assertThat(message.getField(Reference("ascii_1"))).isEqualTo("\u0000\u0000")
         Assertions.assertThat(message.getField(Reference("ascii_null_1"))).isEqualTo("ABC")
-
+        @Suppress("UNCHECKED_CAST")
         val sequence: Array<IMessage> = message.getField(Reference("sequence")) as Array<IMessage>
         Assertions.assertThat(sequence.size).isEqualTo(3)
 

@@ -20,8 +20,8 @@ import com.exactpro.epfast.template.dsl.template
 import com.exactpro.epfast.template.simple.Reference
 import com.exactpro.junit5.WithByteBuf
 import io.netty.buffer.ByteBuf
-import java.io.IOException
 import org.assertj.core.api.Assertions
+import java.io.IOException
 
 class TestTemplatesWithGroup {
     private val templatesWithGroup = listOf(
